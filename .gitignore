@@ -1,0 +1,8 @@
+client/node_modules
+server/node_modules
+client/public/vendor
+client/public/build
+client/public/compiled
+
+
+server/.env
