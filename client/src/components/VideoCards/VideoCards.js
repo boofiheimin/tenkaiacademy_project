@@ -18,9 +18,13 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => {
           alignItems="center"
           gridTemplateColumns="repeat(auto-fit, 300px)"
           gridGap="10px"
+          justifyContent="center"
         >
           {videos.map(
-            ({ title, thumbnail, tags, type, publishedAt, duration }, i) => (
+            (
+              { title, thumbnail, tags, type, publishedAt, duration, videoId },
+              i
+            ) => (
               <VideoCard
                 title={title}
                 thumbnail={thumbnail}
@@ -28,6 +32,8 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => {
                 type={type}
                 publishedAt={publishedAt}
                 duration={duration}
+                videoId={videoId}
+                key={i}
               />
             )
           )}

@@ -1,7 +1,6 @@
 import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
-import TheatersIcon from "@material-ui/icons/Theaters";
 import { useMemo, forwardRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 
@@ -16,7 +15,7 @@ const ListItemLink = ({ disabled = false, icon, primary, to }) => {
   return (
     <ListItem
       button
-      selected={to === location.pathname}
+      selected={location.pathname.indexOf(to) >= 0}
       disabled={disabled ?? false}
       component={renderLink}
     >

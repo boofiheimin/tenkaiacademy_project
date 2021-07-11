@@ -12,7 +12,10 @@ export const getStreams = (query) => async (dispatch) => {
   try {
     const {
       data: { docs },
-    } = await api.fetchStreams({ query, limit: VIDEOS_FETCH_LIMIT });
+    } = await api.fetchStreams({
+      query,
+      limit: VIDEOS_FETCH_LIMIT,
+    });
 
     if (docs.length < VIDEOS_FETCH_LIMIT) {
       dispatch({ type: FETCH_STREAM_SUCCESS, data: docs });

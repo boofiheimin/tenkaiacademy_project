@@ -26,12 +26,6 @@ const useStyles = makeStyles((theme) => ({
   cardMedia: {
     position: "relative",
   },
-  grid: {
-    [theme.breakpoints.up("lg")]: {
-      maxWidth: "20%",
-      flexBasis: "20%",
-    },
-  },
 }));
 
 export default useStyles;

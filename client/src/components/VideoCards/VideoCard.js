@@ -8,10 +8,9 @@ import {
   Chip,
   Box,
 } from "@material-ui/core";
-
 import HistoryIcon from "@material-ui/icons/History";
-
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 import VideoCardCorner from "./VideoCardCorner";
 
@@ -27,12 +26,21 @@ const durationFormat = (duration) => {
       .format("H:mm:ss");
 };
 
-const VideoCard = ({ title, thumbnail, type, tags, publishedAt, duration }) => {
+const VideoCard = ({
+  title,
+  thumbnail,
+  type,
+  tags,
+  publishedAt,
+  duration,
+  videoId,
+}) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   return (
     <Card className={classes.root}>
       <VideoCardCorner type={type} />
-      <CardActionArea>
+      <CardActionArea onClick={() => navigate(`/streams/${videoId}`)}>
         <Box position="relative">
           <CardMedia
             component="img"
