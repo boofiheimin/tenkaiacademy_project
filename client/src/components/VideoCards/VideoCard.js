@@ -17,19 +17,43 @@ import VideoCardCorner from "./VideoCardCorner";
 
 import useStyles from "./styles";
 
-const VideoCard = ({ title, thumbnail, type, tags, publishedAt }) => {
+const durationFormat = (duration) => {
+  if (duration < 3600) {
+    return moment("2015-01-01").startOf("day").seconds(duration).format("m:ss");
+  } else
+    return moment("2015-01-01")
+      .startOf("day")
+      .seconds(duration)
+      .format("H:mm:ss");
+};
+
+const VideoCard = ({ title, thumbnail, type, tags, publishedAt, duration }) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <VideoCardCorner type={type} />
       <CardActionArea>
-        <CardMedia
-          component="img"
-          alt="videoThumb"
-          height="169"
-          image={thumbnail}
-          title="videoThumb"
-        />
+        <Box position="relative">
+          <CardMedia
+            component="img"
+            alt="videoThumb"
+            height="169"
+            image={thumbnail}
+            title="videoThumb"
+            className={classes.cardMedia}
+          />
+          <Box
+            position="absolute"
+            className={classes.duration}
+            bottom={0}
+            right={0}
+            color="white"
+            bgcolor="black"
+            padding="2px"
+          >
+            {durationFormat(duration)}
+          </Box>
+        </Box>
         <CardContent className={classes.content}>
           <Typography
             gutterBottom

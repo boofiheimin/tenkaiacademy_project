@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 300,
-    height: 350,
     position: "relative",
   },
 
@@ -23,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     height: 110,
+  },
+  cardMedia: {
+    position: "relative",
   },
 }));
 

@@ -35,6 +35,10 @@ export default {
         { id: 3, name: "Endurance" },
       ],
     },
+    duration: {
+      defaultValue: 5400,
+      control: { type: "number" },
+    },
   },
 };
 
