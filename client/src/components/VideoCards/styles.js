@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 300,
+    width: 300,
     position: "relative",
   },
 
@@ -25,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
   },
   cardMedia: {
     position: "relative",
+  },
+  grid: {
+    [theme.breakpoints.up("lg")]: {
+      maxWidth: "20%",
+      flexBasis: "20%",
+    },
   },
 }));
 

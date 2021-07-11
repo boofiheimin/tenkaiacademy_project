@@ -1,28 +1,38 @@
-import { Container, Grid, CssBaseline } from "@material-ui/core";
+import { CircularProgress, Box } from "@material-ui/core";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import VideoCard from "./VideoCard";
 
-const VideoCards = ({ videos }) => {
+const VideoCards = ({ videos, hasMore, fetchMore }) => {
   return (
     <div>
-      <CssBaseline />
-      <Container>
-        <Grid container spacing={4}>
+      <InfiniteScroll
+        style={{ overflow: "hidden" }}
+        dataLength={videos.length}
+        next={fetchMore}
+        hasMore={hasMore}
+        loader={<CircularProgress />}
+      >
+        <Box
+          display="grid"
+          alignItems="center"
+          gridTemplateColumns="repeat(auto-fit, 300px)"
+          gridGap="10px"
+        >
           {videos.map(
             ({ title, thumbnail, tags, type, publishedAt, duration }, i) => (
-              <Grid item key={i} xs={12} sm={6} md={4} lg={3}>
-                <VideoCard
-                  title={title}
-                  thumbnail={thumbnail}
-                  tags={tags}
-                  type={type}
-                  publishedAt={publishedAt}
-                  duration={duration}
-                />
-              </Grid>
+              <VideoCard
+                title={title}
+                thumbnail={thumbnail}
+                tags={tags}
+                type={type}
+                publishedAt={publishedAt}
+                duration={duration}
+              />
             )
           )}
-        </Grid>
-      </Container>
+        </Box>
+      </InfiniteScroll>
     </div>
   );
 };

@@ -35,8 +35,6 @@ const DrawerItems = (classes) => {
           primary={"Streams"}
           icon={<VideoLibraryIcon />}
         />
-
-        <ListItemLink to="/clips" primary={"Clips"} icon={<TheatersIcon />} />
       </List>
     </div>
   );

@@ -1,7 +1,13 @@
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LandingRoute = () => {
-  return <div> LAND </div>;
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/streams");
+  }, [navigate]);
+
+  return <div>Landing</div>;
 };
 
 export default LandingRoute;

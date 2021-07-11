@@ -1,19 +1,23 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getStreams } from "../../actions/StreamsActions";
+import { getStreams, getMoreStreams } from "../../actions/StreamsActions";
 
 import Streams from "../../components/Streams/Streams";
 
 const StreamsRoute = () => {
   const dispatch = useDispatch();
-  const streams = useSelector((state) => state.streams);
+  const { streams, offset, hasMore } = useSelector((state) => state.streams);
 
   useEffect(() => {
-    dispatch(getStreams({}, 20, 0));
+    dispatch(getStreams({}));
   }, [dispatch]);
 
-  return <Streams videos={streams} />;
+  const fetchMore = () => {
+    dispatch(getMoreStreams({}, offset));
+  };
+
+  return <Streams videos={streams} hasMore={hasMore} fetchMore={fetchMore} />;
 };
 
 export default StreamsRoute;
