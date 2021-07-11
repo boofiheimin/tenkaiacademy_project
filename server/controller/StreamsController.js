@@ -3,10 +3,10 @@ import moment from "moment";
 
 import Stream from "../models/Stream.js";
 
-import { KANATA_CHANNEL_ID } from "../constants/main";
+import { KANATA_CHANNEL_ID } from "../constants/main.js";
 
 export const getStreams = async (req, res) => {
-  const { query = {}, offset, limit } = req.body;
+  const { query, offset, limit } = req.query;
 
   const paginateOptions = {
     ...(offset && { offset }),
@@ -14,7 +14,7 @@ export const getStreams = async (req, res) => {
   };
 
   try {
-    const streams = await Stream.paginate(query, paginateOptions);
+    const streams = await Stream.paginate(JSON.parse(query), paginateOptions);
     res.status(200).json(streams);
   } catch (error) {
     res.status(404).json({ message: error.message });
