@@ -9,7 +9,8 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export const fetchStreams = (queryData) => API.get("/streams", queryData);
+export const fetchStreams = (queryData) =>
+  API.get("/streams", { params: { ...queryData } });
 
 export const logIn = (formData) => API.post("/auth/login", formData);
 export const logOut = () => API.post("/auth/logout");

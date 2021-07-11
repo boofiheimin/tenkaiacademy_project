@@ -1,10 +1,22 @@
-import { useSelector } from "react-redux";
-const Streams = () => {
-  const streams = useSelector((state) => state.streams);
+import { Container, Typography } from "@material-ui/core";
 
-  console.log(streams);
+import VideoCards from "../VideoCards/VideoCards";
 
-  return <h1> Streams here </h1>;
+const Streams = ({ videos }) => {
+  return (
+    <div>
+      <Container>
+        <Typography variant="h3" align="left" color="textPrimary" gutterBottom>
+          Streams Library
+        </Typography>
+        <Typography variant="h6" align="left" color="textSecondary" paragraph>
+          At Tenkai Academy, We pride ourselves in our collection of adventures
+          from our dear angel!
+        </Typography>
+      </Container>
+      <VideoCards videos={videos} />
+    </div>
+  );
 };
 
 export default Streams;
