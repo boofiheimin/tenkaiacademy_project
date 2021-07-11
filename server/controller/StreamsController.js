@@ -1,12 +1,12 @@
 import Stream from "../models/Stream.js";
 
 export const getStreams = async (req, res) => {
-  const { query, offset, limit } = req.query;
+  const { query, offset, limit, sort = "-publishedAt" } = req.query;
 
   const paginateOptions = {
     ...(offset && { offset }),
     ...(limit && { limit }),
-    sort: "-publishedAt",
+    ...(sort && { sort }),
   };
 
   try {
