@@ -11,7 +11,7 @@ import { LockOutlined } from "@material-ui/icons";
 
 import useStyles from "./styles";
 
-const LoginForm = ({ onFormChange, onFormSubmit }) => {
+const LoginForm = ({ onFormChange, onFormSubmit, error }) => {
   const classes = useStyles();
   return (
     <div className={classes.background}>
@@ -35,7 +35,9 @@ const LoginForm = ({ onFormChange, onFormSubmit }) => {
               name="username"
               autoComplete="username"
               autoFocus
+              error={error}
               onChange={onFormChange}
+              helperText={error ? "Invalid Credentials" : null}
             />
             <TextField
               variant="outlined"
@@ -47,6 +49,7 @@ const LoginForm = ({ onFormChange, onFormSubmit }) => {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={error}
               onChange={onFormChange}
             />
             <Button

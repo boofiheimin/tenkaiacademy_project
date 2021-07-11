@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../actions/AuthActions";
 
@@ -9,6 +9,7 @@ const LoginRoute = () => {
   const [formData, setFormData] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
@@ -25,7 +26,13 @@ const LoginRoute = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  return <LoginForm onFormSubmit={handleSubmit} onFormChange={handleChange} />;
+  return (
+    <LoginForm
+      onFormSubmit={handleSubmit}
+      onFormChange={handleChange}
+      error={auth.isError}
+    />
+  );
 };
 
 export default LoginRoute;

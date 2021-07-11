@@ -1,14 +1,17 @@
-import { AUTH, LOGOUT } from "../constants/actionTypes";
+import { AUTH, LOGOUT, AUTH_ERROR } from "../constants/actionTypes";
 
 const reducer = (state = { user: null, isLogin: false }, action) => {
   switch (action.type) {
     case AUTH:
       localStorage.setItem("authToken", action.data.token);
       console.log({ ...state, user: action?.data?.user });
-      return { ...state, user: action?.data?.user };
+      return { ...state, user: action?.data?.user, isError: false };
+    case AUTH_ERROR:
+      localStorage.clear();
+      return { ...state, user: null, isError: true };
     case LOGOUT:
       localStorage.clear();
-      return { ...state, user: null };
+      return { ...state, user: null, isError: false };
     default:
       return state;
   }

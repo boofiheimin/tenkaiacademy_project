@@ -1,6 +1,6 @@
 import * as api from "../api/index.js";
 
-import { AUTH, LOGOUT } from "../constants/actionTypes";
+import { AUTH, LOGOUT, AUTH_ERROR } from "../constants/actionTypes";
 
 export const login = (formData, navigate) => async (dispatch) => {
   try {
@@ -8,7 +8,9 @@ export const login = (formData, navigate) => async (dispatch) => {
     dispatch({ type: AUTH, data });
     navigate("/");
   } catch (err) {
-    console.log(err);
+    if (err.response.status === 401) {
+      dispatch({ type: AUTH_ERROR });
+    }
   }
 };
 
@@ -19,6 +21,7 @@ export const logout = (navigate) => async (dispatch) => {
     navigate("/");
   } catch (err) {
     console.log(err);
+    dispatch({ type: AUTH_ERROR });
   }
 };
 
