@@ -2,8 +2,6 @@ import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import useStyles from "./styles";
-
 import { Outlet } from "react-router-dom";
 import {
   Drawer,
@@ -19,7 +17,7 @@ import {
 } from "@material-ui/core";
 
 import DrawerItems from "./DrawerItems";
-import { Fragment } from "react";
+import useStyles from "./styles";
 
 const Nav = ({
   open,
@@ -65,12 +63,12 @@ const Nav = ({
             Tenkai Academy Project
           </Typography>
           {isLogin && (
-            <Fragment>
+            <>
               <Typography className={classes.username}>{username}</Typography>
               <Button color="secondary" variant="contained" onClick={onLogout}>
                 Logout
               </Button>
-            </Fragment>
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -84,7 +82,7 @@ const Nav = ({
           open={open}
         >
           <Toolbar />
-          {<DrawerItems classes={classes} />}
+          <DrawerItems classes={classes} />
         </Drawer>
       ) : (
         <Drawer
@@ -99,7 +97,7 @@ const Nav = ({
             keepMounted: true,
           }}
         >
-          {<DrawerItems classes={classes} />}
+          <DrawerItems classes={classes} />
         </Drawer>
       )}
 

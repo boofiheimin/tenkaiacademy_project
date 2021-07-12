@@ -1,7 +1,3 @@
-import React from "react";
-
-const ClipsRoute = () => {
-  return <div>CLIPS</div>;
-};
+const ClipsRoute = () => <div>CLIPS</div>;
 
 export default ClipsRoute;

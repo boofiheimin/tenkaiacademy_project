@@ -48,9 +48,9 @@ const VideoCardCorner = ({ type }) => {
       zIndex="1"
       bgcolor={color}
       padding={1}
-      lineHeight={"8px"}
+      lineHeight="8px"
       right={0}
-      borderRadius={"0 0 0 4px"}
+      borderRadius="0 0 0 4px"
     >
       {icon}
     </Box>

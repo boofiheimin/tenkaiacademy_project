@@ -1,7 +1,3 @@
-import React from "react";
-
-const StreamEdit = () => {
-  return <div>hi</div>;
-};
+const StreamEdit = () => <div>hi</div>;
 
 export default StreamEdit;

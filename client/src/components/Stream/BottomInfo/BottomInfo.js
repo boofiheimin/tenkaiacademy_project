@@ -13,15 +13,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import useStyles from "./styles";
 
-const DetailContent = (classes, publishedAt) => {
-  return (
-    <Box>
-      <Typography
-        className={classes.publishedAt}
-      >{`Published at ${publishedAt}`}</Typography>
-    </Box>
-  );
-};
+const DetailContent = ({ publishedAtBox }, publishedAt) => (
+  <Box>
+    <Typography
+      className={publishedAtBox}
+    >{`Published at ${publishedAt}`}</Typography>
+  </Box>
+);
 
 const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
   const theme = useTheme();
@@ -83,7 +81,7 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
               <Typography>Timestamp</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography></Typography>
+              <Typography />
             </AccordionDetails>
           </Accordion>
           <Accordion expanded={clipAcc} onChange={clipAccordionControl}>
@@ -95,7 +93,7 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
               <Typography>Clips</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography></Typography>
+              <Typography />
             </AccordionDetails>
           </Accordion>
         </div>

@@ -1,4 +1,4 @@
-import { VideoCardStory } from "./VideoCardStory";
+import VideoCardStory from "./VideoCardStory";
 
 import {
   GAME,

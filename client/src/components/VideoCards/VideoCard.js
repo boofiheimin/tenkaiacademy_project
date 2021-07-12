@@ -19,11 +19,11 @@ import useStyles from "./styles";
 const durationFormat = (duration) => {
   if (duration < 3600) {
     return moment("2015-01-01").startOf("day").seconds(duration).format("m:ss");
-  } else
-    return moment("2015-01-01")
-      .startOf("day")
-      .seconds(duration)
-      .format("H:mm:ss");
+  }
+  return moment("2015-01-01")
+    .startOf("day")
+    .seconds(duration)
+    .format("H:mm:ss");
 };
 
 const VideoCard = ({
@@ -77,8 +77,8 @@ const VideoCard = ({
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.cardActions}>
-        {tags.slice(0, 2).map(({ name }, i) => (
-          <Chip label={name} key={i} />
+        {tags.slice(0, 2).map(({ id: tagId, name }) => (
+          <Chip label={name} key={tagId} />
         ))}
       </CardActions>
     </Card>

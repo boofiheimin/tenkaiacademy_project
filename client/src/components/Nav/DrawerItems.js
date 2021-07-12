@@ -25,18 +25,16 @@ const ListItemLink = ({ disabled = false, icon, primary, to }) => {
   );
 };
 
-const DrawerItems = (classes) => {
-  return (
-    <div className={classes.listRoot}>
-      <List>
-        <ListItemLink
-          to="/streams"
-          primary={"Streams"}
-          icon={<VideoLibraryIcon />}
-        />
-      </List>
-    </div>
-  );
-};
+const DrawerItems = ({ listRoot }) => (
+  <div className={listRoot}>
+    <List>
+      <ListItemLink
+        to="/streams"
+        primary="Streams"
+        icon={<VideoLibraryIcon />}
+      />
+    </List>
+  </div>
+);
 
 export default DrawerItems;
