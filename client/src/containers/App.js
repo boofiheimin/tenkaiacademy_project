@@ -9,7 +9,8 @@ import Nav from "./Nav/NavContainer";
 import Login from "./Login/LoginContainer";
 import Landing from "./Landing/LandingContainer";
 import Streams from "./Streams/StreamsContainer";
-import Stream from "./Streams/StreamContainer";
+import Stream from "./Stream/StreamContainer";
+import StreamEdit from "./StreamEdit/StreamEditContainer";
 import Clips from "./Clips/ClipsContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
@@ -28,7 +29,8 @@ const App = () => {
           <Route path="/" element={<Landing />} />
           <Route path="streams">
             <Route path="/" element={<Streams />} />
-            <Route path="/:videoId" element={<Stream />} />
+            <Route path="/:id" element={<Stream />} />
+            <Route path="/:id/edit" element={<StreamEdit />} />
           </Route>
           <Route path="clips" element={<Clips />} />
         </Route>

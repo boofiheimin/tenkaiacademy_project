@@ -1,18 +1,18 @@
-import { Typography } from "@material-ui/core";
+import { Typography, Box, Container } from "@material-ui/core";
 
 import VideoCards from "../VideoCards/VideoCards";
 
+import useStyles from "./styles";
+
 const Streams = (props) => {
+  const classes = useStyles();
   return (
     <div>
-      <Typography variant="h3" align="left" color="textPrimary" gutterBottom>
-        Streams Library
-      </Typography>
-      <Typography variant="h6" align="left" color="textSecondary" paragraph>
-        At Tenkai Academy, We pride ourselves in our collection of adventures
-        from our dear angel!
-      </Typography>
-
+      <Box padding={3}>
+        <Typography variant="h5" align="left" color="textPrimary" gutterBottom>
+          Search form
+        </Typography>
+      </Box>
       <VideoCards {...props} />
     </div>
   );

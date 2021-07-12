@@ -22,7 +22,7 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => {
         >
           {videos.map(
             (
-              { title, thumbnail, tags, type, publishedAt, duration, videoId },
+              { title, thumbnail, tags, type, publishedAt, duration, _id },
               i
             ) => (
               <VideoCard
@@ -32,7 +32,7 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => {
                 type={type}
                 publishedAt={publishedAt}
                 duration={duration}
-                videoId={videoId}
+                id={_id}
                 key={i}
               />
             )

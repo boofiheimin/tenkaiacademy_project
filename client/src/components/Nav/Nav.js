@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import useStyles from "./style";
+import useStyles from "./styles";
 
 import { Outlet } from "react-router-dom";
 import {
@@ -109,7 +109,9 @@ const Nav = ({
         })}
       >
         <div className={classes.drawerHeader} />
-        <Outlet />
+        <div className={classes.outlet}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    background: "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -55,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     height: "100vh",
-    padding: theme.spacing(3),
+    display: "flex",
+    flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
@@ -73,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
   listRoot: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
+  },
+  outlet: {
+    flexGrow: 1,
   },
 }));
 

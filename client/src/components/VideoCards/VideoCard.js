@@ -33,14 +33,14 @@ const VideoCard = ({
   tags,
   publishedAt,
   duration,
-  videoId,
+  id,
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   return (
     <Card className={classes.root}>
       <VideoCardCorner type={type} />
-      <CardActionArea onClick={() => navigate(`/streams/${videoId}`)}>
+      <CardActionArea onClick={() => navigate(`/streams/${id}`)}>
         <Box position="relative">
           <CardMedia
             component="img"

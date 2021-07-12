@@ -4,7 +4,6 @@ const reducer = (state = { user: null, isLogin: false }, action) => {
   switch (action.type) {
     case AUTH:
       localStorage.setItem("authToken", action.data.token);
-      console.log({ ...state, user: action?.data?.user });
       return { ...state, user: action?.data?.user, isError: false };
     case AUTH_ERROR:
       localStorage.clear();
