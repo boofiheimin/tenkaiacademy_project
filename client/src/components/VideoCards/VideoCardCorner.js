@@ -1,3 +1,4 @@
+import Proptypes from "prop-types";
 import { Box } from "@material-ui/core";
 
 import {
@@ -55,6 +56,14 @@ const VideoCardCorner = ({ type }) => {
       {icon}
     </Box>
   );
+};
+
+VideoCardCorner.propTypes = {
+  type: Proptypes.number,
+};
+
+VideoCardCorner.defaultProps = {
+  type: 0,
 };
 
 export default VideoCardCorner;

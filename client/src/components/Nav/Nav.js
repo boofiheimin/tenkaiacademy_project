@@ -1,3 +1,4 @@
+import Proptypes from "prop-types";
 import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -115,6 +116,18 @@ const Nav = ({
   );
 };
 
-Nav.propTypes = {};
+Nav.propTypes = {
+  open: Proptypes.bool.isRequired,
+  openMobile: Proptypes.bool.isRequired,
+  handleDrawerToggle: Proptypes.func.isRequired,
+  handleDrawerToggleMobile: Proptypes.func.isRequired,
+  onLogout: Proptypes.func.isRequired,
+  isLogin: Proptypes.string.isRequired,
+  username: Proptypes.string,
+};
+
+Nav.defaultProps = {
+  username: "",
+};
 
 export default Nav;

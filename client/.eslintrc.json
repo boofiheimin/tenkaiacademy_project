@@ -5,6 +5,8 @@
     "rules": {
       "prettier/prettier": "error",
       "no-unused-vars": "warn",
+      "react/prop-types": "warn",
+      "react/forbid-prop-types": "off",
       "no-console": "off",
       "func-names": "off",
       "no-process-exit": "off",

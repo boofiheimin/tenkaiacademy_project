@@ -1,3 +1,4 @@
+import Proptypes from "prop-types";
 import { CircularProgress, Box } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -20,7 +21,7 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => (
         justifyContent="center"
       >
         {videos.map(
-          ({ title, thumbnail, tags, type, publishedAt, duration, _id }, i) => (
+          ({ title, thumbnail, tags, type, publishedAt, duration, _id }) => (
             <VideoCard
               title={title}
               thumbnail={thumbnail}
@@ -37,5 +38,15 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => (
     </InfiniteScroll>
   </div>
 );
+
+VideoCards.propTypes = {
+  videos: Proptypes.array,
+  hasMore: Proptypes.bool.isRequired,
+  fetchMore: Proptypes.func.isRequired,
+};
+
+VideoCards.defaultProps = {
+  videos: [],
+};
 
 export default VideoCards;

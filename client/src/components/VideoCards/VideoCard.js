@@ -1,3 +1,5 @@
+import Proptypes from "prop-types";
+
 import {
   Typography,
   Card,
@@ -26,17 +28,12 @@ const durationFormat = (duration) => {
     .format("H:mm:ss");
 };
 
-const VideoCard = ({
-  title,
-  thumbnail,
-  type,
-  tags,
-  publishedAt,
-  duration,
-  id,
-}) => {
+const VideoCard = ({ title, thumbnail, tags, publishedAt, duration, id }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+
+  const type = tags[0]?.tagId;
+
   return (
     <Card className={classes.root}>
       <VideoCardCorner type={type} />
@@ -83,6 +80,15 @@ const VideoCard = ({
       </CardActions>
     </Card>
   );
+};
+
+VideoCard.propTypes = {
+  title: Proptypes.string.isRequired,
+  thumbnail: Proptypes.string.isRequired,
+  tags: Proptypes.array.isRequired,
+  publishedAt: Proptypes.string.isRequired,
+  duration: Proptypes.number.isRequired,
+  id: Proptypes.string.isRequired,
 };
 
 export default VideoCard;

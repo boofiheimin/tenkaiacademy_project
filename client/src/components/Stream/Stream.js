@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import Proptypes from "prop-types";
+
 import {
   Box,
   Grid,
@@ -37,6 +39,12 @@ const TabPanel = ({ children, value, index, ...other }) => (
   </div>
 );
 
+TabPanel.propTypes = {
+  children: Proptypes.string.isRequired,
+  value: Proptypes.number.isRequired,
+  index: Proptypes.number.isRequired,
+};
+
 const Stream = ({
   stream = {},
   clipAcc,
@@ -49,11 +57,13 @@ const Stream = ({
 }) => {
   const classes = useStyles();
 
-  const { videoId, title, tags, publishedAt } = stream;
+  const { videoId, title, publishedAt } = stream;
 
   useEffect(() => {
     fitvids();
   }, []);
+
+  console.log(stream);
 
   return (
     <Container className={classes.root}>
@@ -150,6 +160,21 @@ const Stream = ({
       </Box>
     </Container>
   );
+};
+
+Stream.propTypes = {
+  stream: Proptypes.object,
+  clipAcc: Proptypes.bool.isRequired,
+  clipAccordionControl: Proptypes.func.isRequired,
+  tabStatus: Proptypes.number.isRequired,
+  tabControl: Proptypes.func.isRequired,
+  goBack: Proptypes.func.isRequired,
+  isLogin: Proptypes.string.isRequired,
+  goEdit: Proptypes.func.isRequired,
+};
+
+Stream.defaultProps = {
+  stream: {},
 };
 
 export default Stream;

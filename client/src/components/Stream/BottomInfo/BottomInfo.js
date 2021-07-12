@@ -1,3 +1,4 @@
+import Proptypes from "prop-types";
 import {
   Grid,
   Box,
@@ -13,13 +14,18 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import useStyles from "./styles";
 
-const DetailContent = ({ publishedAtBox }, publishedAt) => (
+const DetailContent = ({ publishedAtBox, publishedAt }) => (
   <Box>
     <Typography
       className={publishedAtBox}
     >{`Published at ${publishedAt}`}</Typography>
   </Box>
 );
+
+DetailContent.propTypes = {
+  publishedAtBox: Proptypes.string.isRequired,
+  publishedAt: Proptypes.string.isRequired,
+};
 
 const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
   const theme = useTheme();
@@ -35,7 +41,10 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
                 <Box className={classes.header}>
                   <Typography>Detail</Typography>
                 </Box>
-                {DetailContent(classes, publishedAt)}
+                <DetailContent
+                  publishedAt={publishedAt}
+                  publishedAtBox={classes.publishedAtBox}
+                />
               </Card>
             </Box>
           </Grid>
@@ -100,6 +109,12 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
       )}
     </div>
   );
+};
+
+BottomInfo.propTypes = {
+  publishedAt: Proptypes.string.isRequired,
+  clipAcc: Proptypes.bool.isRequired,
+  clipAccordionControl: Proptypes.func.isRequired,
 };
 
 export default BottomInfo;
