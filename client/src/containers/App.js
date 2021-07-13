@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { authen } from "../actions/AuthActions";
+import PrivateRoute from "./Routing/PrivateRoute";
 
 import Nav from "./Nav/NavContainer";
-
 import Login from "./Login/LoginContainer";
 import Landing from "./Landing/LandingContainer";
 import Streams from "./Streams/StreamsContainer";
@@ -30,7 +30,11 @@ const App = () => {
           <Route path="streams">
             <Route path="/" element={<Streams />} />
             <Route path="/:id" element={<Stream />} />
-            <Route path="/:id/edit" element={<StreamEdit />} />
+            <PrivateRoute
+              path="/:id/edit"
+              element={<StreamEdit />}
+              isLogin={localStorage.getItem("authToken")}
+            />
           </Route>
           <Route path="clips" element={<Clips />} />
         </Route>
