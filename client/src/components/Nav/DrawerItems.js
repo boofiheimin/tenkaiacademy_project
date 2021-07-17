@@ -1,8 +1,15 @@
 import { useMemo, forwardRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import Proptypes from "prop-types";
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@material-ui/core";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+import LabelIcon from "@material-ui/icons/Label";
 
 import useStyles from "./styles";
 
@@ -52,6 +59,14 @@ const DrawerItems = () => {
           icon={<VideoLibraryIcon />}
         />
       </List>
+      {localStorage.getItem("authToken") && (
+        <>
+          <Divider />
+          <List>
+            <ListItemLink to="/tags" primary="Tags" icon={<LabelIcon />} />
+          </List>
+        </>
+      )}
     </div>
   );
 };

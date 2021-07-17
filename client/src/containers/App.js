@@ -13,6 +13,7 @@ import Streams from "./Streams/StreamsContainer";
 import Stream from "./Stream/StreamContainer";
 import StreamEdit from "./StreamEdit/StreamEditContainer";
 import Clips from "./Clips/ClipsContainer";
+import Tags from "./Tags/TagsContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
 const theme = createTheme({
@@ -41,6 +42,7 @@ const App = () => {
               <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
             </Route>
             <Route path="clips" element={<Clips />} />
+            <PrivateRoute path="tags" element={<Tags />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

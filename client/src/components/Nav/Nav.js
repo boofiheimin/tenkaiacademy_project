@@ -1,4 +1,4 @@
-import { useRef, createContext } from "react";
+import { useRef } from "react";
 import Proptypes from "prop-types";
 import clsx from "clsx";
 
@@ -37,9 +37,6 @@ const Nav = ({
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
-
-  OutletContext = createContext(outletRef);
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -116,9 +113,7 @@ const Nav = ({
       >
         <div className={classes.drawerHeader} />
         <div className={classes.outlet} id="scrollableDiv">
-          <OutletContext.Provider>
-            <Outlet outletRef={outletRef} />
-          </OutletContext.Provider>
+          <Outlet outletRef={outletRef} />
         </div>
       </main>
     </div>
