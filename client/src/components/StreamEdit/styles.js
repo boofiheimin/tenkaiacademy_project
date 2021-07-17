@@ -68,6 +68,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: theme.spacing(2),
   },
+  infoInputContainer: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+  },
+  infoInput: {
+    width: "100%",
+  },
 }));
 
 export default useStyles;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Proptypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { Typography } from "@material-ui/core";
 
 import Draggable from "./Draggable/Draggable";
 import AddForm from "./AddForm/AddForm";

@@ -10,14 +10,29 @@ import {
   Button,
   Divider,
   TextareaAutosize,
+  TextField,
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
+import Timestamp from "./Timestamp/Timestamp";
 
 import useStyles from "./styles";
 
-const StreamEdit = ({ stream, goBack, formData, onSubmit }) => {
-  const { title, thumbnail } = stream;
+const StreamEdit = ({
+  stream,
+  goBack,
+  formData,
+  onSubmit,
+  onTitleChange,
+  onDurationChange,
+  onPublishedChange,
+}) => {
+  const { title, thumbnail, _id, videoId, duration, publishedAt } = stream;
   const { relatedVideos } = formData;
   const classes = useStyles();
   return (
@@ -29,37 +44,7 @@ const StreamEdit = ({ stream, goBack, formData, onSubmit }) => {
           </IconButton>
           <Typography variant="h5">Edit Form</Typography>
         </Box>
-        <Grid container>
-          <Grid item md={6} xs={12} className={classes.gridContainer}>
-            <img
-              className={clsx(classes.thumbnail, classes.segmentContainer)}
-              src={thumbnail}
-              alt="vidthumb"
-            />
-          </Grid>
-          <Grid item md={6} xs={12} className={classes.gridContainer}>
-            <Card className={classes.segmentContainer}>
-              <div className={classes.cardHeader}>
-                <Typography className={classes.vidInfo} variant="h6">
-                  Video Information
-                </Typography>
-                <Button className={classes.refetchButton} variant="contained">
-                  <i className={clsx("fas fa-sync-alt", classes.refetchIcon)} />
-                  Refetch
-                </Button>
-              </div>
-              <Divider />
-              <Box padding={2}>
-                <Typography>id: id</Typography>
-                <Typography>videoId: title</Typography>
-                <Typography>title: title</Typography>
-                <Typography>duration: title</Typography>
-                <Typography>uploader: title</Typography>
-                <Typography>publisedAt: title</Typography>
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
+
         <form onSubmit={onSubmit}>
           <div className={classes.formController}>
             <Button
@@ -79,16 +64,74 @@ const StreamEdit = ({ stream, goBack, formData, onSubmit }) => {
           </div>
           <Grid container>
             <Grid item md={6} xs={12} className={classes.gridContainer}>
+              <img
+                className={clsx(classes.thumbnail, classes.segmentContainer)}
+                src={thumbnail}
+                alt="vidthumb"
+              />
+            </Grid>
+            <Grid item md={6} xs={12} className={classes.gridContainer}>
+              <Card className={classes.segmentContainer}>
+                <div className={classes.cardHeader}>
+                  <Typography className={classes.vidInfo} variant="h6">
+                    Video Information
+                  </Typography>
+                  <Button className={classes.refetchButton} variant="contained">
+                    <i
+                      className={clsx("fas fa-sync-alt", classes.refetchIcon)}
+                    />
+                    Refetch
+                  </Button>
+                </div>
+                <Divider />
+                <Box padding={2}>
+                  <Typography>id: {_id}</Typography>
+                  <Typography>videoId: {videoId}</Typography>
+                  <div className={classes.infoInputContainer}>
+                    <Typography>title:&nbsp;</Typography>
+                    <TextField
+                      value={title}
+                      className={classes.infoInput}
+                      onChange={onTitleChange}
+                    />
+                  </div>
+                  <div className={classes.infoInputContainer}>
+                    <Typography>duration:&nbsp;</Typography>
+                    <TextField value={duration} onChange={onDurationChange} />
+                  </div>
+                  <div className={classes.infoInputContainer}>
+                    <Typography>uploader:&nbsp;</Typography>
+                    <TextField className={classes.infoInput} />
+                  </div>
+                  <div className={classes.infoInputContainer}>
+                    <Typography>publisedAt:&nbsp;</Typography>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        id="date-picker-inline"
+                        value={publishedAt}
+                        onChange={onPublishedChange}
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                      />
+                    </MuiPickersUtilsProvider>
+                  </div>
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item md={6} xs={12} className={classes.gridContainer}>
               <Card className={classes.segmentContainer}>
                 <div className={classes.cardHeader}>
                   <Typography variant="h6">Tag Manager</Typography>
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  <DragAndDrop
-                    items={relatedVideos}
-                    addItemLabel="Add main tags"
-                  />
+                  <DragAndDrop items={relatedVideos} addItemLabel="Add tags" />
                 </div>
               </Card>
             </Grid>
@@ -141,6 +184,9 @@ const StreamEdit = ({ stream, goBack, formData, onSubmit }) => {
                   <Typography variant="h6">Timestamp</Typography>
                 </div>
                 <Divider />
+                <div className={classes.dndContainer}>
+                  <Timestamp />
+                </div>
               </Card>
             </Grid>
           </Grid>
@@ -155,11 +201,17 @@ StreamEdit.propTypes = {
   goBack: Proptypes.func.isRequired,
   onSubmit: Proptypes.func.isRequired,
   formData: Proptypes.object,
+  onTitleChange: Proptypes.func,
+  onDurationChange: Proptypes.func,
+  onPublishedChange: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
   stream: {},
   formData: {},
+  onTitleChange: () => {},
+  onDurationChange: () => {},
+  onPublishedChange: () => {},
 };
 
 export default StreamEdit;

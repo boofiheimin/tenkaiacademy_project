@@ -44,6 +44,7 @@ VideoCards.propTypes = {
   videos: Proptypes.array,
   hasMore: Proptypes.bool.isRequired,
   fetchMore: Proptypes.func.isRequired,
+  onVideoCardClick: Proptypes.func.isRequired,
 };
 
 VideoCards.defaultProps = {
