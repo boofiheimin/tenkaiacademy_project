@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import VideoCard from "./VideoCard";
 
-const VideoCards = ({ videos, hasMore, fetchMore }) => (
+const VideoCards = ({ videos, hasMore, fetchMore, onVideoCardClick }) => (
   <div>
     <InfiniteScroll
       style={{ overflow: "hidden" }}
@@ -31,6 +31,7 @@ const VideoCards = ({ videos, hasMore, fetchMore }) => (
               duration={duration}
               id={_id}
               key={_id}
+              onVideoCardClick={onVideoCardClick}
             />
           )
         )}

@@ -19,7 +19,11 @@ const StreamEditContainer = () => {
     navigate(`/streams/${id}`);
   };
 
-  return <StreamEdit stream={stream} goBack={goBack} />;
+  const onSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  return <StreamEdit stream={stream} goBack={goBack} onSubmit={onSubmit} />;
 };
 
 export default StreamEditContainer;

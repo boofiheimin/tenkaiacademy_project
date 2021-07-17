@@ -30,11 +30,7 @@ const App = () => {
           <Route path="streams">
             <Route path="/" element={<Streams />} />
             <Route path="/:id" element={<Stream />} />
-            <PrivateRoute
-              path="/:id/edit"
-              element={<StreamEdit />}
-              isLogin={localStorage.getItem("authToken")}
-            />
+            <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
           </Route>
           <Route path="clips" element={<Clips />} />
         </Route>

@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 import reducers from "./reducers";
 
 import App from "./containers/App";
+import "@fortawesome/fontawesome-free/js/all";
 
 const store = createStore(
   reducers,
