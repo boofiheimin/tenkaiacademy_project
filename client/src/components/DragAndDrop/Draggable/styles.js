@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     backgroundColor: isDragging ? "lightblue" : "white",
     userSelect: "none",
+    position: "relative",
     ...draggableStyle,
   }),
   icon: { marginRight: theme.spacing(1) },
@@ -16,6 +17,14 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
     height: 90,
     marginRight: theme.spacing(1),
+    flexShrink: 0,
+  },
+  cancel: {},
+  text: {
+    flexGrow: 1,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
 }));
 

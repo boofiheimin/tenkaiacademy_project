@@ -63,6 +63,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     resize: "none",
   },
+  dndContainer: {
+    display: "flex",
+    justifyContent: "center",
+    padding: theme.spacing(2),
+  },
 }));
 
 export default useStyles;

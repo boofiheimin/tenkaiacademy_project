@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
 import { authen } from "../actions/AuthActions";
 import PrivateRoute from "./Routing/PrivateRoute";
@@ -14,6 +15,12 @@ import StreamEdit from "./StreamEdit/StreamEditContainer";
 import Clips from "./Clips/ClipsContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
+const theme = createTheme({
+  typography: {
+    fontFamily: ["Rubik", "sans-serif"].join(","),
+  },
+});
+
 const App = () => {
   const dispatch = useDispatch();
 
@@ -22,21 +29,23 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="" element={<Nav />}>
-          <Route path="/" element={<Landing />} />
-          <Route path="streams">
-            <Route path="/" element={<Streams />} />
-            <Route path="/:id" element={<Stream />} />
-            <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="" element={<Nav />}>
+            <Route path="/" element={<Landing />} />
+            <Route path="streams">
+              <Route path="/" element={<Streams />} />
+              <Route path="/:id" element={<Stream />} />
+              <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
+            </Route>
+            <Route path="clips" element={<Clips />} />
           </Route>
-          <Route path="clips" element={<Clips />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

@@ -1,11 +1,11 @@
 import Proptypes from "prop-types";
 import clsx from "clsx";
-import { Typography } from "@material-ui/core";
+import { Typography, IconButton } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
-
+import CancelIcon from "@material-ui/icons/Cancel";
 import useStyles from "./styles";
 
-const CustomDraggable = ({ item: { id, text, img }, index }) => (
+const CustomDraggable = ({ item: { id, text, img }, index, onRemove }) => (
   <Draggable draggableId={id} index={index}>
     {(provided, { isDragging, draggableStyle }) => {
       const classes = useStyles({ isDragging, draggableStyle });
@@ -18,7 +18,10 @@ const CustomDraggable = ({ item: { id, text, img }, index }) => (
           <div className={classes.listContainer}>
             <i className={clsx("fas fa-bars", classes.icon)} />
             {img && <img src={img} alt="listimg" className={classes.img} />}
-            <Typography>{text}</Typography>
+            <Typography className={classes.text}>{text}</Typography>
+            <IconButton className={classes.cancel} onClick={() => onRemove(id)}>
+              <CancelIcon />
+            </IconButton>
           </div>
         </div>
       );
@@ -32,6 +35,8 @@ CustomDraggable.propTypes = {
     text: Proptypes.string.isRequired,
     img: Proptypes.string,
   }),
+  index: Proptypes.number.isRequired,
+  onRemove: Proptypes.func,
 };
 
 CustomDraggable.defaultProps = {
@@ -40,6 +45,7 @@ CustomDraggable.defaultProps = {
     text: "",
     img: "",
   },
+  onRemove: () => {},
 };
 
 export default CustomDraggable;

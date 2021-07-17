@@ -12,11 +12,13 @@ import {
   TextareaAutosize,
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import DragAndDrop from "../DragAndDrop/DragAndDrop";
 
 import useStyles from "./styles";
 
-const StreamEdit = ({ stream, goBack, onSubmit }) => {
+const StreamEdit = ({ stream, goBack, formData, onSubmit }) => {
   const { title, thumbnail } = stream;
+  const { relatedVideos } = formData;
   const classes = useStyles();
   return (
     <Container>
@@ -82,6 +84,12 @@ const StreamEdit = ({ stream, goBack, onSubmit }) => {
                   <Typography variant="h6">Tag Manager</Typography>
                 </div>
                 <Divider />
+                <div className={classes.dndContainer}>
+                  <DragAndDrop
+                    items={relatedVideos}
+                    addItemLabel="Add main tags"
+                  />
+                </div>
               </Card>
             </Grid>
             <Grid item md={6} xs={12} className={classes.gridContainer}>
@@ -103,6 +111,12 @@ const StreamEdit = ({ stream, goBack, onSubmit }) => {
                   <Typography variant="h6">Related Videos</Typography>
                 </div>
                 <Divider />
+                <div className={classes.dndContainer}>
+                  <DragAndDrop
+                    items={relatedVideos}
+                    addItemLabel="Add Related Videos"
+                  />
+                </div>
               </Card>
             </Grid>
             <Grid item md={6} xs={12} className={classes.gridContainer}>
@@ -111,6 +125,12 @@ const StreamEdit = ({ stream, goBack, onSubmit }) => {
                   <Typography variant="h6">Related Tweets</Typography>
                 </div>
                 <Divider />
+                <div className={classes.dndContainer}>
+                  <DragAndDrop
+                    items={relatedVideos}
+                    addItemLabel="Add Related Tweets"
+                  />
+                </div>
               </Card>
             </Grid>
           </Grid>
@@ -119,14 +139,6 @@ const StreamEdit = ({ stream, goBack, onSubmit }) => {
               <Card className={classes.segmentContainer}>
                 <div className={classes.cardHeader}>
                   <Typography variant="h6">Timestamp</Typography>
-                </div>
-                <Divider />
-              </Card>
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.gridContainer}>
-              <Card className={classes.segmentContainer}>
-                <div className={classes.cardHeader}>
-                  <Typography variant="h6">Clips</Typography>
                 </div>
                 <Divider />
               </Card>
@@ -142,10 +154,12 @@ StreamEdit.propTypes = {
   stream: Proptypes.object,
   goBack: Proptypes.func.isRequired,
   onSubmit: Proptypes.func.isRequired,
+  formData: Proptypes.object,
 };
 
 StreamEdit.defaultProps = {
   stream: {},
+  formData: {},
 };
 
 export default StreamEdit;
