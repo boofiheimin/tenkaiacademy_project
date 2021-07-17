@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   outlet: {
     flexGrow: 1,
+    overflowY: "auto",
   },
 }));
 

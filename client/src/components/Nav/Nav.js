@@ -1,3 +1,4 @@
+import { useRef, createContext } from "react";
 import Proptypes from "prop-types";
 import clsx from "clsx";
 
@@ -20,6 +21,9 @@ import {
 import DrawerItems from "./DrawerItems";
 import useStyles from "./styles";
 
+// eslint-disable-next-line import/no-mutable-exports
+let OutletContext;
+
 const Nav = ({
   open,
   openMobile,
@@ -29,9 +33,12 @@ const Nav = ({
   isLogin,
   username,
 }) => {
+  const outletRef = useRef(null);
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
+
+  OutletContext = createContext(outletRef);
 
   return (
     <div className={classes.root}>
@@ -108,8 +115,10 @@ const Nav = ({
         })}
       >
         <div className={classes.drawerHeader} />
-        <div className={classes.outlet}>
-          <Outlet />
+        <div className={classes.outlet} id="scrollableDiv">
+          <OutletContext.Provider>
+            <Outlet outletRef={outletRef} />
+          </OutletContext.Provider>
         </div>
       </main>
     </div>
@@ -129,5 +138,7 @@ Nav.propTypes = {
 Nav.defaultProps = {
   username: "",
 };
+
+export { OutletContext };
 
 export default Nav;
