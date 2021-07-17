@@ -4,10 +4,25 @@ export default {
   title: "DragAndDrop",
   component: DragAndDropStory,
   argTypes: {
-    title: {
-      defaultValue:
-        "【Minecraft】「××時間かかった奇跡の結晶！！」で売りに出す！！！【天音かなた/ホロライブ】",
-      control: { type: "text" },
+    items: {
+      defaultValue: [
+        {
+          id: "kLwkwIhfOrM",
+          text: "kLwkwIhfOrM",
+          img: "https://i.ytimg.com/vi/kLwkwIhfOrM/0.jpg",
+        },
+        {
+          id: "7RDVdxJXqN0",
+          text: "7RDVdxJXqN0",
+          img: "https://i.ytimg.com/vi/7RDVdxJXqN0/0.jpg",
+        },
+        {
+          id: "gtkgGWfPcrA",
+          text: "gtkgGWfPcrA",
+          img: "https://i.ytimg.com/vi/gtkgGWfPcrA/0.jpg",
+        },
+      ],
+      control: { type: "array" },
     },
   },
 };
