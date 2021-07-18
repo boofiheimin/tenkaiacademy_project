@@ -30,7 +30,9 @@ export const createTag = async (req, res, next) => {
 
 export const editTag = async (req, res, next) => {
   try {
-    const tag = await Tag.findByIdAndUpdate(req.params.id, req.body);
+    const tag = await Tag.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     await tag.save();
 
     res.status(200).json(tag);

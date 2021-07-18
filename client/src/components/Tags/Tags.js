@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Container,
@@ -18,14 +18,22 @@ import Tag from "./Tag/Tag";
 
 import useStyles from "./styles";
 
-const Tags = ({ tags, onTagSave, onTagRemove, onAddTag }) => {
+const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
   const classes = useStyles();
   const [tagNameEN, setEN] = useState("");
   const [tagNameJP, setJP] = useState("");
   const [catId, setCatId] = useState("");
-
+  const [tags, setTags] = useState(propTags);
   const [enError, setENError] = useState(false);
   const [catError, setCatError] = useState(false);
+
+  const [filterCat, setFilterCat] = useState("");
+  const [filterEN, setFilterEN] = useState("");
+  const [filterJP, setFilterJP] = useState("");
+
+  useEffect(() => {
+    setTags(propTags);
+  }, [propTags]);
 
   const handleENChange = (e) => {
     setEN(e.target.value);
@@ -55,7 +63,35 @@ const Tags = ({ tags, onTagSave, onTagRemove, onAddTag }) => {
     }
   };
 
+  const handleCatSearch = (e) => {
+    const { value } = e.target;
+    setFilterCat(value);
+  };
+
+  const handleENSearch = (e) => {
+    const { value } = e.target;
+    setFilterEN(value);
+  };
+
+  const handleJPSearch = (e) => {
+    const { value } = e.target;
+    setFilterJP(value);
+  };
+
   tags.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
+  let filtered = tags;
+
+  if (filterCat !== "") {
+    filtered = filtered.filter(
+      (item) => item.catId === parseInt(filterCat, 10)
+    );
+  }
+  if (filterEN !== "") {
+    filtered = filtered.filter((item) => item.tagNameEN.includes(filterEN));
+  }
+  if (filterJP !== "") {
+    filtered = filtered.filter((item) => item.tagNameJP.includes(filterJP));
+  }
 
   return (
     <Container>
@@ -98,17 +134,43 @@ const Tags = ({ tags, onTagSave, onTagRemove, onAddTag }) => {
             <TableHead>
               <TableRow>
                 <TableCell style={{ width: "10%" }}>id</TableCell>
-                <TableCell style={{ width: "30%" }}>EN</TableCell>
-                <TableCell style={{ width: "30%" }}>JP</TableCell>
-                <TableCell style={{ width: "10%" }}>Category ID</TableCell>
+                <TableCell style={{ width: "30%" }}>
+                  <div>EN</div>
+                  <input
+                    type="text"
+                    onChange={handleENSearch}
+                    placeholder="search by en"
+                  />
+                </TableCell>
+                <TableCell style={{ width: "30%" }}>
+                  <div>JP</div>
+                  <input
+                    type="text"
+                    onChange={handleJPSearch}
+                    placeholder="search by jp"
+                  />
+                </TableCell>
+                <TableCell style={{ width: "10%" }}>
+                  <div>Category ID</div>
+                  <input
+                    type="text"
+                    onChange={handleCatSearch}
+                    placeholder="search by category id"
+                  />
+                </TableCell>
                 <TableCell style={{ width: "20%" }} align="right">
                   Action
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {tags.map((tag) => (
-                <Tag tag={tag} onSave={onTagSave} onRemove={onTagRemove} />
+              {filtered.map((tag) => (
+                <Tag
+                  tag={tag}
+                  onSave={onTagSave}
+                  onRemove={onTagRemove}
+                  key={tag._id}
+                />
               ))}
             </TableBody>
           </Table>
@@ -120,7 +182,8 @@ const Tags = ({ tags, onTagSave, onTagRemove, onAddTag }) => {
 
 Tags.propTypes = {
   tags: PropTypes.arrayOf(
-    PropTypes.objectOf({
+    PropTypes.shape({
+      _id: PropTypes.string,
       tagId: PropTypes.number,
       tagNameEN: PropTypes.string,
       tagNameJP: PropTypes.string,

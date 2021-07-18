@@ -131,7 +131,8 @@ const Tag = ({ tag, onSave, onRemove }) => {
 };
 
 Tag.propTypes = {
-  tag: PropTypes.objectOf({
+  tag: PropTypes.shape({
+    _id: PropTypes.string,
     tagId: PropTypes.number,
     tagNameEN: PropTypes.string,
     tagNameJP: PropTypes.string,
@@ -143,7 +144,8 @@ Tag.propTypes = {
 
 Tag.defaultProps = {
   tag: {
-    id: null,
+    _id: null,
+    tagId: null,
     tagNameEN: "",
     tagNameJP: "",
     catId: null,

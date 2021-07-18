@@ -12,9 +12,15 @@ const reducer = (tags = [], action) => {
     case CREATE_TAG_SUCCESS:
       return [...tags, action.data];
     case EDIT_TAG_SUCCESS:
-      return tags.map((tag) =>
-        tag._id === action.data._id ? action.data : tag
-      );
+      return tags.map((tag) => {
+        if (tag._id !== action.data._id) {
+          return tag;
+        }
+        return {
+          ...tag,
+          ...action.data,
+        };
+      });
     case DELETE_TAG_SUCCESS:
       return tags.filter((tag) => tag._id !== action.data._id);
     default:
