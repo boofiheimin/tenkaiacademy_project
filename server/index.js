@@ -7,6 +7,7 @@ import errorHandler from "./middleware/ErrorMiddleware.js";
 
 import authRoute from "./routes/AuthRoute.js";
 import streamsRoute from "./routes/StreamsRoute.js";
+import tagsRoute from "./routes/TagsRoute.js";
 
 const app = express();
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/streams", streamsRoute);
+app.use("/api/v1/tags", tagsRoute);
 
 // Error Handler
 
