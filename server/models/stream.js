@@ -21,6 +21,14 @@ const streamSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
+  uploader: {
+    type: String,
+    required: [true, "Please provide uploader"],
+  },
+  source: {
+    type: String,
+    enum: ["admin", "youtube"],
+  },
   modifiedAt: {
     type: Date,
     default: new Date(),
