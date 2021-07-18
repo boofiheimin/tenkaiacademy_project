@@ -1,5 +1,5 @@
-import React from "react";
+import Tags from "../../components/Tags/Tags";
 
-const TagsContainer = () => <div>hi</div>;
+const TagsContainer = () => <Tags />;
 
 export default TagsContainer;

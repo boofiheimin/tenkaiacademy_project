@@ -1,3 +1,4 @@
+import { PropTypes } from "prop-types";
 import clsx from "clsx";
 import { Typography, Box, Button } from "@material-ui/core";
 
@@ -25,4 +26,13 @@ const Streams = ({ handleRefetchAll, ...props }) => {
     </div>
   );
 };
+
+Streams.propTypes = {
+  handleRefetchAll: PropTypes.func,
+};
+
+Streams.defaultProps = {
+  handleRefetchAll: () => {},
+};
+
 export default Streams;

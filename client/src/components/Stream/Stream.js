@@ -63,8 +63,6 @@ const Stream = ({
     fitvids();
   }, []);
 
-  console.log(stream);
-
   return (
     <Container className={classes.root}>
       <Box display="flex" flexDirection="column" height="100%">
