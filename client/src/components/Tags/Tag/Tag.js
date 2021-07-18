@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   TableRow,
@@ -20,10 +20,15 @@ const Tag = ({ tag, onSave, onRemove }) => {
   const [catId, setCatId] = useState(tag.catId);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  useEffect(() => {
+    setEN(tag.tagNameEN);
+    setJP(tag.tagNameJP);
+    setCatId(tag.catId);
+  }, [tag]);
+
   const toggleState = () => {
     if (mode) {
-      onSave({
-        id: tag.id,
+      onSave(tag._id, {
         tagNameEN,
         tagNameJP,
         catId,
@@ -35,7 +40,7 @@ const Tag = ({ tag, onSave, onRemove }) => {
   const handleENChange = (e) => {
     setEN(e.target.value);
   };
-  const handleTHChange = (e) => {
+  const handleJPChange = (e) => {
     setJP(e.target.value);
   };
   const handleCatIdChange = (e) => {
@@ -47,7 +52,7 @@ const Tag = ({ tag, onSave, onRemove }) => {
   };
 
   const handlePopperConfirm = () => {
-    onRemove(tag.id);
+    onRemove(tag._id);
     setAnchorEl(null);
   };
 
@@ -55,13 +60,13 @@ const Tag = ({ tag, onSave, onRemove }) => {
     setAnchorEl(null);
   };
 
-  const { id } = tag;
+  const { tagId } = tag;
   const classes = useStyles();
   const open = Boolean(anchorEl);
   return (
-    <TableRow key={id}>
+    <TableRow key={tagId}>
       <TableCell component="th" scope="row">
-        <Typography>{id}</Typography>
+        <Typography>{tagId}</Typography>
       </TableCell>
       <TableCell>
         {mode ? (
@@ -72,7 +77,7 @@ const Tag = ({ tag, onSave, onRemove }) => {
       </TableCell>
       <TableCell>
         {mode ? (
-          <TextField value={tagNameJP} onChange={handleTHChange} />
+          <TextField value={tagNameJP} onChange={handleJPChange} />
         ) : (
           <Typography>{tagNameJP}</Typography>
         )}
@@ -95,7 +100,7 @@ const Tag = ({ tag, onSave, onRemove }) => {
         <Button className={classes.actionButton} onClick={handleRemove}>
           <i className="fas fa-minus-square" />
         </Button>
-        <Popper id={id} open={open} anchorEl={anchorEl}>
+        <Popper id={tagId} open={open} anchorEl={anchorEl}>
           <Card>
             <CardContent>
               <Typography>Are you sure?</Typography>
@@ -127,10 +132,10 @@ const Tag = ({ tag, onSave, onRemove }) => {
 
 Tag.propTypes = {
   tag: PropTypes.objectOf({
-    id: PropTypes.string,
+    tagId: PropTypes.number,
     tagNameEN: PropTypes.string,
     tagNameJP: PropTypes.string,
-    catId: PropTypes.string,
+    catId: PropTypes.number,
   }),
   onSave: PropTypes.func,
   onRemove: PropTypes.func,
@@ -138,10 +143,10 @@ Tag.propTypes = {
 
 Tag.defaultProps = {
   tag: {
-    id: "",
+    id: null,
     tagNameEN: "",
     tagNameJP: "",
-    catId: "",
+    catId: null,
   },
   onSave: () => {},
   onRemove: () => {},

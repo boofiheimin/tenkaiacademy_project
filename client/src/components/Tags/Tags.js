@@ -1,3 +1,4 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Container,
@@ -17,8 +18,45 @@ import Tag from "./Tag/Tag";
 
 import useStyles from "./styles";
 
-const Tags = ({ tags = [], onTagSave, onTagRemove }) => {
+const Tags = ({ tags, onTagSave, onTagRemove, onAddTag }) => {
   const classes = useStyles();
+  const [tagNameEN, setEN] = useState("");
+  const [tagNameJP, setJP] = useState("");
+  const [catId, setCatId] = useState("");
+
+  const [enError, setENError] = useState(false);
+  const [catError, setCatError] = useState(false);
+
+  const handleENChange = (e) => {
+    setEN(e.target.value);
+  };
+  const handleJPChange = (e) => {
+    setJP(e.target.value);
+  };
+  const handleCatIdChange = (e) => {
+    setCatId(e.target.value);
+  };
+
+  const handleAddTag = () => {
+    if (tagNameEN === "" || catId === "") {
+      setENError(tagNameEN === "");
+      setCatError(catId === "");
+    } else {
+      onAddTag({
+        tagNameEN,
+        tagNameJP,
+        catId,
+      });
+      setEN("");
+      setJP("");
+      setCatId("");
+      setENError(false);
+      setCatError(false);
+    }
+  };
+
+  tags.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
+
   return (
     <Container>
       <div className={classes.header}>
@@ -26,10 +64,28 @@ const Tags = ({ tags = [], onTagSave, onTagRemove }) => {
       </div>
       <Divider />
       <div className={classes.input}>
-        <TextField label="Tag name EN" />
-        <TextField label="Tag name JP" />
-        <TextField label="categoryId" />
-        <Button variant="contained">Add Tag</Button>
+        <TextField
+          label="Tag name EN"
+          value={tagNameEN}
+          error={enError}
+          helperText={enError ? "Please provide tag name" : null}
+          onChange={handleENChange}
+        />
+        <TextField
+          label="Tag name JP"
+          value={tagNameJP}
+          onChange={handleJPChange}
+        />
+        <TextField
+          label="categoryId"
+          value={catId}
+          error={catError}
+          helperText={catError ? "Please provide category id" : null}
+          onChange={handleCatIdChange}
+        />
+        <Button variant="contained" onClick={handleAddTag}>
+          Add Tag
+        </Button>
       </div>
       <Divider />
       <div className={classes.tagTable}>
@@ -65,19 +121,21 @@ const Tags = ({ tags = [], onTagSave, onTagRemove }) => {
 Tags.propTypes = {
   tags: PropTypes.arrayOf(
     PropTypes.objectOf({
-      id: PropTypes.string,
+      tagId: PropTypes.number,
       tagNameEN: PropTypes.string,
       tagNameJP: PropTypes.string,
-      catId: PropTypes.string,
+      catId: PropTypes.number,
     })
   ),
   onTagSave: PropTypes.func,
   onTagRemove: PropTypes.func,
+  onAddTag: PropTypes.func,
 };
 Tags.defaultProps = {
   tags: [],
   onTagSave: () => {},
   onTagRemove: () => {},
+  onAddTag: () => {},
 };
 
 export default Tags;

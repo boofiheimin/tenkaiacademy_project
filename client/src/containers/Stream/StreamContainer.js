@@ -27,11 +27,9 @@ const StreamContainer = () => {
   };
 
   const goBack = () => {
-    console.log("say hmh?");
     navigate("/streams");
   };
   const goEdit = () => {
-    console.log("say wha");
     navigate(`/streams/${id}/edit`);
   };
 
