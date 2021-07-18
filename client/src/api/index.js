@@ -17,3 +17,7 @@ export const fetchStreams = (queryData) =>
   API.get("/streams", { params: { ...queryData } });
 
 export const fetchStream = (id) => API.get(`/streams/${id}`);
+export const refetchAll = () => {
+  console.log("hhhhh");
+  API.get("/streams/refetch_all");
+};

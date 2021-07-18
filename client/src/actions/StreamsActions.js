@@ -52,3 +52,22 @@ export const getStream = (id) => async (dispatch) => {
     console.log(error.message);
   }
 };
+
+export const refetchAll = () => async (dispatch) => {
+  try {
+    await api.refetchAll();
+    const {
+      data: { docs },
+    } = await api.fetchStreams({
+      limit: VIDEOS_FETCH_LIMIT,
+    });
+
+    if (docs.length < VIDEOS_FETCH_LIMIT) {
+      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs });
+    } else {
+      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};

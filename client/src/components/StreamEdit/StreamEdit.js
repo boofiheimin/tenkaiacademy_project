@@ -31,10 +31,21 @@ const StreamEdit = ({
   onTitleChange,
   onDurationChange,
   onPublishedChange,
+  onUploaderChange,
 }) => {
-  const { title, thumbnail, _id, videoId, duration, publishedAt } = stream;
+  const {
+    title,
+    thumbnail,
+    _id,
+    videoId,
+    duration,
+    publishedAt,
+    uploader,
+    source,
+  } = stream;
   const { relatedVideos } = formData;
   const classes = useStyles();
+  const disableVideoInfo = source === "youtube";
   return (
     <Container>
       <Box display="flex" flexDirection="column" height="100%">
@@ -93,15 +104,25 @@ const StreamEdit = ({
                       value={title}
                       className={classes.infoInput}
                       onChange={onTitleChange}
+                      disabled={disableVideoInfo}
                     />
                   </div>
                   <div className={classes.infoInputContainer}>
                     <Typography>duration:&nbsp;</Typography>
-                    <TextField value={duration} onChange={onDurationChange} />
+                    <TextField
+                      value={duration}
+                      onChange={onDurationChange}
+                      disabled={disableVideoInfo}
+                    />
                   </div>
                   <div className={classes.infoInputContainer}>
                     <Typography>uploader:&nbsp;</Typography>
-                    <TextField className={classes.infoInput} />
+                    <TextField
+                      className={classes.infoInput}
+                      value={uploader}
+                      onChange={onUploaderChange}
+                      disabled={disableVideoInfo}
+                    />
                   </div>
                   <div className={classes.infoInputContainer}>
                     <Typography>publisedAt:&nbsp;</Typography>
@@ -113,6 +134,7 @@ const StreamEdit = ({
                         id="date-picker-inline"
                         value={publishedAt}
                         onChange={onPublishedChange}
+                        disabled={disableVideoInfo}
                         KeyboardButtonProps={{
                           "aria-label": "change date",
                         }}
@@ -204,6 +226,7 @@ StreamEdit.propTypes = {
   onTitleChange: Proptypes.func,
   onDurationChange: Proptypes.func,
   onPublishedChange: Proptypes.func,
+  onUploaderChange: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -212,6 +235,7 @@ StreamEdit.defaultProps = {
   onTitleChange: () => {},
   onDurationChange: () => {},
   onPublishedChange: () => {},
+  onUploaderChange: () => {},
 };
 
 export default StreamEdit;

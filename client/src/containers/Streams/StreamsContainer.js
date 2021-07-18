@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { getStreams, getMoreStreams } from "../../actions/StreamsActions";
+import {
+  getStreams,
+  getMoreStreams,
+  refetchAll,
+} from "../../actions/StreamsActions";
 
 import Streams from "../../components/Streams/Streams";
 
@@ -23,12 +27,17 @@ const StreamsRoute = () => {
     navigate(`/streams/${id}`);
   };
 
+  const handleRefetchAll = () => {
+    dispatch(refetchAll());
+  };
+
   return (
     <Streams
       videos={streams}
       hasMore={hasMore}
       fetchMore={fetchMore}
       onVideoCardClick={onVideoCardClick}
+      handleRefetchAll={handleRefetchAll}
     />
   );
 };
