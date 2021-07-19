@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,7 @@ const StreamsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { streams, offset, hasMore } = useSelector((state) => state.streams);
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     dispatch(getStreams({}));
@@ -29,6 +30,7 @@ const StreamsRoute = () => {
 
   const handleRefetchAll = () => {
     dispatch(refetchAll());
+    forceUpdate();
   };
 
   return (

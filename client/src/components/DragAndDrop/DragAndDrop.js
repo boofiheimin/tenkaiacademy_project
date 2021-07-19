@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Proptypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -14,9 +14,15 @@ const DragAndDrop = ({
   addItemValue,
   onAddItem,
   onChangeItem,
+  onReorderedItem,
+  lists,
 }) => {
   const [items, setItems] = useState(propItems);
   const classes = useStyles({ itemsLength: items.length });
+
+  useEffect(() => {
+    setItems(propItems);
+  }, [propItems]);
 
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -34,7 +40,7 @@ const DragAndDrop = ({
       result.source.index,
       result.destination.index
     );
-    setItems(reorderedItems);
+    onReorderedItem(reorderedItems);
   };
 
   return (
@@ -44,6 +50,7 @@ const DragAndDrop = ({
         value={addItemValue}
         onAdd={onAddItem}
         onChange={onChangeItem}
+        lists={lists}
       />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
@@ -77,6 +84,8 @@ DragAndDrop.propTypes = {
   addItemValue: Proptypes.string,
   onAddItem: Proptypes.func,
   onChangeItem: Proptypes.func,
+  onReorderedItem: Proptypes.func,
+  lists: Proptypes.array,
 };
 
 DragAndDrop.defaultProps = {
@@ -86,6 +95,8 @@ DragAndDrop.defaultProps = {
   addItemValue: "",
   onAddItem: () => {},
   onChangeItem: () => {},
+  onReorderedItem: () => {},
+  lists: [],
 };
 
 export default DragAndDrop;

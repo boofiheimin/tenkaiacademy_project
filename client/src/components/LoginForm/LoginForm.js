@@ -71,8 +71,12 @@ const LoginForm = ({ onFormChange, onFormSubmit, error }) => {
 
 LoginForm.propTypes = {
   onFormChange: Proptypes.func.isRequired,
-  error: Proptypes.bool.isRequired,
+  error: Proptypes.bool,
   onFormSubmit: Proptypes.func.isRequired,
+};
+
+LoginForm.defaultProps = {
+  error: false,
 };
 
 export default LoginForm;

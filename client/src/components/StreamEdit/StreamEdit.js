@@ -24,7 +24,6 @@ import Timestamp from "./Timestamp/Timestamp";
 import useStyles from "./styles";
 
 const StreamEdit = ({
-  stream,
   goBack,
   formData,
   onSubmit,
@@ -32,6 +31,10 @@ const StreamEdit = ({
   onDurationChange,
   onPublishedChange,
   onUploaderChange,
+  tags: propTags,
+  onAddTag,
+  onTagReordered,
+  onTagRemove,
 }) => {
   const {
     title,
@@ -42,10 +45,11 @@ const StreamEdit = ({
     publishedAt,
     uploader,
     source,
-  } = stream;
-  const { relatedVideos } = formData;
+    tags,
+  } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
+
   return (
     <Container>
       <Box display="flex" flexDirection="column" height="100%">
@@ -153,7 +157,14 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  <DragAndDrop items={relatedVideos} addItemLabel="Add tags" />
+                  <DragAndDrop
+                    items={tags}
+                    addItemLabel="Add tags"
+                    onAddItem={onAddTag}
+                    lists={propTags}
+                    onReorderedItem={onTagReordered}
+                    onRemoveItem={onTagRemove}
+                  />
                 </div>
               </Card>
             </Grid>
@@ -177,10 +188,10 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  <DragAndDrop
+                  {/* <DragAndDrop
                     items={relatedVideos}
                     addItemLabel="Add Related Videos"
-                  />
+                  /> */}
                 </div>
               </Card>
             </Grid>
@@ -191,10 +202,10 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  <DragAndDrop
+                  {/* <DragAndDrop
                     items={relatedVideos}
                     addItemLabel="Add Related Tweets"
-                  />
+                  /> */}
                 </div>
               </Card>
             </Grid>
@@ -219,10 +230,9 @@ const StreamEdit = ({
 };
 
 StreamEdit.propTypes = {
-  stream: Proptypes.object,
+  formData: Proptypes.object,
   goBack: Proptypes.func.isRequired,
   onSubmit: Proptypes.func.isRequired,
-  formData: Proptypes.object,
   onTitleChange: Proptypes.func,
   onDurationChange: Proptypes.func,
   onPublishedChange: Proptypes.func,
@@ -230,7 +240,6 @@ StreamEdit.propTypes = {
 };
 
 StreamEdit.defaultProps = {
-  stream: {},
   formData: {},
   onTitleChange: () => {},
   onDurationChange: () => {},

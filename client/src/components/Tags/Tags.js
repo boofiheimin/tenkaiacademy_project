@@ -78,7 +78,6 @@ const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
     setFilterJP(value);
   };
 
-  tags.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
   let filtered = tags;
 
   if (filterCat !== "") {

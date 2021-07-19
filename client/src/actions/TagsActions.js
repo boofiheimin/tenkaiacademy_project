@@ -9,6 +9,7 @@ import {
 export const getTags = () => async (dispatch) => {
   try {
     const { data } = await api.fetchTags();
+    data.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
     dispatch({ type: FETCH_TAGS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);
@@ -36,7 +37,6 @@ export const editTag = (id, tag) => async (dispatch) => {
 export const deleteTag = (id) => async (dispatch) => {
   try {
     const { data } = await api.deleteTag(id);
-    console.log(data);
     dispatch({ type: DELETE_TAG_SUCCESS, data });
   } catch (error) {
     console.log(error.message);

@@ -30,7 +30,7 @@ const CustomDraggable = ({ item: { id, text, img }, index, onRemove }) => (
 );
 
 CustomDraggable.propTypes = {
-  item: Proptypes.objectOf({
+  item: Proptypes.shape({
     id: Proptypes.string.isRequired,
     text: Proptypes.string.isRequired,
     img: Proptypes.string,

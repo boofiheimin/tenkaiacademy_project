@@ -3,7 +3,10 @@ import ErrorResponse from "../utils/ErrorResponse.js";
 
 export const getTags = async (req, res, next) => {
   try {
-    const tags = await Tag.find();
+    const tags = await Tag.find(
+      {},
+      { _id: 1, catId: 1, tagId: 1, tagNameEN: 1, tagNameJP: 1 }
+    );
     res.status(200).json(tags);
   } catch (error) {
     return next(new ErrorResponse(err.message, 500));
