@@ -38,7 +38,7 @@ const VideoCard = ({
 }) => {
   const classes = useStyles();
 
-  const type = tags[0]?.tagId;
+  const type = tags[0]?.tagNameEN;
 
   return (
     <Card className={classes.root}>
@@ -80,8 +80,8 @@ const VideoCard = ({
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.cardActions}>
-        {tags.slice(0, 2).map(({ id: tagId, name }) => (
-          <Chip label={name} key={tagId} />
+        {tags.slice(0, 2).map(({ id: tagId, tagNameEN }) => (
+          <Chip label={tagNameEN} key={tagId} className={classes.chip} />
         ))}
       </CardActions>
     </Card>

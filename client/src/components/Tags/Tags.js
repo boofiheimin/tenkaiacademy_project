@@ -77,7 +77,7 @@ const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
     const { value } = e.target;
     setFilterJP(value);
   };
-
+  tags.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
   let filtered = tags;
 
   if (filterCat !== "") {
@@ -85,6 +85,7 @@ const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
       (item) => item.catId === parseInt(filterCat, 10)
     );
   }
+
   if (filterEN !== "") {
     filtered = filtered.filter((item) => item.tagNameEN.includes(filterEN));
   }

@@ -1,7 +1,4 @@
-export const GAME = "GAME";
-export const TALK = "TALK";
-export const COVER = "COVER";
-export const SINGING = "SINGING";
-export const LIVE = "LIVE";
-export const ORIGINAL = "ORIGINAL";
+export const GAME = "Game";
+export const TALK = "Talk";
+export const MUSIC = "Music";
 export const PRIVATE = "PRIVATE";

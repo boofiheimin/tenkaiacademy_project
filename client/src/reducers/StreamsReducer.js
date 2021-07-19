@@ -4,6 +4,7 @@ import {
   FETCH_STREAMS_HASMORE_SUCCESS,
   FETCH_STREAMS_HASMORE_DONE,
   FETCH_STREAM_SUCCESS,
+  EDIT_STREAM_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -34,6 +35,8 @@ const reducer = (state = { streams: [], hasMore: true, offset: 0 }, action) => {
       };
     case FETCH_STREAM_SUCCESS:
       return { ...state, stream: action?.data };
+    case EDIT_STREAM_SUCCESS:
+      return { ...state, stream: { ...state.stream, ...action.data } };
     default:
       return state;
   }

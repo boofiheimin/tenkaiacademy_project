@@ -14,8 +14,10 @@ export const getStreams = async ({ query: reqQuery = {} }, res, next) => {
     ...(limit && { limit }),
     ...(sort && { sort }),
   };
+  // { $and: [{ "tags.tagId": 2 }, { "tags.tagId": 57 }] }
   try {
-    const streams = await Stream.paginate(JSON.parse(query), paginateOptions);
+    const streams = await Stream.paginate({}, paginateOptions);
+
     res.status(200).json(streams);
   } catch (error) {
     next(error);
@@ -42,6 +44,19 @@ export const getStream = async (req, res, next) => {
     res.status(200).json(stream);
   } catch (err) {
     return next(new ErrorResponse("Stream not found", 404));
+  }
+};
+
+export const editStream = async (req, res, next) => {
+  try {
+    const stream = await Stream.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    await stream.save();
+
+    res.status(200).json(stream);
+  } catch (err) {
+    return next(new ErrorResponse(err.message, 500));
   }
 };
 

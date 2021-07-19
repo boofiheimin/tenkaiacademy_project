@@ -9,7 +9,6 @@ import {
 export const getTags = () => async (dispatch) => {
   try {
     const { data } = await api.fetchTags();
-    data.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
     dispatch({ type: FETCH_TAGS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);

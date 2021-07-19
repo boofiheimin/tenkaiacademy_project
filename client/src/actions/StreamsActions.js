@@ -5,6 +5,7 @@ import {
   FETCH_STREAMS_HASMORE_SUCCESS,
   FETCH_STREAMS_HASMORE_DONE,
   FETCH_STREAM_SUCCESS,
+  EDIT_STREAM_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -48,6 +49,15 @@ export const getStream = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchStream(id);
     dispatch({ type: FETCH_STREAM_SUCCESS, data });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const editStream = (id, formData) => async (dispatch) => {
+  try {
+    const { data } = await api.editStream(id, formData);
+    dispatch({ type: EDIT_STREAM_SUCCESS, data });
   } catch (error) {
     console.log(error.message);
   }

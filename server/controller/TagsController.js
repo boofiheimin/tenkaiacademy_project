@@ -1,4 +1,5 @@
 import Tag from "../models/Tag.js";
+import Stream from "../models/Stream.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 
 export const getTags = async (req, res, next) => {
@@ -38,6 +39,20 @@ export const editTag = async (req, res, next) => {
     });
     await tag.save();
 
+    //cascasde update
+    await Stream.updateMany(
+      { "tags.tagId": req.body.tagId },
+      {
+        $set: {
+          "tags.$.tagNameEN": req.body.tagNameEN,
+          "tags.$.tagNameJP": req.body.tagNameJP,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
     res.status(200).json(tag);
   } catch (err) {
     return next(new ErrorResponse(err.message, 500));
@@ -50,6 +65,20 @@ export const deleteTag = async (req, res, next) => {
     if (!tag) {
       return next(new ErrorResponse(("tag not found", 404)));
     }
+
+    //cascade delete
+
+    await Stream.updateMany(
+      { "tags.tagId": tag.tagId },
+      {
+        $pull: {
+          tags: { tagId: tag.tagId },
+        },
+      },
+      {
+        new: true,
+      }
+    );
     res.status(200).json(tag);
   } catch (err) {
     return next(new ErrorResponse((err.message, 500)));

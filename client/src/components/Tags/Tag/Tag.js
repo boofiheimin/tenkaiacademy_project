@@ -32,6 +32,7 @@ const Tag = ({ tag, onSave, onRemove }) => {
         tagNameEN,
         tagNameJP,
         catId,
+        tagId: tag.tagId,
       });
     }
     setMode(!mode);

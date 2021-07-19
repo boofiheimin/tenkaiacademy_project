@@ -17,6 +17,8 @@ export const fetchStreams = async (queryData) =>
   API.get("/streams", { params: { ...queryData } });
 
 export const fetchStream = async (id) => API.get(`/streams/${id}`);
+export const editStream = async (id, formData) =>
+  API.patch(`/streams/${id}`, formData);
 export const refetchAll = async () => {
   API.get("/streams/refetch_all");
 };

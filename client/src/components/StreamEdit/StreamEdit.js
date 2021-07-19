@@ -65,6 +65,7 @@ const StreamEdit = ({
             <Button
               className={clsx(classes.formControlButton, classes.saveButton)}
               variant="contained"
+              type="submit"
             >
               <i className={clsx("fas fa-save", classes.refetchIcon)} />
               Save

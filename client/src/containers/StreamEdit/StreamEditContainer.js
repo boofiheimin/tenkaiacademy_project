@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getStream } from "../../actions/StreamsActions";
+import { getStream, editStream } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 
 import StreamEdit from "../../components/StreamEdit/StreamEdit";
 
 const StreamEditContainer = ({ streamId }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { stream } = useSelector((state) => state.streams);
   const tags = useSelector((state) => state.tags);
 
@@ -17,8 +18,18 @@ const StreamEditContainer = ({ streamId }) => {
   const [tagOptions, setTagOptions] = useState([]);
 
   useEffect(() => {
-    setFormData(stream);
-    setTagOptions(tags);
+    if (tags.length > 0 && stream) {
+      setFormData({
+        ...stream,
+        tags: stream.tags.map(({ tagId: tid }) => {
+          const { _id, tagNameEN, tagId, catId } = tags.find(
+            (tag) => tag.tagId === tid
+          );
+          return { id: _id, text: tagNameEN, tagId, catId };
+        }),
+      });
+      setTagOptions(tags);
+    }
   }, [stream, tags]);
 
   const goBack = () => {
@@ -27,9 +38,19 @@ const StreamEditContainer = ({ streamId }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    dispatch(
+      editStream(streamId, {
+        ...formData,
+        tags: formData.tags.map(({ tagId, text, tagNameJP }) => ({
+          tagId,
+          tagNameEN: text,
+          tagNameJP,
+        })),
+      })
+    );
   };
 
-  const onAddTag = ({ _id, tagId, tagNameEN, catId }) => {
+  const onAddTag = ({ _id, tagId, tagNameEN, tagNameJP, catId }) => {
     let newTags = [...formData.tags];
     let newOptions = tagOptions.filter((tag) => tag._id !== _id);
     // Add parent Tag if no parent tag is found
@@ -39,17 +60,21 @@ const StreamEditContainer = ({ streamId }) => {
         const {
           _id: pId,
           tagNameEN: pEN,
+          tagNameJP: pJP,
           tagId: pTId,
           catId: pCatId,
         } = tags.find((tag) => tag.tagId === catId);
         newTags = [
           ...newTags,
-          { id: pId, text: pEN, tagId: pTId, catId: pCatId },
+          { id: pId, text: pEN, tagNameJP: pJP, tagId: pTId, catId: pCatId },
         ];
         newOptions = newOptions.filter((tag) => tag._id !== pId);
       }
     }
-    newTags = [...newTags, { id: _id, text: tagNameEN, tagId, catId }];
+    newTags = [
+      ...newTags,
+      { id: _id, text: tagNameEN, tagNameJP, tagId, catId },
+    ];
     const newForm = {
       ...formData,
       tags: newTags,

@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
   cardMedia: {
     position: "relative",
   },
+  chip: {
+    maxWidth: 120,
+  },
 }));
 
 export default useStyles;
