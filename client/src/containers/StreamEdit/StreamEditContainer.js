@@ -119,6 +119,14 @@ const StreamEditContainer = ({ streamId }) => {
     setTagOptions(newOptions);
   };
 
+  const onDetailChange = (e) => {
+    const newForm = {
+      ...formData,
+      detail: e.target.value,
+    };
+    setFormData(newForm);
+  };
+
   return (
     <StreamEdit
       formData={formData}
@@ -128,6 +136,7 @@ const StreamEditContainer = ({ streamId }) => {
       onAddTag={onAddTag}
       onTagRemove={onTagRemove}
       onTagReordered={onTagReordered}
+      onDetailChange={onDetailChange}
     />
   );
 };

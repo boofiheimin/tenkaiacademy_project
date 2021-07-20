@@ -14,20 +14,22 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import useStyles from "./styles";
 
-const DetailContent = ({ publishedAtBox, publishedAt }) => (
-  <Box>
+const DetailContent = ({ publishedAtBox, publishedAt, detail }) => (
+  <Box padding={1}>
     <Typography
       className={publishedAtBox}
     >{`Published at ${publishedAt}`}</Typography>
+    <Typography>{detail}</Typography>
   </Box>
 );
 
 DetailContent.propTypes = {
   publishedAtBox: Proptypes.string.isRequired,
   publishedAt: Proptypes.string.isRequired,
+  detail: Proptypes.string.isRequired,
 };
 
-const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
+const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl, detail }) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
   const classes = useStyles();
@@ -42,6 +44,7 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl }) => {
                   <Typography>Detail</Typography>
                 </Box>
                 <DetailContent
+                  detail={detail}
                   publishedAt={publishedAt}
                   publishedAtBox={classes.publishedAtBox}
                 />
@@ -115,6 +118,11 @@ BottomInfo.propTypes = {
   publishedAt: Proptypes.string.isRequired,
   clipAcc: Proptypes.bool.isRequired,
   clipAccordionControl: Proptypes.func.isRequired,
+  detail: Proptypes.string,
+};
+
+BottomInfo.defaultProps = {
+  detail: "",
 };
 
 export default BottomInfo;

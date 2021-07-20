@@ -35,6 +35,7 @@ const StreamEdit = ({
   onAddTag,
   onTagReordered,
   onTagRemove,
+  onDetailChange,
 }) => {
   const {
     title,
@@ -46,6 +47,7 @@ const StreamEdit = ({
     uploader,
     source,
     tags,
+    detail,
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
@@ -172,11 +174,16 @@ const StreamEdit = ({
             <Grid item md={6} xs={12} className={classes.gridContainer}>
               <Card className={classes.segmentContainer}>
                 <div className={classes.cardHeader}>
-                  <Typography variant="h6">Details</Typography>
+                  <Typography variant="h6">Detail</Typography>
                 </div>
                 <Divider />
                 <div className={classes.textAreaContainer}>
-                  <TextareaAutosize className={classes.textarea} minRows={9} />
+                  <TextareaAutosize
+                    className={classes.textarea}
+                    minRows={9}
+                    value={detail}
+                    onChange={onDetailChange}
+                  />
                 </div>
               </Card>
             </Grid>
@@ -238,6 +245,19 @@ StreamEdit.propTypes = {
   onDurationChange: Proptypes.func,
   onPublishedChange: Proptypes.func,
   onUploaderChange: Proptypes.func,
+  onDetailChange: Proptypes.func,
+  tags: Proptypes.arrayOf(
+    Proptypes.shape({
+      id: Proptypes.string,
+      text: Proptypes.string,
+      tagNameJP: Proptypes.string,
+      tagId: Proptypes.number,
+      catId: Proptypes.number,
+    })
+  ),
+  onAddTag: Proptypes.func,
+  onTagReordered: Proptypes.func,
+  onTagRemove: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -246,6 +266,11 @@ StreamEdit.defaultProps = {
   onDurationChange: () => {},
   onPublishedChange: () => {},
   onUploaderChange: () => {},
+  onDetailChange: () => {},
+  tags: [],
+  onAddTag: () => {},
+  onTagReordered: () => {},
+  onTagRemove: () => {},
 };
 
 export default StreamEdit;

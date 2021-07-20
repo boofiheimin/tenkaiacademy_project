@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
   textarea: {
     width: "100%",
     resize: "none",
+    fontFamily: "Rubik",
+    fontSize: "1rem",
+    padding: "6px",
   },
   dndContainer: {
     display: "flex",

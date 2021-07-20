@@ -57,7 +57,7 @@ const Stream = ({
 }) => {
   const classes = useStyles();
 
-  const { videoId, title, publishedAt } = stream;
+  const { videoId, title, publishedAt, tags = [], detail } = stream;
 
   useEffect(() => {
     fitvids();
@@ -138,19 +138,16 @@ const Stream = ({
               <Typography>Tags</Typography>
             </Box>
             <Box padding={1}>
-              <Chip label="tag1" />
-              <Chip label="tag1" />
-              <Chip label="tag1" />
-              <Chip label="tag1" />
-              <Chip label="tag1" />
-              <Chip label="tag1" />
-              <Chip label="tag1" />
+              {tags.map(({ id: tagId, tagNameEN }) => (
+                <Chip label={tagNameEN} key={tagId} className={classes.chip} />
+              ))}
             </Box>
           </Card>
         </Box>
         <Box>
           <BottomInfo
             publishedAt={moment(publishedAt).toString()}
+            detail={detail}
             clipAcc={clipAcc}
             clipAccordionControl={clipAccordionControl}
           />

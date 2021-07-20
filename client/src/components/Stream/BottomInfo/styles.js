@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
   publishedAtBox: {
     fontStyle: "italic",
     fontSize: "0.75rem",
-    padding: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   header: {
     color: "white",

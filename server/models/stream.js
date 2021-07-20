@@ -11,6 +11,7 @@ const streamSchema = mongoose.Schema({
     type: String,
     required: [true, "Please provide a title"],
   },
+  detail: String,
   thumbnail: String,
   duration: Number,
   publishedAt: {
