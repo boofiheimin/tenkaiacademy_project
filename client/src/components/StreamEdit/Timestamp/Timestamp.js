@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Grid,
@@ -13,20 +14,25 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import { useState } from "react";
 import TimestampCell from "./TimestampCell/TimestampCell";
 
 import useStyles from "./styles";
 
 const Timestamp = ({
-  rows,
+  timestamps: propTimestamps,
   onTimestampSave,
-  onTimestampDelete,
+  onDeleteTimestamp,
   onAddTimeStamp,
 }) => {
+  const [timestamps, setTimestamps] = useState([]);
   const [timestamp, setTimestamp] = useState("");
   const [description, setDesc] = useState("");
+  const [errorValidate, setErrorValidate] = useState(false);
   const classes = useStyles();
+
+  useEffect(() => {
+    setTimestamps(propTimestamps);
+  }, [propTimestamps]);
 
   const handleTimeChange = (e) => {
     setTimestamp(e.target.value);
@@ -37,10 +43,21 @@ const Timestamp = ({
   };
 
   const handleOnAddTimestamp = () => {
-    onAddTimeStamp({
-      timestamp,
-      description,
-    });
+    const regex = /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/g;
+    const match = timestamp.match(regex);
+
+    if (match === null) {
+      setErrorValidate(true);
+    } else {
+      setErrorValidate(false);
+      setTimestamp("");
+      setDesc("");
+
+      onAddTimeStamp({
+        timestamp: timestamp.trim(),
+        description,
+      });
+    }
   };
 
   return (
@@ -52,6 +69,8 @@ const Timestamp = ({
               placeholder="00:00:00"
               onChange={handleTimeChange}
               value={timestamp}
+              error={errorValidate}
+              helperText={errorValidate ? "Invalid Format" : null}
             />
           </Grid>
           <Grid container item xs={7} alignItems="center">
@@ -82,15 +101,16 @@ const Timestamp = ({
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
-              <TableRow component="tr" scope="row">
-                {rows.map((row) => (
+              {timestamps.map((row, index) => (
+                <TableRow component="tr" scope="row">
                   <TimestampCell
                     row={row}
                     onSave={onTimestampSave}
-                    onDelete={onTimestampDelete}
+                    onDelete={onDeleteTimestamp}
+                    index={index}
                   />
-                ))}
-              </TableRow>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -100,16 +120,16 @@ const Timestamp = ({
 };
 
 Timestamp.propTypes = {
-  rows: PropTypes.array,
+  timestamps: PropTypes.array,
   onTimestampSave: PropTypes.func,
-  onTimestampDelete: PropTypes.func,
+  onDeleteTimestamp: PropTypes.func,
   onAddTimeStamp: PropTypes.func,
 };
 
 Timestamp.defaultProps = {
-  rows: [],
+  timestamps: [],
   onTimestampSave: () => {},
-  onTimestampDelete: () => {},
+  onDeleteTimestamp: () => {},
   onAddTimeStamp: () => {},
 };
 

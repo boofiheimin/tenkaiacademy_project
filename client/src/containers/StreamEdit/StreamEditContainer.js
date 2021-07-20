@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import moment from "moment";
 
 import { getStream, editStream } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
@@ -127,6 +128,34 @@ const StreamEditContainer = ({ streamId }) => {
     setFormData(newForm);
   };
 
+  const onAddTimeStamp = ({ timestamp, description }) => {
+    const newTimestamps = [
+      ...formData.timestamps,
+      {
+        timestamp: moment.duration(timestamp).asSeconds(),
+        description,
+      },
+    ];
+    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
+    const newForm = {
+      ...formData,
+      timestamps: newTimestamps,
+    };
+
+    setFormData(newForm);
+  };
+
+  const onDeleteTimestamp = (index) => {
+    console.log(index);
+    const newTimestamps = [...formData.timestamps];
+    newTimestamps.splice(index, 1);
+    const newForm = {
+      ...formData,
+      timestamps: newTimestamps,
+    };
+    setFormData(newForm);
+  };
+
   return (
     <StreamEdit
       formData={formData}
@@ -137,6 +166,8 @@ const StreamEditContainer = ({ streamId }) => {
       onTagRemove={onTagRemove}
       onTagReordered={onTagReordered}
       onDetailChange={onDetailChange}
+      onAddTimeStamp={onAddTimeStamp}
+      onDeleteTimestamp={onDeleteTimestamp}
     />
   );
 };

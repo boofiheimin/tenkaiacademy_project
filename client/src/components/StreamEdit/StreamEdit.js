@@ -18,6 +18,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 import Timestamp from "./Timestamp/Timestamp";
 
@@ -36,6 +37,8 @@ const StreamEdit = ({
   onTagReordered,
   onTagRemove,
   onDetailChange,
+  onAddTimeStamp,
+  onDeleteTimestamp,
 }) => {
   const {
     title,
@@ -47,6 +50,7 @@ const StreamEdit = ({
     uploader,
     source,
     tags,
+    timestamps = [],
     detail,
   } = formData;
   const classes = useStyles();
@@ -104,7 +108,16 @@ const StreamEdit = ({
                 <Divider />
                 <Box padding={2}>
                   <Typography>id: {_id}</Typography>
-                  <Typography>videoId: {videoId}</Typography>
+                  <Typography>
+                    videoId:{" "}
+                    <a
+                      href={`https://www.youtube.com/watch?v=${videoId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {videoId}
+                    </a>
+                  </Typography>
                   <div className={classes.infoInputContainer}>
                     <Typography>title:&nbsp;</Typography>
                     <TextField
@@ -226,7 +239,11 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  <Timestamp />
+                  <Timestamp
+                    timestamps={timestamps}
+                    onAddTimeStamp={onAddTimeStamp}
+                    onDeleteTimestamp={onDeleteTimestamp}
+                  />
                 </div>
               </Card>
             </Grid>

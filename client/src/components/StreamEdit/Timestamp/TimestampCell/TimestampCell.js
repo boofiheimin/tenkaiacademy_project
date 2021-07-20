@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import {
   TableCell,
   TextField,
@@ -8,8 +10,8 @@ import {
 
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ConfirmationPopper from "../../../ConfirmationPopper/ConfirmationPopper";
 
-import { useState } from "react";
 import useStyles from "./styles";
 
 const TimestampCell = ({
@@ -18,8 +20,14 @@ const TimestampCell = ({
   onSave,
   onDelete,
 }) => {
-  const [timestamp, setTimestamp] = useState(propTimestamp);
-  const [description, setDesc] = useState(propDesc);
+  const [timestamp, setTimestamp] = useState(0);
+  const [description, setDesc] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  useEffect(() => {
+    setTimestamp(moment.duration(propTimestamp, "seconds").format("hh:mm:ss"));
+    setDesc(propDesc);
+  }, [propTimestamp, propDesc]);
 
   const handleTimeChange = (e) => {
     setTimestamp(e.target.value);
@@ -30,11 +38,26 @@ const TimestampCell = ({
   };
 
   const handleOnSave = () => {
+    const regex = /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/g;
+
+    const match = timestamp.match(regex);
+
+    console.log(match);
+
     onSave({ timestamp, description }, index);
   };
 
-  const handleOnDelete = () => {
+  const handleOnDelete = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handlePopperConfirm = () => {
     onDelete(index);
+    setAnchorEl(null);
+  };
+
+  const handlePopperCancel = () => {
+    setAnchorEl(null);
   };
 
   const classes = useStyles();
@@ -62,6 +85,12 @@ const TimestampCell = ({
           <Button className={classes.removeButton} onClick={handleOnDelete}>
             <DeleteIcon />
           </Button>
+          <ConfirmationPopper
+            popperId={index}
+            onPopperConfirm={handlePopperConfirm}
+            onPopperCancel={handlePopperCancel}
+            anchorEl={anchorEl}
+          />
         </div>
       </TableCell>
     </>

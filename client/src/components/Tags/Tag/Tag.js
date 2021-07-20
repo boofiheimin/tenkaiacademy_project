@@ -13,6 +13,8 @@ import {
 } from "@material-ui/core";
 import useStyles from "./styles";
 
+import ConfirmationPopper from "../../ConfirmationPopper/ConfirmationPopper";
+
 const Tag = ({ tag, onSave, onRemove }) => {
   const [mode, setMode] = useState(false);
   const [tagNameEN, setEN] = useState(tag.tagNameEN);
@@ -63,7 +65,6 @@ const Tag = ({ tag, onSave, onRemove }) => {
 
   const { tagId } = tag;
   const classes = useStyles();
-  const open = Boolean(anchorEl);
   return (
     <TableRow key={tagId}>
       <TableCell component="th" scope="row">
@@ -101,31 +102,12 @@ const Tag = ({ tag, onSave, onRemove }) => {
         <Button className={classes.actionButton} onClick={handleRemove}>
           <i className="fas fa-minus-square" />
         </Button>
-        <Popper id={tagId} open={open} anchorEl={anchorEl}>
-          <Card>
-            <CardContent>
-              <Typography>Are you sure?</Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                size="small"
-                color="secondary"
-                variant="outlined"
-                onClick={handlePopperConfirm}
-              >
-                confirm
-              </Button>
-              <Button
-                size="small"
-                color="primary"
-                variant="outlined"
-                onClick={handlePopperCancel}
-              >
-                cancel
-              </Button>
-            </CardActions>
-          </Card>
-        </Popper>
+        <ConfirmationPopper
+          popperId={tagId}
+          onPopperConfirm={handlePopperConfirm}
+          onPopperCancel={handlePopperCancel}
+          anchorEl={anchorEl}
+        />
       </TableCell>
     </TableRow>
   );
