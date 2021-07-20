@@ -20,16 +20,25 @@ const StreamEditContainer = ({ streamId }) => {
 
   useEffect(() => {
     if (tags.length > 0 && stream) {
+      const formatTags = stream.tags.map(({ tagId: tid }) => {
+        const { _id, tagNameEN, tagId, catId } = tags.find(
+          (tag) => tag.tagId === tid
+        );
+        return { id: _id, text: tagNameEN, tagId, catId };
+      });
+
       setFormData({
         ...stream,
-        tags: stream.tags.map(({ tagId: tid }) => {
-          const { _id, tagNameEN, tagId, catId } = tags.find(
-            (tag) => tag.tagId === tid
-          );
-          return { id: _id, text: tagNameEN, tagId, catId };
-        }),
+        tags: formatTags,
       });
-      setTagOptions(tags);
+
+      let formatOptions = [...tags];
+
+      formatTags.forEach((ft) => {
+        formatOptions = formatOptions.filter((tag) => tag._id !== ft.id);
+      });
+
+      setTagOptions(formatOptions);
     }
   }, [stream, tags]);
 
