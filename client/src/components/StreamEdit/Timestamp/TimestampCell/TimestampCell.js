@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import {
   TableCell,
   TextField,
@@ -8,9 +7,8 @@ import {
   Button,
 } from "@material-ui/core";
 
-import SaveIcon from "@material-ui/icons/Save";
-import DeleteIcon from "@material-ui/icons/Delete";
 import ConfirmationPopper from "../../../ConfirmationPopper/ConfirmationPopper";
+import { secondsTohhmmss, hhmmssRegEx } from "../../../../helper";
 
 import useStyles from "./styles";
 
@@ -23,12 +21,28 @@ const TimestampCell = ({
   const [timestamp, setTimestamp] = useState(0);
   const [description, setDesc] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mode, setMode] = useState(false);
+  const [errorValidate, setErrorValidate] = useState(false);
 
   useEffect(() => {
-    setTimestamp(moment.duration(propTimestamp, "seconds").format("hh:mm:ss"));
+    setTimestamp(secondsTohhmmss(propTimestamp));
     setDesc(propDesc);
   }, [propTimestamp, propDesc]);
 
+  const toggleState = () => {
+    if (mode) {
+      const match = timestamp.match(hhmmssRegEx);
+      if (match === null) {
+        setErrorValidate(true);
+      } else {
+        setErrorValidate(false);
+        onSave({ timestamp, description }, index);
+        setMode(!mode);
+      }
+    } else {
+      setMode(!mode);
+    }
+  };
   const handleTimeChange = (e) => {
     setTimestamp(e.target.value);
   };
@@ -36,17 +50,6 @@ const TimestampCell = ({
   const handleDescChange = (e) => {
     setDesc(e.target.value);
   };
-
-  const handleOnSave = () => {
-    const regex = /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/g;
-
-    const match = timestamp.match(regex);
-
-    console.log(match);
-
-    onSave({ timestamp, description }, index);
-  };
-
   const handleOnDelete = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -68,6 +71,9 @@ const TimestampCell = ({
           placeholder="00:00:00"
           value={timestamp}
           onChange={handleTimeChange}
+          disabled={!mode}
+          error={errorValidate}
+          helperText={errorValidate ? "Invalid Format" : null}
         />
       </TableCell>
       <TableCell style={{ width: 322 }} className={classes.tableCell}>
@@ -75,15 +81,20 @@ const TimestampCell = ({
           className={classes.textarea}
           value={description}
           onChange={handleDescChange}
+          disabled={!mode}
         />
       </TableCell>
       <TableCell className={classes.tableCell}>
         <div className={classes.actionButtonContainer}>
-          <Button className={classes.editButton} onClick={handleOnSave}>
-            <SaveIcon />
+          <Button
+            className={classes.actionButton}
+            onClick={toggleState}
+            key={mode ? "fas fa-save" : "fas fa-edit"}
+          >
+            <i className={mode ? "fas fa-save" : "fas fa-edit"} />
           </Button>
-          <Button className={classes.removeButton} onClick={handleOnDelete}>
-            <DeleteIcon />
+          <Button className={classes.actionButton} onClick={handleOnDelete}>
+            <i className="fas fa-minus-square" />
           </Button>
           <ConfirmationPopper
             popperId={index}

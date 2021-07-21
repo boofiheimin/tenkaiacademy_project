@@ -16,6 +16,8 @@ import AddIcon from "@material-ui/icons/Add";
 
 import TimestampCell from "./TimestampCell/TimestampCell";
 
+import { hhmmssRegEx } from "../../../helper";
+
 import useStyles from "./styles";
 
 const Timestamp = ({
@@ -43,8 +45,7 @@ const Timestamp = ({
   };
 
   const handleOnAddTimestamp = () => {
-    const regex = /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/g;
-    const match = timestamp.match(regex);
+    const match = timestamp.match(hhmmssRegEx);
 
     if (match === null) {
       setErrorValidate(true);

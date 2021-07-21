@@ -155,13 +155,27 @@ const StreamEditContainer = ({ streamId }) => {
   };
 
   const onDeleteTimestamp = (index) => {
-    console.log(index);
     const newTimestamps = [...formData.timestamps];
     newTimestamps.splice(index, 1);
     const newForm = {
       ...formData,
       timestamps: newTimestamps,
     };
+    setFormData(newForm);
+  };
+
+  const onTimestampSave = ({ timestamp, description }, index) => {
+    const newTimestamps = [...formData.timestamps];
+    newTimestamps.splice(index, 1, {
+      timestamp: moment.duration(timestamp).asSeconds(),
+      description,
+    });
+    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
+    const newForm = {
+      ...formData,
+      timestamps: newTimestamps,
+    };
+
     setFormData(newForm);
   };
 
@@ -177,6 +191,7 @@ const StreamEditContainer = ({ streamId }) => {
       onDetailChange={onDetailChange}
       onAddTimeStamp={onAddTimeStamp}
       onDeleteTimestamp={onDeleteTimestamp}
+      onTimestampSave={onTimestampSave}
     />
   );
 };

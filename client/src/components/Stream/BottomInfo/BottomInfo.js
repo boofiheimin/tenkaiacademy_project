@@ -9,9 +9,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
+import { secondsTohhmmss } from "../../../helper";
 import useStyles from "./styles";
 
 const DetailContent = ({ publishedAtBox, publishedAt, detail }) => (
@@ -29,7 +35,43 @@ DetailContent.propTypes = {
   detail: Proptypes.string.isRequired,
 };
 
-const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl, detail }) => {
+const TimestampContent = ({ timestamps = [], buttonLink, onSeek }) => (
+  <Box padding={1}>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {timestamps.map(({ timestamp, description }) => (
+            <TableRow component="tr" scope="row" key={`s_${timestamp}`}>
+              <TableCell style={{ width: 138 }}>
+                <Typography>
+                  <button
+                    type="button"
+                    className={buttonLink}
+                    onClick={() => onSeek(timestamp)}
+                  >
+                    <Typography> {secondsTohhmmss(timestamp)}</Typography>
+                  </button>
+                </Typography>
+              </TableCell>
+              <TableCell style={{ width: 322 }}>
+                <Typography> {description} </Typography>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
+);
+
+const BottomInfo = ({
+  publishedAt,
+  clipAcc,
+  clipAccordionControl,
+  detail,
+  timestamps,
+  onSeek,
+}) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
   const classes = useStyles();
@@ -57,6 +99,11 @@ const BottomInfo = ({ publishedAt, clipAcc, clipAccordionControl, detail }) => {
                 <Box className={classes.header}>
                   <Typography>Timestamp</Typography>
                 </Box>
+                <TimestampContent
+                  timestamps={timestamps}
+                  buttonLink={classes.buttonLink}
+                  onSeek={onSeek}
+                />
               </Card>
             </Box>
           </Grid>

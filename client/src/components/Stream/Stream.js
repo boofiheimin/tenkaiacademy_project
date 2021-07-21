@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Proptypes from "prop-types";
 
 import {
@@ -56,12 +56,24 @@ const Stream = ({
   goEdit,
 }) => {
   const classes = useStyles();
+  const [sec, setSec] = useState(0);
 
-  const { videoId, title, publishedAt, tags = [], detail } = stream;
+  const {
+    videoId,
+    title,
+    publishedAt,
+    tags = [],
+    detail,
+    timestamps = [],
+  } = stream;
 
   useEffect(() => {
     fitvids();
   }, []);
+
+  const onSeek = (seekTo) => {
+    setSec(seekTo);
+  };
 
   return (
     <Container className={classes.root}>
@@ -88,7 +100,9 @@ const Stream = ({
             <Grid item xs={12} lg={7}>
               <Box>
                 <iframe
-                  src={`https://www.youtube.com/embed/${videoId}`}
+                  src={`https://www.youtube.com/embed/${videoId}?autoplay=${
+                    sec ? 1 : 0
+                  }&start=${sec}`}
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -148,8 +162,10 @@ const Stream = ({
           <BottomInfo
             publishedAt={moment(publishedAt).toString()}
             detail={detail}
+            timestamps={timestamps}
             clipAcc={clipAcc}
             clipAccordionControl={clipAccordionControl}
+            onSeek={onSeek}
           />
         </Box>
       </Box>

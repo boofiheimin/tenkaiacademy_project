@@ -6,10 +6,6 @@ import {
   TextField,
   Button,
   Typography,
-  Popper,
-  Card,
-  CardContent,
-  CardActions,
 } from "@material-ui/core";
 import useStyles from "./styles";
 

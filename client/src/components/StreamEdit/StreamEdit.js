@@ -39,6 +39,7 @@ const StreamEdit = ({
   onDetailChange,
   onAddTimeStamp,
   onDeleteTimestamp,
+  onTimestampSave,
 }) => {
   const {
     title,
@@ -243,6 +244,7 @@ const StreamEdit = ({
                     timestamps={timestamps}
                     onAddTimeStamp={onAddTimeStamp}
                     onDeleteTimestamp={onDeleteTimestamp}
+                    onTimestampSave={onTimestampSave}
                   />
                 </div>
               </Card>
@@ -275,6 +277,9 @@ StreamEdit.propTypes = {
   onAddTag: Proptypes.func,
   onTagReordered: Proptypes.func,
   onTagRemove: Proptypes.func,
+  onAddTimeStamp: Proptypes.func,
+  onDeleteTimestamp: Proptypes.func,
+  onTimestampSave: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -288,6 +293,9 @@ StreamEdit.defaultProps = {
   onAddTag: () => {},
   onTagReordered: () => {},
   onTagRemove: () => {},
+  onAddTimeStamp: () => {},
+  onDeleteTimestamp: () => {},
+  onTimestampSave: () => {},
 };
 
 export default StreamEdit;

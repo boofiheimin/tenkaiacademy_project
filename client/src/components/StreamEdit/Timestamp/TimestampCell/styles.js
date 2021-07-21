@@ -15,13 +15,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
-  editButton: {
-    minWidth: "auto",
-    padding: "0",
-  },
-  removeButton: {
-    minWidth: "auto",
-    padding: "0",
+  actionButton: {
+    minWidth: "32px",
+    padding: "8px",
   },
 }));
 
