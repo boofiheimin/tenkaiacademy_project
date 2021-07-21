@@ -28,6 +28,7 @@ const StreamEdit = ({
   goBack,
   formData,
   onSubmit,
+  onReset,
   onTitleChange,
   onDurationChange,
   onPublishedChange,
@@ -56,6 +57,7 @@ const StreamEdit = ({
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
+  console.log(detail);
 
   return (
     <Container>
@@ -80,6 +82,7 @@ const StreamEdit = ({
             <Button
               className={clsx(classes.formControlButton, classes.resetButton)}
               variant="contained"
+              onClick={onReset}
             >
               <i className={clsx("fas fa-times", classes.refetchIcon)} />
               Reset
@@ -195,7 +198,7 @@ const StreamEdit = ({
                   <TextareaAutosize
                     className={classes.textarea}
                     minRows={9}
-                    value={detail}
+                    value={detail || ""}
                     onChange={onDetailChange}
                   />
                 </div>
@@ -280,6 +283,7 @@ StreamEdit.propTypes = {
   onAddTimeStamp: Proptypes.func,
   onDeleteTimestamp: Proptypes.func,
   onTimestampSave: Proptypes.func,
+  onReset: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -296,6 +300,7 @@ StreamEdit.defaultProps = {
   onAddTimeStamp: () => {},
   onDeleteTimestamp: () => {},
   onTimestampSave: () => {},
+  onReset: () => {},
 };
 
 export default StreamEdit;

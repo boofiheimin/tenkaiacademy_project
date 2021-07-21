@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -18,8 +18,10 @@ const StreamEditContainer = ({ streamId }) => {
   const [formData, setFormData] = useState({});
   const [tagOptions, setTagOptions] = useState([]);
 
-  useEffect(() => {
+  const formDataInit = useCallback(() => {
+    console.log("formDataInit");
     if (tags.length > 0 && stream) {
+      console.log("formDataInit start");
       const formatTags = stream.tags.map(({ tagId: tid }) => {
         const { _id, tagNameEN, tagId, catId } = tags.find(
           (tag) => tag.tagId === tid
@@ -42,6 +44,10 @@ const StreamEditContainer = ({ streamId }) => {
     }
   }, [stream, tags]);
 
+  useEffect(() => {
+    formDataInit();
+  }, [formDataInit]);
+
   const goBack = () => {
     navigate(`/streams/${streamId}`);
   };
@@ -58,6 +64,11 @@ const StreamEditContainer = ({ streamId }) => {
         })),
       })
     );
+  };
+
+  const onReset = () => {
+    console.log("what");
+    formDataInit();
   };
 
   const onAddTag = ({ _id, tagId, tagNameEN, tagNameJP, catId }) => {
@@ -184,6 +195,7 @@ const StreamEditContainer = ({ streamId }) => {
       formData={formData}
       goBack={goBack}
       onSubmit={onSubmit}
+      onReset={onReset}
       tags={tagOptions}
       onAddTag={onAddTag}
       onTagRemove={onTagRemove}

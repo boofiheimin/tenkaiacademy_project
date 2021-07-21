@@ -19,9 +19,7 @@ export const fetchStreams = async (queryData) =>
 export const fetchStream = async (id) => API.get(`/streams/${id}`);
 export const editStream = async (id, formData) =>
   API.patch(`/streams/${id}`, formData);
-export const refetchAll = async () => {
-  API.get("/streams/refetch_all");
-};
+export const refetchAll = async () => API.get("/streams/refetch_all");
 
 export const fetchTags = async () => API.get("/tags");
 export const createTag = async (tagData) => API.post("/tags", tagData);

@@ -82,6 +82,13 @@ const useStyles = makeStyles((theme) => ({
       overflowY: "auto",
     },
   },
+  close: {
+    padding: 0,
+  },
+  snack: {
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 export default useStyles;

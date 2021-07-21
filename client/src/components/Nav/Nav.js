@@ -3,6 +3,7 @@ import Proptypes from "prop-types";
 import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { Outlet } from "react-router-dom";
 import {
@@ -16,8 +17,9 @@ import {
   Hidden,
   useTheme,
   useMediaQuery,
+  Snackbar,
 } from "@material-ui/core";
-
+import { Alert } from "@material-ui/lab";
 import DrawerItems from "./DrawerItems";
 import useStyles from "./styles";
 
@@ -32,6 +34,9 @@ const Nav = ({
   onLogout,
   isLogin,
   username,
+  openNoti,
+  notification,
+  onNotiClose,
 }) => {
   const outletRef = useRef(null);
   const classes = useStyles();
@@ -113,6 +118,28 @@ const Nav = ({
       >
         <div className={classes.drawerHeader} />
         <div className={classes.outlet} id="scrollableDiv">
+          <Snackbar
+            open={openNoti}
+            onClose={onNotiClose}
+            autoHideDuration={6000}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              severity={notification.type}
+              variant="filled"
+              className={classes.snack}
+            >
+              {notification.message}
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                className={classes.close}
+                size="small"
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Alert>
+          </Snackbar>
           <Outlet outletRef={outletRef} />
         </div>
       </main>
@@ -128,10 +155,22 @@ Nav.propTypes = {
   onLogout: Proptypes.func.isRequired,
   isLogin: Proptypes.string.isRequired,
   username: Proptypes.string,
+  openNoti: Proptypes.bool,
+  notification: Proptypes.shape({
+    type: Proptypes.string,
+    message: Proptypes.string,
+  }),
+  onNotiClose: Proptypes.func,
 };
 
 Nav.defaultProps = {
   username: "",
+  openNoti: false,
+  notification: {
+    type: "",
+    message: "",
+  },
+  onNotiClose: false,
 };
 
 export { OutletContext };
