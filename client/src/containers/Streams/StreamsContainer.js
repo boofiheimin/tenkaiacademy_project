@@ -14,7 +14,9 @@ import Streams from "../../components/Streams/Streams";
 const StreamsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { streams, offset, hasMore } = useSelector((state) => state.streams);
+  const { streams, offset, hasMore, refetching } = useSelector(
+    (state) => state.streams
+  );
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
@@ -31,7 +33,6 @@ const StreamsRoute = () => {
 
   const handleRefetchAll = () => {
     dispatch(refetchAll());
-    forceUpdate();
   };
 
   return (
@@ -41,6 +42,7 @@ const StreamsRoute = () => {
       fetchMore={fetchMore}
       onVideoCardClick={onVideoCardClick}
       handleRefetchAll={handleRefetchAll}
+      refetching={refetching}
     />
   );
 };

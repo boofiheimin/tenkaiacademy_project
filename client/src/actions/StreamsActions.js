@@ -76,7 +76,19 @@ export const refetchAll = () => async (dispatch) => {
     dispatch({ type: REFETCH_ALL_STREAM_BEGIN });
     const { data } = await api.refetchAll();
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
-    dispatch({ type: SUCCESS_NOTIFICATION, message: data });
+    dispatch({ type: SUCCESS_NOTIFICATION, message: data.message });
+    const {
+      data: { docs },
+    } = await api.fetchStreams({
+      query: {},
+      limit: VIDEOS_FETCH_LIMIT,
+    });
+
+    if (docs.length < VIDEOS_FETCH_LIMIT) {
+      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs });
+    } else {
+      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs });
+    }
   } catch (error) {
     console.log(error.message);
     dispatch({ type: ERROR_NOTIFICATION, message: error.message });

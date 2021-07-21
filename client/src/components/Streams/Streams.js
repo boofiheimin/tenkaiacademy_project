@@ -1,11 +1,20 @@
 import { PropTypes } from "prop-types";
 import clsx from "clsx";
-import { Typography, Box, Button } from "@material-ui/core";
+import {
+  Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+  Paper,
+} from "@material-ui/core";
 
 import VideoCards from "../VideoCards/VideoCards";
 import useStyles from "./styles";
 
-const Streams = ({ handleRefetchAll, ...props }) => {
+const Streams = ({ handleRefetchAll, refetching, ...props }) => {
   const classes = useStyles();
   return (
     <div>
@@ -23,6 +32,21 @@ const Streams = ({ handleRefetchAll, ...props }) => {
         </Button>
       </Box>
       <VideoCards {...props} />
+      <Dialog open={refetching}>
+        <DialogTitle>
+          <Typography variant="h5">Refetching</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            padding={2}
+          >
+            <CircularProgress />
+          </Box>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

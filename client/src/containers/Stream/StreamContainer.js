@@ -11,7 +11,7 @@ const StreamContainer = () => {
   const navigate = useNavigate();
   const [clipAcc, setClipAcc] = useState(true);
   const [tabStatus, setTabStatus] = useState(0);
-  const { stream, refetching } = useSelector((state) => state.streams);
+  const { stream } = useSelector((state) => state.streams);
 
   const { id } = useParams();
   useEffect(() => {
@@ -43,7 +43,6 @@ const StreamContainer = () => {
       goBack={goBack}
       goEdit={goEdit}
       isLogin={localStorage.getItem("authToken")}
-      refetching={refetching}
     />
   );
 };
