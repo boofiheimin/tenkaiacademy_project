@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     maxWidth: 120,
   },
+  invisiblechip: {
+    background: "none",
+  },
 }));
 
 export default useStyles;

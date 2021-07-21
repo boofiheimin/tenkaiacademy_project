@@ -80,6 +80,7 @@ const VideoCard = ({
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.cardActions}>
+        {tags.length === 0 && <Chip className={classes.invisiblechip} />}
         {tags.slice(0, 2).map(({ id: tagId, tagNameEN }) => (
           <Chip label={tagNameEN} key={tagId} className={classes.chip} />
         ))}
