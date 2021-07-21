@@ -84,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   close: {
     padding: 0,
+    marginLeft: theme.spacing(2),
   },
   snack: {
     display: "flex",

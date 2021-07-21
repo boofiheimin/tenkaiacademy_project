@@ -1,9 +1,37 @@
-import { VIDEO_MODE } from "../constants/actionTypes";
+import {
+  VIDEO_MODE,
+  SUCCESS_NOTIFICATION,
+  ERROR_NOTIFICATION,
+} from "../constants/actionTypes";
+import { ALERT_SUCCESS, ALERT_ERROR } from "../constants/main";
 
-const reducer = (state = { videoMode: false }, action) => {
+const reducer = (
+  state = {
+    videoMode: false,
+    notification: { type: ALERT_SUCCESS, message: false },
+  },
+  action
+) => {
   switch (action.type) {
     case VIDEO_MODE:
       return { ...state, videoMode: action.status ?? false };
+    case SUCCESS_NOTIFICATION:
+      return {
+        ...state,
+        notification: {
+          type: ALERT_SUCCESS,
+          message: action.message,
+        },
+      };
+    case ERROR_NOTIFICATION:
+      return {
+        ...state,
+        notification: {
+          type: ALERT_ERROR,
+          message: action.message,
+        },
+      };
+
     default:
       return state;
   }

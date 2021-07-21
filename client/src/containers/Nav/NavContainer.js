@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../actions/AuthActions";
+import { clearNotification } from "../../actions/GlobalActions";
 import Nav from "../../components/Nav/Nav";
 
 const NavContainer = () => {
@@ -11,17 +12,18 @@ const NavContainer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const notification = useSelector((state) => state.notification);
-  const { videoMode } = useSelector((state) => state.global);
+  const { videoMode, notification } = useSelector((state) => state.global);
 
   useEffect(() => {
     if (notification.message) {
       setOpenNoti(true);
     }
+    setOpenMobile(false);
   }, [notification]);
 
   const handleNotiClose = () => {
     setOpenNoti(false);
+    dispatch(clearNotification);
   };
 
   const handleDrawerToggle = () => {
@@ -35,8 +37,6 @@ const NavContainer = () => {
   const handleLogout = () => {
     dispatch(logout(navigate));
   };
-
-  console.log(openNoti);
 
   return (
     <Nav
