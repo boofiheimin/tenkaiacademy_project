@@ -12,6 +12,7 @@ const NavContainer = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const notification = useSelector((state) => state.notification);
+  const { videoMode } = useSelector((state) => state.global);
 
   useEffect(() => {
     if (notification.message) {
@@ -25,12 +26,10 @@ const NavContainer = () => {
 
   const handleDrawerToggle = () => {
     setOpen(!open);
-    setOpenMobile(!open);
   };
 
   const handleDrawerToggleMobile = () => {
     setOpenMobile(!openMobile);
-    setOpen(!openMobile);
   };
 
   const handleLogout = () => {
@@ -51,6 +50,7 @@ const NavContainer = () => {
       notification={notification}
       onNotiClose={handleNotiClose}
       openNoti={openNoti}
+      videoMode={videoMode}
     />
   );
 };

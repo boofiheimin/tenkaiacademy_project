@@ -143,7 +143,7 @@ const StreamEditContainer = ({ streamId }) => {
   const onDetailChange = (e) => {
     const newForm = {
       ...formData,
-      detail: e.target.value,
+      description: e.target.value,
     };
     setFormData(newForm);
   };

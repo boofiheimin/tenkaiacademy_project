@@ -2,6 +2,8 @@ export const AUTH = "AUTH";
 export const LOGOUT = "LOGOUT";
 export const AUTH_ERROR = "AUTH_ERROR";
 
+export const VIDEO_MODE = "VIDEO_MODE";
+
 export const SUCCESS_NOTIFICATION = "SUCCESS_NOTIFICATION";
 export const ERROR_NOTIFICATION = "ERROR_NOTIFICATION";
 

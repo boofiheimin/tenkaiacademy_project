@@ -53,11 +53,11 @@ const StreamEdit = ({
     source,
     tags,
     timestamps = [],
-    detail,
+    description,
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
-  console.log(detail);
+  console.log(description);
 
   return (
     <Container>
@@ -191,14 +191,14 @@ const StreamEdit = ({
             <Grid item md={6} xs={12} className={classes.gridContainer}>
               <Card className={classes.segmentContainer}>
                 <div className={classes.cardHeader}>
-                  <Typography variant="h6">Detail</Typography>
+                  <Typography variant="h6">Description</Typography>
                 </div>
                 <Divider />
                 <div className={classes.textAreaContainer}>
                   <TextareaAutosize
                     className={classes.textarea}
                     minRows={9}
-                    value={detail || ""}
+                    value={description || ""}
                     onChange={onDetailChange}
                   />
                 </div>

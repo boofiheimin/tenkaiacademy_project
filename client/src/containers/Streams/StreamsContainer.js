@@ -17,7 +17,6 @@ const StreamsRoute = () => {
   const { streams, offset, hasMore, refetching } = useSelector(
     (state) => state.streams
   );
-  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     dispatch(getStreams({}));

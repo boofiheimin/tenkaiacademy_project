@@ -20,19 +20,19 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { secondsTohhmmss } from "../../../helper";
 import useStyles from "./styles";
 
-const DetailContent = ({ publishedAtBox, publishedAt, detail }) => (
+const DetailContent = ({ publishedAtBox, publishedAt, description }) => (
   <Box padding={1}>
     <Typography
       className={publishedAtBox}
     >{`Published at ${publishedAt}`}</Typography>
-    <Typography>{detail}</Typography>
+    <Typography>{description}</Typography>
   </Box>
 );
 
 DetailContent.propTypes = {
   publishedAtBox: Proptypes.string.isRequired,
   publishedAt: Proptypes.string.isRequired,
-  detail: Proptypes.string.isRequired,
+  description: Proptypes.string.isRequired,
 };
 
 const TimestampContent = ({ timestamps = [], buttonLink, onSeek }) => (
@@ -68,7 +68,7 @@ const BottomInfo = ({
   publishedAt,
   clipAcc,
   clipAccordionControl,
-  detail,
+  description,
   timestamps,
   onSeek,
 }) => {
@@ -83,10 +83,10 @@ const BottomInfo = ({
             <Box height="100%">
               <Card>
                 <Box className={classes.header}>
-                  <Typography>Detail</Typography>
+                  <Typography>Description</Typography>
                 </Box>
                 <DetailContent
-                  detail={detail}
+                  description={description}
                   publishedAt={publishedAt}
                   publishedAtBox={classes.publishedAtBox}
                 />
@@ -125,7 +125,7 @@ const BottomInfo = ({
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Detail</Typography>
+              <Typography>Description</Typography>
             </AccordionSummary>
             <AccordionDetails>
               {DetailContent(classes, publishedAt)}
@@ -165,11 +165,11 @@ BottomInfo.propTypes = {
   publishedAt: Proptypes.string.isRequired,
   clipAcc: Proptypes.bool.isRequired,
   clipAccordionControl: Proptypes.func.isRequired,
-  detail: Proptypes.string,
+  description: Proptypes.string,
 };
 
 BottomInfo.defaultProps = {
-  detail: "",
+  description: "",
 };
 
 export default BottomInfo;

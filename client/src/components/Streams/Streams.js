@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogContent,
   CircularProgress,
-  Paper,
 } from "@material-ui/core";
 
 import VideoCards from "../VideoCards/VideoCards";
@@ -53,10 +52,12 @@ const Streams = ({ handleRefetchAll, refetching, ...props }) => {
 
 Streams.propTypes = {
   handleRefetchAll: PropTypes.func,
+  refetching: PropTypes.bool,
 };
 
 Streams.defaultProps = {
   handleRefetchAll: () => {},
+  refetching: false,
 };
 
 export default Streams;

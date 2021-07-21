@@ -14,7 +14,6 @@ import {
   IconButton,
   Button,
   CssBaseline,
-  Hidden,
   useTheme,
   useMediaQuery,
   Snackbar,
@@ -37,17 +36,18 @@ const Nav = ({
   openNoti,
   notification,
   onNotiClose,
+  videoMode,
 }) => {
   const outletRef = useRef(null);
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("lg"));
+  const matches = useMediaQuery(theme.breakpoints.down("md")) || videoMode;
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Hidden lgUp implementation="css">
+          {matches ? (
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -57,8 +57,7 @@ const Nav = ({
             >
               <MenuIcon />
             </IconButton>
-          </Hidden>
-          <Hidden mdDown implementation="css">
+          ) : (
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -68,7 +67,8 @@ const Nav = ({
             >
               <MenuIcon />
             </IconButton>
-          </Hidden>
+          )}
+
           <Typography variant="h6" noWrap className={classes.title}>
             Tenkai Academy Project
           </Typography>
@@ -85,17 +85,6 @@ const Nav = ({
 
       {matches ? (
         <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-          <Toolbar />
-          <DrawerItems classes={classes} />
-        </Drawer>
-      ) : (
-        <Drawer
           open={openMobile}
           onClose={handleDrawerToggleMobile}
           variant="temporary"
@@ -107,6 +96,17 @@ const Nav = ({
             keepMounted: true,
           }}
         >
+          <DrawerItems classes={classes} />
+        </Drawer>
+      ) : (
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          <Toolbar />
           <DrawerItems classes={classes} />
         </Drawer>
       )}
@@ -161,6 +161,7 @@ Nav.propTypes = {
     message: Proptypes.string,
   }),
   onNotiClose: Proptypes.func,
+  videoMode: Proptypes.bool,
 };
 
 Nav.defaultProps = {
@@ -171,6 +172,7 @@ Nav.defaultProps = {
     message: "",
   },
   onNotiClose: false,
+  videoMode: false,
 };
 
 export { OutletContext };
