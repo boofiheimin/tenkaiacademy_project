@@ -22,6 +22,10 @@ const streamSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
+  timestamps: {
+    type: Array,
+    default: [],
+  },
   uploader: {
     type: String,
     required: [true, "Please provide uploader"],
