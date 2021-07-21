@@ -138,8 +138,6 @@ export const refetch_all = async (req, res, next) => {
             );
             totalAdd += 1;
           }
-        } else {
-          console.log(data);
         }
       })
     );

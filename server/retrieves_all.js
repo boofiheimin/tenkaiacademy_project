@@ -78,8 +78,6 @@ const retrieves_all = async () => {
             await newStream.save();
             totalAdd += 1;
           }
-        } else {
-          console.log(data);
         }
       })
     );
