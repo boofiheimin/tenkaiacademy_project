@@ -5,9 +5,9 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   sectionHeader: {
-    background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
-    padding: theme.spacing(1),
-    color: "white",
+    padding: `${theme.spacing(1)}px  ${theme.spacing(2)}px`,
+    // background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+    // color: "white",
   },
   videoTitle: {
     lineClamp: 1,
@@ -37,8 +37,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   timestampContainer: {
-    height: "calc(100% - 48px)",
+    height: "calc(100% - 56px)",
     width: "100%",
+    marginTop: theme.spacing(0.5),
     overflowY: "auto",
     position: "relative",
   },
@@ -49,6 +50,23 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  publishedAt: {
+    paddingLeft: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    fontStyle: "italic",
+  },
+  secondGrid: {
+    marginTop: theme.spacing(1),
+  },
+  thirdGrid: {
+    marginTop: theme.spacing(1),
+  },
+  embedContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    alignItems: "center",
   },
 }));
 

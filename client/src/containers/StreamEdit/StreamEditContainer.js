@@ -19,9 +19,7 @@ const StreamEditContainer = ({ streamId }) => {
   const [tagOptions, setTagOptions] = useState([]);
 
   const formDataInit = useCallback(() => {
-    console.log("formDataInit");
     if (tags.length > 0 && stream) {
-      console.log("formDataInit start");
       const formatTags = stream.tags.map(({ tagId: tid }) => {
         const { _id, tagNameEN, tagId, catId } = tags.find(
           (tag) => tag.tagId === tid
@@ -67,7 +65,6 @@ const StreamEditContainer = ({ streamId }) => {
   };
 
   const onReset = () => {
-    console.log("what");
     formDataInit();
   };
 

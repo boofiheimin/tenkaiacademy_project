@@ -14,10 +14,7 @@ import {
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 import Timestamp from "./Timestamp/Timestamp";
@@ -57,7 +54,6 @@ const StreamEdit = ({
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
-  console.log(description);
 
   return (
     <Container>
@@ -151,17 +147,13 @@ const StreamEdit = ({
                   <div className={classes.infoInputContainer}>
                     <Typography>publisedAt:&nbsp;</Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        disableToolbar
+                      <DateTimePicker
                         variant="inline"
-                        format="MM/dd/yyyy"
+                        format="MM/dd/yyyy HH:mm:ss "
                         id="date-picker-inline"
                         value={publishedAt}
                         onChange={onPublishedChange}
                         disabled={disableVideoInfo}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
                       />
                     </MuiPickersUtilsProvider>
                   </div>

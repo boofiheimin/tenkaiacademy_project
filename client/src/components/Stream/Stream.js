@@ -1,15 +1,18 @@
 import Proptypes from "prop-types";
-
+import moment from "moment";
 import {
   Box,
   Grid,
   Container,
   Typography,
-  IconButton,
   Button,
+  Divider,
+  Chip,
+  Paper,
 } from "@material-ui/core";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
 import EditIcon from "@material-ui/icons/Edit";
+import { TwitterTweetEmbed } from "react-twitter-embed";
 
 import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
 
@@ -17,14 +20,7 @@ import useStyles from "./styles";
 
 import Timestamp from "./Timestamp/Timestamp";
 
-const Stream = ({
-  stream = {},
-  goBack,
-  isLogin,
-  goEdit,
-  videoPos,
-  onVideoSeek,
-}) => {
+const Stream = ({ stream = {}, isLogin, goEdit, videoPos, onVideoSeek }) => {
   const classes = useStyles();
   const {
     videoId,
@@ -33,6 +29,10 @@ const Stream = ({
     tags = [],
     description,
     timestamps = [],
+    uploader,
+    clips = [],
+    relatedVideos = [],
+    relatedTweets = [],
   } = stream;
 
   return (
@@ -45,14 +45,16 @@ const Stream = ({
         paddingLeft={8}
         paddingRight={8}
       >
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={9}>
             <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
           </Grid>
           <Grid item xs={3}>
-            <div className={classes.sectionHeader}>
-              <Typography variant="h5">Timestamp</Typography>
-            </div>
+            <Paper>
+              <div className={classes.sectionHeader}>
+                <Typography variant="h6">Timestamp</Typography>
+              </div>
+            </Paper>
             <div className={classes.timestampContainer}>
               <div className={classes.timestampScroller}>
                 <Timestamp timestamps={timestamps} onVideoSeek={onVideoSeek} />
@@ -60,25 +62,86 @@ const Stream = ({
             </div>
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container spacing={2} className={classes.secondGrid}>
           <Grid item xs={9}>
-            <Box display="flex" padding={1} alignItems="center">
-              <Typography variant="h6" className={classes.videoTitle}>
-                {title}
-              </Typography>
-              {isLogin && (
-                <Button
-                  className={classes.editButton}
-                  variant="contained"
-                  onClick={goEdit}
-                >
-                  <EditIcon />
-                </Button>
-              )}
-            </Box>
+            <Paper>
+              <Box display="flex" padding={2} alignItems="center">
+                <Typography variant="h6" className={classes.videoTitle}>
+                  {title}
+                </Typography>
+                {isLogin && (
+                  <Button
+                    className={classes.editButton}
+                    variant="contained"
+                    onClick={goEdit}
+                  >
+                    <EditIcon />
+                  </Button>
+                )}
+              </Box>
+              <Typography
+                className={classes.publishedAt}
+              >{`Published at ${moment(publishedAt).format(
+                "MMM d, YYYY HH:mm:ss"
+              )}`}</Typography>
+              <Divider />
+              <Box padding={2}>
+                <Typography variant="h6">{`Channel: ${uploader}`}</Typography>
+                <Box paddingTop={1}>
+                  <Typography>{description}</Typography>
+                </Box>
+              </Box>
+              <Box padding={2}>
+                {tags.map((tag) => (
+                  <Chip label={tag.tagNameEN} className={classes.chip} />
+                ))}
+              </Box>
+            </Paper>
+            <Grid item container spacing={2} className={classes.thirdGrid}>
+              <Grid item xs={6}>
+                <Paper>
+                  <div className={classes.sectionHeader}>
+                    <Typography variant="h6">Related Tweets</Typography>
+                  </div>
+                </Paper>
+                <Box padding={2}>
+                  {relatedTweets.length === 0 && (
+                    <Typography align="center">None</Typography>
+                  )}
+                  <div className={classes.embedContainer}>
+                    {relatedTweets.map((tweet) => (
+                      <TwitterTweetEmbed tweetId={tweet} />
+                    ))}
+                  </div>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Paper>
+                  <div className={classes.sectionHeader}>
+                    <Typography variant="h6">Related Videos</Typography>
+                  </div>
+                </Paper>
+                <Box padding={2}>
+                  {relatedVideos.length === 0 && (
+                    <Typography align="center">None</Typography>
+                  )}
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={3}>
-            <div>clips</div>
+            <Box>
+              <Paper>
+                <div className={classes.sectionHeader}>
+                  <Typography variant="h6">Clips</Typography>
+                </div>
+              </Paper>
+              <Box padding={2}>
+                {clips.length === 0 && (
+                  <Typography align="center">No clips :(</Typography>
+                )}
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Box>
@@ -88,7 +151,6 @@ const Stream = ({
 
 Stream.propTypes = {
   stream: Proptypes.object,
-  goBack: Proptypes.func.isRequired,
   isLogin: Proptypes.string.isRequired,
   goEdit: Proptypes.func.isRequired,
   videoPos: Proptypes.number,

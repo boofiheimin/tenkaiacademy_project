@@ -32,9 +32,6 @@ const StreamContainer = () => {
     setTabStatus(value);
   };
 
-  const goBack = () => {
-    navigate("/streams");
-  };
   const goEdit = () => {
     navigate(`/streams/${id}/edit`);
   };
@@ -52,7 +49,6 @@ const StreamContainer = () => {
       clipAccordionControl={clipAccordionControl}
       tabControl={tabControl}
       tabStatus={tabStatus}
-      goBack={goBack}
       goEdit={goEdit}
       isLogin={localStorage.getItem("authToken")}
       onVideoSeek={handleVideoSeek}
