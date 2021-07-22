@@ -19,7 +19,7 @@ const NavContainer = () => {
       setOpenNoti(true);
     }
     setOpenMobile(false);
-  }, [notification]);
+  }, [notification, videoMode]);
 
   const handleNotiClose = () => {
     setOpenNoti(false);
