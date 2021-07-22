@@ -63,10 +63,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   embedContainer: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    alignItems: "center",
+    "& div": {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+      alignItems: "center",
+    },
+    "& iframe": {
+      width: "100% !important",
+    },
   },
 }));
 

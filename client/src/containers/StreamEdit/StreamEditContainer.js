@@ -26,10 +26,15 @@ const StreamEditContainer = ({ streamId }) => {
         );
         return { id: _id, text: tagNameEN, tagId, catId };
       });
+      const formatTweets = stream.relatedTweets.map((tweetId) => ({
+        id: tweetId,
+        text: tweetId,
+      }));
 
       setFormData({
         ...stream,
         tags: formatTags,
+        relatedTweets: formatTweets,
       });
 
       let formatOptions = [...tags];
@@ -52,14 +57,20 @@ const StreamEditContainer = ({ streamId }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    const formatTags = formData.tags.map(({ tagId, text, tagNameJP }) => ({
+      tagId,
+      tagNameEN: text,
+      tagNameJP,
+    }));
+
+    const formatTweets = formData.relatedTweets.map(({ text }) => text);
+
     dispatch(
       editStream(streamId, {
         ...formData,
-        tags: formData.tags.map(({ tagId, text, tagNameJP }) => ({
-          tagId,
-          tagNameEN: text,
-          tagNameJP,
-        })),
+        tags: formatTags,
+        relatedTweets: formatTweets,
       })
     );
   };
@@ -101,7 +112,7 @@ const StreamEditContainer = ({ streamId }) => {
     setTagOptions(newOptions);
   };
 
-  const onTagReordered = (reorderedTags) => {
+  const onReorderTag = (reorderedTags) => {
     const newForm = {
       ...formData,
       tags: [...reorderedTags],
@@ -109,7 +120,7 @@ const StreamEditContainer = ({ streamId }) => {
     setFormData(newForm);
   };
 
-  const onTagRemove = (id) => {
+  const onRemoveTag = (id) => {
     // If parent tag is removed. Remove all child.
     let newTags = [...formData.tags];
     let newOptions = [...tagOptions];
@@ -187,6 +198,33 @@ const StreamEditContainer = ({ streamId }) => {
     setFormData(newForm);
   };
 
+  const onAddTweet = (twitterId) => {
+    const newTweets = [
+      ...formData.relatedTweets,
+      { id: twitterId, text: twitterId },
+    ];
+    const newForm = {
+      ...formData,
+      relatedTweets: newTweets,
+    };
+    setFormData(newForm);
+  };
+  const onReorderTweet = (reorderedTweets) => {
+    const newForm = {
+      ...formData,
+      relatedTweets: [...reorderedTweets],
+    };
+    setFormData(newForm);
+  };
+  const onRemoveTweet = (id) => {
+    const newTweets = [...formData.relatedTweets];
+    const newForm = {
+      ...formData,
+      relatedTweets: newTweets.filter((tag) => tag.id !== id),
+    };
+    setFormData(newForm);
+  };
+
   return (
     <StreamEdit
       formData={formData}
@@ -195,12 +233,15 @@ const StreamEditContainer = ({ streamId }) => {
       onReset={onReset}
       tags={tagOptions}
       onAddTag={onAddTag}
-      onTagRemove={onTagRemove}
-      onTagReordered={onTagReordered}
+      onRemoveTag={onRemoveTag}
+      onReorderTag={onReorderTag}
       onDetailChange={onDetailChange}
       onAddTimeStamp={onAddTimeStamp}
       onDeleteTimestamp={onDeleteTimestamp}
       onTimestampSave={onTimestampSave}
+      onAddTweet={onAddTweet}
+      onReorderTweet={onReorderTweet}
+      onRemoveTweet={onRemoveTweet}
     />
   );
 };

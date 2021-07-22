@@ -21,7 +21,7 @@ const TagsContainer = () => {
   const onAddTag = (tag) => {
     dispatch(createTag(tag));
   };
-  const onTagRemove = (id) => {
+  const onRemoveTag = (id) => {
     dispatch(deleteTag(id));
   };
 
@@ -33,7 +33,7 @@ const TagsContainer = () => {
     <Tags
       tags={tags}
       onAddTag={onAddTag}
-      onTagRemove={onTagRemove}
+      onRemoveTag={onRemoveTag}
       onTagSave={onTagSave}
     />
   );

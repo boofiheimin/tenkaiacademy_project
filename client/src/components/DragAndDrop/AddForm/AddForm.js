@@ -4,7 +4,7 @@ import { TextField, IconButton, Box } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const AddForm = ({ label, onAdd, lists }) => {
+const AddForm = ({ label, placeholder, onAdd, lists }) => {
   const [value, setValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
@@ -16,6 +16,11 @@ const AddForm = ({ label, onAdd, lists }) => {
   const handleOnChange = (e, v) => {
     setValue(v);
   };
+
+  const handleOnTextFieldChange = (e) => {
+    setValue(e.target.value);
+  };
+
   const handleInputChange = (e, v) => {
     setInputValue(v);
   };
@@ -33,7 +38,7 @@ const AddForm = ({ label, onAdd, lists }) => {
       borderRadius={8}
       padding={1}
     >
-      {options.length > 0 ? (
+      {lists.length > 0 ? (
         <Autocomplete
           options={options}
           value={value}
@@ -56,8 +61,9 @@ const AddForm = ({ label, onAdd, lists }) => {
       ) : (
         <TextField
           label={label}
+          placeholder={placeholder}
           value={value}
-          onChange={handleOnChange}
+          onChange={handleOnTextFieldChange}
           style={{ width: "80%" }}
           InputLabelProps={{
             shrink: true,
@@ -75,12 +81,14 @@ AddForm.propTypes = {
   label: PropTypes.string,
   onAdd: PropTypes.func,
   lists: PropTypes.array,
+  placeholder: PropTypes.string,
 };
 
 AddForm.defaultProps = {
   label: "",
   onAdd: () => {},
   lists: [],
+  placeholder: "",
 };
 
 export default AddForm;

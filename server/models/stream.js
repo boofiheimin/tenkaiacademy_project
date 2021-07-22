@@ -26,6 +26,14 @@ const streamSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
+  relatedTweets: {
+    type: Array,
+    default: [],
+  },
+  relatedVideos: {
+    type: Array,
+    default: [],
+  },
   uploader: {
     type: String,
     required: [true, "Please provide uploader"],

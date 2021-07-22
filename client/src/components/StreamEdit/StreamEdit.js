@@ -32,12 +32,15 @@ const StreamEdit = ({
   onUploaderChange,
   tags: propTags,
   onAddTag,
-  onTagReordered,
-  onTagRemove,
+  onReorderTag,
+  onRemoveTag,
   onDetailChange,
   onAddTimeStamp,
   onDeleteTimestamp,
   onTimestampSave,
+  onAddTweet,
+  onReorderTweet,
+  onRemoveTweet,
 }) => {
   const {
     title,
@@ -51,6 +54,7 @@ const StreamEdit = ({
     tags,
     timestamps = [],
     description,
+    relatedTweets = [],
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
@@ -109,7 +113,7 @@ const StreamEdit = ({
                 <Box padding={2}>
                   <Typography>id: {_id}</Typography>
                   <Typography>
-                    videoId:{" "}
+                    {`videoId: `}
                     <a
                       href={`https://www.youtube.com/watch?v=${videoId}`}
                       target="_blank"
@@ -174,8 +178,8 @@ const StreamEdit = ({
                     addItemLabel="Add tags"
                     onAddItem={onAddTag}
                     lists={propTags}
-                    onReorderedItem={onTagReordered}
-                    onRemoveItem={onTagRemove}
+                    onReorderItem={onReorderTag}
+                    onRemoveItem={onRemoveTag}
                   />
                 </div>
               </Card>
@@ -219,10 +223,14 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  {/* <DragAndDrop
-                    items={relatedVideos}
+                  <DragAndDrop
+                    items={relatedTweets}
                     addItemLabel="Add Related Tweets"
-                  /> */}
+                    placeholder="twitter id"
+                    onAddItem={onAddTweet}
+                    onReorderItem={onReorderTweet}
+                    onRemoveItem={onRemoveTweet}
+                  />
                 </div>
               </Card>
             </Grid>
@@ -270,12 +278,15 @@ StreamEdit.propTypes = {
     })
   ),
   onAddTag: Proptypes.func,
-  onTagReordered: Proptypes.func,
-  onTagRemove: Proptypes.func,
+  onReorderTag: Proptypes.func,
+  onRemoveTag: Proptypes.func,
   onAddTimeStamp: Proptypes.func,
   onDeleteTimestamp: Proptypes.func,
   onTimestampSave: Proptypes.func,
   onReset: Proptypes.func,
+  onAddTweet: Proptypes.func,
+  onReorderTweet: Proptypes.func,
+  onRemoveTweet: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -287,12 +298,15 @@ StreamEdit.defaultProps = {
   onDetailChange: () => {},
   tags: [],
   onAddTag: () => {},
-  onTagReordered: () => {},
-  onTagRemove: () => {},
+  onReorderTag: () => {},
+  onRemoveTag: () => {},
   onAddTimeStamp: () => {},
   onDeleteTimestamp: () => {},
   onTimestampSave: () => {},
   onReset: () => {},
+  onAddTweet: () => {},
+  onReorderTweet: () => {},
+  onRemoveTweet: () => {},
 };
 
 export default StreamEdit;

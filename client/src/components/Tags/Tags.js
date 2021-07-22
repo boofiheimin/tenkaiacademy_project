@@ -18,7 +18,7 @@ import Tag from "./Tag/Tag";
 
 import useStyles from "./styles";
 
-const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
+const Tags = ({ tags: propTags, onTagSave, onRemoveTag, onAddTag }) => {
   const classes = useStyles();
   const [tagNameEN, setEN] = useState("");
   const [tagNameJP, setJP] = useState("");
@@ -168,7 +168,7 @@ const Tags = ({ tags: propTags, onTagSave, onTagRemove, onAddTag }) => {
                 <Tag
                   tag={tag}
                   onSave={onTagSave}
-                  onRemove={onTagRemove}
+                  onRemove={onRemoveTag}
                   key={tag._id}
                 />
               ))}
@@ -191,13 +191,13 @@ Tags.propTypes = {
     })
   ),
   onTagSave: PropTypes.func,
-  onTagRemove: PropTypes.func,
+  onRemoveTag: PropTypes.func,
   onAddTag: PropTypes.func,
 };
 Tags.defaultProps = {
   tags: [],
   onTagSave: () => {},
-  onTagRemove: () => {},
+  onRemoveTag: () => {},
   onAddTag: () => {},
 };
 

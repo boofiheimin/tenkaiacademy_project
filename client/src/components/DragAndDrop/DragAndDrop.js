@@ -14,8 +14,9 @@ const DragAndDrop = ({
   addItemValue,
   onAddItem,
   onChangeItem,
-  onReorderedItem,
+  onReorderItem,
   lists,
+  placeholder,
 }) => {
   const [items, setItems] = useState(propItems);
   const classes = useStyles({ itemsLength: items.length });
@@ -40,13 +41,14 @@ const DragAndDrop = ({
       result.source.index,
       result.destination.index
     );
-    onReorderedItem(reorderedItems);
+    onReorderItem(reorderedItems);
   };
 
   return (
     <div className={classes.container}>
       <AddForm
         label={addItemLabel}
+        placeholder={placeholder}
         value={addItemValue}
         onAdd={onAddItem}
         onChange={onChangeItem}
@@ -84,8 +86,9 @@ DragAndDrop.propTypes = {
   addItemValue: Proptypes.string,
   onAddItem: Proptypes.func,
   onChangeItem: Proptypes.func,
-  onReorderedItem: Proptypes.func,
+  onReorderItem: Proptypes.func,
   lists: Proptypes.array,
+  placeholder: Proptypes.string,
 };
 
 DragAndDrop.defaultProps = {
@@ -95,8 +98,9 @@ DragAndDrop.defaultProps = {
   addItemValue: "",
   onAddItem: () => {},
   onChangeItem: () => {},
-  onReorderedItem: () => {},
+  onReorderItem: () => {},
   lists: [],
+  placeholder: "",
 };
 
 export default DragAndDrop;
