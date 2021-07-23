@@ -1,14 +1,6 @@
 import VideoCardStory from "./VideoCardStory";
 
-import {
-  GAME,
-  TALK,
-  COVER,
-  SINGING,
-  LIVE,
-  ORIGINAL,
-  PRIVATE,
-} from "../constants/videoTypes";
+import { GAME, TALK, PRIVATE } from "../constants/videoTypes";
 
 export default {
   title: "VideoCard",
@@ -25,7 +17,7 @@ export default {
     },
     type: {
       defaultValue: GAME,
-      options: [GAME, TALK, COVER, SINGING, LIVE, ORIGINAL, PRIVATE, "misc"],
+      options: [GAME, TALK, PRIVATE, "misc"],
       control: { type: "select" },
     },
     tags: {

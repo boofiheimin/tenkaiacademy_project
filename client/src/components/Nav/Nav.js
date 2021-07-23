@@ -99,16 +99,24 @@ const Nav = ({
           <DrawerItems classes={classes} />
         </Drawer>
       ) : (
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-          <Toolbar />
-          <DrawerItems classes={classes} />
-        </Drawer>
+        <>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(
+                classes.drawerPaper,
+                !open && classes.drawerPaperClose
+              ),
+            }}
+            open={open}
+          >
+            <Toolbar />
+            <DrawerItems classes={classes} />
+          </Drawer>
+          <div
+            className={open ? classes.drawerSide : classes.drawerSideClose}
+          />
+        </>
       )}
 
       <main
@@ -117,32 +125,33 @@ const Nav = ({
         })}
       >
         <div className={classes.drawerHeader} />
+
         <div className={classes.outlet} id="scrollableDiv">
-          <Snackbar
-            open={openNoti}
-            onClose={onNotiClose}
-            autoHideDuration={6000}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert
-              severity={notification.type}
-              variant="filled"
-              className={classes.snack}
-            >
-              {notification.message}
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                className={classes.close}
-                size="small"
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Alert>
-          </Snackbar>
           <Outlet outletRef={outletRef} />
         </div>
       </main>
+      <Snackbar
+        open={openNoti}
+        onClose={onNotiClose}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          severity={notification.type}
+          variant="filled"
+          className={classes.snack}
+        >
+          {notification.message}
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            className={classes.close}
+            size="small"
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
@@ -171,7 +180,7 @@ Nav.defaultProps = {
     type: "",
     message: "",
   },
-  onNotiClose: false,
+  onNotiClose: () => {},
   videoMode: false,
 };
 

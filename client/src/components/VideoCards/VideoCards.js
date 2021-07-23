@@ -2,7 +2,7 @@ import Proptypes from "prop-types";
 import { CircularProgress, Box } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import VideoCard from "./VideoCard";
+import VideoCard from "../VideoCard/VideoCard";
 
 const VideoCards = ({ videos, hasMore, fetchMore, onVideoCardClick }) => (
   <div
@@ -17,7 +17,6 @@ const VideoCards = ({ videos, hasMore, fetchMore, onVideoCardClick }) => (
       next={fetchMore}
       hasMore={hasMore}
       loader={<CircularProgress />}
-      scrollableTarget="scrollableDiv"
     >
       <Box
         display="grid"

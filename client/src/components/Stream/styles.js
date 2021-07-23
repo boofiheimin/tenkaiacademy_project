@@ -73,6 +73,12 @@ const useStyles = makeStyles((theme) => ({
       width: "100% !important",
     },
   },
+  relatedVidContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    alignItems: "center",
+  },
 }));
 
 export default useStyles;

@@ -9,6 +9,8 @@ import { getTags } from "../../actions/TagsActions";
 
 import StreamEdit from "../../components/StreamEdit/StreamEdit";
 
+import { youtubeThumbnailGetter } from "../../helper";
+
 const StreamEditContainer = ({ streamId }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,11 +32,17 @@ const StreamEditContainer = ({ streamId }) => {
         id: tweetId,
         text: tweetId,
       }));
+      const formatVideos = stream.relatedVideos.map(({ videoId }) => ({
+        id: videoId,
+        text: videoId,
+        img: youtubeThumbnailGetter(videoId),
+      }));
 
       setFormData({
         ...stream,
         tags: formatTags,
         relatedTweets: formatTweets,
+        relatedVideos: formatVideos,
       });
 
       let formatOptions = [...tags];
@@ -66,11 +74,16 @@ const StreamEditContainer = ({ streamId }) => {
 
     const formatTweets = formData.relatedTweets.map(({ text }) => text);
 
+    const formatVideos = formData.relatedVideos.map(({ text }) => ({
+      videoId: text,
+    }));
+
     dispatch(
       editStream(streamId, {
         ...formData,
         tags: formatTags,
         relatedTweets: formatTweets,
+        relatedVideos: formatVideos,
       })
     );
   };
@@ -220,7 +233,38 @@ const StreamEditContainer = ({ streamId }) => {
     const newTweets = [...formData.relatedTweets];
     const newForm = {
       ...formData,
-      relatedTweets: newTweets.filter((tag) => tag.id !== id),
+      relatedTweets: newTweets.filter((tweet) => tweet.id !== id),
+    };
+    setFormData(newForm);
+  };
+
+  const onAddVideo = (videoId) => {
+    const newVideos = [
+      ...formData.relatedVideos,
+      {
+        id: videoId,
+        text: videoId,
+        img: youtubeThumbnailGetter(videoId),
+      },
+    ];
+    const newForm = {
+      ...formData,
+      relatedVideos: newVideos,
+    };
+    setFormData(newForm);
+  };
+  const onReorderVideo = (reorderedVideos) => {
+    const newForm = {
+      ...formData,
+      relatedVideos: [...reorderedVideos],
+    };
+    setFormData(newForm);
+  };
+  const onRemoveVideo = (id) => {
+    const newVideos = [...formData.relatedVideos];
+    const newForm = {
+      ...formData,
+      relatedVideos: newVideos.filter((video) => video.id !== id),
     };
     setFormData(newForm);
   };
@@ -242,6 +286,9 @@ const StreamEditContainer = ({ streamId }) => {
       onAddTweet={onAddTweet}
       onReorderTweet={onReorderTweet}
       onRemoveTweet={onRemoveTweet}
+      onAddVideo={onAddVideo}
+      onReorderVideo={onReorderVideo}
+      onRemoveVideo={onRemoveVideo}
     />
   );
 };

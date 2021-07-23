@@ -6,23 +6,22 @@ import { getStream } from "../../actions/StreamsActions";
 
 import Stream from "../../components/Stream/Stream";
 
-const StreamContainer = () => {
-  const dispatch = useDispatch();
+const StreamContainer = ({ streamId }) => {
   const navigate = useNavigate();
   const [clipAcc, setClipAcc] = useState(true);
   const [tabStatus, setTabStatus] = useState(0);
   const [videoPos, setVideoPos] = useState(null);
   const [toggle, setToggle] = useState(false);
+  const [currentStream, setCurrentStream] = useState({});
+
   const { stream } = useSelector((state) => state.streams);
 
-  const { id } = useParams();
   useEffect(() => {
-    dispatch(getStream(id));
-    dispatch(setVideoMode(true));
+    setCurrentStream(stream);
     return () => {
-      dispatch(setVideoMode(false));
+      setCurrentStream({ relatedTweets: [] });
     };
-  }, [dispatch, id]);
+  }, [stream]);
 
   const clipAccordionControl = () => {
     setClipAcc(!clipAcc);
@@ -33,7 +32,7 @@ const StreamContainer = () => {
   };
 
   const goEdit = () => {
-    navigate(`/streams/${id}/edit`);
+    navigate(`/streams/${streamId}/edit`);
   };
 
   const handleVideoSeek = (sec) => {
@@ -42,9 +41,17 @@ const StreamContainer = () => {
     setVideoPos(sec);
   };
 
+  const handleRelatedVideoClick = (id, videoId, existing) => {
+    if (existing) {
+      navigate(`/streams/${id}`);
+    } else {
+      window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
+    }
+  };
+
   return (
     <Stream
-      stream={stream}
+      stream={currentStream}
       clipAcc={clipAcc}
       clipAccordionControl={clipAccordionControl}
       tabControl={tabControl}
@@ -53,8 +60,23 @@ const StreamContainer = () => {
       isLogin={localStorage.getItem("authToken")}
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
+      onRelatedVideoClick={handleRelatedVideoClick}
     />
   );
 };
 
-export default StreamContainer;
+const StreamWrapper = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  useEffect(() => {
+    dispatch(getStream(id));
+    dispatch(setVideoMode(true));
+    return () => {
+      dispatch(setVideoMode(false));
+    };
+  }, [dispatch, id]);
+
+  return <StreamContainer streamId={id} />;
+};
+
+export default StreamWrapper;

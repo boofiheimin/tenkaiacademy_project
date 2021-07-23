@@ -35,8 +35,25 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
   },
+  drawerSide: {
+    width: drawerWidth,
+    height: "100%",
+    overflowX: "hidden",
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerSideClose: {
+    width: 0,
+    overflowX: "hidden",
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
   drawerPaper: {
-    position: "relative",
+    position: "fixed",
     overflowX: "hidden",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -79,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
   outlet: {
     flexGrow: 1,
     [theme.breakpoints.up("sm")]: {
-      overflowY: "auto",
+      //  overflowY: "auto",
     },
   },
   close: {

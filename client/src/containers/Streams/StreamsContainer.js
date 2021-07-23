@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useReducer } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -8,19 +8,19 @@ import {
   getMoreStreams,
   refetchAll,
 } from "../../actions/StreamsActions";
+import { setVideoMode } from "../../actions/GlobalActions";
 
 import Streams from "../../components/Streams/Streams";
 
-const StreamsRoute = () => {
+const StreamsRoute = ({ streams: propStreams }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { streams, offset, hasMore, refetching } = useSelector(
-    (state) => state.streams
-  );
+  const [streams, setStreams] = useState([]);
+  const { offset, hasMore, refetching } = useSelector((state) => state.streams);
 
   useEffect(() => {
-    dispatch(getStreams({}));
-  }, [dispatch]);
+    setStreams(propStreams);
+  });
 
   const fetchMore = () => {
     dispatch(getMoreStreams({}, offset));
@@ -46,4 +46,15 @@ const StreamsRoute = () => {
   );
 };
 
-export default StreamsRoute;
+const StreamsWrapper = () => {
+  const dispatch = useDispatch();
+  const { streams } = useSelector((state) => state.streams);
+  useEffect(() => {
+    dispatch(setVideoMode(false));
+    dispatch(getStreams({}));
+  }, [dispatch]);
+
+  return <StreamsRoute streams={streams} />;
+};
+
+export default StreamsWrapper;

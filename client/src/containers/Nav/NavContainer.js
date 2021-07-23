@@ -22,8 +22,8 @@ const NavContainer = () => {
   }, [notification, videoMode]);
 
   const handleNotiClose = () => {
-    setOpenNoti(false);
     dispatch(clearNotification);
+    setOpenNoti(false);
   };
 
   const handleDrawerToggle = () => {

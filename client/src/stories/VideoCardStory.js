@@ -1,4 +1,4 @@
-import VideoCard from "../components/VideoCards/VideoCard";
+import VideoCard from "../components/VideoCard/VideoCard";
 
 const VideoCardStory = (props) => <VideoCard {...props} />;
 

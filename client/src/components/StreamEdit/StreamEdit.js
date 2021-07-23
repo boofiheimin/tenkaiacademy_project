@@ -41,6 +41,9 @@ const StreamEdit = ({
   onAddTweet,
   onReorderTweet,
   onRemoveTweet,
+  onAddVideo,
+  onReorderVideo,
+  onRemoveVideo,
 }) => {
   const {
     title,
@@ -55,6 +58,7 @@ const StreamEdit = ({
     timestamps = [],
     description,
     relatedTweets = [],
+    relatedVideos = [],
   } = formData;
   const classes = useStyles();
   const disableVideoInfo = source === "youtube";
@@ -209,10 +213,14 @@ const StreamEdit = ({
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
-                  {/* <DragAndDrop
+                  <DragAndDrop
                     items={relatedVideos}
                     addItemLabel="Add Related Videos"
-                  /> */}
+                    placeholder="video id"
+                    onAddItem={onAddVideo}
+                    onReorderItem={onReorderVideo}
+                    onRemoveItem={onRemoveVideo}
+                  />
                 </div>
               </Card>
             </Grid>

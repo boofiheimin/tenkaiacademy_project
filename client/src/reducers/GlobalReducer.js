@@ -2,6 +2,7 @@ import {
   VIDEO_MODE,
   SUCCESS_NOTIFICATION,
   ERROR_NOTIFICATION,
+  CLEAR_NOTIFICATION,
 } from "../constants/actionTypes";
 import { ALERT_SUCCESS, ALERT_ERROR } from "../constants/main";
 
@@ -29,6 +30,14 @@ const reducer = (
         notification: {
           type: ALERT_ERROR,
           message: action.message,
+        },
+      };
+    case CLEAR_NOTIFICATION:
+      return {
+        ...state,
+        notification: {
+          type: ALERT_SUCCESS,
+          message: "",
         },
       };
 

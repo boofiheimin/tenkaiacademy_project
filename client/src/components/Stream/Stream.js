@@ -19,8 +19,16 @@ import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
 import useStyles from "./styles";
 
 import Timestamp from "./Timestamp/Timestamp";
+import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 
-const Stream = ({ stream = {}, isLogin, goEdit, videoPos, onVideoSeek }) => {
+const Stream = ({
+  stream = {},
+  isLogin,
+  goEdit,
+  videoPos,
+  onVideoSeek,
+  onRelatedVideoClick,
+}) => {
   const classes = useStyles();
   const {
     videoId,
@@ -110,7 +118,10 @@ const Stream = ({ stream = {}, isLogin, goEdit, videoPos, onVideoSeek }) => {
                   )}
                   <div className={classes.embedContainer}>
                     {relatedTweets.map((tweet) => (
-                      <TwitterTweetEmbed tweetId={tweet} />
+                      <TwitterTweetEmbed
+                        key={Date.now() + Math.random()}
+                        tweetId={tweet}
+                      />
                     ))}
                   </div>
                 </Box>
@@ -125,6 +136,30 @@ const Stream = ({ stream = {}, isLogin, goEdit, videoPos, onVideoSeek }) => {
                   {relatedVideos.length === 0 && (
                     <Typography align="center">None</Typography>
                   )}
+                  <div className={classes.relatedVidContainer}>
+                    {relatedVideos.map(
+                      ({
+                        id: relatedVId,
+                        title: relatedVTitle,
+                        videoId: relatedVVideoId,
+                        uploader: relatedVUploader,
+                        existing,
+                      }) => (
+                        <HorizontalVideoCard
+                          title={relatedVTitle}
+                          videoId={relatedVVideoId}
+                          uploader={relatedVUploader}
+                          onCardClick={() =>
+                            onRelatedVideoClick(
+                              relatedVId,
+                              relatedVVideoId,
+                              existing
+                            )
+                          }
+                        />
+                      )
+                    )}
+                  </div>
                 </Box>
               </Grid>
             </Grid>
