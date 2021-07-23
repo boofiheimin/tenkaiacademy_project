@@ -9,6 +9,7 @@ import {
   getMoreStreams,
   refetchAll,
 } from "../../actions/StreamsActions";
+import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
 import Streams from "../../components/Streams/Streams";
@@ -18,6 +19,7 @@ const StreamsRoute = ({ streams: propStreams }) => {
   const navigate = useNavigate();
   const [streams, setStreams] = useState([]);
   const { offset, hasMore, refetching } = useSelector((state) => state.streams);
+  const tags = useSelector((state) => state.tags);
 
   useEffect(() => {
     setStreams(propStreams);
@@ -38,6 +40,7 @@ const StreamsRoute = ({ streams: propStreams }) => {
   return (
     <Streams
       videos={streams}
+      tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
       onVideoCardClick={onVideoCardClick}
@@ -68,6 +71,7 @@ const StreamsWrapper = () => {
   useEffect(() => {
     dispatch(setVideoMode(false));
     dispatch(getStreams({}));
+    dispatch(getTags());
   }, [dispatch]);
 
   return <StreamsRoute streams={streams} />;

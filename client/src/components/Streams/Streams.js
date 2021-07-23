@@ -11,9 +11,10 @@ import {
 } from "@material-ui/core";
 
 import VideoCards from "../VideoCards/VideoCards";
+import SearchForm from "../SearchForm/SearchForm";
 import useStyles from "./styles";
 
-const Streams = ({ handleRefetchAll, refetching, ...props }) => {
+const Streams = ({ handleRefetchAll, refetching, tags, ...props }) => {
   const classes = useStyles();
   return (
     <div>
@@ -30,6 +31,7 @@ const Streams = ({ handleRefetchAll, refetching, ...props }) => {
           Refetch All
         </Button>
       </Box>
+      <SearchForm tags={tags} />
       <VideoCards {...props} />
       <Dialog open={refetching}>
         <DialogTitle>
