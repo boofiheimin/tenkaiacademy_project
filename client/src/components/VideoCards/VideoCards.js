@@ -26,12 +26,11 @@ const VideoCards = ({ videos, hasMore, fetchMore, onVideoCardClick }) => (
         justifyContent="center"
       >
         {videos.map(
-          ({ title, thumbnail, tags, type, publishedAt, duration, _id }) => (
+          ({ title, thumbnail, tags, publishedAt, duration, _id }) => (
             <VideoCard
               title={title}
               thumbnail={thumbnail}
               tags={tags}
-              type={type}
               publishedAt={publishedAt}
               duration={duration}
               id={_id}

@@ -190,12 +190,14 @@ Stream.propTypes = {
   goEdit: Proptypes.func.isRequired,
   videoPos: Proptypes.number,
   onVideoSeek: Proptypes.func,
+  onRelatedVideoClick: Proptypes.func,
 };
 
 Stream.defaultProps = {
   stream: {},
   videoPos: null,
   onVideoSeek: () => {},
+  onRelatedVideoClick: () => {},
 };
 
 export default Stream;

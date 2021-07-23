@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -44,6 +45,21 @@ const StreamsRoute = ({ streams: propStreams }) => {
       refetching={refetching}
     />
   );
+};
+
+StreamsRoute.propTypes = {
+  streams: PropTypes.arrayOf({
+    title: PropTypes.string,
+    thumbnail: PropTypes.string,
+    tags: PropTypes.array,
+    publishedAt: PropTypes.string,
+    duration: PropTypes.number,
+    _id: PropTypes.string,
+  }),
+};
+
+StreamsRoute.defaultProps = {
+  streams: [],
 };
 
 const StreamsWrapper = () => {

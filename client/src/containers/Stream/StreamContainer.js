@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { setVideoMode } from "../../actions/GlobalActions";
@@ -63,6 +64,14 @@ const StreamContainer = ({ streamId }) => {
       onRelatedVideoClick={handleRelatedVideoClick}
     />
   );
+};
+
+StreamContainer.propTypes = {
+  streamId: PropTypes.string,
+};
+
+StreamContainer.defaultProps = {
+  streamId: "",
 };
 
 const StreamWrapper = () => {

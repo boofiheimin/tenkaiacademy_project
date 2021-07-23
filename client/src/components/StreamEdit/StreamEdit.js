@@ -295,6 +295,9 @@ StreamEdit.propTypes = {
   onAddTweet: Proptypes.func,
   onReorderTweet: Proptypes.func,
   onRemoveTweet: Proptypes.func,
+  onAddVideo: Proptypes.func,
+  onReorderVideo: Proptypes.func,
+  onRemoveVideo: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -315,6 +318,9 @@ StreamEdit.defaultProps = {
   onAddTweet: () => {},
   onReorderTweet: () => {},
   onRemoveTweet: () => {},
+  onAddVideo: () => {},
+  onReorderVideo: () => {},
+  onRemoveVideo: () => {},
 };
 
 export default StreamEdit;

@@ -126,7 +126,7 @@ const Nav = ({
       >
         <div className={classes.drawerHeader} />
 
-        <div className={classes.outlet} id="scrollableDiv">
+        <div className={classes.outlet}>
           <Outlet outletRef={outletRef} />
         </div>
       </main>
