@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:5000/api/v1/" });
+const URL = process.env.API_ROUTE || "http://localhost:5000/api/v1/";
+
+const API = axios.create({ baseURL: URL });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("authToken")) {
