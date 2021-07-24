@@ -94,6 +94,15 @@ const Stream = ({
                 <Typography variant="h6" className={classes.videoTitle}>
                   {title}
                 </Typography>
+                {localStorage.getItem("authToken") && (
+                  <Button
+                    className={classes.mobBtn}
+                    variant="outlined"
+                    onClick={goEdit}
+                  >
+                    Edit
+                  </Button>
+                )}
               </Hidden>
               <Hidden lgUp>
                 <Accordion className={classes.accordionDesc}>
