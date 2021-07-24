@@ -5,6 +5,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
+import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 
 import reducers from "./reducers";
 
@@ -15,10 +16,7 @@ momentDurationFormatSetup(moment);
 
 const store = createStore(
   reducers,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  composeWithDevTools(applyMiddleware(thunk))
 );
 
 ReactDOM.render(
