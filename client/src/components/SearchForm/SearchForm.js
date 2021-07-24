@@ -178,7 +178,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
       <div className={classes.advSearch} ref={accPanel}>
         <div className={classes.accdContainer}>
           <TextField
-            className={classes.searchUploader}
+            className={classes.moreField}
             label="Search by Uploader"
             variant="outlined"
             value={formData.uploader}
@@ -194,9 +194,9 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
               format="dd/MM/yyyy "
               label="From"
               onKeyPress={handleKeypress}
+              className={classes.moreField}
             />
           </MuiPickersUtilsProvider>
-          <Typography>-</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               variant="inline"
@@ -206,14 +206,14 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
               format="dd/MM/yyyy  "
               label="To"
               onKeyPress={handleKeypress}
+              className={classes.moreField}
             />
           </MuiPickersUtilsProvider>
           <Select
-            label="demo-simple-select-label"
-            id="demo-simple-select"
             value={formData.sort}
             onChange={handleSortChange}
             variant="outlined"
+            className={classes.moreField}
           >
             <MenuItem value={-1}>Sort by Date DESC</MenuItem>
             <MenuItem value={1}>Sort by Date AESC</MenuItem>

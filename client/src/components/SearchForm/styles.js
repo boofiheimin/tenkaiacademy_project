@@ -12,15 +12,20 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   searchTitle: {
     width: 400,
-    marginRight: theme.spacing(2),
+    margin: theme.spacing(1),
   },
   btnGroups: {
-    height: theme.spacing(7),
+    height: theme.spacing(9),
     display: "flex",
+    justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      width: 400,
+    },
   },
   clrBtn: {
     marginLeft: theme.spacing(1),
@@ -39,16 +44,17 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     transition: "max-height 0.2s ease-out",
   },
-  advSearchClose: {},
+  moreField: { width: 300, margin: theme.spacing(1) },
   accdContainer: {
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(2),
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    flexWrap: "wrap",
     "& > *": {
       "&:not(:last-child)": {
-        marginRight: theme.spacing(1),
+        // marginRight: theme.spacing(1),
       },
     },
   },
