@@ -15,6 +15,10 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Hello, Tenkai Academy!");
+});
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/streams", streamsRoute);
 app.use("/api/v1/tags", tagsRoute);
