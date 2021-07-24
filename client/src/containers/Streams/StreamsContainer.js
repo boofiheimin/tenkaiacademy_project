@@ -61,18 +61,22 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
 };
 
 StreamsRoute.propTypes = {
-  streams: PropTypes.arrayOf({
-    title: PropTypes.string,
-    thumbnail: PropTypes.string,
-    tags: PropTypes.array,
-    publishedAt: PropTypes.string,
-    duration: PropTypes.number,
-    _id: PropTypes.string,
-  }),
+  streams: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      thumbnail: PropTypes.string,
+      tags: PropTypes.array,
+      publishedAt: PropTypes.string,
+      duration: PropTypes.number,
+      _id: PropTypes.string,
+    })
+  ),
+  totalStreams: PropTypes.number,
 };
 
 StreamsRoute.defaultProps = {
   streams: [],
+  totalStreams: 0,
 };
 
 const StreamsWrapper = () => {

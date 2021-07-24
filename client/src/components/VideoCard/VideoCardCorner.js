@@ -44,11 +44,11 @@ const VideoCardCorner = ({ type }) => {
 };
 
 VideoCardCorner.propTypes = {
-  type: Proptypes.number,
+  type: Proptypes.string,
 };
 
 VideoCardCorner.defaultProps = {
-  type: 0,
+  type: "",
 };
 
 export default VideoCardCorner;

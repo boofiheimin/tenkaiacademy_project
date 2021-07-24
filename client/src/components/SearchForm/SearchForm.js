@@ -5,7 +5,6 @@ import {
   Button,
   Typography,
   IconButton,
-  Box,
   Select,
   MenuItem,
 } from "@material-ui/core";
@@ -20,7 +19,7 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import useStyles from "./styles";
 
-const SearchForm = ({ onSearch, onSubmit, tags = [], searchFilter }) => {
+const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
   const accPanel = useRef(null);
@@ -194,7 +193,6 @@ const SearchForm = ({ onSearch, onSubmit, tags = [], searchFilter }) => {
               onChange={handleFromChange}
               format="dd/MM/yyyy "
               label="From"
-              id="date-picker-inline"
               onKeyPress={handleKeypress}
             />
           </MuiPickersUtilsProvider>
@@ -207,7 +205,6 @@ const SearchForm = ({ onSearch, onSubmit, tags = [], searchFilter }) => {
               onChange={handleToChange}
               format="dd/MM/yyyy  "
               label="To"
-              id="date-picker-inline"
               onKeyPress={handleKeypress}
             />
           </MuiPickersUtilsProvider>
@@ -227,6 +224,40 @@ const SearchForm = ({ onSearch, onSubmit, tags = [], searchFilter }) => {
   );
 };
 
-SearchForm.propTypes = {};
+SearchForm.propTypes = {
+  onSubmit: PropTypes.func,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      tagNameEN: PropTypes.tagNameEN,
+    })
+  ),
+  searchFilter: PropTypes.shape({
+    title: PropTypes.string,
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string,
+        tagNameEN: PropTypes.tagNameEN,
+      })
+    ),
+    uploader: PropTypes.string,
+    from: PropTypes.instanceOf(Date),
+    to: PropTypes.instanceOf(Date),
+    sort: PropTypes.number,
+  }),
+};
+
+SearchForm.defaultProps = {
+  onSubmit: () => {},
+  tags: [],
+  searchFilter: {
+    title: "",
+    tags: [],
+    uploader: "",
+    from: null,
+    to: null,
+    sort: -1,
+  },
+};
 
 export default SearchForm;

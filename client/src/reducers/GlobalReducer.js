@@ -9,7 +9,7 @@ import { ALERT_SUCCESS, ALERT_ERROR } from "../constants/main";
 const reducer = (
   state = {
     videoMode: false,
-    notification: { type: ALERT_SUCCESS, message: false },
+    notification: { type: ALERT_SUCCESS, message: "" },
   },
   action
 ) => {
@@ -36,7 +36,7 @@ const reducer = (
       return {
         ...state,
         notification: {
-          type: ALERT_SUCCESS,
+          ...state.notification,
           message: "",
         },
       };

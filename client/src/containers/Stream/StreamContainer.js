@@ -58,7 +58,6 @@ const StreamContainer = ({ streamId }) => {
       tabControl={tabControl}
       tabStatus={tabStatus}
       goEdit={goEdit}
-      isLogin={localStorage.getItem("authToken")}
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
       onRelatedVideoClick={handleRelatedVideoClick}

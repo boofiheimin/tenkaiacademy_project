@@ -23,7 +23,6 @@ import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 
 const Stream = ({
   stream = {},
-  isLogin,
   goEdit,
   videoPos,
   onVideoSeek,
@@ -77,7 +76,7 @@ const Stream = ({
                 <Typography variant="h6" className={classes.videoTitle}>
                   {title}
                 </Typography>
-                {isLogin && (
+                {localStorage.getItem("authToken") && (
                   <Button
                     className={classes.editButton}
                     variant="contained"
@@ -186,7 +185,6 @@ const Stream = ({
 
 Stream.propTypes = {
   stream: Proptypes.object,
-  isLogin: Proptypes.string.isRequired,
   goEdit: Proptypes.func.isRequired,
   videoPos: Proptypes.number,
   onVideoSeek: Proptypes.func,
