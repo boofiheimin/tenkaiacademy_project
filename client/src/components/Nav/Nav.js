@@ -147,6 +147,7 @@ const Nav = ({
             color="inherit"
             className={classes.close}
             size="small"
+            onClick={onNotiClose}
           >
             <CloseIcon fontSize="small" />
           </IconButton>

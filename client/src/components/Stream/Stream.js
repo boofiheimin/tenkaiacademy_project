@@ -90,7 +90,7 @@ const Stream = ({
               <Typography
                 className={classes.publishedAt}
               >{`Published at ${moment(publishedAt).format(
-                "MMM d, YYYY HH:mm:ss"
+                "MMM DD, YYYY HH:mm:ss"
               )}`}</Typography>
               <Divider />
               <Box padding={2}>

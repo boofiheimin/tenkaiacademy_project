@@ -7,17 +7,35 @@ import moment from "moment";
 import { KANATA_CHANNEL_ID } from "../constants/main.js";
 
 export const getStreams = async ({ query: reqQuery = {} }, res, next) => {
-  const { query = null, offset, limit, sort = "-publishedAt" } = reqQuery;
+  const { query = null, offset, limit } = reqQuery;
+
+  const { title, tags = [], from, to, uploader, sort } = JSON.parse(query);
 
   const paginateOptions = {
     ...(offset && { offset }),
     ...(limit && { limit }),
-    ...(sort && { sort }),
+    ...(sort && { sort: { publishedAt: sort } }),
   };
-  // { $and: [{ "tags.tagId": 2 }, { "tags.tagId": 57 }] }
-  try {
-    const streams = await Stream.paginate({}, paginateOptions);
 
+  const filter = [];
+
+  let srchQuery = {};
+
+  for (const tag of tags) {
+    filter.push({ "tags.tagId": tag.tagId });
+  }
+
+  srchQuery = {
+    ...(title && { title: new RegExp(title, "i") }),
+    ...(uploader && { uploader: new RegExp(uploader, "i") }),
+    ...((from || to) && {
+      publishedAt: { ...(from && { $gte: from }), ...(to && { $lte: to }) },
+    }),
+    ...(filter.length > 0 && { $and: filter }),
+  };
+
+  try {
+    const streams = await Stream.paginate(srchQuery, paginateOptions);
     res.status(200).json(streams);
   } catch (error) {
     next(error);
@@ -82,8 +100,6 @@ export const editStream = async (req, res, next) => {
       }
     }
 
-    console.log(relatedVideos);
-
     const stream = await Stream.findByIdAndUpdate(req.params.id, formData, {
       new: true,
     });
@@ -105,32 +121,42 @@ export const refetch_all = async (req, res, next) => {
     let totalData = [];
     let fetchRound = 1;
 
-    const firstSet = await Youtube.search.list({
+    const channel = await Youtube.channels.list({
+      part: "contentDetails",
+      id: KANATA_CHANNEL_ID,
+    });
+
+    const uploadPlaylistID =
+      channel?.data?.items[0]?.contentDetails?.relatedPlaylists?.uploads;
+    const firstSet = await Youtube.playlistItems.list({
       maxResults: 50,
-      channelId: KANATA_CHANNEL_ID,
-      part: "id",
+      playlistId: uploadPlaylistID,
+      part: "contentDetails",
       order: "date",
     });
 
-    console.log(`${fetchRound} round of fetch`);
+    let videoIds = firstSet.data.items.map((item) => {
+      return item.contentDetails.videoId;
+    });
 
-    fetchRound += 1;
-
-    totalData = [...firstSet.data.items];
     let pageToken = firstSet.data.nextPageToken;
 
     while (true) {
       console.log(`${fetchRound} round of fetch`, pageToken);
-      const { data } = await Youtube.search.list({
+      const { data } = await Youtube.playlistItems.list({
         maxResults: 50,
-        channelId: KANATA_CHANNEL_ID,
-        part: "id",
+        playlistId: uploadPlaylistID,
+        part: "contentDetails",
         order: "date",
         pageToken,
       });
       fetchRound += 1;
 
-      totalData = totalData.concat(data.items);
+      const nextIds = data.items.map((item) => {
+        return item.contentDetails.videoId;
+      });
+
+      videoIds = videoIds.concat(nextIds);
       if (!data.nextPageToken) {
         break;
       }
@@ -139,45 +165,32 @@ export const refetch_all = async (req, res, next) => {
 
     let totalAdd = 0;
 
-    await Promise.all(
-      totalData.map(async (data) => {
-        if (data?.id?.videoId) {
-          const results = await Youtube.videos.list({
-            maxResults: 1,
-            id: data.id.videoId,
-            part: "snippet, contentDetails",
-          });
+    for (const videoId of videoIds) {
+      const results = await Youtube.videos.list({
+        maxResults: 1,
+        id: videoId,
+        part: "snippet, contentDetails",
+      });
+      const video = results?.data?.items[0];
+      const videoParams = {
+        videoId: video?.id,
+        title: video?.snippet?.title,
+        thumbnail: video?.snippet?.thumbnails?.high?.url,
+        uploader: video?.snippet?.channelTitle,
+        duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
+        publishedAt: new Date(video?.snippet?.publishedAt),
+        source: "youtube",
+      };
+      if (video?.snippet?.liveBroadcastContent === "none") {
+        await Stream.updateMany({ videoId: videoParams.videoId }, videoParams, {
+          upsert: true,
+          setDefaultsOnInsert: true,
+        });
+        totalAdd += 1;
+      }
+    }
 
-          const video = results?.data?.items[0];
-
-          const videoParams = {
-            videoId: video?.id,
-            title: video?.snippet?.title,
-            thumbnail: video?.snippet?.thumbnails?.high?.url,
-            uploader: video?.snippet?.channelTitle,
-            duration: moment
-              .duration(video?.contentDetails?.duration)
-              .asSeconds(),
-            publishedAt: new Date(video?.snippet?.publishedAt),
-            source: "youtube",
-          };
-
-          if (video?.snippet?.liveBroadcastContent === "none") {
-            await Stream.updateMany(
-              { videoId: videoParams.videoId },
-              videoParams,
-              {
-                upsert: true,
-                setDefaultsOnInsert: true,
-              }
-            );
-            totalAdd += 1;
-          }
-        }
-      })
-    );
-
-    const message = `Successfully Add: ${totalAdd} Streams`;
+    const message = `Successfully Add/Update: ${totalAdd} videos`;
     console.log(message);
     res.status(200).json({
       message,

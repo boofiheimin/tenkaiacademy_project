@@ -14,7 +14,16 @@ import VideoCards from "../VideoCards/VideoCards";
 import SearchForm from "../SearchForm/SearchForm";
 import useStyles from "./styles";
 
-const Streams = ({ handleRefetchAll, refetching, tags, ...props }) => {
+const Streams = ({
+  onRefetchAll,
+  onSubmit,
+  refetching,
+  tags,
+  streams,
+  totalStreams,
+  searchFilter,
+  ...props
+}) => {
   const classes = useStyles();
   return (
     <div>
@@ -25,14 +34,14 @@ const Streams = ({ handleRefetchAll, refetching, tags, ...props }) => {
         <Button
           className={classes.refetchButton}
           variant="contained"
-          onClick={handleRefetchAll}
+          onClick={onRefetchAll}
         >
           <i className={clsx("fas fa-sync-alt", classes.refetchIcon)} />
           Refetch All
         </Button>
       </Box>
-      <SearchForm tags={tags} />
-      <VideoCards {...props} />
+      <SearchForm tags={tags} onSubmit={onSubmit} searchFilter={searchFilter} />
+      <VideoCards videos={streams} total={totalStreams} {...props} />
       <Dialog open={refetching}>
         <DialogTitle>
           <Typography variant="h5">Refetching</Typography>
@@ -53,12 +62,12 @@ const Streams = ({ handleRefetchAll, refetching, tags, ...props }) => {
 };
 
 Streams.propTypes = {
-  handleRefetchAll: PropTypes.func,
+  onRefetchAll: PropTypes.func,
   refetching: PropTypes.bool,
 };
 
 Streams.defaultProps = {
-  handleRefetchAll: () => {},
+  onRefetchAll: () => {},
   refetching: false,
 };
 

@@ -10,23 +10,24 @@ import {
   SUCCESS_NOTIFICATION,
   ERROR_NOTIFICATION,
   REFETCH_ALL_STREAM_SUCCESS,
+  SET_STREAMS_FITLER,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
 // Action Creators
 export const getStreams = (query) => async (dispatch) => {
   try {
-    const {
-      data: { docs },
-    } = await api.fetchStreams({
+    const { data } = await api.fetchStreams({
       query,
       limit: VIDEOS_FETCH_LIMIT,
     });
 
+    const { docs, totalDocs } = data;
+
     if (docs.length < VIDEOS_FETCH_LIMIT) {
-      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs });
+      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs, total: totalDocs });
     } else {
-      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs });
+      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
     }
   } catch (error) {
     console.log(error.message);
@@ -36,14 +37,25 @@ export const getStreams = (query) => async (dispatch) => {
 
 export const getMoreStreams = (query, offset) => async (dispatch) => {
   try {
-    const {
-      data: { docs },
-    } = await api.fetchStreams({ query, limit: VIDEOS_FETCH_LIMIT, offset });
+    const { data } = await api.fetchStreams({
+      query,
+      limit: VIDEOS_FETCH_LIMIT,
+      offset,
+    });
 
+    const { docs, totalDocs } = data;
     if (docs.length < VIDEOS_FETCH_LIMIT) {
-      dispatch({ type: FETCH_STREAMS_HASMORE_DONE, data: docs });
+      dispatch({
+        type: FETCH_STREAMS_HASMORE_DONE,
+        data: docs,
+        total: totalDocs,
+      });
     } else {
-      dispatch({ type: FETCH_STREAMS_HASMORE_SUCCESS, data: docs });
+      dispatch({
+        type: FETCH_STREAMS_HASMORE_SUCCESS,
+        data: docs,
+        total: totalDocs,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -77,21 +89,25 @@ export const refetchAll = () => async (dispatch) => {
     const { data } = await api.refetchAll();
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
     dispatch({ type: SUCCESS_NOTIFICATION, message: data.message });
-    const {
-      data: { docs },
-    } = await api.fetchStreams({
+    const { data: rData } = await api.fetchStreams({
       query: {},
       limit: VIDEOS_FETCH_LIMIT,
     });
 
+    const { docs, totalDocs } = rData;
+
     if (docs.length < VIDEOS_FETCH_LIMIT) {
-      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs });
+      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs, total: totalDocs });
     } else {
-      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs });
+      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
     }
   } catch (error) {
     console.log(error.message);
     dispatch({ type: ERROR_NOTIFICATION, message: error.message });
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
   }
+};
+
+export const setStreamsFilter = (filter) => (dispatch) => {
+  dispatch({ type: SET_STREAMS_FITLER, data: filter });
 };

@@ -10,19 +10,32 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import ClearIcon from "@material-ui/icons/Clear";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import useStyles from "./styles";
 
-const SearchForm = ({ onSearch, tags = [] }) => {
-  const [titleValue, setTitleValue] = useState();
-  const [value, setValue] = useState([]);
+const SearchForm = ({ onSearch, onSubmit, tags = [], searchFilter }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
-  const [openOption, setOpenOption] = useState(false);
   const accPanel = useRef(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    tags: [],
+    uploader: "",
+    from: null,
+    to: null,
+    sort: -1,
+  });
+
+  useEffect(() => {
+    setFormData(searchFilter);
+  }, [searchFilter]);
 
   const classes = useStyles();
 
@@ -30,13 +43,51 @@ const SearchForm = ({ onSearch, tags = [] }) => {
     setOptions(["", ...tags]);
   }, [tags]);
 
-  const handleOnChange = (e, v) => {
-    console.log(v);
-    setValue(v);
+  const handleSearchTitleChange = (e) => {
+    const newFormData = {
+      ...formData,
+      title: e.target.value,
+    };
+    setFormData(newFormData);
   };
 
-  const handleOnTextFieldChange = (e) => {
-    setValue(e.target.value);
+  const handleTagsChange = (e, v) => {
+    const newFormData = {
+      ...formData,
+      tags: v,
+    };
+    setFormData(newFormData);
+  };
+
+  const handleSearchUploaderChange = (e) => {
+    const newFormData = {
+      ...formData,
+      uploader: e.target.value,
+    };
+    setFormData(newFormData);
+  };
+
+  const handleFromChange = (v) => {
+    const newFormData = {
+      ...formData,
+      from: v,
+    };
+    setFormData(newFormData);
+  };
+  const handleToChange = (v) => {
+    const newFormData = {
+      ...formData,
+      to: v,
+    };
+    setFormData(newFormData);
+  };
+
+  const handleSortChange = (e) => {
+    const newFormData = {
+      ...formData,
+      sort: e.target.value,
+    };
+    setFormData(newFormData);
   };
 
   const handleInputChange = (e, v) => {
@@ -44,20 +95,33 @@ const SearchForm = ({ onSearch, tags = [] }) => {
   };
 
   const handleOnSearch = () => {
-    console.log(value);
-    setValue([]);
-    // onSearch(value);
+    onSubmit(formData);
+  };
+
+  const handleOnClear = () => {
+    setFormData({
+      title: "",
+      tags: [],
+      uploader: "",
+      from: null,
+      to: null,
+      sort: -1,
+    });
   };
 
   const toggleOption = () => {
-    // setOpenOption(!openOption);
-
     const currPanel = accPanel.current;
 
     if (currPanel.style.maxHeight) {
       currPanel.style.maxHeight = null;
     } else {
       currPanel.style.maxHeight = `${currPanel.scrollHeight}px`;
+    }
+  };
+
+  const handleKeypress = (e) => {
+    if (e.key === "Enter") {
+      handleOnSearch();
     }
   };
 
@@ -69,6 +133,9 @@ const SearchForm = ({ onSearch, tags = [] }) => {
             className={classes.searchTitle}
             label="Search by title"
             variant="outlined"
+            value={formData.title}
+            onChange={handleSearchTitleChange}
+            onKeyPress={handleKeypress}
           />
         </div>
         <div>
@@ -76,12 +143,13 @@ const SearchForm = ({ onSearch, tags = [] }) => {
             className={classes.searchTitle}
             multiple
             options={options}
-            value={value}
-            onChange={handleOnChange}
+            value={formData.tags}
+            onChange={handleTagsChange}
             inputValue={inputValue}
             onInputChange={handleInputChange}
             getOptionSelected={(o, v) => o._id === v._id}
             getOptionLabel={(o) => (o.tagNameEN ? o.tagNameEN : "")}
+            onKeyPress={handleKeypress}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -92,53 +160,66 @@ const SearchForm = ({ onSearch, tags = [] }) => {
             )}
           />
         </div>
-
-        <div className={classes.searchBtn}>
+        <div className={classes.btnGroups}>
           <Button variant="contained" onClick={handleOnSearch}>
             <SearchIcon /> Search
+          </Button>
+          <Button
+            className={classes.clrBtn}
+            variant="contained"
+            onClick={handleOnClear}
+          >
+            <ClearIcon />
           </Button>
         </div>
       </div>
       <IconButton onClick={toggleOption}>
         <KeyboardArrowDownIcon />
       </IconButton>
-      <div
-        className={openOption ? classes.advSearch : classes.advSearchClose}
-        ref={accPanel}
-      >
+      <div className={classes.advSearch} ref={accPanel}>
         <div className={classes.accdContainer}>
           <TextField
             className={classes.searchUploader}
             label="Search by Uploader"
             variant="outlined"
+            value={formData.uploader}
+            onChange={handleSearchUploaderChange}
+            onKeyPress={handleKeypress}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
+            <KeyboardDatePicker
               variant="inline"
               inputVariant="outlined"
-              format="MM/dd/yyyy "
-              label="Start time"
+              value={formData.from}
+              onChange={handleFromChange}
+              format="dd/MM/yyyy "
+              label="From"
               id="date-picker-inline"
+              onKeyPress={handleKeypress}
             />
           </MuiPickersUtilsProvider>
           <Typography>-</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
+            <KeyboardDatePicker
               variant="inline"
               inputVariant="outlined"
-              format="MM/dd/yyyy  "
-              label="End time"
+              value={formData.to}
+              onChange={handleToChange}
+              format="dd/MM/yyyy  "
+              label="To"
               id="date-picker-inline"
+              onKeyPress={handleKeypress}
             />
           </MuiPickersUtilsProvider>
           <Select
             label="demo-simple-select-label"
             id="demo-simple-select"
-            defaultValue={1}
+            value={formData.sort}
+            onChange={handleSortChange}
             variant="outlined"
           >
-            <MenuItem value={1}>Sort by Date DESC</MenuItem>
-            <MenuItem value={-1}>Sort by Date AESC</MenuItem>
+            <MenuItem value={-1}>Sort by Date DESC</MenuItem>
+            <MenuItem value={1}>Sort by Date AESC</MenuItem>
           </Select>
         </div>
       </div>

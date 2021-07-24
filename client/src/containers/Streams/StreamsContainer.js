@@ -8,17 +8,20 @@ import {
   getStreams,
   getMoreStreams,
   refetchAll,
+  setStreamsFilter,
 } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
 import Streams from "../../components/Streams/Streams";
 
-const StreamsRoute = ({ streams: propStreams }) => {
+const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [streams, setStreams] = useState([]);
-  const { offset, hasMore, refetching } = useSelector((state) => state.streams);
+  const { offset, hasMore, refetching, filter } = useSelector(
+    (state) => state.streams
+  );
   const tags = useSelector((state) => state.tags);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ const StreamsRoute = ({ streams: propStreams }) => {
   });
 
   const fetchMore = () => {
-    dispatch(getMoreStreams({}, offset));
+    dispatch(getMoreStreams(filter, offset));
   };
 
   const onVideoCardClick = (id) => {
@@ -37,15 +40,22 @@ const StreamsRoute = ({ streams: propStreams }) => {
     dispatch(refetchAll());
   };
 
+  const handleOnSubmit = (value) => {
+    dispatch(setStreamsFilter(value));
+  };
+
   return (
     <Streams
-      videos={streams}
+      streams={streams}
+      totalStreams={totalStreams}
       tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
       onVideoCardClick={onVideoCardClick}
-      handleRefetchAll={handleRefetchAll}
+      onRefetchAll={handleRefetchAll}
       refetching={refetching}
+      searchFilter={filter}
+      onSubmit={handleOnSubmit}
     />
   );
 };
@@ -67,14 +77,14 @@ StreamsRoute.defaultProps = {
 
 const StreamsWrapper = () => {
   const dispatch = useDispatch();
-  const { streams } = useSelector((state) => state.streams);
+  const { streams, total, filter } = useSelector((state) => state.streams);
   useEffect(() => {
     dispatch(setVideoMode(false));
-    dispatch(getStreams({}));
+    dispatch(getStreams(filter));
     dispatch(getTags());
-  }, [dispatch]);
+  }, [dispatch, filter]);
 
-  return <StreamsRoute streams={streams} />;
+  return <StreamsRoute streams={streams} totalStreams={total} />;
 };
 
 export default StreamsWrapper;

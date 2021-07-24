@@ -14,13 +14,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-start",
   },
   searchTitle: {
-    width: 500,
+    width: 400,
     marginRight: theme.spacing(2),
   },
-  searchBtn: {
+  btnGroups: {
     height: theme.spacing(7),
     display: "flex",
     alignItems: "center",
+  },
+  clrBtn: {
+    marginLeft: theme.spacing(1),
+    minWidth: "auto",
+    padding: "6px",
   },
   buttonLink: {
     background: "none !important",
@@ -29,14 +34,14 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     cursor: "pointer",
   },
-  advSearch: { display: "block" },
-  advSearchClose: {
+  advSearch: {
     maxHeight: 0,
     overflow: "hidden",
     transition: "max-height 0.2s ease-out",
   },
+  advSearchClose: {},
   accdContainer: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(4),
     marginTop: theme.spacing(2),
     display: "flex",
     alignItems: "center",
