@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   searchTitle: {
     width: 400,
     margin: theme.spacing(1),
+    [theme.breakpoints.down("sm")]: {
+      width: 300,
+    },
   },
   btnGroups: {
     height: theme.spacing(9),
@@ -25,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     [theme.breakpoints.down("md")]: {
       width: 400,
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: 300,
     },
   },
   clrBtn: {

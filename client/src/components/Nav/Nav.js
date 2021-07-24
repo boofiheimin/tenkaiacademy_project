@@ -18,6 +18,7 @@ import {
   useMediaQuery,
   Snackbar,
 } from "@material-ui/core";
+import json2mq from "json2mq";
 import { Alert } from "@material-ui/lab";
 import DrawerItems from "./DrawerItems";
 import useStyles from "./styles";
@@ -41,47 +42,57 @@ const Nav = ({
   const outletRef = useRef(null);
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down("md")) || videoMode;
+  const matchSize = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
+
+  const matches = matchSize || videoMode;
+  const phoneLandscape = matchSize && matchOrientation && videoMode;
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          {matches ? (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggleMobile}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
+      {!phoneLandscape && (
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            {matches ? (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggleMobile}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
 
-          <Typography variant="h6" noWrap className={classes.title}>
-            Tenkai Academy Project
-          </Typography>
-          {isLogin && (
-            <>
-              <Typography className={classes.username}>{username}</Typography>
-              <Button color="secondary" variant="contained" onClick={onLogout}>
-                Logout
-              </Button>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
+            <Typography variant="h6" noWrap className={classes.title}>
+              Tenkai Academy Project
+            </Typography>
+            {isLogin && (
+              <>
+                <Typography className={classes.username}>{username}</Typography>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={onLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+      )}
 
       {matches ? (
         <Drawer
@@ -124,7 +135,7 @@ const Nav = ({
           [classes.contentShift]: open,
         })}
       >
-        <div className={classes.drawerHeader} />
+        {!phoneLandscape && <div className={classes.drawerHeader} />}
 
         <div className={classes.outlet}>
           <Outlet outletRef={outletRef} />

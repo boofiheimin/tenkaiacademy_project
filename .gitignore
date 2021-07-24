@@ -3,7 +3,7 @@ server/node_modules
 client/public/vendor
 client/public/build
 client/public/compiled
-
+client/build
 
 server/.env
 client/.env

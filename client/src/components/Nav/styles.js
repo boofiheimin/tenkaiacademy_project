@@ -95,9 +95,6 @@ const useStyles = makeStyles((theme) => ({
   },
   outlet: {
     flexGrow: 1,
-    [theme.breakpoints.up("sm")]: {
-      //  overflowY: "auto",
-    },
   },
   close: {
     padding: 0,

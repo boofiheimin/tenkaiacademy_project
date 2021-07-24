@@ -3,6 +3,15 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    paddingTop: theme.spacing(4),
+    paddingLeft: theme.spacing(8),
+    paddingRight: theme.spacing(8),
+    [theme.breakpoints.down("lg")]: {
+      padding: 0,
+      overflowX: "hidden",
+    },
   },
   sectionHeader: {
     padding: `${theme.spacing(1)}px  ${theme.spacing(2)}px`,
@@ -10,12 +19,7 @@ const useStyles = makeStyles((theme) => ({
     // color: "white",
   },
   videoTitle: {
-    lineClamp: 1,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "-webkit-box",
-    "-webkit-box-orient": "vertical",
-    flexGrow: 1,
+    padding: theme.spacing(2),
   },
   editButton: {
     minWidth: "auto",
@@ -50,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
+    [theme.breakpoints.down("lg")]: {
+      minWidth: 300,
+      overflowX: "auto",
+    },
   },
   publishedAt: {
     paddingLeft: theme.spacing(2),
@@ -78,6 +86,31 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     width: "100%",
     alignItems: "center",
+  },
+  mobBtn: {
+    width: 120,
+    "&:not(:last-child)": {
+      marginRight: theme.spacing(1),
+    },
+  },
+  descDialog: {
+    position: "fixed",
+    top: `calc(56px + 100vw * 9 / 16)`,
+    zIndex: 5555,
+    height: `calc(100vh - 56px - 100vw * 9 / 16)`,
+    width: "100vw",
+    backgroundColor: "white",
+  },
+  dialogHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(1),
+  },
+  dialogHeader_text: {
+    flexGrow: 1,
+  },
+  accordionDesc: {
+    width: "100%",
   },
 }));
 

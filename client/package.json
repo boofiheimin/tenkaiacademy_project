@@ -24,6 +24,7 @@
     "date-fns": "^2.22.1",
     "fitvids": "^2.1.1",
     "history": "^5.0.0",
+    "json2mq": "^0.2.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",

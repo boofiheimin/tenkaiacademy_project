@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Proptypes from "prop-types";
 import moment from "moment";
 import {
@@ -9,10 +10,18 @@ import {
   Divider,
   Chip,
   Paper,
+  Hidden,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Slide,
+  IconButton,
+  useMediaQuery,
 } from "@material-ui/core";
-
-import EditIcon from "@material-ui/icons/Edit";
+import ClearIcon from "@material-ui/icons/Clear";
 import { TwitterTweetEmbed } from "react-twitter-embed";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import json2mq from "json2mq";
 
 import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
 
@@ -29,6 +38,10 @@ const Stream = ({
   onRelatedVideoClick,
 }) => {
   const classes = useStyles();
+  const [descDialog, setDescDialog] = useState(false);
+  const matchRegSize = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
   const {
     videoId,
     title,
@@ -42,20 +55,23 @@ const Stream = ({
     relatedTweets = [],
   } = stream;
 
+  const handleDescDialogOpen = () => {
+    setDescDialog(true);
+  };
+
+  const handleDescDialogClose = () => {
+    setDescDialog(false);
+  };
+
+  const matches = matchPhoneSize && matchOrientation;
+
   return (
     <Container className={classes.root} maxWidth="xl">
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        paddingTop={4}
-        paddingLeft={8}
-        paddingRight={8}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs={9}>
-            <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
-          </Grid>
+      <Grid container spacing={matches ? 0 : 2}>
+        <Grid item xs={matches ? 9 : 12} lg={9}>
+          <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
+        </Grid>
+        {(matches || matchRegSize) && (
           <Grid item xs={3}>
             <Paper>
               <div className={classes.sectionHeader}>
@@ -68,24 +84,31 @@ const Stream = ({
               </div>
             </div>
           </Grid>
-        </Grid>
-        <Grid container spacing={2} className={classes.secondGrid}>
-          <Grid item xs={9}>
-            <Paper>
-              <Box display="flex" padding={2} alignItems="center">
+        )}
+      </Grid>
+      <Grid container spacing={2} className={classes.secondGrid}>
+        <Grid item xs={12} lg={9}>
+          <Paper>
+            <Box display="flex" alignItems="center">
+              <Hidden mdDown>
                 <Typography variant="h6" className={classes.videoTitle}>
                   {title}
                 </Typography>
-                {localStorage.getItem("authToken") && (
-                  <Button
-                    className={classes.editButton}
-                    variant="contained"
-                    onClick={goEdit}
-                  >
-                    <EditIcon />
-                  </Button>
-                )}
-              </Box>
+              </Hidden>
+              <Hidden lgUp>
+                <Accordion className={classes.accordionDesc}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{title}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box paddingTop={1}>
+                      <Typography>{description}</Typography>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              </Hidden>
+            </Box>
+            <Hidden mdDown>
               <Typography
                 className={classes.publishedAt}
               >{`Published at ${moment(publishedAt).format(
@@ -98,14 +121,36 @@ const Stream = ({
                   <Typography>{description}</Typography>
                 </Box>
               </Box>
-              <Box padding={2}>
-                {tags.map((tag) => (
-                  <Chip label={tag.tagNameEN} className={classes.chip} />
-                ))}
+            </Hidden>
+            <Box padding={2}>
+              {tags.map((tag) => (
+                <Chip label={tag.tagNameEN} className={classes.chip} />
+              ))}
+            </Box>
+            <Hidden lgUp>
+              <Box display="flex" paddingLeft={2} paddingBottom={2}>
+                <Button
+                  className={classes.mobBtn}
+                  variant="outlined"
+                  onClick={handleDescDialogOpen}
+                >
+                  Timestamp
+                </Button>
+                {localStorage.getItem("authToken") && (
+                  <Button
+                    className={classes.mobBtn}
+                    variant="outlined"
+                    onClick={goEdit}
+                  >
+                    Edit
+                  </Button>
+                )}
               </Box>
-            </Paper>
-            <Grid item container spacing={2} className={classes.thirdGrid}>
-              <Grid item xs={6}>
+            </Hidden>
+          </Paper>
+          <Grid item container spacing={2} className={classes.thirdGrid}>
+            <Grid item xs={12} lg={6}>
+              <Hidden mdDown>
                 <Paper>
                   <div className={classes.sectionHeader}>
                     <Typography variant="h6">Related Tweets</Typography>
@@ -124,8 +169,32 @@ const Stream = ({
                     ))}
                   </div>
                 </Box>
-              </Grid>
-              <Grid item xs={6}>
+              </Hidden>
+              <Hidden lgUp>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6">Related Tweets</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box padding={2} width="100%">
+                      {relatedTweets.length === 0 && (
+                        <Typography align="center">None</Typography>
+                      )}
+                      <div className={classes.embedContainer}>
+                        {relatedTweets.map((tweet) => (
+                          <TwitterTweetEmbed
+                            key={Date.now() + Math.random()}
+                            tweetId={tweet}
+                          />
+                        ))}
+                      </div>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              </Hidden>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Hidden mdDown>
                 <Paper>
                   <div className={classes.sectionHeader}>
                     <Typography variant="h6">Related Videos</Typography>
@@ -160,25 +229,86 @@ const Stream = ({
                     )}
                   </div>
                 </Box>
-              </Grid>
+              </Hidden>
+              <Hidden lgUp>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6">Related Videos</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box padding={2} width="100%">
+                      {relatedVideos.length === 0 && (
+                        <Typography align="center">None</Typography>
+                      )}
+                      <div className={classes.relatedVidContainer}>
+                        {relatedVideos.map(
+                          ({
+                            id: relatedVId,
+                            title: relatedVTitle,
+                            videoId: relatedVVideoId,
+                            uploader: relatedVUploader,
+                            existing,
+                          }) => (
+                            <HorizontalVideoCard
+                              title={relatedVTitle}
+                              videoId={relatedVVideoId}
+                              uploader={relatedVUploader}
+                              onCardClick={() =>
+                                onRelatedVideoClick(
+                                  relatedVId,
+                                  relatedVVideoId,
+                                  existing
+                                )
+                              }
+                            />
+                          )
+                        )}
+                      </div>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              </Hidden>
             </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Box>
-              <Paper>
-                <div className={classes.sectionHeader}>
-                  <Typography variant="h6">Clips</Typography>
-                </div>
-              </Paper>
-              <Box padding={2}>
-                {clips.length === 0 && (
-                  <Typography align="center">No clips :(</Typography>
-                )}
-              </Box>
-            </Box>
-          </Grid>
         </Grid>
-      </Box>
+        <Grid item xs={12} lg={3}>
+          <Box>
+            <Paper>
+              <div className={classes.sectionHeader}>
+                <Typography variant="h6">Clips</Typography>
+              </div>
+            </Paper>
+            <Box padding={2}>
+              {clips.length === 0 && (
+                <Typography align="center">No clips :(</Typography>
+              )}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+
+      <Slide direction="up" in={descDialog} mountOnEnter unmountOnExit>
+        <div className={classes.descDialog}>
+          <div className={classes.dialogHeader}>
+            <Typography variant="h6" className={classes.dialogHeader_text}>
+              Timestamp
+            </Typography>
+            <IconButton
+              className={classes.clrBtn}
+              variant="contained"
+              onClick={handleDescDialogClose}
+            >
+              <ClearIcon />
+            </IconButton>
+          </div>
+
+          <div className={classes.timestampContainer}>
+            <div className={classes.timestampScroller}>
+              <Timestamp timestamps={timestamps} onVideoSeek={onVideoSeek} />
+            </div>
+          </div>
+        </div>
+      </Slide>
     </Container>
   );
 };

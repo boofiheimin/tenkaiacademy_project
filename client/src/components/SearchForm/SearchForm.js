@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   TextField,
   Button,
-  Typography,
   IconButton,
   Select,
   MenuItem,
@@ -12,6 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -31,6 +31,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
     to: null,
     sort: -1,
   });
+  const [moreOption, setMoreOption] = useState(false);
 
   useEffect(() => {
     setFormData(searchFilter);
@@ -109,6 +110,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
   };
 
   const toggleOption = () => {
+    setMoreOption(!moreOption);
     const currPanel = accPanel.current;
 
     if (currPanel.style.maxHeight) {
@@ -173,7 +175,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
         </div>
       </div>
       <IconButton onClick={toggleOption}>
-        <KeyboardArrowDownIcon />
+        {moreOption ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
       <div className={classes.advSearch} ref={accPanel}>
         <div className={classes.accdContainer}>
