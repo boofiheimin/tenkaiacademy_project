@@ -7,7 +7,7 @@ import moment from "moment";
 import { KANATA_CHANNEL_ID } from "../constants/main.js";
 
 export const getStreams = async ({ query: reqQuery = {} }, res, next) => {
-  const { query = null, offset, limit } = reqQuery;
+  const { query = "{}", offset, limit } = reqQuery;
 
   const { title, tags = [], from, to, uploader, sort } = JSON.parse(query);
 
