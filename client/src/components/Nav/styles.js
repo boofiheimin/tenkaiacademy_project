@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     height: "100%",
     overflowX: "hidden",
+    flexShrink: 0,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   drawerSideClose: {
     width: 0,
     overflowX: "hidden",
+    flexShrink: 0,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
