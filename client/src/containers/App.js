@@ -29,7 +29,6 @@ const ScrollToTop = () => {
 const App = () => {
   const dispatch = useDispatch();
   const { siteMode } = useSelector((state) => state.global);
-  console.log("siteMode", siteMode);
   const theme = useMemo(() =>
     createTheme({
       palette: {

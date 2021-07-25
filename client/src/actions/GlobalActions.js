@@ -14,6 +14,5 @@ export const clearNotification = (dispatch) => {
 };
 
 export const toggleSiteMode = (dispatch) => {
-  console.log("nanede");
   dispatch({ type: TOGGLE_SITE_MODE });
 };

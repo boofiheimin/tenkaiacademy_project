@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
+import moment from "moment";
 import {
   getStreams,
   getMoreStreams,
@@ -15,18 +16,43 @@ import { setVideoMode } from "../../actions/GlobalActions";
 
 import Streams from "../../components/Streams/Streams";
 
-const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
+import { useQuery } from "../../utils";
+
+const StreamsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [streams, setStreams] = useState([]);
-  const { offset, hasMore, refetching, filter } = useSelector(
+  const [queriedStreams, setStreams] = useState([]);
+  const { offset, hasMore, refetching, filter, streams, total } = useSelector(
     (state) => state.streams
   );
   const tags = useSelector((state) => state.tags);
+  const query = useQuery();
+  const location = useLocation();
 
   useEffect(() => {
-    setStreams(propStreams);
-  }, [propStreams]);
+    const newFilter = {
+      title: query.get("title") || "",
+      tags: JSON.parse(query.get("tags")) || [],
+      uploader: query.get("uploader") || "",
+      from: query.get("from") ? moment(query.get("from")).toDate() : null,
+      to: query.get("to") ? moment(query.get("to")).toDate() : null,
+      sort: query.get("sort") || -1,
+    };
+    dispatch(setStreamsFilter(newFilter));
+  }, [location.search]);
+
+  useEffect(() => {
+    dispatch(setVideoMode(false));
+    dispatch(getTags());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getStreams(filter));
+  }, [filter]);
+
+  useEffect(() => {
+    setStreams(streams);
+  }, [streams]);
 
   const fetchMore = () => {
     dispatch(getMoreStreams(filter, offset));
@@ -36,14 +62,40 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
     dispatch(refetchAll());
   };
 
-  const handleOnSubmit = (value) => {
-    dispatch(setStreamsFilter(value));
+  const handleOnSubmit = ({
+    title,
+    tags: submittedTags,
+    uploader,
+    from,
+    to,
+    sort,
+  }) => {
+    let searchArray = [];
+    if (title) searchArray = searchArray.concat(`title=${title}`);
+    if (submittedTags.length > 0) {
+      const tagsId = submittedTags.map((tag) => tag.tagId);
+      searchArray = searchArray.concat(`tags=[${tagsId.toString()}]`);
+    }
+    if (uploader) searchArray.concat(`uploader=${uploader}`);
+    if (from) {
+      const fromString = moment(from).format("YYYYMMDD");
+      searchArray = searchArray.concat(`from=${fromString}`);
+    }
+    if (to) {
+      const fromString = moment(to).format("YYYYMMDD");
+      searchArray = searchArray.concat(`to=${fromString}`);
+    }
+    if (sort !== -1) searchArray = searchArray.concat(`sort=${sort}`);
+
+    const searchParams = searchArray.join("&");
+
+    navigate(`/streams${searchParams ? `?${searchParams}` : ""}`);
   };
 
   return (
     <Streams
-      streams={streams}
-      totalStreams={totalStreams}
+      streams={queriedStreams}
+      totalStreams={total}
       tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
@@ -55,35 +107,4 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
   );
 };
 
-StreamsRoute.propTypes = {
-  streams: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      thumbnail: PropTypes.string,
-      tags: PropTypes.array,
-      publishedAt: PropTypes.string,
-      duration: PropTypes.number,
-      _id: PropTypes.string,
-    })
-  ),
-  totalStreams: PropTypes.number,
-};
-
-StreamsRoute.defaultProps = {
-  streams: [],
-  totalStreams: 0,
-};
-
-const StreamsWrapper = () => {
-  const dispatch = useDispatch();
-  const { streams, total, filter } = useSelector((state) => state.streams);
-  useEffect(() => {
-    dispatch(setVideoMode(false));
-    dispatch(getStreams(filter));
-    dispatch(getTags());
-  }, [dispatch]);
-
-  return <StreamsRoute streams={streams} totalStreams={total} />;
-};
-
-export default StreamsWrapper;
+export default StreamsRoute;

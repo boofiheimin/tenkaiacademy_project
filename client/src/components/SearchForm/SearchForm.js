@@ -34,13 +34,19 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
   const [moreOption, setMoreOption] = useState(false);
 
   useEffect(() => {
-    setFormData(searchFilter);
-  }, [searchFilter]);
+    if (options.length > 0) {
+      const mappedTag = searchFilter.tags.map((tagId) =>
+        options.find((tag) => tag.tagId === tagId)
+      );
+
+      setFormData({ ...searchFilter, tags: mappedTag });
+    }
+  }, [searchFilter, options]);
 
   const classes = useStyles();
 
   useEffect(() => {
-    setOptions(["", ...tags]);
+    setOptions(tags);
   }, [tags]);
 
   const handleSearchTitleChange = (e) => {
@@ -126,8 +132,6 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
     }
   };
 
-  console.log(formData.sort);
-
   return (
     <div className={classes.root}>
       <div className={classes.basicSearch}>
@@ -150,7 +154,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
             onChange={handleTagsChange}
             inputValue={inputValue}
             onInputChange={handleInputChange}
-            getOptionSelected={(o, v) => o._id === v._id}
+            getOptionSelected={(o, v) => o.tagId === v.tagId}
             getOptionLabel={(o) => (o.tagNameEN ? o.tagNameEN : "")}
             onKeyPress={handleKeypress}
             renderInput={(params) => (

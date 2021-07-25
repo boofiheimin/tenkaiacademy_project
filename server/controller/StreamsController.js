@@ -22,7 +22,7 @@ export const getStreams = async ({ query: reqQuery = {} }, res, next) => {
   let srchQuery = {};
 
   for (const tag of tags) {
-    filter.push({ "tags.tagId": tag.tagId });
+    filter.push({ "tags.tagId": tag });
   }
 
   srchQuery = {

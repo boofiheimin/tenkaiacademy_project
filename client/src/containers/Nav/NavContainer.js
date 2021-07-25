@@ -39,7 +39,6 @@ const NavContainer = () => {
   };
 
   const handleSiteModeToggle = () => {
-    console.log("what");
     dispatch(toggleSiteMode);
   };
 

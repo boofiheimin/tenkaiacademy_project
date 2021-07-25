@@ -66,7 +66,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
         />
       )}
 
-      <IconButton onClick={handleOnAdd}>
+      <IconButton onClick={handleOnAdd} disabled={!value}>
         <AddIcon />
       </IconButton>
     </Box>
