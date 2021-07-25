@@ -108,6 +108,23 @@ export const refetchAll = () => async (dispatch) => {
   }
 };
 
-export const setStreamsFilter = (filter) => (dispatch) => {
+export const setStreamsFilter = (filter) => async (dispatch) => {
   dispatch({ type: SET_STREAMS_FITLER, data: filter });
+  try {
+    const { data } = await api.fetchStreams({
+      query: filter,
+      limit: VIDEOS_FETCH_LIMIT,
+    });
+
+    const { docs, totalDocs } = data;
+
+    if (docs.length < VIDEOS_FETCH_LIMIT) {
+      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs, total: totalDocs });
+    } else {
+      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
+    }
+  } catch (error) {
+    console.log(error.message);
+    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+  }
 };

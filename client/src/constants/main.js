@@ -3,3 +3,6 @@ export const VIDEOS_FETCH_LIMIT =
 
 export const ALERT_SUCCESS = "success";
 export const ALERT_ERROR = "error";
+
+export const SITE_MODE_DARK = "dark";
+export const SITE_MODE_LIGHT = "light";

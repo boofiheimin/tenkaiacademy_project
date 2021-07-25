@@ -3,13 +3,20 @@ import {
   SUCCESS_NOTIFICATION,
   ERROR_NOTIFICATION,
   CLEAR_NOTIFICATION,
+  TOGGLE_SITE_MODE,
 } from "../constants/actionTypes";
-import { ALERT_SUCCESS, ALERT_ERROR } from "../constants/main";
+import {
+  ALERT_SUCCESS,
+  ALERT_ERROR,
+  SITE_MODE_DARK,
+  SITE_MODE_LIGHT,
+} from "../constants/main";
 
 const reducer = (
   state = {
     videoMode: false,
     notification: { type: ALERT_SUCCESS, message: "" },
+    siteMode: SITE_MODE_DARK,
   },
   action
 ) => {
@@ -40,6 +47,18 @@ const reducer = (
           message: "",
         },
       };
+    case TOGGLE_SITE_MODE: {
+      let newSiteMode = "";
+      if (state.siteMode === SITE_MODE_DARK) {
+        newSiteMode = SITE_MODE_LIGHT;
+      } else {
+        newSiteMode = SITE_MODE_DARK;
+      }
+      return {
+        ...state,
+        siteMode: newSiteMode,
+      };
+    }
 
     default:
       return state;

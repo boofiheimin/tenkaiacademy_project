@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { ThemeProvider, createTheme } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { ThemeProvider, createTheme } from "@material-ui/core";
 
 import { authen } from "../actions/AuthActions";
 import PrivateRoute from "./Routing/PrivateRoute";
@@ -16,14 +16,9 @@ import Clips from "./Clips/ClipsContainer";
 import Tags from "./Tags/TagsContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
-const theme = createTheme({
-  typography: {
-    fontFamily: ["Rubik", "sans-serif"].join(","),
-  },
-});
-
 const ScrollToTop = () => {
   const { pathname } = useLocation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -33,6 +28,18 @@ const ScrollToTop = () => {
 
 const App = () => {
   const dispatch = useDispatch();
+  const { siteMode } = useSelector((state) => state.global);
+  console.log("siteMode", siteMode);
+  const theme = useMemo(() =>
+    createTheme({
+      palette: {
+        type: siteMode,
+      },
+      typography: {
+        fontFamily: ["Rubik", "sans-serif"].join(","),
+      },
+    })
+  );
 
   useEffect(() => {
     dispatch(authen());

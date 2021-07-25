@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../actions/AuthActions";
-import { clearNotification } from "../../actions/GlobalActions";
+import { clearNotification, toggleSiteMode } from "../../actions/GlobalActions";
 import Nav from "../../components/Nav/Nav";
 
 const NavContainer = () => {
@@ -38,6 +38,11 @@ const NavContainer = () => {
     dispatch(logout(navigate));
   };
 
+  const handleSiteModeToggle = () => {
+    console.log("what");
+    dispatch(toggleSiteMode);
+  };
+
   return (
     <Nav
       open={open}
@@ -51,6 +56,7 @@ const NavContainer = () => {
       onNotiClose={handleNotiClose}
       openNoti={openNoti}
       videoMode={videoMode}
+      onSiteModeToggle={handleSiteModeToggle}
     />
   );
 };

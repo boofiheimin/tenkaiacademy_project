@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(8),
     [theme.breakpoints.down("lg")]: {
       padding: 0,
-      overflowX: "hidden",
     },
   },
   sectionHeader: {

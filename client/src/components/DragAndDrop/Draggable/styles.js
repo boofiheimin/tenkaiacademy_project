@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     border: "1px solid silver",
     padding: theme.spacing(1),
-    backgroundColor: isDragging ? "lightblue" : "white",
+    backgroundColor: isDragging ? "lightblue" : "transparent",
     userSelect: "none",
     position: "relative",
     ...draggableStyle,

@@ -126,6 +126,8 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
     }
   };
 
+  console.log(formData.sort);
+
   return (
     <div className={classes.root}>
       <div className={classes.basicSearch}>

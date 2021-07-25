@@ -1,7 +1,7 @@
 export const AUTH = "AUTH";
 export const LOGOUT = "LOGOUT";
 export const AUTH_ERROR = "AUTH_ERROR";
-
+export const TOGGLE_SITE_MODE = "TOGGLE_SITE_MODE";
 export const VIDEO_MODE = "VIDEO_MODE";
 
 export const SUCCESS_NOTIFICATION = "SUCCESS_NOTIFICATION";

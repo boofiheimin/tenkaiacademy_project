@@ -26,7 +26,7 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
 
   useEffect(() => {
     setStreams(propStreams);
-  });
+  }, [propStreams]);
 
   const fetchMore = () => {
     dispatch(getMoreStreams(filter, offset));
@@ -86,7 +86,7 @@ const StreamsWrapper = () => {
     dispatch(setVideoMode(false));
     dispatch(getStreams(filter));
     dispatch(getTags());
-  }, [dispatch, filter]);
+  }, [dispatch]);
 
   return <StreamsRoute streams={streams} totalStreams={total} />;
 };

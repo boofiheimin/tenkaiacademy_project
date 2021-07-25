@@ -31,13 +31,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      bgcolor="white"
-      borderRadius={8}
-      padding={1}
-    >
+    <Box display="flex" justifyContent="center" borderRadius={8} padding={1}>
       {lists.length > 0 ? (
         <Autocomplete
           options={options}

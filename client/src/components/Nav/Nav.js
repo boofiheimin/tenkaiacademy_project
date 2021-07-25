@@ -4,6 +4,7 @@ import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
+import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
 
 import { Outlet } from "react-router-dom";
 import {
@@ -38,6 +39,7 @@ const Nav = ({
   notification,
   onNotiClose,
   videoMode,
+  onSiteModeToggle,
 }) => {
   const outletRef = useRef(null);
   const classes = useStyles();
@@ -78,6 +80,9 @@ const Nav = ({
             <Typography variant="h6" noWrap className={classes.title}>
               Tenkai Academy Project
             </Typography>
+            <IconButton onClick={onSiteModeToggle}>
+              <EmojiObjectsIcon />
+            </IconButton>
             {isLogin && (
               <>
                 <Typography className={classes.username}>{username}</Typography>
