@@ -32,7 +32,6 @@ import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 
 const Stream = ({
   stream = {},
-  goEdit,
   videoPos,
   onVideoSeek,
   onRelatedVideoClick,
@@ -43,6 +42,7 @@ const Stream = ({
   const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
   const {
+    _id,
     videoId,
     title,
     publishedAt,
@@ -98,7 +98,7 @@ const Stream = ({
                   <Button
                     className={classes.mobBtn}
                     variant="outlined"
-                    onClick={goEdit}
+                    href={`/streams/${_id}/edit`}
                   >
                     Edit
                   </Button>
@@ -149,7 +149,7 @@ const Stream = ({
                   <Button
                     className={classes.mobBtn}
                     variant="outlined"
-                    onClick={goEdit}
+                    href={`/streams/${_id}/edit`}
                   >
                     Edit
                   </Button>
@@ -324,7 +324,6 @@ const Stream = ({
 
 Stream.propTypes = {
   stream: Proptypes.object,
-  goEdit: Proptypes.func.isRequired,
   videoPos: Proptypes.number,
   onVideoSeek: Proptypes.func,
   onRelatedVideoClick: Proptypes.func,

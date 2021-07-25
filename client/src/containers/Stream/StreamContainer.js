@@ -32,10 +32,6 @@ const StreamContainer = ({ streamId }) => {
     setTabStatus(value);
   };
 
-  const goEdit = () => {
-    navigate(`/streams/${streamId}/edit`);
-  };
-
   const handleVideoSeek = (sec) => {
     // toggle allowed same timestamp to be pressed consecutively
     setToggle(!toggle);
@@ -57,7 +53,6 @@ const StreamContainer = ({ streamId }) => {
       clipAccordionControl={clipAccordionControl}
       tabControl={tabControl}
       tabStatus={tabStatus}
-      goEdit={goEdit}
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
       onRelatedVideoClick={handleRelatedVideoClick}

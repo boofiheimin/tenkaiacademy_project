@@ -27,15 +27,7 @@ const durationFormat = (duration) => {
     .format("H:mm:ss");
 };
 
-const VideoCard = ({
-  title,
-  thumbnail,
-  tags,
-  publishedAt,
-  duration,
-  id,
-  onVideoCardClick,
-}) => {
+const VideoCard = ({ title, thumbnail, tags, publishedAt, duration, id }) => {
   const classes = useStyles();
 
   const type = tags[0]?.tagNameEN;
@@ -43,7 +35,7 @@ const VideoCard = ({
   return (
     <Card className={classes.root}>
       <VideoCardCorner type={type} />
-      <CardActionArea onClick={() => onVideoCardClick(id)}>
+      <CardActionArea href={`/streams/${id}`}>
         <Box position="relative">
           <CardMedia
             component="img"
@@ -100,11 +92,6 @@ VideoCard.propTypes = {
   publishedAt: Proptypes.string.isRequired,
   duration: Proptypes.number.isRequired,
   id: Proptypes.string.isRequired,
-  onVideoCardClick: Proptypes.func,
-};
-
-VideoCard.defaultProps = {
-  onVideoCardClick: () => {},
 };
 
 export default VideoCard;

@@ -32,10 +32,6 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
     dispatch(getMoreStreams(filter, offset));
   };
 
-  const onVideoCardClick = (id) => {
-    navigate(`/streams/${id}`);
-  };
-
   const handleRefetchAll = () => {
     dispatch(refetchAll());
   };
@@ -51,7 +47,6 @@ const StreamsRoute = ({ streams: propStreams, totalStreams }) => {
       tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
-      onVideoCardClick={onVideoCardClick}
       onRefetchAll={handleRefetchAll}
       refetching={refetching}
       searchFilter={filter}

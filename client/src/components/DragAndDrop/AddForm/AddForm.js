@@ -5,12 +5,13 @@ import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const AddForm = ({ label, placeholder, onAdd, lists }) => {
-  const [value, setValue] = useState("");
+  // setting textfield value to null is going to give an error. but this is a correct approach for our case
+  const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    setOptions(["", ...lists]);
+    setOptions(lists);
   }, [lists]);
 
   const handleOnChange = (e, v) => {
@@ -26,7 +27,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
   };
 
   const handleOnAdd = () => {
-    setValue("");
+    setValue(null);
     onAdd(value);
   };
 
