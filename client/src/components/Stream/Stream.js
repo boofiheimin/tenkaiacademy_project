@@ -41,6 +41,7 @@ const Stream = ({
   const matchRegSize = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
+
   const {
     _id,
     videoId,

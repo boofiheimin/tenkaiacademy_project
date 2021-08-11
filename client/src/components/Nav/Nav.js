@@ -188,6 +188,7 @@ Nav.propTypes = {
   }),
   onNotiClose: Proptypes.func,
   videoMode: Proptypes.bool,
+  onSiteModeToggle: Proptypes.func,
 };
 
 Nav.defaultProps = {
@@ -199,6 +200,7 @@ Nav.defaultProps = {
   },
   onNotiClose: () => {},
   videoMode: false,
+  onSiteModeToggle: () => {},
 };
 
 export { OutletContext };

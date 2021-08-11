@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Proptypes from "prop-types";
 
 import {
@@ -9,6 +10,7 @@ import {
   CardActions,
   Chip,
   Box,
+  Button,
 } from "@material-ui/core";
 import HistoryIcon from "@material-ui/icons/History";
 import moment from "moment";
@@ -16,6 +18,7 @@ import moment from "moment";
 import VideoCardCorner from "./VideoCardCorner";
 
 import useStyles from "./styles";
+import ConfirmationPopper from "../ConfirmationPopper/ConfirmationPopper";
 
 const durationFormat = (duration) => {
   if (duration < 3600) {
@@ -27,10 +30,29 @@ const durationFormat = (duration) => {
     .format("H:mm:ss");
 };
 
-const VideoCard = ({ title, thumbnail, tags, publishedAt, duration, id }) => {
+const VideoCard = ({
+  title,
+  thumbnail,
+  tags,
+  publishedAt,
+  duration,
+  id,
+  onRemove,
+}) => {
   const classes = useStyles();
 
   const type = tags[0]?.tagNameEN;
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleRemoveClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handlePopperConfirm = () => {
+    onRemove(id);
+    setAnchorEl(null);
+  };
+  const handlePopperCancel = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Card className={classes.root}>
@@ -80,6 +102,24 @@ const VideoCard = ({ title, thumbnail, tags, publishedAt, duration, id }) => {
             className={classes.chip}
           />
         ))}
+        {localStorage.getItem("authToken") && (
+          <>
+            <Button
+              className={classes.mobBtn}
+              variant="outlined"
+              color="secondary"
+              onClick={handleRemoveClick}
+            >
+              Delete
+            </Button>
+            <ConfirmationPopper
+              popperId={id}
+              onPopperConfirm={handlePopperConfirm}
+              onPopperCancel={handlePopperCancel}
+              anchorEl={anchorEl}
+            />
+          </>
+        )}
       </CardActions>
     </Card>
   );
@@ -92,6 +132,7 @@ VideoCard.propTypes = {
   publishedAt: Proptypes.string.isRequired,
   duration: Proptypes.number.isRequired,
   id: Proptypes.string.isRequired,
+  onRemove: Proptypes.func.isRequired,
 };
 
 export default VideoCard;

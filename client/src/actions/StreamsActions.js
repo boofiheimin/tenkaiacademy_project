@@ -11,6 +11,8 @@ import {
   ERROR_NOTIFICATION,
   REFETCH_ALL_STREAM_SUCCESS,
   SET_STREAMS_FITLER,
+  ADD_STREAM_SUCCESS,
+  DELETE_STREAM_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -30,8 +32,7 @@ export const getStreams = (query) => async (dispatch) => {
       dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
     }
   } catch (error) {
-    console.log(error.message);
-    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
 
@@ -58,8 +59,7 @@ export const getMoreStreams = (query, offset) => async (dispatch) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
-    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
 
@@ -68,7 +68,7 @@ export const getStream = (id) => async (dispatch) => {
     const { data } = await api.fetchStream(id);
     dispatch({ type: FETCH_STREAM_SUCCESS, data });
   } catch (error) {
-    console.log(error.message);
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
 
@@ -78,8 +78,7 @@ export const editStream = (id, formData) => async (dispatch) => {
     dispatch({ type: EDIT_STREAM_SUCCESS, data });
     dispatch({ type: SUCCESS_NOTIFICATION, message: "Saved successfully" });
   } catch (error) {
-    console.log(error.message);
-    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
 
@@ -102,8 +101,7 @@ export const refetchAll = () => async (dispatch) => {
       dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
     }
   } catch (error) {
-    console.log(error.message);
-    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
   }
 };
@@ -126,5 +124,32 @@ export const setStreamsFilter = (filter) => async (dispatch) => {
   } catch (error) {
     console.log(error.message);
     dispatch({ type: ERROR_NOTIFICATION, message: error.message });
+  }
+};
+
+export const addStream = (videoId, navigate) => async (dispatch) => {
+  try {
+    const { data } = await api.addStream(videoId);
+    dispatch({ type: ADD_STREAM_SUCCESS, data, navigate });
+    dispatch({
+      type: SUCCESS_NOTIFICATION,
+      message: "successfully add stream",
+    });
+    navigate(`/streams/${data._id}/edit`);
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+  }
+};
+
+export const removeStream = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.deleteStream(id);
+    dispatch({ type: DELETE_STREAM_SUCCESS, data });
+    dispatch({
+      type: SUCCESS_NOTIFICATION,
+      message: "successfully delete stream",
+    });
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };

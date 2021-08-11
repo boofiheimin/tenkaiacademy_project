@@ -40,7 +40,7 @@ const streamSchema = mongoose.Schema({
   },
   source: {
     type: String,
-    enum: ["admin", "youtube"],
+    enum: ["youtube-manual", "youtube", "private"],
   },
   modifiedAt: {
     type: Date,

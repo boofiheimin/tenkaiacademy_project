@@ -8,6 +8,8 @@ import {
   REFETCH_ALL_STREAM_BEGIN,
   REFETCH_ALL_STREAM_SUCCESS,
   SET_STREAMS_FITLER,
+  ADD_STREAM_SUCCESS,
+  DELETE_STREAM_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -71,6 +73,15 @@ const reducer = (
       return { ...state, refetching: false };
     case SET_STREAMS_FITLER:
       return { ...state, filter: action?.data };
+    case ADD_STREAM_SUCCESS:
+      return state;
+    case DELETE_STREAM_SUCCESS:
+      return {
+        ...state,
+        streams: state.streams.filter(
+          (stream) => stream._id !== action?.data._id
+        ),
+      };
     default:
       return state;
   }

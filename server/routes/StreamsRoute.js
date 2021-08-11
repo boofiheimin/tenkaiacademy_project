@@ -6,6 +6,7 @@ import {
   getStream,
   refetch_all,
   editStream,
+  deleteStream,
 } from "../controller/StreamsController.js";
 
 import { authorize } from "../middleware/AuthMiddleware.js";
@@ -18,5 +19,6 @@ router.get("/", getStreams);
 router.get("/:id", getStream);
 router.route("/").post(authorize([SUPERADMIN, ADMIN]), createStream);
 router.route("/:id").patch(authorize([SUPERADMIN, ADMIN]), editStream);
+router.route("/:id").delete(authorize([SUPERADMIN, ADMIN]), deleteStream);
 
 export default router;

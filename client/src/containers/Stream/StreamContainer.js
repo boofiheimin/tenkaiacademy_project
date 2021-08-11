@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { setVideoMode } from "../../actions/GlobalActions";
@@ -7,21 +6,28 @@ import { getStream } from "../../actions/StreamsActions";
 
 import Stream from "../../components/Stream/Stream";
 
-const StreamContainer = ({ streamId }) => {
+const StreamContainer = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [clipAcc, setClipAcc] = useState(true);
   const [tabStatus, setTabStatus] = useState(0);
   const [videoPos, setVideoPos] = useState(null);
   const [toggle, setToggle] = useState(false);
   const [currentStream, setCurrentStream] = useState({});
+  const { id } = useParams();
 
   const { stream } = useSelector((state) => state.streams);
 
   useEffect(() => {
-    setCurrentStream(stream);
+    dispatch(getStream(id));
+    dispatch(setVideoMode(true));
     return () => {
-      setCurrentStream({ relatedTweets: [] });
+      dispatch(setVideoMode(false));
     };
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    setCurrentStream(stream);
   }, [stream]);
 
   const clipAccordionControl = () => {
@@ -38,9 +44,9 @@ const StreamContainer = ({ streamId }) => {
     setVideoPos(sec);
   };
 
-  const handleRelatedVideoClick = (id, videoId, existing) => {
+  const handleRelatedVideoClick = (_id, videoId, existing) => {
     if (existing) {
-      navigate(`/streams/${id}`);
+      navigate(`/streams/${_id}`);
     } else {
       window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
     }
@@ -60,26 +66,4 @@ const StreamContainer = ({ streamId }) => {
   );
 };
 
-StreamContainer.propTypes = {
-  streamId: PropTypes.string,
-};
-
-StreamContainer.defaultProps = {
-  streamId: "",
-};
-
-const StreamWrapper = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
-  useEffect(() => {
-    dispatch(getStream(id));
-    dispatch(setVideoMode(true));
-    return () => {
-      dispatch(setVideoMode(false));
-    };
-  }, [dispatch, id]);
-
-  return <StreamContainer streamId={id} />;
-};
-
-export default StreamWrapper;
+export default StreamContainer;

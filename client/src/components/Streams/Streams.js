@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PropTypes } from "prop-types";
 import clsx from "clsx";
 import {
@@ -8,6 +9,8 @@ import {
   DialogTitle,
   DialogContent,
   CircularProgress,
+  TextField,
+  DialogActions,
 } from "@material-ui/core";
 
 import VideoCards from "../VideoCards/VideoCards";
@@ -22,15 +25,43 @@ const Streams = ({
   streams,
   totalStreams,
   searchFilter,
+  handleAddStream,
   ...props
 }) => {
   const classes = useStyles();
+  const [videoId, setVideoId] = useState("");
+  const [addStreamOpen, setAddStreamOpen] = useState(false);
+
+  const onVideoIdChange = (e) => {
+    setVideoId(e.target.value);
+  };
+
+  const handleOpenAddStream = () => {
+    setAddStreamOpen(true);
+  };
+
+  const handleCloseAddStream = () => {
+    setAddStreamOpen(false);
+  };
+
+  const onAddStream = () => {
+    handleAddStream(videoId);
+  };
+
   return (
     <div>
       {localStorage.getItem("authToken") && (
         <Box display="flex" padding={3} justifyContent="flex-end">
           <Button
-            className={classes.refetchButton}
+            className={clsx(classes.add, classes.button)}
+            variant="contained"
+            onClick={handleOpenAddStream}
+          >
+            <i className={clsx("fas fa-plus", classes.refetchIcon)} />
+            Add Stream
+          </Button>
+          <Button
+            className={classes.button}
             variant="contained"
             onClick={onRefetchAll}
           >
@@ -41,6 +72,7 @@ const Streams = ({
       )}
       <SearchForm tags={tags} onSubmit={onSubmit} searchFilter={searchFilter} />
       <VideoCards videos={streams} total={totalStreams} {...props} />
+      {/* refetch dialog */}
       <Dialog open={refetching}>
         <DialogTitle>
           <Typography variant="h5">Refetching</Typography>
@@ -55,6 +87,24 @@ const Streams = ({
             <CircularProgress />
           </Box>
         </DialogContent>
+      </Dialog>
+      {/* add stream dialog */}
+      <Dialog open={addStreamOpen} onClose={handleCloseAddStream}>
+        <DialogContent dividers>
+          <TextField label="Video Id" fullWidth onChange={onVideoIdChange} />
+        </DialogContent>
+        <DialogActions dividers>
+          <Button variant="contained" color="primary" onClick={onAddStream}>
+            Add Stream
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleCloseAddStream}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
@@ -98,6 +148,7 @@ Streams.propTypes = {
     to: PropTypes.instanceOf(Date),
     sort: PropTypes.number,
   }),
+  handleAddStream: PropTypes.func,
 };
 
 Streams.defaultProps = {
@@ -115,6 +166,7 @@ Streams.defaultProps = {
     to: null,
     sort: -1,
   },
+  handleAddStream: () => {},
 };
 
 export default Streams;

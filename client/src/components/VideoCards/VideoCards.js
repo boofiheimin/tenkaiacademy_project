@@ -5,7 +5,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import VideoCard from "../VideoCard/VideoCard";
 
-const VideoCards = ({ videos: propsVideo, total, hasMore, fetchMore }) => {
+const VideoCards = ({
+  videos: propsVideo,
+  total,
+  hasMore,
+  fetchMore,
+  handleRemoveStream,
+}) => {
   const [videos, setVideos] = useState([]);
   useEffect(() => {
     setVideos(propsVideo);
@@ -47,6 +53,7 @@ const VideoCards = ({ videos: propsVideo, total, hasMore, fetchMore }) => {
                   duration={duration}
                   id={_id}
                   key={_id}
+                  onRemove={handleRemoveStream}
                 />
               )
             )}
@@ -61,6 +68,7 @@ VideoCards.propTypes = {
   total: Proptypes.number,
   hasMore: Proptypes.bool.isRequired,
   fetchMore: Proptypes.func.isRequired,
+  handleRemoveStream: Proptypes.func.isRequired,
 };
 
 VideoCards.defaultProps = {

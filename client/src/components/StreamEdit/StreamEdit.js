@@ -61,8 +61,7 @@ const StreamEdit = ({
     relatedVideos = [],
   } = formData;
   const classes = useStyles();
-  const disableVideoInfo = source === "youtube";
-
+  const disableVideoInfo = source !== "manual";
   return (
     <Container>
       <Box display="flex" flexDirection="column" height="100%">

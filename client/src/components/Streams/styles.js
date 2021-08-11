@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  refetchButton: {
+  button: {
     padding: theme.spacing(1),
     display: "flex",
     alignItems: "center",
@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 1,
     color: "white",
     background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+  },
+  add: {
+    marginRight: theme.spacing(1),
   },
   refetchIcon: {
     marginRight: theme.spacing(1),

@@ -10,6 +10,8 @@ import {
   getMoreStreams,
   refetchAll,
   setStreamsFilter,
+  addStream,
+  removeStream,
 } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
@@ -92,6 +94,14 @@ const StreamsRoute = () => {
     navigate(`/streams${searchParams ? `?${searchParams}` : ""}`);
   };
 
+  const handleAddStream = (videoId) => {
+    dispatch(addStream(videoId, navigate));
+  };
+
+  const handleRemoveStream = (id) => {
+    dispatch(removeStream(id));
+  };
+
   return (
     <Streams
       streams={queriedStreams}
@@ -103,6 +113,8 @@ const StreamsRoute = () => {
       refetching={refetching}
       searchFilter={filter}
       onSubmit={handleOnSubmit}
+      handleAddStream={handleAddStream}
+      handleRemoveStream={handleRemoveStream}
     />
   );
 };

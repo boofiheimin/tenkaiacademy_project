@@ -43,13 +43,36 @@ export const getStreams = async ({ query: reqQuery = {} }, res, next) => {
 };
 
 export const createStream = async (req, res, next) => {
-  const stream = req.body;
-  const newStream = new Stream(stream);
-
   try {
-    await newStream.save();
+    const { videoId } = req.body;
+    Youtube.authenticate({
+      type: "key",
+      key: process.env.YOUTUBE_API_KEY || null,
+    });
+    const results = await Youtube.videos.list({
+      maxResults: 1,
+      id: videoId,
+      part: "snippet, contentDetails",
+    });
+    const video = results?.data?.items[0];
 
-    res.status(200).json(newStream);
+    if (video) {
+      const videoParams = {
+        videoId: video?.id,
+        title: video?.snippet?.title,
+        thumbnail: video?.snippet?.thumbnails?.high?.url,
+        uploader: video?.snippet?.channelTitle,
+        duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
+        publishedAt: new Date(video?.snippet?.publishedAt),
+        source: "youtube-manual",
+      };
+
+      const newStream = new Stream(videoParams);
+
+      await newStream.save();
+
+      res.status(200).json(newStream);
+    }
   } catch (error) {
     next(error);
   }
@@ -107,7 +130,19 @@ export const editStream = async (req, res, next) => {
 
     res.status(200).json(stream);
   } catch (err) {
-    return next(new ErrorResponse(err.message, 500));
+    next(error);
+  }
+};
+
+export const deleteStream = async (req, res, next) => {
+  try {
+    const stream = await Stream.findByIdAndDelete(req.params.id);
+    if (!stream) {
+      return next(new ErrorResponse(("stream not found", 404)));
+    }
+    res.status(200).json(stream);
+  } catch (err) {
+    next(error);
   }
 };
 
@@ -196,6 +231,6 @@ export const refetch_all = async (req, res, next) => {
       message,
     });
   } catch (err) {
-    return next(new ErrorResponse(err.message, 500));
+    next(error);
   }
 };
