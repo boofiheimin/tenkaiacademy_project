@@ -12,6 +12,8 @@ import {
   TextField,
   DialogActions,
 } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
 import VideoCards from "../VideoCards/VideoCards";
 import SearchForm from "../SearchForm/SearchForm";
@@ -57,7 +59,7 @@ const Streams = ({
             variant="contained"
             onClick={handleOpenAddStream}
           >
-            <i className={clsx("fas fa-plus", classes.refetchIcon)} />
+            <FontAwesomeIcon icon={faPlus} className={classes.refetchIcon} />
             Add Stream
           </Button>
           <Button
@@ -65,7 +67,7 @@ const Streams = ({
             variant="contained"
             onClick={onRefetchAll}
           >
-            <i className={clsx("fas fa-sync-alt", classes.refetchIcon)} />
+            <FontAwesomeIcon icon={faSyncAlt} className={classes.refetchIcon} />
             Refetch All
           </Button>
         </Box>

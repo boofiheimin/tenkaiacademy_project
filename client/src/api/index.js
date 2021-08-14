@@ -24,6 +24,7 @@ export const editStream = async (id, formData) =>
 export const refetchAll = async () => API.get("/streams/refetch_all");
 export const addStream = async (videoId) => API.post("/streams", { videoId });
 export const deleteStream = async (id) => API.delete(`/streams/${id}`);
+export const refetchStream = async (id) => API.patch(`/streams/refetch/${id}`);
 
 export const fetchTags = async () => API.get("/tags");
 export const createTag = async (tagData) => API.post("/tags", tagData);

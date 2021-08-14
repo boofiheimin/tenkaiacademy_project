@@ -7,6 +7,12 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMinusSquare,
+  faSave,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./styles";
 
 import ConfirmationPopper from "../../ConfirmationPopper/ConfirmationPopper";
@@ -93,10 +99,10 @@ const Tag = ({ tag, onSave, onRemove }) => {
           onClick={toggleState}
           key={mode ? "fas fa-save" : "fas fa-edit"}
         >
-          <i className={mode ? "fas fa-save" : "fas fa-edit"} />
+          <FontAwesomeIcon icon={mode ? faSave : faEdit} />
         </Button>
         <Button className={classes.actionButton} onClick={handleRemove}>
-          <i className="fas fa-minus-square" />
+          <FontAwesomeIcon icon={faMinusSquare} />
         </Button>
         <ConfirmationPopper
           popperId={tagId}

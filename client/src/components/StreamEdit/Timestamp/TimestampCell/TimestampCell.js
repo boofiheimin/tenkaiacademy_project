@@ -6,6 +6,12 @@ import {
   TextareaAutosize,
   Button,
 } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSave,
+  faEdit,
+  faMinusSquare,
+} from "@fortawesome/free-solid-svg-icons";
 
 import ConfirmationPopper from "../../../ConfirmationPopper/ConfirmationPopper";
 import { secondsTohhmmss, hhmmssRegEx } from "../../../../helper";
@@ -91,10 +97,10 @@ const TimestampCell = ({
             onClick={toggleState}
             key={mode ? "fas fa-save" : "fas fa-edit"}
           >
-            <i className={mode ? "fas fa-save" : "fas fa-edit"} />
+            <FontAwesomeIcon icon={mode ? faSave : faEdit} />
           </Button>
           <Button className={classes.actionButton} onClick={handleOnDelete}>
-            <i className="fas fa-minus-square" />
+            <FontAwesomeIcon icon={faMinusSquare} />
           </Button>
           <ConfirmationPopper
             popperId={index}

@@ -55,9 +55,9 @@ export const createStream = async (req, res, next) => {
       part: "snippet, contentDetails",
     });
     const video = results?.data?.items[0];
-
+    let videoParams;
     if (video) {
-      const videoParams = {
+      videoParams = {
         videoId: video?.id,
         title: video?.snippet?.title,
         thumbnail: video?.snippet?.thumbnails?.high?.url,
@@ -66,13 +66,17 @@ export const createStream = async (req, res, next) => {
         publishedAt: new Date(video?.snippet?.publishedAt),
         source: "youtube-manual",
       };
-
-      const newStream = new Stream(videoParams);
-
-      await newStream.save();
-
-      res.status(200).json(newStream);
+    } else {
+      videoParams = {
+        videoId,
+        title: "NEW VIDEO",
+        source: "manual",
+      };
     }
+
+    const newStream = new Stream(videoParams);
+    await newStream.save();
+    res.status(200).json(newStream);
   } catch (error) {
     next(error);
   }
@@ -231,6 +235,47 @@ export const refetch_all = async (req, res, next) => {
       message,
     });
   } catch (err) {
+    next(error);
+  }
+};
+
+export const refetchStream = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let stream = await Stream.findById(id);
+    Youtube.authenticate({
+      type: "key",
+      key: process.env.YOUTUBE_API_KEY || null,
+    });
+
+    const results = await Youtube.videos.list({
+      maxResults: 1,
+      id: stream.videoId,
+      part: "snippet, contentDetails",
+    });
+
+    const video = results?.data?.items[0];
+    let videoParams;
+    if (video) {
+      videoParams = {
+        title: video?.snippet?.title,
+        thumbnail: video?.snippet?.thumbnails?.high?.url,
+        uploader: video?.snippet?.channelTitle,
+        duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
+        publishedAt: new Date(video?.snippet?.publishedAt),
+      };
+    } else {
+      return next(new ErrorResponse("Stream not found", 404));
+    }
+    stream.title = videoParams.title;
+    stream.thumbnail = videoParams.thumbnail;
+    stream.uploader = videoParams.uploader;
+    stream.duration = videoParams.duration;
+    stream.publishedAt = videoParams.publishedAt;
+
+    await stream.save();
+    res.status(200).json(stream);
+  } catch (error) {
     next(error);
   }
 };

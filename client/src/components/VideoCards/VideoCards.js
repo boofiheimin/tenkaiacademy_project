@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Proptypes from "prop-types";
-import { CircularProgress, Box, Typography, Divider } from "@material-ui/core";
+import { Box, Typography, Divider } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import VideoCard from "../VideoCard/VideoCard";
+
+import ShurikenSpinner from "../ShurikenSpinner/ShurikenSpinner";
 
 const VideoCards = ({
   videos: propsVideo,
@@ -34,7 +36,7 @@ const VideoCards = ({
           dataLength={videos.length}
           next={fetchMore}
           hasMore={hasMore}
-          loader={<CircularProgress />}
+          loader={<ShurikenSpinner />}
         >
           <Box
             display="grid"
@@ -44,7 +46,15 @@ const VideoCards = ({
             justifyContent="center"
           >
             {videos.map(
-              ({ title, thumbnail, tags, publishedAt, duration, _id }) => (
+              ({
+                title,
+                thumbnail,
+                tags,
+                publishedAt,
+                duration,
+                _id,
+                uploader,
+              }) => (
                 <VideoCard
                   title={title}
                   thumbnail={thumbnail}
@@ -53,6 +63,7 @@ const VideoCards = ({
                   duration={duration}
                   id={_id}
                   key={_id}
+                  uploader={uploader}
                   onRemove={handleRemoveStream}
                 />
               )

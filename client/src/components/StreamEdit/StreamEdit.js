@@ -15,6 +15,8 @@ import {
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSave, faTimes, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 import Timestamp from "./Timestamp/Timestamp";
@@ -44,6 +46,7 @@ const StreamEdit = ({
   onAddVideo,
   onReorderVideo,
   onRemoveVideo,
+  refetchVideo,
 }) => {
   const {
     title,
@@ -79,7 +82,7 @@ const StreamEdit = ({
               variant="contained"
               type="submit"
             >
-              <i className={clsx("fas fa-save", classes.refetchIcon)} />
+              <FontAwesomeIcon icon={faSave} className={classes.refetchIcon} />
               Save
             </Button>
             <Button
@@ -87,7 +90,7 @@ const StreamEdit = ({
               variant="contained"
               onClick={onReset}
             >
-              <i className={clsx("fas fa-times", classes.refetchIcon)} />
+              <FontAwesomeIcon icon={faTimes} className={classes.refetchIcon} />
               Reset
             </Button>
           </div>
@@ -105,9 +108,15 @@ const StreamEdit = ({
                   <Typography className={classes.vidInfo} variant="h6">
                     Video Information
                   </Typography>
-                  <Button className={classes.refetchButton} variant="contained">
-                    <i
-                      className={clsx("fas fa-sync-alt", classes.refetchIcon)}
+                  <Button
+                    className={classes.refetchButton}
+                    variant="contained"
+                    onClick={refetchVideo}
+                    disabled={!disableVideoInfo}
+                  >
+                    <FontAwesomeIcon
+                      icon={faSyncAlt}
+                      className={classes.refetchIcon}
                     />
                     Refetch
                   </Button>
@@ -297,6 +306,7 @@ StreamEdit.propTypes = {
   onAddVideo: Proptypes.func,
   onReorderVideo: Proptypes.func,
   onRemoveVideo: Proptypes.func,
+  refetchVideo: Proptypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -320,6 +330,7 @@ StreamEdit.defaultProps = {
   onAddVideo: () => {},
   onReorderVideo: () => {},
   onRemoveVideo: () => {},
+  refetchVideo: () => {},
 };
 
 export default StreamEdit;

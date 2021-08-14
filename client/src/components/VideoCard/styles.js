@@ -21,16 +21,22 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
   content: {
-    height: 110,
+    height: 130,
   },
   cardMedia: {
     position: "relative",
   },
-  chip: {
-    maxWidth: 120,
+  authorChip: {
+    marginLeft: theme.spacing(1),
   },
   invisiblechip: {
     background: "none",
+  },
+  uploader: {
+    fontSize: "0.85rem",
+    fontStyle: "italic",
+    marginTop: theme.spacing(1),
+    color: "darkgray",
   },
 }));
 

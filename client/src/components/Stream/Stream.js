@@ -8,7 +8,6 @@ import {
   Typography,
   Button,
   Divider,
-  Chip,
   Paper,
   Hidden,
   Accordion,
@@ -29,6 +28,8 @@ import useStyles from "./styles";
 
 import Timestamp from "./Timestamp/Timestamp";
 import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
+
+import TypeChip from "../TypeChip/TypeChip";
 
 const Stream = ({
   stream = {},
@@ -132,11 +133,11 @@ const Stream = ({
                 </Box>
               </Box>
             </Hidden>
-            <Box padding={2}>
+            <div className={classes.tagContainer}>
               {tags.map((tag) => (
-                <Chip label={tag.tagNameEN} className={classes.chip} />
+                <TypeChip label={tag.tagNameEN} />
               ))}
-            </Box>
+            </div>
             <Hidden lgUp>
               <Box display="flex" paddingLeft={2} paddingBottom={2}>
                 <Button

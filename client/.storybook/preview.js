@@ -1,5 +1,3 @@
-import "@fortawesome/fontawesome-free/js/all";
-
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {

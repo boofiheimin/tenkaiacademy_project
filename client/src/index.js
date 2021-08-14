@@ -10,7 +10,6 @@ import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import reducers from "./reducers";
 
 import App from "./containers/App";
-import "@fortawesome/fontawesome-free/js/all";
 
 momentDurationFormatSetup(moment);
 

@@ -153,3 +153,13 @@ export const removeStream = (id) => async (dispatch) => {
     dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
+
+export const refetchStream = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.refetchStream(id);
+    dispatch({ type: EDIT_STREAM_SUCCESS, data });
+    dispatch({ type: SUCCESS_NOTIFICATION, message: "Refetch successfully" });
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+  }
+};

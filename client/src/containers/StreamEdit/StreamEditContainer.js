@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 
-import { getStream, editStream } from "../../actions/StreamsActions";
+import {
+  getStream,
+  editStream,
+  refetchStream,
+} from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 
 import StreamEdit from "../../components/StreamEdit/StreamEdit";
@@ -269,6 +273,10 @@ const StreamEditContainer = ({ streamId }) => {
     setFormData(newForm);
   };
 
+  const refetchVideo = () => {
+    dispatch(refetchStream(streamId));
+  };
+
   return (
     <StreamEdit
       formData={formData}
@@ -289,6 +297,7 @@ const StreamEditContainer = ({ streamId }) => {
       onAddVideo={onAddVideo}
       onReorderVideo={onReorderVideo}
       onRemoveVideo={onRemoveVideo}
+      refetchVideo={refetchVideo}
     />
   );
 };

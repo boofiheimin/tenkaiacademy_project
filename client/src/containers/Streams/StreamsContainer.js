@@ -102,6 +102,12 @@ const StreamsRoute = () => {
     dispatch(removeStream(id));
   };
 
+  tags.sort(
+    (a, b) => a.catId - b.catId || a.tagNameEN.localeCompare(b.tagNameEN)
+  );
+
+  console.log(tags);
+
   return (
     <Streams
       streams={queriedStreams}

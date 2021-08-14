@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 
 import {
   Typography,
@@ -15,10 +15,10 @@ import {
 import HistoryIcon from "@material-ui/icons/History";
 import moment from "moment";
 
-import VideoCardCorner from "./VideoCardCorner";
-
 import useStyles from "./styles";
 import ConfirmationPopper from "../ConfirmationPopper/ConfirmationPopper";
+
+import TypeChip from "../TypeChip/TypeChip";
 
 const durationFormat = (duration) => {
   if (duration < 3600) {
@@ -38,10 +38,9 @@ const VideoCard = ({
   duration,
   id,
   onRemove,
+  uploader,
 }) => {
   const classes = useStyles();
-
-  const type = tags[0]?.tagNameEN;
   const [anchorEl, setAnchorEl] = useState(null);
   const handleRemoveClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -56,7 +55,6 @@ const VideoCard = ({
 
   return (
     <Card className={classes.root}>
-      <VideoCardCorner type={type} />
       <CardActionArea href={`/streams/${id}`}>
         <Box position="relative">
           <CardMedia
@@ -87,20 +85,26 @@ const VideoCard = ({
           >
             {title}
           </Typography>
-          <Box display="flex" color="darkgray" lineHeight="16px">
+          <Box
+            display="flex"
+            color="darkgray"
+            lineHeight="16px"
+            alignItems="center"
+          >
             <HistoryIcon className={classes.historyIcon} />
             <Typography>{moment(publishedAt).fromNow()}</Typography>
+          </Box>
+          <Box paddingTop={1} paddingBottom={1}>
+            <Typography className={classes.uploader}>{uploader}</Typography>
           </Box>
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.cardActions}>
-        {tags.length === 0 && <Chip className={classes.invisiblechip} />}
+        {!localStorage.getItem("authToken") && tags.length === 0 && (
+          <Chip className={classes.invisiblechip} />
+        )}
         {tags.slice(0, 2).map(({ tagNameEN }) => (
-          <Chip
-            label={tagNameEN}
-            key={Date.now() + Math.random()}
-            className={classes.chip}
-          />
+          <TypeChip label={tagNameEN} key={Date.now() + Math.random()} />
         ))}
         {localStorage.getItem("authToken") && (
           <>
@@ -126,13 +130,25 @@ const VideoCard = ({
 };
 
 VideoCard.propTypes = {
-  title: Proptypes.string.isRequired,
-  thumbnail: Proptypes.string.isRequired,
-  tags: Proptypes.array.isRequired,
-  publishedAt: Proptypes.string.isRequired,
-  duration: Proptypes.number.isRequired,
-  id: Proptypes.string.isRequired,
-  onRemove: Proptypes.func.isRequired,
+  title: PropTypes.string,
+  thumbnail: PropTypes.string,
+  tags: PropTypes.array,
+  publishedAt: PropTypes.string,
+  duration: PropTypes.number,
+  id: PropTypes.string,
+  onRemove: PropTypes.func,
+  uploader: PropTypes.string,
+};
+
+VideoCard.defaultProps = {
+  title: "",
+  thumbnail: "",
+  tags: [],
+  publishedAt: "",
+  duration: 0,
+  id: "",
+  onRemove: () => {},
+  uploader: "",
 };
 
 export default VideoCard;

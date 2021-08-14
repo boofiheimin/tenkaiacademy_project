@@ -13,10 +13,13 @@ const streamSchema = mongoose.Schema({
   },
   description: String,
   thumbnail: String,
-  duration: Number,
+  duration: {
+    type: Number,
+    default: 0,
+  },
   publishedAt: {
     type: Date,
-    required: [true, "Please provide publish date"],
+    default: new Date(),
   },
   tags: {
     type: Array,
@@ -36,11 +39,11 @@ const streamSchema = mongoose.Schema({
   },
   uploader: {
     type: String,
-    required: [true, "Please provide uploader"],
+    default: "Kanata Ch. 天音かなた",
   },
   source: {
     type: String,
-    enum: ["youtube-manual", "youtube", "private"],
+    enum: ["youtube-manual", "youtube", "manual"],
   },
   modifiedAt: {
     type: Date,

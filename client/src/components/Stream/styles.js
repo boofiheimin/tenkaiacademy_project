@@ -26,12 +26,6 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
   },
-  chip: {
-    marginBottom: theme.spacing(1),
-    "&:not(:last-child)": {
-      marginRight: theme.spacing(1),
-    },
-  },
   buttonLink: {
     background: "none !important",
     border: "none",
@@ -110,6 +104,12 @@ const useStyles = makeStyles((theme) => ({
   },
   accordionDesc: {
     width: "100%",
+  },
+  tagContainer: {
+    padding: theme.spacing(2),
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1),
+    },
   },
 }));
 
