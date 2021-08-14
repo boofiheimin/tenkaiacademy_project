@@ -34,8 +34,6 @@ export default {
 };
 
 const Template = ({ tags, type, ...restargs }) => {
-  console.log(tags);
-
   // eslint-disable-next-line no-param-reassign
   tags[0] = { id: 1, tagNameEN: type };
 

@@ -111,6 +111,9 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
     },
   },
+  thumbnail: {
+    width: "100%",
+  },
 }));
 
 export default useStyles;

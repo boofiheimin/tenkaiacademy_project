@@ -78,7 +78,7 @@ const StreamsRoute = () => {
       const tagsId = submittedTags.map((tag) => tag.tagId);
       searchArray = searchArray.concat(`tags=[${tagsId.toString()}]`);
     }
-    if (uploader) searchArray.concat(`uploader=${uploader}`);
+    if (uploader) searchArray = searchArray.concat(`uploader=${uploader}`);
     if (from) {
       const fromString = moment(from).format("YYYYMMDD");
       searchArray = searchArray.concat(`from=${fromString}`);
@@ -105,8 +105,6 @@ const StreamsRoute = () => {
   tags.sort(
     (a, b) => a.catId - b.catId || a.tagNameEN.localeCompare(b.tagNameEN)
   );
-
-  console.log(tags);
 
   return (
     <Streams

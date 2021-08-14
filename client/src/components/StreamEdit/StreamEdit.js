@@ -1,4 +1,4 @@
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 import {
   Container,
@@ -32,6 +32,7 @@ const StreamEdit = ({
   onDurationChange,
   onPublishedChange,
   onUploaderChange,
+  onThumbnailChange,
   tags: propTags,
   onAddTag,
   onReorderTag,
@@ -140,6 +141,15 @@ const StreamEdit = ({
                       value={title}
                       className={classes.infoInput}
                       onChange={onTitleChange}
+                      disabled={disableVideoInfo}
+                    />
+                  </div>
+                  <div className={classes.infoInputContainer}>
+                    <Typography>thumbnail:&nbsp;</Typography>
+                    <TextField
+                      value={thumbnail}
+                      className={classes.infoInput}
+                      onChange={onThumbnailChange}
                       disabled={disableVideoInfo}
                     />
                   </div>
@@ -276,37 +286,38 @@ const StreamEdit = ({
 };
 
 StreamEdit.propTypes = {
-  formData: Proptypes.object,
-  goBack: Proptypes.func.isRequired,
-  onSubmit: Proptypes.func.isRequired,
-  onTitleChange: Proptypes.func,
-  onDurationChange: Proptypes.func,
-  onPublishedChange: Proptypes.func,
-  onUploaderChange: Proptypes.func,
-  onDetailChange: Proptypes.func,
-  tags: Proptypes.arrayOf(
-    Proptypes.shape({
-      id: Proptypes.string,
-      text: Proptypes.string,
-      tagNameJP: Proptypes.string,
-      tagId: Proptypes.number,
-      catId: Proptypes.number,
+  formData: PropTypes.object,
+  goBack: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onTitleChange: PropTypes.func,
+  onDurationChange: PropTypes.func,
+  onPublishedChange: PropTypes.func,
+  onUploaderChange: PropTypes.func,
+  onDetailChange: PropTypes.func,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      text: PropTypes.string,
+      tagNameJP: PropTypes.string,
+      tagId: PropTypes.number,
+      catId: PropTypes.number,
     })
   ),
-  onAddTag: Proptypes.func,
-  onReorderTag: Proptypes.func,
-  onRemoveTag: Proptypes.func,
-  onAddTimeStamp: Proptypes.func,
-  onDeleteTimestamp: Proptypes.func,
-  onTimestampSave: Proptypes.func,
-  onReset: Proptypes.func,
-  onAddTweet: Proptypes.func,
-  onReorderTweet: Proptypes.func,
-  onRemoveTweet: Proptypes.func,
-  onAddVideo: Proptypes.func,
-  onReorderVideo: Proptypes.func,
-  onRemoveVideo: Proptypes.func,
-  refetchVideo: Proptypes.func,
+  onAddTag: PropTypes.func,
+  onReorderTag: PropTypes.func,
+  onRemoveTag: PropTypes.func,
+  onAddTimeStamp: PropTypes.func,
+  onDeleteTimestamp: PropTypes.func,
+  onTimestampSave: PropTypes.func,
+  onReset: PropTypes.func,
+  onAddTweet: PropTypes.func,
+  onReorderTweet: PropTypes.func,
+  onRemoveTweet: PropTypes.func,
+  onAddVideo: PropTypes.func,
+  onReorderVideo: PropTypes.func,
+  onRemoveVideo: PropTypes.func,
+  refetchVideo: PropTypes.func,
+  onThumbnailChange: PropTypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -331,6 +342,7 @@ StreamEdit.defaultProps = {
   onReorderVideo: () => {},
   onRemoveVideo: () => {},
   refetchVideo: () => {},
+  onThumbnailChange: () => {},
 };
 
 export default StreamEdit;

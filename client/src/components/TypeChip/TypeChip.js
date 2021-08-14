@@ -34,7 +34,6 @@ const typeReducer = (type) => {
 
 const TypeChip = ({ label, ...props }) => {
   const classes = useStyles({ bgColor: typeReducer(label) });
-  console.log(label);
   return <Chip label={label} {...props} className={classes.root} />;
 };
 

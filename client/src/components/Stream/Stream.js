@@ -48,6 +48,7 @@ const Stream = ({
     videoId,
     title,
     publishedAt,
+    thumbnail,
     tags = [],
     description,
     timestamps = [],
@@ -71,7 +72,11 @@ const Stream = ({
     <Container className={classes.root} maxWidth="xl">
       <Grid container spacing={matches ? 0 : 2}>
         <Grid item xs={matches ? 9 : 12} lg={9}>
-          <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
+          {tags.some((tag) => tag.tagNameEN === "Private") ? (
+            <img className={classes.thumbnail} src={thumbnail} alt="" />
+          ) : (
+            <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
+          )}
         </Grid>
         {(matches || matchRegSize) && (
           <Grid item xs={3}>

@@ -277,6 +277,42 @@ const StreamEditContainer = ({ streamId }) => {
     dispatch(refetchStream(streamId));
   };
 
+  const onTitleChange = (e) => {
+    const newForm = {
+      ...formData,
+      title: e.target.value,
+    };
+    setFormData(newForm);
+  };
+  const onThumbnailChange = (e) => {
+    const newForm = {
+      ...formData,
+      thumbnail: e.target.value,
+    };
+    setFormData(newForm);
+  };
+  const onDurationChange = (e) => {
+    const newForm = {
+      ...formData,
+      duration: e.target.value,
+    };
+    setFormData(newForm);
+  };
+  const onUploaderChange = (e) => {
+    const newForm = {
+      ...formData,
+      uploader: e.target.value,
+    };
+    setFormData(newForm);
+  };
+  const onPublishedChange = (v) => {
+    const newForm = {
+      ...formData,
+      publishedAt: v.toISOString(),
+    };
+    setFormData(newForm);
+  };
+
   return (
     <StreamEdit
       formData={formData}
@@ -298,6 +334,11 @@ const StreamEditContainer = ({ streamId }) => {
       onReorderVideo={onReorderVideo}
       onRemoveVideo={onRemoveVideo}
       refetchVideo={refetchVideo}
+      onTitleChange={onTitleChange}
+      onThumbnailChange={onThumbnailChange}
+      onDurationChange={onDurationChange}
+      onUploaderChange={onUploaderChange}
+      onPublishedChange={onPublishedChange}
     />
   );
 };
