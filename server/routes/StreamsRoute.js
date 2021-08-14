@@ -4,7 +4,7 @@ import {
   getStreams,
   createStream,
   getStream,
-  refetch_all,
+  refetchAll,
   editStream,
   deleteStream,
   refetchStream,
@@ -15,7 +15,7 @@ import { ADMIN, SUPERADMIN } from "../constants/userRoles.js";
 
 const router = express.Router();
 
-router.route("/refetch_all").get(authorize([SUPERADMIN, ADMIN]), refetch_all);
+router.route("/refetchAll").get(authorize([SUPERADMIN, ADMIN]), refetchAll);
 router.get("/", getStreams);
 router.get("/:id", getStream);
 router.route("/").post(authorize([SUPERADMIN, ADMIN]), createStream);

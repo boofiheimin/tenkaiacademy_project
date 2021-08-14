@@ -1,4 +1,5 @@
 import Stream from "../models/Stream.js";
+import Tag from "../models/Tag.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 
 import Youtube from "youtube-api";
@@ -67,10 +68,21 @@ export const createStream = async (req, res, next) => {
         source: "youtube-manual",
       };
     } else {
+      const tags = await Tag.findOne(
+        { tagNameEN: "Private" },
+        { _id: 1, catId: 1, tagId: 1, tagNameEN: 1, tagNameJP: 1 }
+      );
       videoParams = {
         videoId,
         title: "NEW VIDEO",
         source: "manual",
+        tags: [
+          {
+            tagId: tags.tagId,
+            tagNameEN: tags.tagNameEN,
+            tagNameJP: tags.tagNameJP,
+          },
+        ],
       };
     }
 
@@ -150,7 +162,7 @@ export const deleteStream = async (req, res, next) => {
   }
 };
 
-export const refetch_all = async (req, res, next) => {
+export const refetchAll = async (req, res, next) => {
   try {
     Youtube.authenticate({
       type: "key",
