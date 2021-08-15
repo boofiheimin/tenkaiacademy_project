@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(2),
+    "& > :not(:first-child)": {
+      marginLeft: theme.spacing(1),
+    },
   },
   vidInfo: {
     flexGrow: 1,
@@ -78,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
   },
   infoInput: {
     width: "100%",
+  },
+  timestampHeader: {
+    flexGrow: 1,
   },
 }));
 

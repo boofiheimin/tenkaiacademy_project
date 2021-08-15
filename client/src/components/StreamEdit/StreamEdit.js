@@ -20,6 +20,7 @@ import { faSave, faTimes, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 import Timestamp from "./Timestamp/Timestamp";
+import ImportTimestampModal from "./ImportTimestampModal/ImportTimestampModal";
 
 import useStyles from "./styles";
 
@@ -48,6 +49,8 @@ const StreamEdit = ({
   onReorderVideo,
   onRemoveVideo,
   refetchVideo,
+  onImportTimestamp,
+  onClearTimestamp,
 }) => {
   const {
     title,
@@ -65,7 +68,9 @@ const StreamEdit = ({
     relatedVideos = [],
   } = formData;
   const classes = useStyles();
+
   const disableVideoInfo = source !== "manual";
+
   return (
     <Container>
       <Box display="flex" flexDirection="column" height="100%">
@@ -265,7 +270,17 @@ const StreamEdit = ({
             <Grid item md={6} xs={12} className={classes.gridContainer}>
               <Card className={classes.segmentContainer}>
                 <div className={classes.cardHeader}>
-                  <Typography variant="h6">Timestamp</Typography>
+                  <Typography variant="h6" className={classes.timestampHeader}>
+                    Timestamp
+                  </Typography>
+                  <ImportTimestampModal onImportTimestamp={onImportTimestamp} />
+                  <Button
+                    variant="outlined"
+                    onClick={onClearTimestamp}
+                    color="secondary"
+                  >
+                    Clear
+                  </Button>
                 </div>
                 <Divider />
                 <div className={classes.dndContainer}>
@@ -318,6 +333,8 @@ StreamEdit.propTypes = {
   onRemoveVideo: PropTypes.func,
   refetchVideo: PropTypes.func,
   onThumbnailChange: PropTypes.func,
+  onImportTimestamp: PropTypes.func,
+  onClearTimestamp: PropTypes.func,
 };
 
 StreamEdit.defaultProps = {
@@ -343,6 +360,8 @@ StreamEdit.defaultProps = {
   onRemoveVideo: () => {},
   refetchVideo: () => {},
   onThumbnailChange: () => {},
+  onImportTimestamp: () => {},
+  onClearTimestamp: () => {},
 };
 
 export default StreamEdit;

@@ -27,7 +27,11 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
   };
 
   const handleOnAdd = () => {
-    setValue(null);
+    if (lists.length > 0) {
+      setValue(null);
+    } else {
+      setValue("");
+    }
     onAdd(value);
   };
 

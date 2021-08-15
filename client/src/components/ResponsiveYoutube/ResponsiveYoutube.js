@@ -14,7 +14,6 @@ const ResponsiveIframe = ({ videoId, videoPos }) => {
 
   const seekTime = (time = 0) => {
     player.seekTo(time);
-    player.playVideo();
   };
 
   useEffect(() => {
@@ -25,7 +24,11 @@ const ResponsiveIframe = ({ videoId, videoPos }) => {
 
   return (
     <div className={classes.container}>
-      <Youtube videoId={videoId} onReady={onReady} />
+      <Youtube
+        videoId={videoId}
+        onReady={onReady}
+        opts={{ playerVars: { autoplay: 1 } }}
+      />
     </div>
   );
 };

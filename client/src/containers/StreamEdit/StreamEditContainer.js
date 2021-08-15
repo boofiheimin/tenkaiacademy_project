@@ -215,6 +215,24 @@ const StreamEditContainer = ({ streamId }) => {
     setFormData(newForm);
   };
 
+  const onImportTimestamp = (value) => {
+    const newTimestamps = [...formData.timestamps, ...value];
+    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
+    const newForm = {
+      ...formData,
+      timestamps: newTimestamps,
+    };
+    setFormData(newForm);
+  };
+
+  const onClearTimestamp = () => {
+    const newForm = {
+      ...formData,
+      timestamps: [],
+    };
+    setFormData(newForm);
+  };
+
   const onAddTweet = (twitterId) => {
     const newTweets = [
       ...formData.relatedTweets,
@@ -339,6 +357,8 @@ const StreamEditContainer = ({ streamId }) => {
       onDurationChange={onDurationChange}
       onUploaderChange={onUploaderChange}
       onPublishedChange={onPublishedChange}
+      onImportTimestamp={onImportTimestamp}
+      onClearTimestamp={onClearTimestamp}
     />
   );
 };
