@@ -31,11 +31,12 @@ import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 
 import TypeChip from "../TypeChip/TypeChip";
 
-const Stream = ({
-  stream = {},
+const Video = ({
+  video = {},
   videoPos,
   onVideoSeek,
   onRelatedVideoClick,
+  type,
 }) => {
   const classes = useStyles();
   const [descDialog, setDescDialog] = useState(false);
@@ -56,7 +57,7 @@ const Stream = ({
     clips = [],
     relatedVideos = [],
     relatedTweets = [],
-  } = stream;
+  } = video;
 
   const handleDescDialogOpen = () => {
     setDescDialog(true);
@@ -105,7 +106,7 @@ const Stream = ({
                   <Button
                     className={classes.mobBtn}
                     variant="outlined"
-                    href={`/streams/${_id}/edit`}
+                    href={`/${type}s/${_id}/edit`}
                   >
                     Edit
                   </Button>
@@ -156,7 +157,7 @@ const Stream = ({
                   <Button
                     className={classes.mobBtn}
                     variant="outlined"
-                    href={`/streams/${_id}/edit`}
+                    href={`/${type}s/${_id}/edit`}
                   >
                     Edit
                   </Button>
@@ -329,18 +330,20 @@ const Stream = ({
   );
 };
 
-Stream.propTypes = {
-  stream: Proptypes.object,
+Video.propTypes = {
+  video: Proptypes.object,
   videoPos: Proptypes.number,
   onVideoSeek: Proptypes.func,
   onRelatedVideoClick: Proptypes.func,
+  type: Proptypes.string,
 };
 
-Stream.defaultProps = {
-  stream: {},
+Video.defaultProps = {
+  video: {},
   videoPos: null,
   onVideoSeek: () => {},
   onRelatedVideoClick: () => {},
+  type: "stream",
 };
 
-export default Stream;
+export default Video;

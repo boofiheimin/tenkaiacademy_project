@@ -24,7 +24,7 @@ import ImportTimestampModal from "./ImportTimestampModal/ImportTimestampModal";
 
 import useStyles from "./styles";
 
-const StreamEdit = ({
+const VideoEdit = ({
   goBack,
   formData,
   onSubmit,
@@ -300,7 +300,7 @@ const StreamEdit = ({
   );
 };
 
-StreamEdit.propTypes = {
+VideoEdit.propTypes = {
   formData: PropTypes.object,
   goBack: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -337,7 +337,7 @@ StreamEdit.propTypes = {
   onClearTimestamp: PropTypes.func,
 };
 
-StreamEdit.defaultProps = {
+VideoEdit.defaultProps = {
   formData: {},
   onTitleChange: () => {},
   onDurationChange: () => {},
@@ -364,4 +364,4 @@ StreamEdit.defaultProps = {
   onClearTimestamp: () => {},
 };
 
-export default StreamEdit;
+export default VideoEdit;

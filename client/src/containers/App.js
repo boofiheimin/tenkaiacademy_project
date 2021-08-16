@@ -57,6 +57,9 @@ const App = () => {
               <Route path="/:id" element={<Stream />} />
               <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
             </Route>
+            <Route path="clips">
+              <Route path="/" element={<Streams />} />
+            </Route>
             <Route path="clips" element={<Clips />} />
             <PrivateRoute path="tags" element={<Tags />} />
           </Route>

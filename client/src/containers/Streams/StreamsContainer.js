@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -16,7 +15,7 @@ import {
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
-import Streams from "../../components/Streams/Streams";
+import Videos from "../../components/Videos/Videos";
 
 import { useQuery } from "../../utils";
 
@@ -107,9 +106,9 @@ const StreamsRoute = () => {
   );
 
   return (
-    <Streams
-      streams={queriedStreams}
-      totalStreams={total}
+    <Videos
+      videos={queriedStreams}
+      totalVideos={total}
       tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
@@ -117,8 +116,8 @@ const StreamsRoute = () => {
       refetching={refetching}
       searchFilter={filter}
       onSubmit={handleOnSubmit}
-      handleAddStream={handleAddStream}
-      handleRemoveStream={handleRemoveStream}
+      handleAddVideo={handleAddStream}
+      handleRemoveVideo={handleRemoveStream}
     />
   );
 };

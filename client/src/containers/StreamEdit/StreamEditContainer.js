@@ -11,7 +11,7 @@ import {
 } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 
-import StreamEdit from "../../components/StreamEdit/StreamEdit";
+import VideoEdit from "../../components/VideoEdit/VideoEdit";
 
 import { youtubeThumbnailGetter } from "../../helper";
 
@@ -332,7 +332,7 @@ const StreamEditContainer = ({ streamId }) => {
   };
 
   return (
-    <StreamEdit
+    <VideoEdit
       formData={formData}
       goBack={goBack}
       onSubmit={onSubmit}

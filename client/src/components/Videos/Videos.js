@@ -19,35 +19,36 @@ import VideoCards from "../VideoCards/VideoCards";
 import SearchForm from "../SearchForm/SearchForm";
 import useStyles from "./styles";
 
-const Streams = ({
+const Videos = ({
   onRefetchAll,
   onSubmit,
   refetching,
   tags,
-  streams,
-  totalStreams,
+  videos,
+  totalVideos,
   searchFilter,
-  handleAddStream,
+  handleAddVideo,
+  handleRemoveVideo,
   ...props
 }) => {
   const classes = useStyles();
   const [videoId, setVideoId] = useState("");
-  const [addStreamOpen, setAddStreamOpen] = useState(false);
+  const [addVideoOpen, setAddVideoOpen] = useState(false);
 
   const onVideoIdChange = (e) => {
     setVideoId(e.target.value);
   };
 
-  const handleOpenAddStream = () => {
-    setAddStreamOpen(true);
+  const handleOpenAddVideo = () => {
+    setAddVideoOpen(true);
   };
 
-  const handleCloseAddStream = () => {
-    setAddStreamOpen(false);
+  const handleCloseAddVideo = () => {
+    setAddVideoOpen(false);
   };
 
-  const onAddStream = () => {
-    handleAddStream(videoId);
+  const onAddVideo = () => {
+    handleAddVideo(videoId);
   };
 
   return (
@@ -57,10 +58,10 @@ const Streams = ({
           <Button
             className={clsx(classes.add, classes.button)}
             variant="contained"
-            onClick={handleOpenAddStream}
+            onClick={handleOpenAddVideo}
           >
             <FontAwesomeIcon icon={faPlus} className={classes.refetchIcon} />
-            Add Stream
+            Add Video
           </Button>
           <Button
             className={classes.button}
@@ -73,7 +74,12 @@ const Streams = ({
         </Box>
       )}
       <SearchForm tags={tags} onSubmit={onSubmit} searchFilter={searchFilter} />
-      <VideoCards videos={streams} total={totalStreams} {...props} />
+      <VideoCards
+        videos={videos}
+        total={totalVideos}
+        onRemoveVideo={handleRemoveVideo}
+        {...props}
+      />
       {/* refetch dialog */}
       <Dialog open={refetching}>
         <DialogTitle>
@@ -91,18 +97,18 @@ const Streams = ({
         </DialogContent>
       </Dialog>
       {/* add stream dialog */}
-      <Dialog open={addStreamOpen} onClose={handleCloseAddStream}>
+      <Dialog open={addVideoOpen} onClose={handleCloseAddVideo}>
         <DialogContent dividers>
           <TextField label="Video Id" fullWidth onChange={onVideoIdChange} />
         </DialogContent>
         <DialogActions dividers>
-          <Button variant="contained" color="primary" onClick={onAddStream}>
-            Add Stream
+          <Button variant="contained" color="primary" onClick={onAddVideo}>
+            Add Video
           </Button>
           <Button
             variant="contained"
             color="secondary"
-            onClick={handleCloseAddStream}
+            onClick={handleCloseAddVideo}
           >
             Cancel
           </Button>
@@ -112,7 +118,7 @@ const Streams = ({
   );
 };
 
-Streams.propTypes = {
+Videos.propTypes = {
   onRefetchAll: PropTypes.func,
   refetching: PropTypes.bool,
   onSubmit: PropTypes.func,
@@ -122,7 +128,7 @@ Streams.propTypes = {
       tagNameEN: PropTypes.tagNameEN,
     })
   ),
-  streams: PropTypes.arrayOf(
+  videos: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       thumbnail: PropTypes.string,
@@ -136,7 +142,7 @@ Streams.propTypes = {
       duration: PropTypes.number,
     })
   ),
-  totalStreams: PropTypes.number,
+  totalVideos: PropTypes.number,
   searchFilter: PropTypes.shape({
     title: PropTypes.string,
     tags: PropTypes.arrayOf(
@@ -150,16 +156,16 @@ Streams.propTypes = {
     to: PropTypes.instanceOf(Date),
     sort: PropTypes.number,
   }),
-  handleAddStream: PropTypes.func,
+  handleAddVideo: PropTypes.func,
 };
 
-Streams.defaultProps = {
+Videos.defaultProps = {
   onRefetchAll: () => {},
   refetching: false,
   onSubmit: () => {},
   tags: [],
-  streams: [],
-  totalStreams: 0,
+  videos: [],
+  totalVideos: 0,
   searchFilter: {
     title: "",
     tags: [],
@@ -168,7 +174,7 @@ Streams.defaultProps = {
     to: null,
     sort: -1,
   },
-  handleAddStream: () => {},
+  handleAddVideo: () => {},
 };
 
-export default Streams;
+export default Videos;

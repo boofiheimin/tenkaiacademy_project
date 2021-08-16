@@ -12,7 +12,7 @@ const VideoCards = ({
   total,
   hasMore,
   fetchMore,
-  handleRemoveStream,
+  onRemoveVideo,
 }) => {
   const [videos, setVideos] = useState([]);
   useEffect(() => {
@@ -64,7 +64,7 @@ const VideoCards = ({
                   id={_id}
                   key={_id}
                   uploader={uploader}
-                  onRemove={handleRemoveStream}
+                  onRemove={onRemoveVideo}
                 />
               )
             )}
@@ -79,7 +79,7 @@ VideoCards.propTypes = {
   total: Proptypes.number,
   hasMore: Proptypes.bool.isRequired,
   fetchMore: Proptypes.func.isRequired,
-  handleRemoveStream: Proptypes.func.isRequired,
+  onRemoveVideo: Proptypes.func.isRequired,
 };
 
 VideoCards.defaultProps = {

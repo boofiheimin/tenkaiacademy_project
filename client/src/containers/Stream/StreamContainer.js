@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { setVideoMode } from "../../actions/GlobalActions";
 import { getStream } from "../../actions/StreamsActions";
 
-import Stream from "../../components/Stream/Stream";
+import Video from "../../components/Video/Video";
 
 const StreamContainer = () => {
   const dispatch = useDispatch();
@@ -53,8 +53,8 @@ const StreamContainer = () => {
   };
 
   return (
-    <Stream
-      stream={currentStream}
+    <Video
+      video={currentStream}
       clipAcc={clipAcc}
       clipAccordionControl={clipAccordionControl}
       tabControl={tabControl}
@@ -62,6 +62,7 @@ const StreamContainer = () => {
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
       onRelatedVideoClick={handleRelatedVideoClick}
+      type="stream"
     />
   );
 };
