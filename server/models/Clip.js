@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-const streamSchema = mongoose.Schema({
+const clipSchema = mongoose.Schema({
   videoId: {
     type: String,
     unique: true,
     required: [true, "Please provide a videoIds"],
+  },
+  srcVideoId: {
+    type: String,
+    unique: true,
+    required: [true, "Please provide a source videoIds"],
   },
   title: {
     type: String,
@@ -25,25 +30,9 @@ const streamSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
-  timestamps: {
-    type: Array,
-    default: [],
-  },
-  relatedTweets: {
-    type: Array,
-    default: [],
-  },
-  relatedVideos: {
-    type: Array,
-    default: [],
-  },
   uploader: {
     type: String,
     default: "Kanata Ch. 天音かなた",
-  },
-  source: {
-    type: String,
-    enum: ["youtube-manual", "youtube", "manual"],
   },
   modifiedAt: {
     type: Date,
@@ -55,8 +44,8 @@ const streamSchema = mongoose.Schema({
   },
 });
 
-streamSchema.plugin(mongoosePaginate);
+clipSchema.plugin(mongoosePaginate);
 
-const Stream = mongoose.model("Stream", streamSchema);
+const Clip = mongoose.model("Clip", clipSchema);
 
-export default Stream;
+export default Clip;
