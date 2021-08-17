@@ -154,11 +154,16 @@ const Video = ({
                 "MMM DD, YYYY HH:mm:ss"
               )}`}</Typography>
               <Divider />
-              <Box padding={2}>
-                <Typography variant="h6">{`Channel: ${uploader}`}</Typography>
+              <Box paddingLeft={2} paddingTop={2}>
+                <Typography variant="h6">{uploader}</Typography>
                 <Box paddingTop={1}>
                   <Typography>{description}</Typography>
                 </Box>
+              </Box>
+            </Hidden>
+            <Hidden lgUp>
+              <Box paddingLeft={2} paddingTop={1}>
+                <Typography>{uploader}</Typography>
               </Box>
             </Hidden>
             <div className={classes.tagContainer}>
