@@ -134,7 +134,6 @@ const Nav = ({
           />
         </>
       )}
-
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,

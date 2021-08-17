@@ -5,17 +5,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import moment from "moment";
 import {
-  getStreams,
-  getMoreStreams,
-  refetchAll,
-  setStreamsFilter,
-  addStream,
-  removeStream,
-} from "../../actions/StreamsActions";
+  getClips,
+  getMoreClips,
+  setClipsFilter,
+} from "../../actions/ClipsActions";
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
-import Streams from "../../components/Videos/Videos";
+import Videos from "../../components/Videos/Videos";
 
 import { useQuery } from "../../utils";
 
@@ -23,8 +20,8 @@ const ClipsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [queriedStreams, setStreams] = useState([]);
-  const { offset, hasMore, refetching, filter, streams, total } = useSelector(
-    (state) => state.streams
+  const { offset, hasMore, filter, clips, total } = useSelector(
+    (state) => state.clips
   );
   const tags = useSelector((state) => state.tags);
   const query = useQuery();
@@ -39,7 +36,7 @@ const ClipsRoute = () => {
       to: query.get("to") ? moment(query.get("to")).toDate() : null,
       sort: query.get("sort") || -1,
     };
-    dispatch(setStreamsFilter(newFilter));
+    dispatch(setClipsFilter(newFilter));
   }, [location.search]);
 
   useEffect(() => {
@@ -48,19 +45,15 @@ const ClipsRoute = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getStreams(filter));
+    dispatch(getClips(filter));
   }, [filter]);
 
   useEffect(() => {
-    setStreams(streams);
-  }, [streams]);
+    setStreams(clips);
+  }, [clips]);
 
   const fetchMore = () => {
-    dispatch(getMoreStreams(filter, offset));
-  };
-
-  const handleRefetchAll = () => {
-    dispatch(refetchAll());
+    dispatch(getMoreClips(filter, offset));
   };
 
   const handleOnSubmit = ({
@@ -90,34 +83,31 @@ const ClipsRoute = () => {
 
     const searchParams = searchArray.join("&");
 
-    navigate(`/streams${searchParams ? `?${searchParams}` : ""}`);
+    navigate(`/clips${searchParams ? `?${searchParams}` : ""}`);
   };
 
-  const handleAddStream = (videoId) => {
-    dispatch(addStream(videoId, navigate));
-  };
+  // const handleAddStream = (videoId) => {
+  //   dispatch(addStream(videoId, navigate));
+  // };
 
-  const handleRemoveStream = (id) => {
-    dispatch(removeStream(id));
-  };
+  // const handleRemoveStream = (id) => {
+  //   dispatch(removeStream(id));
+  // };
 
   tags.sort(
     (a, b) => a.catId - b.catId || a.tagNameEN.localeCompare(b.tagNameEN)
   );
 
   return (
-    <Streams
-      streams={queriedStreams}
-      totalStreams={total}
+    <Videos
+      type="clip"
+      videos={queriedStreams}
+      totalVideos={total}
       tags={tags}
       hasMore={hasMore}
       fetchMore={fetchMore}
-      onRefetchAll={handleRefetchAll}
-      refetching={refetching}
       searchFilter={filter}
       onSubmit={handleOnSubmit}
-      handleAddStream={handleAddStream}
-      handleRemoveStream={handleRemoveStream}
     />
   );
 };

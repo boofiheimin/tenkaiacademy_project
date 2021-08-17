@@ -107,6 +107,7 @@ const StreamsRoute = () => {
 
   return (
     <Videos
+      type="stream"
       videos={queriedStreams}
       totalVideos={total}
       tags={tags}

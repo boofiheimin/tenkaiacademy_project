@@ -57,6 +57,7 @@ const Video = ({
     clips = [],
     relatedVideos = [],
     relatedTweets = [],
+    srcVideoId,
   } = video;
 
   const handleDescDialogOpen = () => {
@@ -71,7 +72,7 @@ const Video = ({
 
   return (
     <Container className={classes.root} maxWidth="xl">
-      <Grid container spacing={matches ? 0 : 2}>
+      <Grid container spacing={matchPhoneSize ? 0 : 2}>
         <Grid item xs={matches ? 9 : 12} lg={9}>
           {tags.some((tag) => tag.tagNameEN === "Private") ? (
             <img className={classes.thumbnail} src={thumbnail} alt="" />
@@ -83,12 +84,25 @@ const Video = ({
           <Grid item xs={3}>
             <Paper>
               <div className={classes.sectionHeader}>
-                <Typography variant="h6">Timestamp</Typography>
+                <Typography variant="h6">
+                  {type === "stream" ? "Timestamp" : "Source"}
+                </Typography>
               </div>
             </Paper>
             <div className={classes.timestampContainer}>
               <div className={classes.timestampScroller}>
-                <Timestamp timestamps={timestamps} onVideoSeek={onVideoSeek} />
+                {type === "stream" ? (
+                  <Timestamp
+                    timestamps={timestamps}
+                    onVideoSeek={onVideoSeek}
+                  />
+                ) : (
+                  <HorizontalVideoCard
+                    title="testnata"
+                    videoId={srcVideoId}
+                    uploader="kanata"
+                  />
+                )}
               </div>
             </div>
           </Grid>
@@ -165,128 +179,130 @@ const Video = ({
               </Box>
             </Hidden>
           </Paper>
-          <Grid item container spacing={2} className={classes.thirdGrid}>
-            <Grid item xs={12} lg={6}>
-              <Hidden mdDown>
-                <Paper>
-                  <div className={classes.sectionHeader}>
-                    <Typography variant="h6">Related Tweets</Typography>
-                  </div>
-                </Paper>
-                <Box padding={2}>
-                  {relatedTweets.length === 0 && (
-                    <Typography align="center">None</Typography>
-                  )}
-                  <div className={classes.embedContainer}>
-                    {relatedTweets.map((tweet) => (
-                      <TwitterTweetEmbed
-                        key={Date.now() + Math.random()}
-                        tweetId={tweet}
-                      />
-                    ))}
-                  </div>
-                </Box>
-              </Hidden>
-              <Hidden lgUp>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">Related Tweets</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Box padding={2} width="100%">
-                      {relatedTweets.length === 0 && (
-                        <Typography align="center">None</Typography>
-                      )}
-                      <div className={classes.embedContainer}>
-                        {relatedTweets.map((tweet) => (
-                          <TwitterTweetEmbed
-                            key={Date.now() + Math.random()}
-                            tweetId={tweet}
-                          />
-                        ))}
-                      </div>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              </Hidden>
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <Hidden mdDown>
-                <Paper>
-                  <div className={classes.sectionHeader}>
-                    <Typography variant="h6">Related Videos</Typography>
-                  </div>
-                </Paper>
-                <Box padding={2}>
-                  {relatedVideos.length === 0 && (
-                    <Typography align="center">None</Typography>
-                  )}
-                  <div className={classes.relatedVidContainer}>
-                    {relatedVideos.map(
-                      ({
-                        id: relatedVId,
-                        title: relatedVTitle,
-                        videoId: relatedVVideoId,
-                        uploader: relatedVUploader,
-                        existing,
-                      }) => (
-                        <HorizontalVideoCard
-                          title={relatedVTitle}
-                          videoId={relatedVVideoId}
-                          uploader={relatedVUploader}
-                          onCardClick={() =>
-                            onRelatedVideoClick(
-                              relatedVId,
-                              relatedVVideoId,
-                              existing
-                            )
-                          }
-                        />
-                      )
+          {type === "stream" && (
+            <Grid item container spacing={2} className={classes.thirdGrid}>
+              <Grid item xs={12} lg={6}>
+                <Hidden mdDown>
+                  <Paper>
+                    <div className={classes.sectionHeader}>
+                      <Typography variant="h6">Related Tweets</Typography>
+                    </div>
+                  </Paper>
+                  <Box padding={2}>
+                    {relatedTweets.length === 0 && (
+                      <Typography align="center">None</Typography>
                     )}
-                  </div>
-                </Box>
-              </Hidden>
-              <Hidden lgUp>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">Related Videos</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Box padding={2} width="100%">
-                      {relatedVideos.length === 0 && (
-                        <Typography align="center">None</Typography>
-                      )}
-                      <div className={classes.relatedVidContainer}>
-                        {relatedVideos.map(
-                          ({
-                            id: relatedVId,
-                            title: relatedVTitle,
-                            videoId: relatedVVideoId,
-                            uploader: relatedVUploader,
-                            existing,
-                          }) => (
-                            <HorizontalVideoCard
-                              title={relatedVTitle}
-                              videoId={relatedVVideoId}
-                              uploader={relatedVUploader}
-                              onCardClick={() =>
-                                onRelatedVideoClick(
-                                  relatedVId,
-                                  relatedVVideoId,
-                                  existing
-                                )
-                              }
-                            />
-                          )
+                    <div className={classes.embedContainer}>
+                      {relatedTweets.map((tweet) => (
+                        <TwitterTweetEmbed
+                          key={Date.now() + Math.random()}
+                          tweetId={tweet}
+                        />
+                      ))}
+                    </div>
+                  </Box>
+                </Hidden>
+                <Hidden lgUp>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography variant="h6">Related Tweets</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box width="100%">
+                        {relatedTweets.length === 0 && (
+                          <Typography align="center">None</Typography>
                         )}
-                      </div>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              </Hidden>
+                        <div className={classes.embedContainer}>
+                          {relatedTweets.map((tweet) => (
+                            <TwitterTweetEmbed
+                              key={Date.now() + Math.random()}
+                              tweetId={tweet}
+                            />
+                          ))}
+                        </div>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </Hidden>
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <Hidden mdDown>
+                  <Paper>
+                    <div className={classes.sectionHeader}>
+                      <Typography variant="h6">Related Videos</Typography>
+                    </div>
+                  </Paper>
+                  <Box padding={2}>
+                    {relatedVideos.length === 0 && (
+                      <Typography align="center">None</Typography>
+                    )}
+                    <div className={classes.relatedVidContainer}>
+                      {relatedVideos.map(
+                        ({
+                          id: relatedVId,
+                          title: relatedVTitle,
+                          videoId: relatedVVideoId,
+                          uploader: relatedVUploader,
+                          existing,
+                        }) => (
+                          <HorizontalVideoCard
+                            title={relatedVTitle}
+                            videoId={relatedVVideoId}
+                            uploader={relatedVUploader}
+                            onCardClick={() =>
+                              onRelatedVideoClick(
+                                relatedVId,
+                                relatedVVideoId,
+                                existing
+                              )
+                            }
+                          />
+                        )
+                      )}
+                    </div>
+                  </Box>
+                </Hidden>
+                <Hidden lgUp>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography variant="h6">Related Videos</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box width="100%">
+                        {relatedVideos.length === 0 && (
+                          <Typography align="center">None</Typography>
+                        )}
+                        <div className={classes.relatedVidContainer}>
+                          {relatedVideos.map(
+                            ({
+                              id: relatedVId,
+                              title: relatedVTitle,
+                              videoId: relatedVVideoId,
+                              uploader: relatedVUploader,
+                              existing,
+                            }) => (
+                              <HorizontalVideoCard
+                                title={relatedVTitle}
+                                videoId={relatedVVideoId}
+                                uploader={relatedVUploader}
+                                onCardClick={() =>
+                                  onRelatedVideoClick(
+                                    relatedVId,
+                                    relatedVVideoId,
+                                    existing
+                                  )
+                                }
+                              />
+                            )
+                          )}
+                        </div>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </Hidden>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
         <Grid item xs={12} lg={3}>
           <Box>
@@ -303,7 +319,6 @@ const Video = ({
           </Box>
         </Grid>
       </Grid>
-
       <Slide direction="up" in={descDialog} mountOnEnter unmountOnExit>
         <div className={classes.descDialog}>
           <div className={classes.dialogHeader}>

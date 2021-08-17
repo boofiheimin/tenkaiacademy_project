@@ -8,8 +8,9 @@ import {
   ListItemText,
   Divider,
 } from "@material-ui/core";
-import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
-import LabelIcon from "@material-ui/icons/Label";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlayCircle, faFilm, faTag } from "@fortawesome/free-solid-svg-icons";
 
 import useStyles from "./styles";
 
@@ -56,14 +57,23 @@ const DrawerItems = () => {
         <ListItemLink
           to="/streams"
           primary="Streams"
-          icon={<VideoLibraryIcon />}
+          icon={<FontAwesomeIcon icon={faPlayCircle} size="lg" />}
+        />
+        <ListItemLink
+          to="/clips"
+          primary="Clips"
+          icon={<FontAwesomeIcon icon={faFilm} size="lg" />}
         />
       </List>
       {localStorage.getItem("authToken") && (
         <>
           <Divider />
           <List>
-            <ListItemLink to="/tags" primary="Tags" icon={<LabelIcon />} />
+            <ListItemLink
+              to="/tags"
+              primary="Tags"
+              icon={<FontAwesomeIcon icon={faTag} size="lg" />}
+            />
           </List>
         </>
       )}

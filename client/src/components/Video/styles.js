@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 5555,
     height: `calc(100vh - 56px - 100vw * 9 / 16)`,
     width: "100vw",
-    backgroundColor: "white",
+    backgroundColor: theme.palette.background.default,
   },
   dialogHeader: {
     display: "flex",

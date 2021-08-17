@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 400,
+    minWidth: "min(400px, calc(100vw-16px))",
     "&:not(:last-child)": {
       marginBottom: theme.spacing(1),
     },

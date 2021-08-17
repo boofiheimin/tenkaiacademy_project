@@ -31,6 +31,7 @@ const durationFormat = (duration) => {
 };
 
 const VideoCard = ({
+  type,
   title,
   thumbnail,
   tags,
@@ -55,7 +56,7 @@ const VideoCard = ({
 
   return (
     <Card className={classes.root}>
-      <CardActionArea href={`/streams/${id}`}>
+      <CardActionArea href={`/${type}s/${id}`}>
         <Box position="relative">
           <CardMedia
             component="img"

@@ -90,15 +90,15 @@ export const createClip = async (req, res, next) => {
   }
 };
 
-// export const getStream = async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const stream = await Stream.findById(id);
-//     res.status(200).json(stream);
-//   } catch (err) {
-//     return next(new ErrorResponse("Stream not found", 404));
-//   }
-// };
+export const getClip = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const clip = await Clip.findById(id);
+    res.status(200).json(clip);
+  } catch (err) {
+    return next(new ErrorResponse("Clip not found", 404));
+  }
+};
 
 // export const editStream = async (req, res, next) => {
 //   try {

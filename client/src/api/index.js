@@ -17,7 +17,6 @@ export const authen = async () => API.get("/auth/authenticate");
 
 export const fetchStreams = async (queryData) =>
   API.get("/streams", { params: { ...queryData } });
-
 export const fetchStream = async (id) => API.get(`/streams/${id}`);
 export const editStream = async (id, formData) =>
   API.patch(`/streams/${id}`, formData);
@@ -25,6 +24,10 @@ export const refetchAll = async () => API.get("/streams/refetchAll");
 export const addStream = async (videoId) => API.post("/streams", { videoId });
 export const deleteStream = async (id) => API.delete(`/streams/${id}`);
 export const refetchStream = async (id) => API.patch(`/streams/refetch/${id}`);
+
+export const fetchClips = async (queryData) =>
+  API.get("/clips", { params: { ...queryData } });
+export const fetchClip = async (id) => API.get(`/clips/${id}`);
 
 export const fetchTags = async () => API.get("/tags");
 export const createTag = async (tagData) => API.post("/tags", tagData);

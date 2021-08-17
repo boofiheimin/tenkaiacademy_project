@@ -13,6 +13,7 @@ const VideoCards = ({
   hasMore,
   fetchMore,
   onRemoveVideo,
+  type,
 }) => {
   const [videos, setVideos] = useState([]);
   useEffect(() => {
@@ -56,6 +57,7 @@ const VideoCards = ({
                 uploader,
               }) => (
                 <VideoCard
+                  type={type}
                   title={title}
                   thumbnail={thumbnail}
                   tags={tags}

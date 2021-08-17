@@ -13,6 +13,7 @@ import Streams from "./Streams/StreamsContainer";
 import Stream from "./Stream/StreamContainer";
 import StreamEdit from "./StreamEdit/StreamEditContainer";
 import Clips from "./Clips/ClipsContainer";
+import Clip from "./Clip/ClipContainer";
 import Tags from "./Tags/TagsContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
@@ -58,9 +59,9 @@ const App = () => {
               <PrivateRoute path="/:id/edit" element={<StreamEdit />} />
             </Route>
             <Route path="clips">
-              <Route path="/" element={<Streams />} />
+              <Route path="/" element={<Clips />} />
+              <Route path="/:id" element={<Clip />} />
             </Route>
-            <Route path="clips" element={<Clips />} />
             <PrivateRoute path="tags" element={<Tags />} />
           </Route>
           <Route path="*" element={<NotFound />} />
