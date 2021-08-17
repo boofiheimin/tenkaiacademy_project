@@ -34,6 +34,7 @@ import TypeChip from "../TypeChip/TypeChip";
 const Video = ({
   video = {},
   videoPos,
+  seekToggle,
   onVideoSeek,
   onRelatedVideoClick,
   type,
@@ -77,7 +78,11 @@ const Video = ({
           {tags.some((tag) => tag.tagNameEN === "Private") ? (
             <img className={classes.thumbnail} src={thumbnail} alt="" />
           ) : (
-            <ResponsiveYoutube videoId={videoId} videoPos={videoPos} />
+            <ResponsiveYoutube
+              videoId={videoId}
+              videoPos={videoPos}
+              seekToggle={seekToggle}
+            />
           )}
         </Grid>
         {(matches || matchRegSize) && (
@@ -319,7 +324,7 @@ const Video = ({
           </Box>
         </Grid>
       </Grid>
-      <Slide direction="up" in={descDialog} mountOnEnter unmountOnExit>
+      <Slide direction="up" in={descDialog}>
         <div className={classes.descDialog}>
           <div className={classes.dialogHeader}>
             <Typography variant="h6" className={classes.dialogHeader_text}>

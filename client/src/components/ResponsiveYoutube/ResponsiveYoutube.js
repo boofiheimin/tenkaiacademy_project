@@ -4,7 +4,7 @@ import Youtube from "react-youtube";
 
 import useStyles from "./styles";
 
-const ResponsiveIframe = ({ videoId, videoPos }) => {
+const ResponsiveIframe = ({ videoId, videoPos, seekToggle }) => {
   const classes = useStyles();
   const [player, setPlayer] = useState(null);
 
@@ -18,9 +18,10 @@ const ResponsiveIframe = ({ videoId, videoPos }) => {
 
   useEffect(() => {
     if (player && videoPos !== null) {
+      console.log("what");
       seekTime(videoPos);
     }
-  });
+  }, [seekToggle, videoPos]);
 
   return (
     <div className={classes.container}>

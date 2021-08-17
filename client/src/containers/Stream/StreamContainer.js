@@ -61,6 +61,7 @@ const StreamContainer = () => {
       tabStatus={tabStatus}
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
+      seekToggle={toggle}
       onRelatedVideoClick={handleRelatedVideoClick}
       type="stream"
     />
