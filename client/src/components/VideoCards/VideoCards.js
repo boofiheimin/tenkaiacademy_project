@@ -7,6 +7,8 @@ import VideoCard from "../VideoCard/VideoCard";
 
 import ShurikenSpinner from "../ShurikenSpinner/ShurikenSpinner";
 
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
+
 const VideoCards = ({
   videos: propsVideo,
   total,
@@ -82,11 +84,13 @@ VideoCards.propTypes = {
   hasMore: Proptypes.bool.isRequired,
   fetchMore: Proptypes.func.isRequired,
   onRemoveVideo: Proptypes.func.isRequired,
+  type: Proptypes.string,
 };
 
 VideoCards.defaultProps = {
   videos: [],
   total: 0,
+  type: VIDEO_TYPE_STREAM,
 };
 
 export default VideoCards;

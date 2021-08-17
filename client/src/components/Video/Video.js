@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Proptypes from "prop-types";
 import moment from "moment";
+import { useSelector } from "react-redux";
 import {
   Box,
   Grid,
@@ -28,8 +29,9 @@ import useStyles from "./styles";
 
 import Timestamp from "./Timestamp/Timestamp";
 import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
-
 import TypeChip from "../TypeChip/TypeChip";
+
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
 
 const Video = ({
   video = {},
@@ -44,6 +46,7 @@ const Video = ({
   const matchRegSize = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
+  const { siteMode } = useSelector((state) => state.global);
 
   const {
     _id,
@@ -165,13 +168,16 @@ const Video = ({
             </div>
             <Hidden lgUp>
               <Box display="flex" paddingLeft={2} paddingBottom={2}>
-                <Button
-                  className={classes.mobBtn}
-                  variant="outlined"
-                  onClick={handleDescDialogOpen}
-                >
-                  Timestamp
-                </Button>
+                {!matches && (
+                  <Button
+                    className={classes.mobBtn}
+                    variant="outlined"
+                    onClick={handleDescDialogOpen}
+                  >
+                    Timestamp
+                  </Button>
+                )}
+
                 {localStorage.getItem("authToken") && (
                   <Button
                     className={classes.mobBtn}
@@ -202,6 +208,7 @@ const Video = ({
                         <TwitterTweetEmbed
                           key={Date.now() + Math.random()}
                           tweetId={tweet}
+                          options={{ theme: siteMode }}
                         />
                       ))}
                     </div>
@@ -222,6 +229,7 @@ const Video = ({
                             <TwitterTweetEmbed
                               key={Date.now() + Math.random()}
                               tweetId={tweet}
+                              options={{ theme: siteMode }}
                             />
                           ))}
                         </div>
@@ -356,6 +364,7 @@ Video.propTypes = {
   onVideoSeek: Proptypes.func,
   onRelatedVideoClick: Proptypes.func,
   type: Proptypes.string,
+  seekToggle: Proptypes.bool,
 };
 
 Video.defaultProps = {
@@ -363,7 +372,8 @@ Video.defaultProps = {
   videoPos: null,
   onVideoSeek: () => {},
   onRelatedVideoClick: () => {},
-  type: "stream",
+  type: VIDEO_TYPE_STREAM,
+  seekToggle: false,
 };
 
 export default Video;

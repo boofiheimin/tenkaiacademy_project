@@ -20,6 +20,8 @@ import ConfirmationPopper from "../ConfirmationPopper/ConfirmationPopper";
 
 import TypeChip from "../TypeChip/TypeChip";
 
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
+
 const durationFormat = (duration) => {
   if (duration < 3600) {
     return moment("2015-01-01").startOf("day").seconds(duration).format("m:ss");
@@ -139,6 +141,7 @@ VideoCard.propTypes = {
   id: PropTypes.string,
   onRemove: PropTypes.func,
   uploader: PropTypes.string,
+  type: PropTypes.string,
 };
 
 VideoCard.defaultProps = {
@@ -150,6 +153,7 @@ VideoCard.defaultProps = {
   id: "",
   onRemove: () => {},
   uploader: "",
+  type: VIDEO_TYPE_STREAM,
 };
 
 export default VideoCard;

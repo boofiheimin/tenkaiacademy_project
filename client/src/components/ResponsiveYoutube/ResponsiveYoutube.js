@@ -18,7 +18,6 @@ const ResponsiveIframe = ({ videoId, videoPos, seekToggle }) => {
 
   useEffect(() => {
     if (player && videoPos !== null) {
-      console.log("what");
       seekTime(videoPos);
     }
   }, [seekToggle, videoPos]);
@@ -37,11 +36,13 @@ const ResponsiveIframe = ({ videoId, videoPos, seekToggle }) => {
 ResponsiveIframe.propTypes = {
   videoId: PropTypes.string,
   videoPos: PropTypes.number,
+  seekToggle: PropTypes.func,
 };
 
 ResponsiveIframe.defaultProps = {
   videoId: "",
   videoPos: null,
+  seekToggle: () => {},
 };
 
 export default ResponsiveIframe;

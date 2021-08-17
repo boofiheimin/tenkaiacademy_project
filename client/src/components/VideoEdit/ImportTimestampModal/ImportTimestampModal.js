@@ -87,7 +87,6 @@ const ImportTimestampModal = ({ onImportTimestamp }) => {
       } else {
         const desc = t.substring(0, t.lastIndexOf(" ") + 1);
         const time = t.substring(t.lastIndexOf(" ") + 1, t.length);
-        console.log(desc, koroTimeParser(time));
 
         processed.push({
           timestamp: koroTimeParser(time),

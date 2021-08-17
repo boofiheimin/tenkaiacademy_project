@@ -157,6 +157,7 @@ Videos.propTypes = {
     sort: PropTypes.number,
   }),
   handleAddVideo: PropTypes.func,
+  handleRemoveVideo: PropTypes.func,
 };
 
 Videos.defaultProps = {
@@ -175,6 +176,7 @@ Videos.defaultProps = {
     sort: -1,
   },
   handleAddVideo: () => {},
+  handleRemoveVideo: () => {},
 };
 
 export default Videos;
