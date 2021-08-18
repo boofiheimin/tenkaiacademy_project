@@ -28,6 +28,11 @@ export const refetchStream = async (id) => API.patch(`/streams/refetch/${id}`);
 export const fetchClips = async (queryData) =>
   API.get("/clips", { params: { ...queryData } });
 export const fetchClip = async (id) => API.get(`/clips/${id}`);
+export const editClip = async (id, formData) =>
+  API.patch(`/clips/${id}`, formData);
+export const refetchClip = async (id) => API.patch(`/clips/refetch/${id}`);
+export const addClip = async (videoId, srcVideoId) =>
+  API.post("/clips", { videoId, srcVideoId });
 
 export const fetchTags = async () => API.get("/tags");
 export const createTag = async (tagData) => API.post("/tags", tagData);

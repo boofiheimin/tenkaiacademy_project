@@ -7,6 +7,9 @@ import {
   FETCH_CLIP_SUCCESS,
   ERROR_NOTIFICATION,
   SET_CLIPS_FITLER,
+  EDIT_CLIP_SUCCESS,
+  SUCCESS_NOTIFICATION,
+  ADD_CLIP_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -84,5 +87,42 @@ export const getClip = (id) => async (dispatch) => {
     dispatch({ type: FETCH_CLIP_SUCCESS, data });
   } catch (error) {
     dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+  }
+};
+
+export const editClip = (id, formData) => async (dispatch) => {
+  try {
+    const { data } = await api.editClip(id, formData);
+    dispatch({ type: EDIT_CLIP_SUCCESS, data });
+    dispatch({ type: SUCCESS_NOTIFICATION, message: "Saved successfully" });
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+  }
+};
+
+export const refetchClip = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.refetchClip(id);
+    dispatch({ type: EDIT_CLIP_SUCCESS, data });
+    dispatch({ type: SUCCESS_NOTIFICATION, message: "Refetch successfully" });
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+  }
+};
+export const addClip = (videoId, srcVideoId, navigate) => async (dispatch) => {
+  try {
+    const { data } = await api.addClip(videoId, srcVideoId);
+    console.log(data);
+    dispatch({ type: ADD_CLIP_SUCCESS, data, navigate });
+    dispatch({
+      type: SUCCESS_NOTIFICATION,
+      message: "successfully add clip",
+    });
+    navigate(`/clips/${data._id}/edit`);
+  } catch (error) {
+    dispatch({
+      type: ERROR_NOTIFICATION,
+      message: error?.response?.data?.error,
+    });
   }
 };

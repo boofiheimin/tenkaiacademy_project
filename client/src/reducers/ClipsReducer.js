@@ -4,6 +4,8 @@ import {
   FETCH_CLIPS_HASMORE_SUCCESS,
   FETCH_CLIPS_HASMORE_DONE,
   FETCH_CLIP_SUCCESS,
+  EDIT_CLIP_SUCCESS,
+  ADD_CLIP_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -59,6 +61,10 @@ const reducer = (
       };
     case FETCH_CLIP_SUCCESS:
       return { ...state, clip: action?.data };
+    case EDIT_CLIP_SUCCESS:
+      return { ...state, clip: { ...state.clip, ...action.data } };
+    case ADD_CLIP_SUCCESS:
+      return state;
     default:
       return state;
   }

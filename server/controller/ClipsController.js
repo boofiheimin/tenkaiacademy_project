@@ -85,9 +85,11 @@ export const createClip = async (req, res, next) => {
         tags: streams[0].tags,
       };
     } else {
+      return next(new ErrorResponse(`${videoId} not found`, 404));
     }
 
     const newClip = new Clip(videoParams);
+    console.log(newClip);
     await newClip.save();
     res.status(200).json(newClip);
   } catch (error) {
@@ -101,55 +103,62 @@ export const getClip = async (req, res, next) => {
     const clip = await Clip.findById(id);
     res.status(200).json(clip);
   } catch (err) {
-    return next(new ErrorResponse("Clip not found", 404));
+    next(err);
   }
 };
 
-// export const editStream = async (req, res, next) => {
-//   try {
-//     const formData = req.body;
+export const editClip = async (req, res, next) => {
+  try {
+    const formData = req.body;
 
-//     const { relatedVideos } = formData;
+    const { relatedVideos } = formData;
 
-//     Youtube.authenticate({
-//       type: "key",
-//       key: process.env.YOUTUBE_API_KEY || null,
-//     });
+    Youtube.authenticate({
+      type: "key",
+      key: process.env.YOUTUBE_API_KEY || null,
+    });
 
-//     for (const video of relatedVideos) {
-//       const existingVideo = await Stream.findOne({ videoId: video.videoId });
-//       if (existingVideo) {
-//         Object.assign(video, {
-//           existing: true,
-//           id: existingVideo.id.toString(),
-//           title: existingVideo.title,
-//           uploader: existingVideo.uploader,
-//         });
-//       } else {
-//         const results = await Youtube.videos.list({
-//           maxResults: 1,
-//           id: video.videoId,
-//           part: "snippet",
-//         });
-//         const resultVideo = results?.data?.items[0];
-//         Object.assign(video, {
-//           existing: false,
-//           uploader: resultVideo?.snippet?.channelTitle,
-//           title: resultVideo?.snippet?.title,
-//         });
-//       }
-//     }
+    const currentClip = await Clip.findById(req.params.id);
 
-//     const stream = await Stream.findByIdAndUpdate(req.params.id, formData, {
-//       new: true,
-//     });
-//     await stream.save();
+    for (const video of relatedVideos) {
+      const existingVideo = await Clip.findOne({ videoId: video.videoId });
+      if (existingVideo) {
+        Object.assign(video, {
+          id: existingVideo.id.toString(),
+          title: existingVideo.title,
+          uploader: existingVideo.uploader,
+          publishedAt: existingVideo.publishedAt,
+        });
 
-//     res.status(200).json(stream);
-//   } catch (err) {
-//     next(error);
-//   }
-// };
+        existingVideo.relatedVideos = existingVideo.relatedVideos
+          .concat({
+            existing: true,
+            videoId: currentClip.videoId,
+            id: currentClip.id.toString(),
+            title: currentClip.title,
+            uploader: currentClip.uploader,
+            publishedAt: currentClip.publishedAt,
+          })
+          .sort((a, b) => a.publishedAt - b.publishedAt);
+
+        await existingVideo.save();
+      } else {
+        return next(
+          new ErrorResponse(`Related Clip ${video.videoId} not found`, 404)
+        );
+      }
+    }
+
+    const clip = await Clip.findByIdAndUpdate(req.params.id, formData, {
+      new: true,
+    });
+    await clip.save();
+
+    res.status(200).json(clip);
+  } catch (err) {
+    next(error);
+  }
+};
 
 // export const deleteStream = async (req, res, next) => {
 //   try {
@@ -163,43 +172,65 @@ export const getClip = async (req, res, next) => {
 //   }
 // };
 
-// export const refetchStream = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     let stream = await Stream.findById(id);
-//     Youtube.authenticate({
-//       type: "key",
-//       key: process.env.YOUTUBE_API_KEY || null,
-//     });
+export const refetchClip = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let clip = await Clip.findById(id);
+    Youtube.authenticate({
+      type: "key",
+      key: process.env.YOUTUBE_API_KEY || null,
+    });
 
-//     const results = await Youtube.videos.list({
-//       maxResults: 1,
-//       id: stream.videoId,
-//       part: "snippet, contentDetails",
-//     });
+    // for source vid
 
-//     const video = results?.data?.items[0];
-//     let videoParams;
-//     if (video) {
-//       videoParams = {
-//         title: video?.snippet?.title,
-//         thumbnail: video?.snippet?.thumbnails?.high?.url,
-//         uploader: video?.snippet?.channelTitle,
-//         duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
-//         publishedAt: new Date(video?.snippet?.publishedAt),
-//       };
-//     } else {
-//       return next(new ErrorResponse("Stream not found", 404));
-//     }
-//     stream.title = videoParams.title;
-//     stream.thumbnail = videoParams.thumbnail;
-//     stream.uploader = videoParams.uploader;
-//     stream.duration = videoParams.duration;
-//     stream.publishedAt = videoParams.publishedAt;
+    const srcResults = await Youtube.videos.list({
+      maxResults: 1,
+      id: clip.srcVideo.videoId,
+      part: "snippet",
+    });
+    const srcVidItem = srcResults?.data?.items[0];
+    let srcVidParams;
+    if (srcVidItem) {
+      srcVidParams = {
+        ...clip.srcVideo,
+        title: srcVidItem?.snippet?.title,
+        uploader: srcVidItem?.snippet?.channelTitle,
+      };
+    } else {
+      return next(new ErrorResponse("Source not found", 404));
+    }
 
-//     await stream.save();
-//     res.status(200).json(stream);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    // for clip
+
+    const results = await Youtube.videos.list({
+      maxResults: 1,
+      id: clip.videoId,
+      part: "snippet, contentDetails",
+    });
+
+    const video = results?.data?.items[0];
+    let videoParams;
+    if (video) {
+      videoParams = {
+        title: video?.snippet?.title,
+        thumbnail: video?.snippet?.thumbnails?.high?.url,
+        uploader: video?.snippet?.channelTitle,
+        duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
+        publishedAt: new Date(video?.snippet?.publishedAt),
+      };
+    } else {
+      return next(new ErrorResponse("Clip not found", 404));
+    }
+    clip.title = videoParams.title;
+    clip.thumbnail = videoParams.thumbnail;
+    clip.uploader = videoParams.uploader;
+    clip.duration = videoParams.duration;
+    clip.publishedAt = videoParams.publishedAt;
+    clip.srcVideo = srcVidParams;
+
+    await clip.save();
+    res.status(200).json(clip);
+  } catch (error) {
+    next(error);
+  }
+};

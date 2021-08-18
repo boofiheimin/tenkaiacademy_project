@@ -135,6 +135,8 @@ export const editStream = async (req, res, next) => {
       key: process.env.YOUTUBE_API_KEY || null,
     });
 
+    const currentStream = await Stream.findById(req.params.id);
+
     for (const video of relatedVideos) {
       const existingVideo = await Stream.findOne({ videoId: video.videoId });
       if (existingVideo) {
@@ -143,7 +145,21 @@ export const editStream = async (req, res, next) => {
           id: existingVideo.id.toString(),
           title: existingVideo.title,
           uploader: existingVideo.uploader,
+          publishedAt: existingVideo.publishedAt,
         });
+
+        existingVideo.relatedVideos = existingVideo.relatedVideos
+          .concat({
+            existing: true,
+            videoId: currentStream.videoId,
+            id: currentStream.id.toString(),
+            title: currentStream.title,
+            uploader: currentStream.uploader,
+            publishedAt: currentStream.publishedAt,
+          })
+          .sort((a, b) => a.publishedAt - b.publishedAt);
+
+        await existingVideo.save();
       } else {
         const results = await Youtube.videos.list({
           maxResults: 1,
@@ -159,9 +175,13 @@ export const editStream = async (req, res, next) => {
       }
     }
 
-    const stream = await Stream.findByIdAndUpdate(req.params.id, formData, {
-      new: true,
-    });
+    const stream = await Stream.findByIdAndUpdate(
+      req.params.id,
+      { ...formData, modifiedAt: new Date() },
+      {
+        new: true,
+      }
+    );
     await stream.save();
 
     res.status(200).json(stream);

@@ -11,46 +11,47 @@ const srcVideoSchema = mongoose.Schema(
   { _id: false }
 );
 
-const clipSchema = mongoose.Schema({
-  videoId: {
-    type: String,
-    unique: true,
-    required: [true, "Please provide a videoIds"],
+const clipSchema = mongoose.Schema(
+  {
+    videoId: {
+      type: String,
+      unique: true,
+      required: [true, "Please provide a videoIds"],
+    },
+    srcVideo: {
+      type: srcVideoSchema,
+    },
+    title: {
+      type: String,
+      required: [true, "Please provide a title"],
+    },
+    description: String,
+    thumbnail: String,
+    duration: {
+      type: Number,
+      default: 0,
+    },
+    publishedAt: {
+      type: Date,
+      default: new Date(),
+    },
+    tags: {
+      type: Array,
+      default: [],
+    },
+    uploader: {
+      type: String,
+      default: "Kanata Ch. 天音かなた",
+    },
+    relatedVideos: {
+      type: Array,
+      default: [],
+    },
   },
-  srcVideo: {
-    type: srcVideoSchema,
-  },
-  title: {
-    type: String,
-    required: [true, "Please provide a title"],
-  },
-  description: String,
-  thumbnail: String,
-  duration: {
-    type: Number,
-    default: 0,
-  },
-  publishedAt: {
-    type: Date,
-    default: new Date(),
-  },
-  tags: {
-    type: Array,
-    default: [],
-  },
-  uploader: {
-    type: String,
-    default: "Kanata Ch. 天音かなた",
-  },
-  modifiedAt: {
-    type: Date,
-    default: new Date(),
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 clipSchema.plugin(mongoosePaginate);
 

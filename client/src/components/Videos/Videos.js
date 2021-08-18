@@ -19,7 +19,10 @@ import VideoCards from "../VideoCards/VideoCards";
 import SearchForm from "../SearchForm/SearchForm";
 import useStyles from "./styles";
 
+import { VIDEO_TYPE_CLIP, VIDEO_TYPE_STREAM } from "../../constants/main";
+
 const Videos = ({
+  type,
   onRefetchAll,
   onSubmit,
   refetching,
@@ -33,10 +36,15 @@ const Videos = ({
 }) => {
   const classes = useStyles();
   const [videoId, setVideoId] = useState("");
+  const [srcVideoId, setSrcVideoId] = useState("");
   const [addVideoOpen, setAddVideoOpen] = useState(false);
 
   const onVideoIdChange = (e) => {
     setVideoId(e.target.value);
+  };
+
+  const onSrcVideoIdChange = (e) => {
+    setSrcVideoId(e.target.value);
   };
 
   const handleOpenAddVideo = () => {
@@ -48,7 +56,7 @@ const Videos = ({
   };
 
   const onAddVideo = () => {
-    handleAddVideo(videoId);
+    handleAddVideo(videoId, srcVideoId);
   };
 
   return (
@@ -63,14 +71,19 @@ const Videos = ({
             <FontAwesomeIcon icon={faPlus} className={classes.refetchIcon} />
             Add Video
           </Button>
-          <Button
-            className={classes.button}
-            variant="contained"
-            onClick={onRefetchAll}
-          >
-            <FontAwesomeIcon icon={faSyncAlt} className={classes.refetchIcon} />
-            Refetch All
-          </Button>
+          {type === VIDEO_TYPE_STREAM && (
+            <Button
+              className={classes.button}
+              variant="contained"
+              onClick={onRefetchAll}
+            >
+              <FontAwesomeIcon
+                icon={faSyncAlt}
+                className={classes.refetchIcon}
+              />
+              Refetch All
+            </Button>
+          )}
         </Box>
       )}
       <SearchForm tags={tags} onSubmit={onSubmit} searchFilter={searchFilter} />
@@ -78,6 +91,7 @@ const Videos = ({
         videos={videos}
         total={totalVideos}
         onRemoveVideo={handleRemoveVideo}
+        type={type}
         {...props}
       />
       {/* refetch dialog */}
@@ -99,7 +113,20 @@ const Videos = ({
       {/* add stream dialog */}
       <Dialog open={addVideoOpen} onClose={handleCloseAddVideo}>
         <DialogContent dividers>
-          <TextField label="Video Id" fullWidth onChange={onVideoIdChange} />
+          <TextField
+            value={videoId}
+            label="Video Id"
+            fullWidth
+            onChange={onVideoIdChange}
+          />
+          {type === VIDEO_TYPE_CLIP && (
+            <TextField
+              value={srcVideoId}
+              label="Source Video Id"
+              fullWidth
+              onChange={onSrcVideoIdChange}
+            />
+          )}
         </DialogContent>
         <DialogActions dividers>
           <Button variant="contained" color="primary" onClick={onAddVideo}>

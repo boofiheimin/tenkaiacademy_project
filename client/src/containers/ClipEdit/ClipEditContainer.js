@@ -1,56 +1,49 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import moment from "moment";
 
-import {
-  getStream,
-  editStream,
-  refetchStream,
-} from "../../actions/StreamsActions";
+import { getClip, editClip, refetchClip } from "../../actions/ClipsActions";
 import { getTags } from "../../actions/TagsActions";
 
 import VideoEdit from "../../components/VideoEdit/VideoEdit";
 
 import { youtubeThumbnailGetter } from "../../helper";
 
-const StreamEditContainer = () => {
+import { VIDEO_TYPE_CLIP } from "../../constants/main";
+
+const ClipEditContainer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { stream } = useSelector((state) => state.streams);
+  const { clip } = useSelector((state) => state.clips);
   const tags = useSelector((state) => state.tags);
   const [formData, setFormData] = useState({});
   const [tagOptions, setTagOptions] = useState([]);
 
-  const { id: streamId } = useParams();
+  const { id: clipId } = useParams();
 
   useEffect(() => {
-    dispatch(getStream(streamId));
+    dispatch(getClip(clipId));
     dispatch(getTags());
-  }, [streamId]);
+  }, [clipId]);
 
   const formDataInit = useCallback(() => {
-    if (tags.length > 0 && stream) {
-      const formatTags = stream.tags.map(({ tagId: tid }) => {
+    if (tags.length > 0 && clip) {
+      console.log(clip);
+      const formatTags = clip.tags.map(({ tagId: tid }) => {
         const { _id, tagNameEN, tagId, catId } = tags.find(
           (tag) => tag.tagId === tid
         );
         return { id: _id, text: tagNameEN, tagId, catId };
       });
-      const formatTweets = stream.relatedTweets.map((tweetId) => ({
-        id: tweetId,
-        text: tweetId,
-      }));
-      const formatVideos = stream.relatedVideos.map(({ videoId }) => ({
+      const formatVideos = clip.relatedVideos.map(({ videoId }) => ({
         id: videoId,
         text: videoId,
         img: youtubeThumbnailGetter(videoId),
       }));
 
       setFormData({
-        ...stream,
+        ...clip,
         tags: formatTags,
-        relatedTweets: formatTweets,
         relatedVideos: formatVideos,
       });
 
@@ -62,14 +55,14 @@ const StreamEditContainer = () => {
 
       setTagOptions(formatOptions);
     }
-  }, [stream, tags]);
+  }, [clip, tags]);
 
   useEffect(() => {
     formDataInit();
-  }, [stream, tags]);
+  }, [clip, tags]);
 
   const goBack = () => {
-    navigate(`/streams/${streamId}`);
+    navigate(`/clips/${clipId}`);
   };
 
   const onSubmit = (e) => {
@@ -81,17 +74,14 @@ const StreamEditContainer = () => {
       tagNameJP,
     }));
 
-    const formatTweets = formData.relatedTweets.map(({ text }) => text);
-
     const formatVideos = formData.relatedVideos.map(({ text }) => ({
       videoId: text,
     }));
 
     dispatch(
-      editStream(streamId, {
+      editClip(clipId, {
         ...formData,
         tags: formatTags,
-        relatedTweets: formatTweets,
         relatedVideos: formatVideos,
       })
     );
@@ -178,93 +168,6 @@ const StreamEditContainer = () => {
     setFormData(newForm);
   };
 
-  const onAddTimeStamp = ({ timestamp, description }) => {
-    const newTimestamps = [
-      ...formData.timestamps,
-      {
-        timestamp: moment.duration(timestamp).asSeconds(),
-        description,
-      },
-    ];
-    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
-    const newForm = {
-      ...formData,
-      timestamps: newTimestamps,
-    };
-
-    setFormData(newForm);
-  };
-
-  const onDeleteTimestamp = (index) => {
-    const newTimestamps = [...formData.timestamps];
-    newTimestamps.splice(index, 1);
-    const newForm = {
-      ...formData,
-      timestamps: newTimestamps,
-    };
-    setFormData(newForm);
-  };
-
-  const onTimestampSave = ({ timestamp, description }, index) => {
-    const newTimestamps = [...formData.timestamps];
-    newTimestamps.splice(index, 1, {
-      timestamp: moment.duration(timestamp).asSeconds(),
-      description,
-    });
-    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
-    const newForm = {
-      ...formData,
-      timestamps: newTimestamps,
-    };
-
-    setFormData(newForm);
-  };
-
-  const onImportTimestamp = (value) => {
-    const newTimestamps = [...formData.timestamps, ...value];
-    newTimestamps.sort((a, b) => a.timestamp - b.timestamp);
-    const newForm = {
-      ...formData,
-      timestamps: newTimestamps,
-    };
-    setFormData(newForm);
-  };
-
-  const onClearTimestamp = () => {
-    const newForm = {
-      ...formData,
-      timestamps: [],
-    };
-    setFormData(newForm);
-  };
-
-  const onAddTweet = (twitterId) => {
-    const newTweets = [
-      ...formData.relatedTweets,
-      { id: twitterId, text: twitterId },
-    ];
-    const newForm = {
-      ...formData,
-      relatedTweets: newTweets,
-    };
-    setFormData(newForm);
-  };
-  const onReorderTweet = (reorderedTweets) => {
-    const newForm = {
-      ...formData,
-      relatedTweets: [...reorderedTweets],
-    };
-    setFormData(newForm);
-  };
-  const onRemoveTweet = (id) => {
-    const newTweets = [...formData.relatedTweets];
-    const newForm = {
-      ...formData,
-      relatedTweets: newTweets.filter((tweet) => tweet.id !== id),
-    };
-    setFormData(newForm);
-  };
-
   const onAddVideo = (videoId) => {
     const newVideos = [
       ...formData.relatedVideos,
@@ -297,7 +200,7 @@ const StreamEditContainer = () => {
   };
 
   const refetchVideo = () => {
-    dispatch(refetchStream(streamId));
+    dispatch(refetchClip(clipId));
   };
 
   const onTitleChange = (e) => {
@@ -338,6 +241,7 @@ const StreamEditContainer = () => {
 
   return (
     <VideoEdit
+      type={VIDEO_TYPE_CLIP}
       formData={formData}
       goBack={goBack}
       onSubmit={onSubmit}
@@ -347,12 +251,6 @@ const StreamEditContainer = () => {
       onRemoveTag={onRemoveTag}
       onReorderTag={onReorderTag}
       onDetailChange={onDetailChange}
-      onAddTimeStamp={onAddTimeStamp}
-      onDeleteTimestamp={onDeleteTimestamp}
-      onTimestampSave={onTimestampSave}
-      onAddTweet={onAddTweet}
-      onReorderTweet={onReorderTweet}
-      onRemoveTweet={onRemoveTweet}
       onAddVideo={onAddVideo}
       onReorderVideo={onReorderVideo}
       onRemoveVideo={onRemoveVideo}
@@ -362,10 +260,8 @@ const StreamEditContainer = () => {
       onDurationChange={onDurationChange}
       onUploaderChange={onUploaderChange}
       onPublishedChange={onPublishedChange}
-      onImportTimestamp={onImportTimestamp}
-      onClearTimestamp={onClearTimestamp}
     />
   );
 };
 
-export default StreamEditContainer;
+export default ClipEditContainer;

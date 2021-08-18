@@ -24,7 +24,10 @@ import ImportTimestampModal from "./ImportTimestampModal/ImportTimestampModal";
 
 import useStyles from "./styles";
 
+import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
+
 const VideoEdit = ({
+  type,
   goBack,
   formData,
   onSubmit,
@@ -66,7 +69,16 @@ const VideoEdit = ({
     description,
     relatedTweets = [],
     relatedVideos = [],
+    srcVideo = {},
   } = formData;
+
+  const {
+    id: srcVideoId,
+    title: srcVideoTitle,
+    videoId: srcVideoVideoId,
+    uploader: srcVideoUploader,
+  } = srcVideo;
+
   const classes = useStyles();
 
   const disableVideoInfo = source !== "manual";
@@ -140,6 +152,29 @@ const VideoEdit = ({
                       {videoId}
                     </a>
                   </Typography>
+                  {type === VIDEO_TYPE_CLIP && (
+                    <>
+                      <Typography>
+                        {`source videoId: `}
+                        <a
+                          href={`https://www.youtube.com/watch?v=${srcVideoVideoId}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {srcVideoVideoId}
+                        </a>
+                      </Typography>
+                      <Typography>
+                        {`source title: `}
+                        {srcVideoTitle}
+                      </Typography>
+                      <Typography>
+                        {`source uploader: `}
+                        {srcVideoUploader}
+                      </Typography>
+                    </>
+                  )}
+
                   <div className={classes.infoInputContainer}>
                     <Typography>title:&nbsp;</Typography>
                     <TextField
@@ -247,53 +282,62 @@ const VideoEdit = ({
                 </div>
               </Card>
             </Grid>
-            <Grid item md={6} xs={12} className={classes.gridContainer}>
-              <Card className={classes.segmentContainer}>
-                <div className={classes.cardHeader}>
-                  <Typography variant="h6">Related Tweets</Typography>
-                </div>
-                <Divider />
-                <div className={classes.dndContainer}>
-                  <DragAndDrop
-                    items={relatedTweets}
-                    addItemLabel="Add Related Tweets"
-                    placeholder="twitter id"
-                    onAddItem={onAddTweet}
-                    onReorderItem={onReorderTweet}
-                    onRemoveItem={onRemoveTweet}
-                  />
-                </div>
-              </Card>
-            </Grid>
+            {type === VIDEO_TYPE_STREAM && (
+              <Grid item md={6} xs={12} className={classes.gridContainer}>
+                <Card className={classes.segmentContainer}>
+                  <div className={classes.cardHeader}>
+                    <Typography variant="h6">Related Tweets</Typography>
+                  </div>
+                  <Divider />
+                  <div className={classes.dndContainer}>
+                    <DragAndDrop
+                      items={relatedTweets}
+                      addItemLabel="Add Related Tweets"
+                      placeholder="twitter id"
+                      onAddItem={onAddTweet}
+                      onReorderItem={onReorderTweet}
+                      onRemoveItem={onRemoveTweet}
+                    />
+                  </div>
+                </Card>
+              </Grid>
+            )}
           </Grid>
-          <Grid container>
-            <Grid item md={6} xs={12} className={classes.gridContainer}>
-              <Card className={classes.segmentContainer}>
-                <div className={classes.cardHeader}>
-                  <Typography variant="h6" className={classes.timestampHeader}>
-                    Timestamp
-                  </Typography>
-                  <ImportTimestampModal onImportTimestamp={onImportTimestamp} />
-                  <Button
-                    variant="outlined"
-                    onClick={onClearTimestamp}
-                    color="secondary"
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <Divider />
-                <div className={classes.dndContainer}>
-                  <Timestamp
-                    timestamps={timestamps}
-                    onAddTimeStamp={onAddTimeStamp}
-                    onDeleteTimestamp={onDeleteTimestamp}
-                    onTimestampSave={onTimestampSave}
-                  />
-                </div>
-              </Card>
+          {type === VIDEO_TYPE_STREAM && (
+            <Grid container>
+              <Grid item md={6} xs={12} className={classes.gridContainer}>
+                <Card className={classes.segmentContainer}>
+                  <div className={classes.cardHeader}>
+                    <Typography
+                      variant="h6"
+                      className={classes.timestampHeader}
+                    >
+                      Timestamp
+                    </Typography>
+                    <ImportTimestampModal
+                      onImportTimestamp={onImportTimestamp}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={onClearTimestamp}
+                      color="secondary"
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                  <Divider />
+                  <div className={classes.dndContainer}>
+                    <Timestamp
+                      timestamps={timestamps}
+                      onAddTimeStamp={onAddTimeStamp}
+                      onDeleteTimestamp={onDeleteTimestamp}
+                      onTimestampSave={onTimestampSave}
+                    />
+                  </div>
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </form>
       </Box>
     </Container>
@@ -335,6 +379,7 @@ VideoEdit.propTypes = {
   onThumbnailChange: PropTypes.func,
   onImportTimestamp: PropTypes.func,
   onClearTimestamp: PropTypes.func,
+  type: PropTypes.string,
 };
 
 VideoEdit.defaultProps = {
@@ -362,6 +407,7 @@ VideoEdit.defaultProps = {
   onThumbnailChange: () => {},
   onImportTimestamp: () => {},
   onClearTimestamp: () => {},
+  type: VIDEO_TYPE_STREAM,
 };
 
 export default VideoEdit;
