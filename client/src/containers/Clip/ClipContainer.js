@@ -44,12 +44,8 @@ const ClipContainer = () => {
     setVideoPos(sec);
   };
 
-  const handleRelatedVideoClick = (_id, videoId, existing) => {
-    if (existing) {
-      navigate(`/clips/${_id}`);
-    } else {
-      window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
-    }
+  const handleRelatedVideoClick = (_id) => {
+    navigate(`/streams/${_id}`);
   };
 
   return (

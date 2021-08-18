@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import Stream from "../models/Stream.js";
+import Clip from "../models/Clip.js";
 import Tag from "../models/Tag.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 
@@ -97,10 +99,28 @@ export const createStream = async (req, res, next) => {
 export const getStream = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const stream = await Stream.findById(id);
+    const [stream] = await Stream.aggregate()
+      .match({
+        _id: mongoose.Types.ObjectId(id),
+      })
+      .lookup({
+        from: "clips",
+        let: { videoId: "$videoId" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$srcVideo.videoId", "$$videoId"],
+              },
+            },
+          },
+          { $sort: { publisedAt: -1 } },
+        ],
+        as: "clips",
+      });
     res.status(200).json(stream);
   } catch (err) {
-    return next(new ErrorResponse("Stream not found", 404));
+    next(err);
   }
 };
 

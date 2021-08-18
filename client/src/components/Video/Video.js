@@ -31,7 +31,7 @@ import Timestamp from "./Timestamp/Timestamp";
 import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 import TypeChip from "../TypeChip/TypeChip";
 
-import { VIDEO_TYPE_STREAM } from "../../constants/main";
+import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
 
 const Video = ({
   video = {},
@@ -61,8 +61,15 @@ const Video = ({
     clips = [],
     relatedVideos = [],
     relatedTweets = [],
-    srcVideoId,
+    srcVideo = {},
   } = video;
+
+  const {
+    id: srcVideoId,
+    title: srcVideoTitle,
+    videoId: srcVideoVideoId,
+    uploader: srcVideoUploader,
+  } = srcVideo;
 
   const handleDescDialogOpen = () => {
     setDescDialog(true);
@@ -93,22 +100,23 @@ const Video = ({
             <Paper>
               <div className={classes.sectionHeader}>
                 <Typography variant="h6">
-                  {type === "stream" ? "Timestamp" : "Source"}
+                  {type === VIDEO_TYPE_STREAM ? "Timestamp" : "Source"}
                 </Typography>
               </div>
             </Paper>
             <div className={classes.timestampContainer}>
               <div className={classes.timestampScroller}>
-                {type === "stream" ? (
+                {type === VIDEO_TYPE_STREAM ? (
                   <Timestamp
                     timestamps={timestamps}
                     onVideoSeek={onVideoSeek}
                   />
                 ) : (
                   <HorizontalVideoCard
-                    title="testnata"
-                    videoId={srcVideoId}
-                    uploader="kanata"
+                    title={srcVideoTitle}
+                    videoId={srcVideoVideoId}
+                    uploader={srcVideoUploader}
+                    onCardClick={() => onRelatedVideoClick(srcVideoId)}
                   />
                 )}
               </div>
@@ -195,7 +203,7 @@ const Video = ({
               </Box>
             </Hidden>
           </Paper>
-          {type === "stream" && (
+          {type === VIDEO_TYPE_STREAM && (
             <Grid item container spacing={2} className={classes.thirdGrid}>
               <Grid item xs={12} lg={6}>
                 <Hidden mdDown>
@@ -332,6 +340,28 @@ const Video = ({
             <Box padding={2}>
               {clips.length === 0 && (
                 <Typography align="center">No clips :(</Typography>
+              )}
+              {clips.map(
+                ({
+                  _id: clipId,
+                  title: clipTitle,
+                  videoId: clipVideoId,
+                  uploader: clipUploader,
+                }) => (
+                  <HorizontalVideoCard
+                    title={clipTitle}
+                    videoId={clipVideoId}
+                    uploader={clipUploader}
+                    onCardClick={() =>
+                      onRelatedVideoClick(
+                        clipId,
+                        clipVideoId,
+                        true,
+                        VIDEO_TYPE_CLIP
+                      )
+                    }
+                  />
+                )
               )}
             </Box>
           </Box>

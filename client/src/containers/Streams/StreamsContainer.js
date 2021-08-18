@@ -18,6 +18,7 @@ import { setVideoMode } from "../../actions/GlobalActions";
 import Videos from "../../components/Videos/Videos";
 
 import { useQuery } from "../../utils";
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
 
 const StreamsRoute = () => {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ const StreamsRoute = () => {
 
   return (
     <Videos
-      type="stream"
+      type={VIDEO_TYPE_STREAM}
       videos={queriedStreams}
       totalVideos={total}
       tags={tags}

@@ -1,16 +1,24 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
+const srcVideoSchema = mongoose.Schema(
+  {
+    id: mongoose.ObjectId,
+    videoId: String,
+    title: String,
+    uploader: String,
+  },
+  { _id: false }
+);
+
 const clipSchema = mongoose.Schema({
   videoId: {
     type: String,
     unique: true,
     required: [true, "Please provide a videoIds"],
   },
-  srcVideoId: {
-    type: String,
-    unique: true,
-    required: [true, "Please provide a source videoIds"],
+  srcVideo: {
+    type: srcVideoSchema,
   },
   title: {
     type: String,

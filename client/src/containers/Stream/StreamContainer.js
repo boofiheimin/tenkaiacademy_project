@@ -6,6 +6,8 @@ import { getStream } from "../../actions/StreamsActions";
 
 import Video from "../../components/Video/Video";
 
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
+
 const StreamContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,9 +46,14 @@ const StreamContainer = () => {
     setVideoPos(sec);
   };
 
-  const handleRelatedVideoClick = (_id, videoId, existing) => {
+  const handleRelatedVideoClick = (
+    _id,
+    videoId,
+    existing,
+    type = VIDEO_TYPE_STREAM
+  ) => {
     if (existing) {
-      navigate(`/streams/${_id}`);
+      navigate(`/${type}s/${_id}`);
     } else {
       window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
     }
@@ -63,7 +70,7 @@ const StreamContainer = () => {
       videoPos={videoPos}
       seekToggle={toggle}
       onRelatedVideoClick={handleRelatedVideoClick}
-      type="stream"
+      type={VIDEO_TYPE_STREAM}
     />
   );
 };

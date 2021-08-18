@@ -70,7 +70,12 @@ export const createClip = async (req, res, next) => {
     let videoParams;
     if (video) {
       videoParams = {
-        srcVideoId: srcVideoId,
+        srcVideo: {
+          id: streams[0]._id,
+          videoId: streams[0].videoId,
+          uploader: streams[0].uploader,
+          title: streams[0].title,
+        },
         videoId: video?.id,
         title: video?.snippet?.title,
         thumbnail: video?.snippet?.thumbnails?.high?.url,
