@@ -6,6 +6,7 @@ import {
   FETCH_CLIP_SUCCESS,
   EDIT_CLIP_SUCCESS,
   ADD_CLIP_SUCCESS,
+  DELETE_CLIP_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -22,7 +23,6 @@ const reducer = (
       to: null,
       sort: -1,
     },
-    clip: {},
   },
   action
 ) => {
@@ -65,6 +65,11 @@ const reducer = (
       return { ...state, clip: { ...state.clip, ...action.data } };
     case ADD_CLIP_SUCCESS:
       return state;
+    case DELETE_CLIP_SUCCESS:
+      return {
+        ...state,
+        clips: state.clips.filter((clip) => clip._id !== action?.data._id),
+      };
     default:
       return state;
   }

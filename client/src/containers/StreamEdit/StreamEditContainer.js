@@ -41,11 +41,13 @@ const StreamEditContainer = () => {
         id: tweetId,
         text: tweetId,
       }));
-      const formatVideos = stream.relatedVideos.map(({ videoId }) => ({
-        id: videoId,
-        text: videoId,
-        img: youtubeThumbnailGetter(videoId),
-      }));
+      const formatVideos = stream.relatedVideos.map(
+        ({ videoId, thumbnail, title }) => ({
+          id: videoId,
+          text: title,
+          img: thumbnail || youtubeThumbnailGetter(videoId),
+        })
+      );
 
       setFormData({
         ...stream,
@@ -83,8 +85,8 @@ const StreamEditContainer = () => {
 
     const formatTweets = formData.relatedTweets.map(({ text }) => text);
 
-    const formatVideos = formData.relatedVideos.map(({ text }) => ({
-      videoId: text,
+    const formatVideos = formData.relatedVideos.map(({ id }) => ({
+      videoId: id,
     }));
 
     dispatch(

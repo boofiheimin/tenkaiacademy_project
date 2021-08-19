@@ -18,13 +18,15 @@ import { setVideoMode } from "../../actions/GlobalActions";
 import Videos from "../../components/Videos/Videos";
 
 import { useQuery } from "../../utils";
-import { VIDEO_TYPE_STREAM } from "../../constants/main";
+import { VIDEO_TYPE_STREAM, VIDEOS_FETCH_LIMIT } from "../../constants/main";
 
 const StreamsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [queriedStreams, setStreams] = useState([]);
-  const { offset, hasMore, refetching, filter, streams, total } = useSelector(
+  const [filter, setFilter] = useState();
+  const [offset, setOffset] = useState(0);
+  const { hasMore, refetching, streams, total } = useSelector(
     (state) => state.streams
   );
   const tags = useSelector((state) => state.tags);
@@ -40,8 +42,10 @@ const StreamsRoute = () => {
       to: query.get("to") ? moment(query.get("to")).toDate() : null,
       sort: query.get("sort") || -1,
     };
-    dispatch(setStreamsFilter(newFilter));
-  }, [location.search]);
+    // dispatch(setStreamsFilter(newFilter));
+    dispatch(getStreams(newFilter));
+    setFilter(newFilter);
+  }, [location]);
 
   useEffect(() => {
     dispatch(setVideoMode(false));
@@ -49,15 +53,12 @@ const StreamsRoute = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getStreams(filter));
-  }, [filter]);
-
-  useEffect(() => {
     setStreams(streams);
   }, [streams]);
 
   const fetchMore = () => {
-    dispatch(getMoreStreams(filter, offset));
+    dispatch(getMoreStreams(filter, offset + VIDEOS_FETCH_LIMIT));
+    setOffset(offset + VIDEOS_FETCH_LIMIT);
   };
 
   const handleRefetchAll = () => {

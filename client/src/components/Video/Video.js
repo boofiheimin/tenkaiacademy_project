@@ -61,15 +61,8 @@ const Video = ({
     clips = [],
     relatedVideos = [],
     relatedTweets = [],
-    srcVideo = {},
+    srcVideos = [],
   } = video;
-
-  const {
-    id: srcVideoId,
-    title: srcVideoTitle,
-    videoId: srcVideoVideoId,
-    uploader: srcVideoUploader,
-  } = srcVideo;
 
   const handleDescDialogOpen = () => {
     setDescDialog(true);
@@ -112,12 +105,26 @@ const Video = ({
                     onVideoSeek={onVideoSeek}
                   />
                 ) : (
-                  <HorizontalVideoCard
-                    title={srcVideoTitle}
-                    videoId={srcVideoVideoId}
-                    uploader={srcVideoUploader}
-                    onCardClick={() => onRelatedVideoClick(srcVideoId)}
-                  />
+                  srcVideos.map(
+                    ({
+                      id: srcID,
+                      title: srctitle,
+                      videoId: srcVID,
+                      thumbnail: srcThumbnail,
+                      uploader: srcUploader,
+                      existing,
+                    }) => (
+                      <HorizontalVideoCard
+                        title={srctitle}
+                        videoId={srcVID}
+                        thumbnail={srcThumbnail}
+                        uploader={srcUploader}
+                        onCardClick={() =>
+                          onRelatedVideoClick(srcID, srcVID, existing)
+                        }
+                      />
+                    )
+                  )
                 )}
               </div>
             </div>
@@ -268,12 +275,14 @@ const Video = ({
                           id: relatedVId,
                           title: relatedVTitle,
                           videoId: relatedVVideoId,
+                          thumbnail: relatedVThumbnail,
                           uploader: relatedVUploader,
                           existing,
                         }) => (
                           <HorizontalVideoCard
                             title={relatedVTitle}
                             videoId={relatedVVideoId}
+                            thumbnail={relatedVThumbnail}
                             uploader={relatedVUploader}
                             onCardClick={() =>
                               onRelatedVideoClick(
@@ -304,13 +313,15 @@ const Video = ({
                               id: relatedVId,
                               title: relatedVTitle,
                               videoId: relatedVVideoId,
+                              thumbnail: relatedVThumbnail,
                               uploader: relatedVUploader,
                               existing,
                             }) => (
                               <HorizontalVideoCard
                                 title={relatedVTitle}
-                                videoId={relatedVVideoId}
+                                thumbnail={relatedVThumbnail}
                                 uploader={relatedVUploader}
+                                videoId={relatedVVideoId}
                                 onCardClick={() =>
                                   onRelatedVideoClick(
                                     relatedVId,
@@ -334,35 +345,62 @@ const Video = ({
           <Box>
             <Paper>
               <div className={classes.sectionHeader}>
-                <Typography variant="h6">Clips</Typography>
+                <Typography variant="h6">
+                  {type === VIDEO_TYPE_STREAM ? "Clips" : "Related Clips"}
+                </Typography>
               </div>
             </Paper>
             <Box padding={2}>
-              {clips.length === 0 && (
-                <Typography align="center">No clips :(</Typography>
-              )}
-              {clips.map(
-                ({
-                  _id: clipId,
-                  title: clipTitle,
-                  videoId: clipVideoId,
-                  uploader: clipUploader,
-                }) => (
-                  <HorizontalVideoCard
-                    title={clipTitle}
-                    videoId={clipVideoId}
-                    uploader={clipUploader}
-                    onCardClick={() =>
-                      onRelatedVideoClick(
-                        clipId,
-                        clipVideoId,
-                        true,
-                        VIDEO_TYPE_CLIP
-                      )
-                    }
-                  />
-                )
-              )}
+              {type === VIDEO_TYPE_STREAM
+                ? clips.map(
+                    ({
+                      _id: clipId,
+                      title: clipTitle,
+                      videoId: clipVideoId,
+                      uploader: clipUploader,
+                      thumbnail: clipThumbnail,
+                    }) => (
+                      <HorizontalVideoCard
+                        title={clipTitle}
+                        thumbnail={clipThumbnail}
+                        uploader={clipUploader}
+                        videoId={clipVideoId}
+                        onCardClick={() =>
+                          onRelatedVideoClick(
+                            clipId,
+                            clipVideoId,
+                            true,
+                            VIDEO_TYPE_CLIP
+                          )
+                        }
+                      />
+                    )
+                  )
+                : relatedVideos.map(
+                    ({
+                      id: relatedVId,
+                      title: relatedVTitle,
+                      videoId: relatedVVideoId,
+                      thumbnail: relatedVThumbnail,
+                      uploader: relatedVUploader,
+                      existing,
+                    }) => (
+                      <HorizontalVideoCard
+                        title={relatedVTitle}
+                        videoId={relatedVVideoId}
+                        thumbnail={relatedVThumbnail}
+                        uploader={relatedVUploader}
+                        onCardClick={() =>
+                          onRelatedVideoClick(
+                            relatedVId,
+                            relatedVVideoId,
+                            existing,
+                            VIDEO_TYPE_CLIP
+                          )
+                        }
+                      />
+                    )
+                  )}
             </Box>
           </Box>
         </Grid>

@@ -2,16 +2,21 @@ import PropTypes from "prop-types";
 import { Card, Typography, CardActionArea } from "@material-ui/core";
 
 import useStyles from "./styles";
-
 import { youtubeThumbnailGetter } from "../../helper";
 
-const HorizontalVideoCard = ({ videoId, title, uploader, onCardClick }) => {
+const HorizontalVideoCard = ({
+  title,
+  uploader,
+  videoId,
+  thumbnail,
+  onCardClick,
+}) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardActionArea className={classes.actionArea} onClick={onCardClick}>
         <img
-          src={youtubeThumbnailGetter(videoId)}
+          src={thumbnail || youtubeThumbnailGetter(videoId)}
           alt="yt"
           className={classes.thumbnail}
         />
@@ -25,14 +30,12 @@ const HorizontalVideoCard = ({ videoId, title, uploader, onCardClick }) => {
 };
 
 HorizontalVideoCard.propTypes = {
-  videoId: PropTypes.string,
   title: PropTypes.string,
   uploader: PropTypes.string,
   onCardClick: PropTypes.func,
 };
 
 HorizontalVideoCard.defaultProps = {
-  videoId: "",
   title: "",
   uploader: "",
   onCardClick: () => {},

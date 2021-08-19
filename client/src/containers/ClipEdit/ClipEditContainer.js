@@ -28,23 +28,33 @@ const ClipEditContainer = () => {
 
   const formDataInit = useCallback(() => {
     if (tags.length > 0 && clip) {
-      console.log(clip);
       const formatTags = clip.tags.map(({ tagId: tid }) => {
         const { _id, tagNameEN, tagId, catId } = tags.find(
           (tag) => tag.tagId === tid
         );
         return { id: _id, text: tagNameEN, tagId, catId };
       });
-      const formatVideos = clip.relatedVideos.map(({ videoId }) => ({
-        id: videoId,
-        text: videoId,
-        img: youtubeThumbnailGetter(videoId),
-      }));
+      const formatVideos = clip.relatedVideos.map(
+        ({ videoId, title, thumbnail }) => ({
+          id: videoId,
+          text: title,
+          img: thumbnail || youtubeThumbnailGetter(videoId),
+        })
+      );
+
+      const formatSrcs = clip.srcVideos.map(
+        ({ videoId, title, thumbnail }) => ({
+          id: videoId,
+          text: title,
+          img: thumbnail || youtubeThumbnailGetter(videoId),
+        })
+      );
 
       setFormData({
         ...clip,
         tags: formatTags,
         relatedVideos: formatVideos,
+        srcVideos: formatSrcs,
       });
 
       let formatOptions = [...tags];
@@ -74,8 +84,12 @@ const ClipEditContainer = () => {
       tagNameJP,
     }));
 
-    const formatVideos = formData.relatedVideos.map(({ text }) => ({
-      videoId: text,
+    const formatVideos = formData.relatedVideos.map(({ id }) => ({
+      videoId: id,
+    }));
+
+    const formatSrcs = formData.srcVideos.map(({ id }) => ({
+      videoId: id,
     }));
 
     dispatch(
@@ -83,6 +97,7 @@ const ClipEditContainer = () => {
         ...formData,
         tags: formatTags,
         relatedVideos: formatVideos,
+        srcVideos: formatSrcs,
       })
     );
   };
@@ -199,6 +214,37 @@ const ClipEditContainer = () => {
     setFormData(newForm);
   };
 
+  const onAddSrc = (videoId) => {
+    const newVideos = [
+      ...formData.srcVideos,
+      {
+        id: videoId,
+        text: videoId,
+        img: youtubeThumbnailGetter(videoId),
+      },
+    ];
+    const newForm = {
+      ...formData,
+      srcVideos: newVideos,
+    };
+    setFormData(newForm);
+  };
+  const onReorderSrc = (reorderedVideos) => {
+    const newForm = {
+      ...formData,
+      srcVideos: [...reorderedVideos],
+    };
+    setFormData(newForm);
+  };
+  const onRemoveSrc = (id) => {
+    const newVideos = [...formData.srcVideos];
+    const newForm = {
+      ...formData,
+      srcVideos: newVideos.filter((video) => video.id !== id),
+    };
+    setFormData(newForm);
+  };
+
   const refetchVideo = () => {
     dispatch(refetchClip(clipId));
   };
@@ -254,6 +300,9 @@ const ClipEditContainer = () => {
       onAddVideo={onAddVideo}
       onReorderVideo={onReorderVideo}
       onRemoveVideo={onRemoveVideo}
+      onAddSrc={onAddSrc}
+      onReorderSrc={onReorderSrc}
+      onRemoveSrc={onRemoveSrc}
       refetchVideo={refetchVideo}
       onTitleChange={onTitleChange}
       onThumbnailChange={onThumbnailChange}

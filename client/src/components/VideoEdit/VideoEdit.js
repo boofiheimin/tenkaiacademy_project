@@ -51,6 +51,9 @@ const VideoEdit = ({
   onAddVideo,
   onReorderVideo,
   onRemoveVideo,
+  onAddSrc,
+  onReorderSrc,
+  onRemoveSrc,
   refetchVideo,
   onImportTimestamp,
   onClearTimestamp,
@@ -69,15 +72,8 @@ const VideoEdit = ({
     description,
     relatedTweets = [],
     relatedVideos = [],
-    srcVideo = {},
+    srcVideos = [],
   } = formData;
-
-  const {
-    id: srcVideoId,
-    title: srcVideoTitle,
-    videoId: srcVideoVideoId,
-    uploader: srcVideoUploader,
-  } = srcVideo;
 
   const classes = useStyles();
 
@@ -152,28 +148,6 @@ const VideoEdit = ({
                       {videoId}
                     </a>
                   </Typography>
-                  {type === VIDEO_TYPE_CLIP && (
-                    <>
-                      <Typography>
-                        {`source videoId: `}
-                        <a
-                          href={`https://www.youtube.com/watch?v=${srcVideoVideoId}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {srcVideoVideoId}
-                        </a>
-                      </Typography>
-                      <Typography>
-                        {`source title: `}
-                        {srcVideoTitle}
-                      </Typography>
-                      <Typography>
-                        {`source uploader: `}
-                        {srcVideoUploader}
-                      </Typography>
-                    </>
-                  )}
 
                   <div className={classes.infoInputContainer}>
                     <Typography>title:&nbsp;</Typography>
@@ -282,7 +256,7 @@ const VideoEdit = ({
                 </div>
               </Card>
             </Grid>
-            {type === VIDEO_TYPE_STREAM && (
+            {type === VIDEO_TYPE_STREAM ? (
               <Grid item md={6} xs={12} className={classes.gridContainer}>
                 <Card className={classes.segmentContainer}>
                   <div className={classes.cardHeader}>
@@ -297,6 +271,25 @@ const VideoEdit = ({
                       onAddItem={onAddTweet}
                       onReorderItem={onReorderTweet}
                       onRemoveItem={onRemoveTweet}
+                    />
+                  </div>
+                </Card>
+              </Grid>
+            ) : (
+              <Grid item md={6} xs={12} className={classes.gridContainer}>
+                <Card className={classes.segmentContainer}>
+                  <div className={classes.cardHeader}>
+                    <Typography variant="h6">Sources</Typography>
+                  </div>
+                  <Divider />
+                  <div className={classes.dndContainer}>
+                    <DragAndDrop
+                      items={srcVideos}
+                      addItemLabel="Sources"
+                      placeholder="video id"
+                      onAddItem={onAddSrc}
+                      onReorderItem={onReorderSrc}
+                      onRemoveItem={onRemoveSrc}
                     />
                   </div>
                 </Card>

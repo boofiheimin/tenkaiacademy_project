@@ -36,7 +36,7 @@ const Videos = ({
 }) => {
   const classes = useStyles();
   const [videoId, setVideoId] = useState("");
-  const [srcVideoId, setSrcVideoId] = useState("");
+  const [srcVideoIds, setSrcVideoId] = useState("");
   const [addVideoOpen, setAddVideoOpen] = useState(false);
 
   const onVideoIdChange = (e) => {
@@ -56,7 +56,7 @@ const Videos = ({
   };
 
   const onAddVideo = () => {
-    handleAddVideo(videoId, srcVideoId);
+    handleAddVideo(videoId, srcVideoIds);
   };
 
   return (
@@ -120,12 +120,15 @@ const Videos = ({
             onChange={onVideoIdChange}
           />
           {type === VIDEO_TYPE_CLIP && (
-            <TextField
-              value={srcVideoId}
-              label="Source Video Id"
-              fullWidth
-              onChange={onSrcVideoIdChange}
-            />
+            <>
+              <TextField
+                value={srcVideoIds}
+                label="Source Video Ids"
+                fullWidth
+                onChange={onSrcVideoIdChange}
+              />
+              <Typography> separated by comma eg. 12345,23456</Typography>
+            </>
           )}
         </DialogContent>
         <DialogActions dividers>

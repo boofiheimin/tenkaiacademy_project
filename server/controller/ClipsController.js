@@ -5,6 +5,7 @@ import ErrorResponse from "../utils/ErrorResponse.js";
 
 import Youtube from "youtube-api";
 import moment from "moment";
+import _ from "lodash";
 
 export const getClips = async ({ query: reqQuery = {} }, res, next) => {
   const { query = "{}", offset, limit } = reqQuery;
@@ -44,23 +45,58 @@ export const getClips = async ({ query: reqQuery = {} }, res, next) => {
 
 export const createClip = async (req, res, next) => {
   try {
-    const { videoId, srcVideoId } = req.body;
-
-    const streams = await Stream.find({ videoId: srcVideoId });
-
-    if (streams.length === 0) {
-      return next(
-        new ErrorResponse(
-          `Stream with videoId ${srcVideoId} not found in library`,
-          404
-        )
-      );
-    }
-
     Youtube.authenticate({
       type: "key",
       key: process.env.YOUTUBE_API_KEY || null,
     });
+
+    const { videoId, srcVideoIds } = req.body;
+
+    if (!srcVideoIds) {
+      return next(
+        new ErrorResponse(`Please provide at least 1 source videoId`, 400)
+      );
+    }
+
+    const splitVideoIds = [...new Set(srcVideoIds.split(","))];
+
+    const streamsParam = [];
+    let streamsTags = [];
+
+    for (const srcVideoId of splitVideoIds) {
+      const stream = await Stream.findOne({ videoId: srcVideoId });
+      if (stream) {
+        streamsParam.push({
+          existing: true,
+          videoId: stream.videoId,
+          id: stream.id.toString(),
+          title: stream.title,
+          uploader: stream.uploader,
+          thumbnail: stream.thumbnail,
+        });
+
+        streamsTags = [...streamsTags, ...stream.tags];
+      } else {
+        const results = await Youtube.videos.list({
+          maxResults: 1,
+          id: srcVideoId,
+          part: "snippet",
+        });
+        const resultVideo = results?.data?.items[0];
+        streamsParam.push({
+          existing: false,
+          videoId: srcVideoId,
+          uploader: resultVideo?.snippet?.channelTitle,
+          title: resultVideo?.snippet?.title,
+        });
+      }
+    }
+
+    streamsTags = streamsTags.filter(
+      (elem, index) =>
+        streamsTags.findIndex((obj) => obj.tagId === elem.tagId) === index
+    );
+
     const results = await Youtube.videos.list({
       maxResults: 1,
       id: videoId,
@@ -70,26 +106,20 @@ export const createClip = async (req, res, next) => {
     let videoParams;
     if (video) {
       videoParams = {
-        srcVideo: {
-          id: streams[0]._id,
-          videoId: streams[0].videoId,
-          uploader: streams[0].uploader,
-          title: streams[0].title,
-        },
+        srcVideos: streamsParam,
         videoId: video?.id,
         title: video?.snippet?.title,
         thumbnail: video?.snippet?.thumbnails?.high?.url,
         uploader: video?.snippet?.channelTitle,
         duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
         publishedAt: new Date(video?.snippet?.publishedAt),
-        tags: streams[0].tags,
+        tags: streamsTags,
       };
     } else {
       return next(new ErrorResponse(`${videoId} not found`, 404));
     }
 
     const newClip = new Clip(videoParams);
-    console.log(newClip);
     await newClip.save();
     res.status(200).json(newClip);
   } catch (error) {
@@ -111,7 +141,7 @@ export const editClip = async (req, res, next) => {
   try {
     const formData = req.body;
 
-    const { relatedVideos } = formData;
+    const { relatedVideos, srcVideos, tags } = formData;
 
     Youtube.authenticate({
       type: "key",
@@ -120,7 +150,54 @@ export const editClip = async (req, res, next) => {
 
     const currentClip = await Clip.findById(req.params.id);
 
-    for (const video of relatedVideos) {
+    let streamsTags = tags;
+
+    let sVideos = srcVideos;
+
+    sVideos = sVideos.filter(
+      (elem, index) =>
+        sVideos.findIndex((obj) => obj.videoId === elem.videoId) === index
+    );
+
+    for (const src of sVideos) {
+      const existingSrc = await Stream.findOne({ videoId: src.videoId });
+      if (existingSrc) {
+        Object.assign(src, {
+          existing: true,
+          id: existingSrc.id.toString(),
+          title: existingSrc.title,
+          uploader: existingSrc.uploader,
+          publishedAt: existingSrc.publishedAt,
+          thumbnail: existingSrc.thumbnail,
+        });
+        streamsTags = [...streamsTags, ...existingSrc.tags];
+      } else {
+        const results = await Youtube.videos.list({
+          maxResults: 1,
+          id: src.videoId,
+          part: "snippet",
+        });
+        const resultVideo = results?.data?.items[0];
+        Object.assign(src, {
+          existing: false,
+          uploader: resultVideo?.snippet?.channelTitle,
+          title: resultVideo?.snippet?.title,
+        });
+      }
+    }
+
+    streamsTags = streamsTags.filter(
+      (elem, index) =>
+        streamsTags.findIndex((obj) => obj.tagId === elem.tagId) === index
+    );
+
+    let rVideos = relatedVideos;
+    rVideos = rVideos.filter(
+      (elem, index) =>
+        rVideos.findIndex((obj) => obj.videoId === elem.videoId) === index
+    );
+
+    for (const video of rVideos) {
       const existingVideo = await Clip.findOne({ videoId: video.videoId });
       if (existingVideo) {
         Object.assign(video, {
@@ -128,6 +205,7 @@ export const editClip = async (req, res, next) => {
           title: existingVideo.title,
           uploader: existingVideo.uploader,
           publishedAt: existingVideo.publishedAt,
+          existing: true,
         });
 
         existingVideo.relatedVideos = existingVideo.relatedVideos
@@ -141,6 +219,13 @@ export const editClip = async (req, res, next) => {
           })
           .sort((a, b) => a.publishedAt - b.publishedAt);
 
+        existingVideo.relatedVideos = existingVideo.relatedVideos.filter(
+          (elem, index) =>
+            existingVideo.relatedVideos.findIndex(
+              (obj) => obj.videoId === elem.videoId
+            ) === index
+        );
+
         await existingVideo.save();
       } else {
         return next(
@@ -149,9 +234,18 @@ export const editClip = async (req, res, next) => {
       }
     }
 
-    const clip = await Clip.findByIdAndUpdate(req.params.id, formData, {
-      new: true,
-    });
+    const clip = await Clip.findByIdAndUpdate(
+      req.params.id,
+      {
+        ...formData,
+        tags: streamsTags,
+        srcVideos: sVideos,
+        relatedVideos: rVideos,
+      },
+      {
+        new: true,
+      }
+    );
     await clip.save();
 
     res.status(200).json(clip);
@@ -160,17 +254,28 @@ export const editClip = async (req, res, next) => {
   }
 };
 
-// export const deleteStream = async (req, res, next) => {
-//   try {
-//     const stream = await Stream.findByIdAndDelete(req.params.id);
-//     if (!stream) {
-//       return next(new ErrorResponse(("stream not found", 404)));
-//     }
-//     res.status(200).json(stream);
-//   } catch (err) {
-//     next(error);
-//   }
-// };
+export const deleteClip = async (req, res, next) => {
+  try {
+    const relatedClips = await Clip.find({
+      "relatedVideos.id": req.params.id,
+    });
+
+    for (const rClip of relatedClips) {
+      rClip.relatedVideos = rClip.relatedVideos.filter(
+        (rVid) => rVid.id !== req.params.id
+      );
+      await rClip.save();
+    }
+
+    const clip = await Clip.findByIdAndDelete(req.params.id);
+    if (!clip) {
+      return next(new ErrorResponse(("clip not found", 404)));
+    }
+    res.status(200).json(clip);
+  } catch (err) {
+    next(error);
+  }
+};
 
 export const refetchClip = async (req, res, next) => {
   try {
@@ -180,27 +285,6 @@ export const refetchClip = async (req, res, next) => {
       type: "key",
       key: process.env.YOUTUBE_API_KEY || null,
     });
-
-    // for source vid
-
-    const srcResults = await Youtube.videos.list({
-      maxResults: 1,
-      id: clip.srcVideo.videoId,
-      part: "snippet",
-    });
-    const srcVidItem = srcResults?.data?.items[0];
-    let srcVidParams;
-    if (srcVidItem) {
-      srcVidParams = {
-        ...clip.srcVideo,
-        title: srcVidItem?.snippet?.title,
-        uploader: srcVidItem?.snippet?.channelTitle,
-      };
-    } else {
-      return next(new ErrorResponse("Source not found", 404));
-    }
-
-    // for clip
 
     const results = await Youtube.videos.list({
       maxResults: 1,
@@ -226,7 +310,6 @@ export const refetchClip = async (req, res, next) => {
     clip.uploader = videoParams.uploader;
     clip.duration = videoParams.duration;
     clip.publishedAt = videoParams.publishedAt;
-    clip.srcVideo = srcVidParams;
 
     await clip.save();
     res.status(200).json(clip);

@@ -110,7 +110,7 @@ export const getStream = async (req, res, next) => {
           {
             $match: {
               $expr: {
-                $eq: ["$srcVideo.videoId", "$$videoId"],
+                $in: ["$$videoId", "$srcVideos.videoId"],
               },
             },
           },
@@ -137,7 +137,14 @@ export const editStream = async (req, res, next) => {
 
     const currentStream = await Stream.findById(req.params.id);
 
-    for (const video of relatedVideos) {
+    let rVideos = relatedVideos;
+
+    rVideos = rVideos.filter(
+      (elem, index) =>
+        rVideos.findIndex((obj) => obj.videoId === elem.videoId) === index
+    );
+
+    for (const video of rVideos) {
       const existingVideo = await Stream.findOne({ videoId: video.videoId });
       if (existingVideo) {
         Object.assign(video, {
@@ -146,6 +153,7 @@ export const editStream = async (req, res, next) => {
           title: existingVideo.title,
           uploader: existingVideo.uploader,
           publishedAt: existingVideo.publishedAt,
+          thumbnail: existingVideo.thumbnail,
         });
 
         existingVideo.relatedVideos = existingVideo.relatedVideos
@@ -156,8 +164,15 @@ export const editStream = async (req, res, next) => {
             title: currentStream.title,
             uploader: currentStream.uploader,
             publishedAt: currentStream.publishedAt,
+            thumbnail: currentStream.thumbnail,
           })
           .sort((a, b) => a.publishedAt - b.publishedAt);
+        existingVideo.relatedVideos = existingVideo.relatedVideos.filter(
+          (elem, index) =>
+            existingVideo.relatedVideos.findIndex(
+              (obj) => obj.videoId === elem.videoId
+            ) === index
+        );
 
         await existingVideo.save();
       } else {
@@ -177,7 +192,7 @@ export const editStream = async (req, res, next) => {
 
     const stream = await Stream.findByIdAndUpdate(
       req.params.id,
-      { ...formData, modifiedAt: new Date() },
+      { ...formData, relatedVideos: rVideos },
       {
         new: true,
       }
@@ -192,6 +207,28 @@ export const editStream = async (req, res, next) => {
 
 export const deleteStream = async (req, res, next) => {
   try {
+    const relatedStreams = await Stream.find({
+      "relatedVideos.id": req.params.id,
+    });
+
+    for (const rStream of relatedStreams) {
+      rStream.relatedVideos = rStream.relatedVideos.filter(
+        (rVid) => rVid.id !== req.params.id
+      );
+      await rStream.save();
+    }
+
+    const relatedClips = await Clip.find({
+      "srcVideos.id": req.params.id,
+    });
+
+    for (const rClip of relatedClips) {
+      rClip.srcVideos = rClip.srcVideos.filter(
+        (rVid) => rVid.id !== req.params.id
+      );
+      await rClip.save();
+    }
+
     const stream = await Stream.findByIdAndDelete(req.params.id);
     if (!stream) {
       return next(new ErrorResponse(("stream not found", 404)));

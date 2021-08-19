@@ -31,8 +31,9 @@ export const fetchClip = async (id) => API.get(`/clips/${id}`);
 export const editClip = async (id, formData) =>
   API.patch(`/clips/${id}`, formData);
 export const refetchClip = async (id) => API.patch(`/clips/refetch/${id}`);
-export const addClip = async (videoId, srcVideoId) =>
-  API.post("/clips", { videoId, srcVideoId });
+export const addClip = async (videoId, srcVideoIds) =>
+  API.post("/clips", { videoId, srcVideoIds });
+export const deleteClip = async (id) => API.delete(`/clips/${id}`);
 
 export const fetchTags = async () => API.get("/tags");
 export const createTag = async (tagData) => API.post("/tags", tagData);

@@ -9,6 +9,7 @@ import {
   getMoreClips,
   setClipsFilter,
   addClip,
+  removeClip,
 } from "../../actions/ClipsActions";
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
@@ -87,13 +88,13 @@ const ClipsRoute = () => {
     navigate(`/clips${searchParams ? `?${searchParams}` : ""}`);
   };
 
-  const handleAddClip = (videoId, srcVideoId) => {
-    dispatch(addClip(videoId, srcVideoId, navigate));
+  const handleAddClip = (videoId, srcVideoIds) => {
+    dispatch(addClip(videoId, srcVideoIds, navigate));
   };
 
-  // const handleRemoveStream = (id) => {
-  //   dispatch(removeStream(id));
-  // };
+  const handleRemoveVideo = (id) => {
+    dispatch(removeClip(id));
+  };
 
   tags.sort(
     (a, b) => a.catId - b.catId || a.tagNameEN.localeCompare(b.tagNameEN)
@@ -110,6 +111,7 @@ const ClipsRoute = () => {
       searchFilter={filter}
       onSubmit={handleOnSubmit}
       handleAddVideo={handleAddClip}
+      handleRemoveVideo={handleRemoveVideo}
     />
   );
 };

@@ -10,6 +10,7 @@ import {
   EDIT_CLIP_SUCCESS,
   SUCCESS_NOTIFICATION,
   ADD_CLIP_SUCCESS,
+  DELETE_CLIP_SUCCESS,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
@@ -109,9 +110,9 @@ export const refetchClip = (id) => async (dispatch) => {
     dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
-export const addClip = (videoId, srcVideoId, navigate) => async (dispatch) => {
+export const addClip = (videoId, srcVideoIds, navigate) => async (dispatch) => {
   try {
-    const { data } = await api.addClip(videoId, srcVideoId);
+    const { data } = await api.addClip(videoId, srcVideoIds);
     console.log(data);
     dispatch({ type: ADD_CLIP_SUCCESS, data, navigate });
     dispatch({
@@ -124,5 +125,18 @@ export const addClip = (videoId, srcVideoId, navigate) => async (dispatch) => {
       type: ERROR_NOTIFICATION,
       message: error?.response?.data?.error,
     });
+  }
+};
+
+export const removeClip = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.deleteClip(id);
+    dispatch({ type: DELETE_CLIP_SUCCESS, data });
+    dispatch({
+      type: SUCCESS_NOTIFICATION,
+      message: "successfully delete clip",
+    });
+  } catch (error) {
+    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
