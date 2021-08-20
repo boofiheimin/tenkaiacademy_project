@@ -379,8 +379,7 @@ const Video = ({
                           onRelatedVideoClick(
                             relatedVId,
                             relatedVVideoId,
-                            existing,
-                            VIDEO_TYPE_CLIP
+                            existing
                           )
                         }
                       />
