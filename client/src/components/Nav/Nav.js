@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -173,21 +173,21 @@ const Nav = ({
 };
 
 Nav.propTypes = {
-  open: Proptypes.bool.isRequired,
-  openMobile: Proptypes.bool.isRequired,
-  handleDrawerToggle: Proptypes.func.isRequired,
-  handleDrawerToggleMobile: Proptypes.func.isRequired,
-  onLogout: Proptypes.func.isRequired,
-  isLogin: Proptypes.string.isRequired,
-  username: Proptypes.string,
-  openNoti: Proptypes.bool,
-  notification: Proptypes.shape({
-    type: Proptypes.string,
-    message: Proptypes.string,
+  open: PropTypes.bool.isRequired,
+  openMobile: PropTypes.bool.isRequired,
+  handleDrawerToggle: PropTypes.func.isRequired,
+  handleDrawerToggleMobile: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
+  isLogin: PropTypes.string.isRequired,
+  username: PropTypes.string,
+  openNoti: PropTypes.bool,
+  notification: PropTypes.shape({
+    type: PropTypes.string,
+    message: PropTypes.string,
   }),
-  onNotiClose: Proptypes.func,
-  videoMode: Proptypes.bool,
-  onSiteModeToggle: Proptypes.func,
+  onNotiClose: PropTypes.func,
+  videoMode: PropTypes.bool,
+  onSiteModeToggle: PropTypes.func,
 };
 
 Nav.defaultProps = {

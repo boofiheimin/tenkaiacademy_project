@@ -18,7 +18,9 @@ const StreamContainer = () => {
   const [currentStream, setCurrentStream] = useState({});
   const { id } = useParams();
 
-  const { stream } = useSelector((state) => state.streams);
+  const { stream, streamLoading, notFound } = useSelector(
+    (state) => state.streams
+  );
 
   useEffect(() => {
     dispatch(getStream(id));
@@ -71,6 +73,8 @@ const StreamContainer = () => {
       seekToggle={toggle}
       onRelatedVideoClick={handleRelatedVideoClick}
       type={VIDEO_TYPE_STREAM}
+      loading={streamLoading}
+      notFound={notFound}
     />
   );
 };

@@ -1,4 +1,4 @@
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Button,
@@ -70,9 +70,9 @@ const LoginForm = ({ onFormChange, onFormSubmit, error }) => {
 };
 
 LoginForm.propTypes = {
-  onFormChange: Proptypes.func.isRequired,
-  error: Proptypes.bool,
-  onFormSubmit: Proptypes.func.isRequired,
+  onFormChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  onFormSubmit: PropTypes.func.isRequired,
 };
 
 LoginForm.defaultProps = {

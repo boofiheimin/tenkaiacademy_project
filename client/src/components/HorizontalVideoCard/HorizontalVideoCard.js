@@ -33,12 +33,16 @@ HorizontalVideoCard.propTypes = {
   title: PropTypes.string,
   uploader: PropTypes.string,
   onCardClick: PropTypes.func,
+  videoId: PropTypes.string,
+  thumbnail: PropTypes.string,
 };
 
 HorizontalVideoCard.defaultProps = {
   title: "",
   uploader: "",
   onCardClick: () => {},
+  videoId: "",
+  thumbnail: "",
 };
 
 export default HorizontalVideoCard;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import { Box, Typography, Divider } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -16,8 +16,10 @@ const VideoCards = ({
   fetchMore,
   onRemoveVideo,
   type,
+  loading,
 }) => {
   const [videos, setVideos] = useState([]);
+
   useEffect(() => {
     setVideos(propsVideo);
   }, [propsVideo]);
@@ -25,7 +27,7 @@ const VideoCards = ({
   return (
     <>
       <Box padding={2}>
-        <Typography>{`Total: ${total}`}</Typography>
+        <Typography>{loading ? "loading..." : `Total: ${total}`}</Typography>
         <Divider />
       </Box>
       <div
@@ -48,30 +50,31 @@ const VideoCards = ({
             gridGap="10px"
             justifyContent="center"
           >
-            {videos.map(
-              ({
-                title,
-                thumbnail,
-                tags,
-                publishedAt,
-                duration,
-                _id,
-                uploader,
-              }) => (
-                <VideoCard
-                  type={type}
-                  title={title}
-                  thumbnail={thumbnail}
-                  tags={tags}
-                  publishedAt={publishedAt}
-                  duration={duration}
-                  id={_id}
-                  key={_id}
-                  uploader={uploader}
-                  onRemove={onRemoveVideo}
-                />
-              )
-            )}
+            {!loading &&
+              videos.map(
+                ({
+                  title,
+                  thumbnail,
+                  tags,
+                  publishedAt,
+                  duration,
+                  _id,
+                  uploader,
+                }) => (
+                  <VideoCard
+                    type={type}
+                    title={title}
+                    thumbnail={thumbnail}
+                    tags={tags}
+                    publishedAt={publishedAt}
+                    duration={duration}
+                    id={_id}
+                    key={_id}
+                    uploader={uploader}
+                    onRemove={onRemoveVideo}
+                  />
+                )
+              )}
           </Box>
         </InfiniteScroll>
       </div>
@@ -79,18 +82,20 @@ const VideoCards = ({
   );
 };
 VideoCards.propTypes = {
-  videos: Proptypes.array,
-  total: Proptypes.number,
-  hasMore: Proptypes.bool.isRequired,
-  fetchMore: Proptypes.func.isRequired,
-  onRemoveVideo: Proptypes.func.isRequired,
-  type: Proptypes.string,
+  videos: PropTypes.array,
+  total: PropTypes.number,
+  hasMore: PropTypes.bool.isRequired,
+  fetchMore: PropTypes.func.isRequired,
+  onRemoveVideo: PropTypes.func.isRequired,
+  type: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 VideoCards.defaultProps = {
   videos: [],
   total: 0,
   type: VIDEO_TYPE_STREAM,
+  loading: true,
 };
 
 export default VideoCards;

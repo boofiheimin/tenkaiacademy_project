@@ -7,7 +7,6 @@ import moment from "moment";
 import {
   getClips,
   getMoreClips,
-  setClipsFilter,
   addClip,
   removeClip,
 } from "../../actions/ClipsActions";
@@ -17,12 +16,15 @@ import { setVideoMode } from "../../actions/GlobalActions";
 import Videos from "../../components/Videos/Videos";
 
 import { useQuery } from "../../utils";
+import { VIDEOS_FETCH_LIMIT, VIDEO_TYPE_CLIP } from "../../constants/main";
 
 const ClipsRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [queriedStreams, setStreams] = useState([]);
-  const { offset, hasMore, filter, clips, total } = useSelector(
+  const [filter, setFilter] = useState();
+  const [offset, setOffset] = useState(0);
+  const { hasMore, clips, total, loading } = useSelector(
     (state) => state.clips
   );
   const tags = useSelector((state) => state.tags);
@@ -38,8 +40,9 @@ const ClipsRoute = () => {
       to: query.get("to") ? moment(query.get("to")).toDate() : null,
       sort: query.get("sort") || -1,
     };
-    dispatch(setClipsFilter(newFilter));
-  }, [location.search]);
+    dispatch(getClips(newFilter));
+    setFilter(newFilter);
+  }, [location]);
 
   useEffect(() => {
     dispatch(setVideoMode(false));
@@ -47,15 +50,12 @@ const ClipsRoute = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getClips(filter));
-  }, [filter]);
-
-  useEffect(() => {
     setStreams(clips);
   }, [clips]);
 
   const fetchMore = () => {
-    dispatch(getMoreClips(filter, offset));
+    dispatch(getMoreClips(filter, offset + VIDEOS_FETCH_LIMIT));
+    setOffset(offset + VIDEOS_FETCH_LIMIT);
   };
 
   const handleOnSubmit = ({
@@ -102,7 +102,7 @@ const ClipsRoute = () => {
 
   return (
     <Videos
-      type="clip"
+      type={VIDEO_TYPE_CLIP}
       videos={queriedStreams}
       totalVideos={total}
       tags={tags}
@@ -112,6 +112,7 @@ const ClipsRoute = () => {
       onSubmit={handleOnSubmit}
       handleAddVideo={handleAddClip}
       handleRemoveVideo={handleRemoveVideo}
+      loading={loading}
     />
   );
 };

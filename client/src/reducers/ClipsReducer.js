@@ -7,33 +7,35 @@ import {
   EDIT_CLIP_SUCCESS,
   ADD_CLIP_SUCCESS,
   DELETE_CLIP_SUCCESS,
+  FETCH_CLIP_LOADING,
+  FETCH_CLIPS_LOADING,
+  CLIP_NOTFOUND,
 } from "../constants/actionTypes";
-import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
 const reducer = (
   state = {
     clips: [],
     hasMore: true,
-    offset: 0,
-    filter: {
-      title: "",
-      tags: [],
-      uploader: "",
-      from: null,
-      to: null,
-      sort: -1,
-    },
+    loading: false,
+    notFound: false,
+    clipLoading: false,
   },
   action
 ) => {
   switch (action.type) {
+    case FETCH_CLIPS_LOADING:
+      return {
+        ...state,
+        clips: [],
+        loading: true,
+      };
     case FETCH_CLIPS_SUCCESS:
       return {
         ...state,
         clips: action?.data,
         total: action?.total,
         hasMore: false,
-        offset: 0,
+        loading: false,
       };
     case FETCH_CLIPS_HASMORE:
       return {
@@ -41,7 +43,7 @@ const reducer = (
         clips: action?.data,
         total: action?.total,
         hasMore: true,
-        offset: VIDEOS_FETCH_LIMIT,
+        loading: false,
       };
     case FETCH_CLIPS_HASMORE_SUCCESS:
       return {
@@ -49,7 +51,6 @@ const reducer = (
         total: action?.total,
         clips: state.clips.concat(action?.data),
         hasMore: true,
-        offset: VIDEOS_FETCH_LIMIT + state.offset,
       };
     case FETCH_CLIPS_HASMORE_DONE:
       return {
@@ -57,10 +58,20 @@ const reducer = (
         total: action?.total,
         clips: state.clips.concat(action?.data),
         hasMore: false,
-        offset: 0,
+      };
+    case FETCH_CLIP_LOADING:
+      return {
+        ...state,
+        clipLoading: true,
+      };
+    case CLIP_NOTFOUND:
+      return {
+        ...state,
+        notFound: true,
+        clipLoading: false,
       };
     case FETCH_CLIP_SUCCESS:
-      return { ...state, clip: action?.data };
+      return { ...state, clip: action?.data, clipLoading: false };
     case EDIT_CLIP_SUCCESS:
       return { ...state, clip: { ...state.clip, ...action.data } };
     case ADD_CLIP_SUCCESS:

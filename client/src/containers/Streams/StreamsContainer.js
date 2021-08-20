@@ -8,7 +8,6 @@ import {
   getStreams,
   getMoreStreams,
   refetchAll,
-  setStreamsFilter,
   addStream,
   removeStream,
 } from "../../actions/StreamsActions";
@@ -26,7 +25,7 @@ const StreamsRoute = () => {
   const [queriedStreams, setStreams] = useState([]);
   const [filter, setFilter] = useState();
   const [offset, setOffset] = useState(0);
-  const { hasMore, refetching, streams, total } = useSelector(
+  const { hasMore, refetching, streams, total, loading } = useSelector(
     (state) => state.streams
   );
   const tags = useSelector((state) => state.tags);
@@ -42,7 +41,6 @@ const StreamsRoute = () => {
       to: query.get("to") ? moment(query.get("to")).toDate() : null,
       sort: query.get("sort") || -1,
     };
-    // dispatch(setStreamsFilter(newFilter));
     dispatch(getStreams(newFilter));
     setFilter(newFilter);
   }, [location]);
@@ -121,6 +119,7 @@ const StreamsRoute = () => {
       onSubmit={handleOnSubmit}
       handleAddVideo={handleAddStream}
       handleRemoveVideo={handleRemoveStream}
+      loading={loading}
     />
   );
 };

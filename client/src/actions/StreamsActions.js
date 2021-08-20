@@ -1,5 +1,6 @@
 import * as api from "../api";
 import {
+  FETCH_STREAMS_LOADING,
   FETCH_STREAMS_SUCCESS,
   FETCH_STREAMS_HASMORE,
   FETCH_STREAMS_HASMORE_SUCCESS,
@@ -10,15 +11,17 @@ import {
   SUCCESS_NOTIFICATION,
   ERROR_NOTIFICATION,
   REFETCH_ALL_STREAM_SUCCESS,
-  SET_STREAMS_FITLER,
   ADD_STREAM_SUCCESS,
   DELETE_STREAM_SUCCESS,
+  FETCH_STREAM_LOADING,
+  STREAM_NOTFOUND,
 } from "../constants/actionTypes";
 import { VIDEOS_FETCH_LIMIT } from "../constants/main";
 
 // Action Creators
 export const getStreams = (query) => async (dispatch) => {
   try {
+    dispatch({ type: FETCH_STREAMS_LOADING });
     const { data } = await api.fetchStreams({
       query,
       limit: VIDEOS_FETCH_LIMIT,
@@ -65,10 +68,11 @@ export const getMoreStreams = (query, offset) => async (dispatch) => {
 
 export const getStream = (id) => async (dispatch) => {
   try {
+    dispatch({ type: FETCH_STREAM_LOADING });
     const { data } = await api.fetchStream(id);
     dispatch({ type: FETCH_STREAM_SUCCESS, data });
   } catch (error) {
-    dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
+    dispatch({ type: STREAM_NOTFOUND });
   }
 };
 
@@ -89,7 +93,7 @@ export const refetchAll = () => async (dispatch) => {
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
     dispatch({ type: SUCCESS_NOTIFICATION, message: data.message });
     const { data: rData } = await api.fetchStreams({
-      query: {},
+      query: { sort: -1 },
       limit: VIDEOS_FETCH_LIMIT,
     });
 
@@ -103,27 +107,6 @@ export const refetchAll = () => async (dispatch) => {
   } catch (error) {
     dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
     dispatch({ type: REFETCH_ALL_STREAM_SUCCESS });
-  }
-};
-
-export const setStreamsFilter = (filter) => async (dispatch) => {
-  dispatch({ type: SET_STREAMS_FITLER, data: filter });
-  try {
-    const { data } = await api.fetchStreams({
-      query: filter,
-      limit: VIDEOS_FETCH_LIMIT,
-    });
-
-    const { docs, totalDocs } = data;
-
-    if (docs.length < VIDEOS_FETCH_LIMIT) {
-      dispatch({ type: FETCH_STREAMS_SUCCESS, data: docs, total: totalDocs });
-    } else {
-      dispatch({ type: FETCH_STREAMS_HASMORE, data: docs, total: totalDocs });
-    }
-  } catch (error) {
-    console.log(error.message);
-    dispatch({ type: ERROR_NOTIFICATION, message: error.message });
   }
 };
 

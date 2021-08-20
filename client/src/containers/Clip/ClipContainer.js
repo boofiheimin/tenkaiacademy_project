@@ -6,7 +6,7 @@ import { getClip } from "../../actions/ClipsActions";
 
 import Video from "../../components/Video/Video";
 
-import { VIDEO_TYPE_STREAM } from "../../constants/main";
+import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
 
 const ClipContainer = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const ClipContainer = () => {
   const [currentClip, setCurrentClip] = useState({});
   const { id } = useParams();
 
-  const { clip } = useSelector((state) => state.clips);
+  const { clip, clipLoading, notFound } = useSelector((state) => state.clips);
 
   useEffect(() => {
     dispatch(getClip(id));
@@ -69,7 +69,9 @@ const ClipContainer = () => {
       onVideoSeek={handleVideoSeek}
       videoPos={videoPos}
       onRelatedVideoClick={handleRelatedVideoClick}
-      type="clip"
+      type={VIDEO_TYPE_CLIP}
+      loading={clipLoading}
+      notFound={notFound}
     />
   );
 };

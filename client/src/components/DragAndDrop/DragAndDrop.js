@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import Draggable from "./Draggable/Draggable";
@@ -80,15 +80,15 @@ const DragAndDrop = ({
 };
 
 DragAndDrop.propTypes = {
-  items: Proptypes.array,
-  onRemoveItem: Proptypes.func,
-  addItemLabel: Proptypes.string,
-  addItemValue: Proptypes.string,
-  onAddItem: Proptypes.func,
-  onChangeItem: Proptypes.func,
-  onReorderItem: Proptypes.func,
-  lists: Proptypes.array,
-  placeholder: Proptypes.string,
+  items: PropTypes.array,
+  onRemoveItem: PropTypes.func,
+  addItemLabel: PropTypes.string,
+  addItemValue: PropTypes.string,
+  onAddItem: PropTypes.func,
+  onChangeItem: PropTypes.func,
+  onReorderItem: PropTypes.func,
+  lists: PropTypes.array,
+  placeholder: PropTypes.string,
 };
 
 DragAndDrop.defaultProps = {

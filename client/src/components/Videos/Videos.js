@@ -32,6 +32,7 @@ const Videos = ({
   searchFilter,
   handleAddVideo,
   handleRemoveVideo,
+  loading,
   ...props
 }) => {
   const classes = useStyles();
@@ -92,6 +93,7 @@ const Videos = ({
         total={totalVideos}
         onRemoveVideo={handleRemoveVideo}
         type={type}
+        loading={loading}
         {...props}
       />
       {/* refetch dialog */}
@@ -188,6 +190,8 @@ Videos.propTypes = {
   }),
   handleAddVideo: PropTypes.func,
   handleRemoveVideo: PropTypes.func,
+  type: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 Videos.defaultProps = {
@@ -207,6 +211,8 @@ Videos.defaultProps = {
   },
   handleAddVideo: () => {},
   handleRemoveVideo: () => {},
+  type: VIDEO_TYPE_STREAM,
+  loading: true,
 };
 
 export default Videos;

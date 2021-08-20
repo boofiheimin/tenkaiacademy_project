@@ -1,6 +1,6 @@
 import { useMemo, forwardRef } from "react";
 import { useLocation, Link } from "react-router-dom";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import {
   List,
   ListItem,
@@ -36,10 +36,10 @@ const ListItemLink = ({ disabled = false, icon, primary, to }) => {
 };
 
 ListItemLink.propTypes = {
-  disabled: Proptypes.bool,
-  icon: Proptypes.element,
-  primary: Proptypes.string,
-  to: Proptypes.string,
+  disabled: PropTypes.bool,
+  icon: PropTypes.element,
+  primary: PropTypes.string,
+  to: PropTypes.string,
 };
 
 ListItemLink.defaultProps = {

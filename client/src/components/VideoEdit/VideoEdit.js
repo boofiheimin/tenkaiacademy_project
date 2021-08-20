@@ -24,7 +24,7 @@ import ImportTimestampModal from "./ImportTimestampModal/ImportTimestampModal";
 
 import useStyles from "./styles";
 
-import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
+import { VIDEO_TYPE_STREAM } from "../../constants/main";
 
 const VideoEdit = ({
   type,
@@ -373,6 +373,9 @@ VideoEdit.propTypes = {
   onImportTimestamp: PropTypes.func,
   onClearTimestamp: PropTypes.func,
   type: PropTypes.string,
+  onAddSrc: PropTypes.func,
+  onReorderSrc: PropTypes.func,
+  onRemoveSrc: PropTypes.func,
 };
 
 VideoEdit.defaultProps = {
@@ -401,6 +404,9 @@ VideoEdit.defaultProps = {
   onImportTimestamp: () => {},
   onClearTimestamp: () => {},
   type: VIDEO_TYPE_STREAM,
+  onAddSrc: () => {},
+  onReorderSrc: () => {},
+  onRemoveSrc: () => {},
 };
 
 export default VideoEdit;

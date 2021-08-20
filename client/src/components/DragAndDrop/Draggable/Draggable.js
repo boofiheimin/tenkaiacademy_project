@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import { Typography, IconButton } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -57,13 +57,13 @@ const CustomDraggable = ({ item: { id, text, img }, index, onRemove }) => {
 };
 
 CustomDraggable.propTypes = {
-  item: Proptypes.shape({
-    id: Proptypes.string.isRequired,
-    text: Proptypes.string.isRequired,
-    img: Proptypes.string,
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    img: PropTypes.string,
   }),
-  index: Proptypes.number.isRequired,
-  onRemove: Proptypes.func,
+  index: PropTypes.number.isRequired,
+  onRemove: PropTypes.func,
 };
 
 CustomDraggable.defaultProps = {

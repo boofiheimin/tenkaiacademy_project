@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import {
@@ -32,6 +32,8 @@ import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
 import TypeChip from "../TypeChip/TypeChip";
 
 import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
+import Loading from "../Loading/Loading";
+import NotFound from "../NotFound/NotFound";
 
 const Video = ({
   video = {},
@@ -40,6 +42,8 @@ const Video = ({
   onVideoSeek,
   onRelatedVideoClick,
   type,
+  loading,
+  notFound,
 }) => {
   const classes = useStyles();
   const [descDialog, setDescDialog] = useState(false);
@@ -74,6 +78,12 @@ const Video = ({
 
   const matches = matchPhoneSize && matchOrientation;
 
+  if (loading) {
+    return <Loading />;
+  }
+  if (notFound) {
+    return <NotFound />;
+  }
   return (
     <Container className={classes.root} maxWidth="xl">
       <Grid container spacing={matchPhoneSize ? 0 : 2}>
@@ -432,12 +442,14 @@ const Video = ({
 };
 
 Video.propTypes = {
-  video: Proptypes.object,
-  videoPos: Proptypes.number,
-  onVideoSeek: Proptypes.func,
-  onRelatedVideoClick: Proptypes.func,
-  type: Proptypes.string,
-  seekToggle: Proptypes.bool,
+  video: PropTypes.object,
+  videoPos: PropTypes.number,
+  onVideoSeek: PropTypes.func,
+  onRelatedVideoClick: PropTypes.func,
+  type: PropTypes.string,
+  seekToggle: PropTypes.bool,
+  loading: PropTypes.bool,
+  notFound: PropTypes.bool,
 };
 
 Video.defaultProps = {
@@ -447,6 +459,8 @@ Video.defaultProps = {
   onRelatedVideoClick: () => {},
   type: VIDEO_TYPE_STREAM,
   seekToggle: false,
+  loading: true,
+  notFound: true,
 };
 
 export default Video;
