@@ -153,7 +153,7 @@ const ClipEditContainer = () => {
     let newOptions = [...tagOptions];
 
     const deletedTag = tags.find((tag) => tag._id === id);
-    if (deletedTag.catId === 0) {
+    if (deletedTag.catId === "0") {
       const childTags = formData.tags.filter(
         (tag) => tag.catId === deletedTag.tagId
       );
