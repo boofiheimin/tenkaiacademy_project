@@ -72,10 +72,15 @@ const Videos = ({
   };
 
   const onAddVideo = () => {
-    const { tagId, tagNameEN, tagNameJP } = tags.find(
-      (tag) => tag.tagId === lang
-    );
-    handleAddVideo(videoId, srcVideoIds, { tagId, tagNameEN, tagNameJP });
+    let langTag;
+    if (type === VIDEO_TYPE_CLIP) {
+      const { tagId, tagNameEN, tagNameJP } = tags.find(
+        (tag) => tag.tagId === lang
+      );
+      langTag = { tagId, tagNameEN, tagNameJP };
+    }
+
+    handleAddVideo(videoId, srcVideoIds, langTag);
   };
 
   return (
