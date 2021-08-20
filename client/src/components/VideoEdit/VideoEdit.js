@@ -26,6 +26,8 @@ import useStyles from "./styles";
 
 import { VIDEO_TYPE_STREAM } from "../../constants/main";
 
+import { tagSortHelper } from "../../helper";
+
 const VideoEdit = ({
   type,
   goBack,
@@ -78,6 +80,7 @@ const VideoEdit = ({
   const classes = useStyles();
 
   const disableVideoInfo = source !== "manual";
+  tagSortHelper(propTags);
 
   return (
     <Container>

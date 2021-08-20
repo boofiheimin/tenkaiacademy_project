@@ -230,9 +230,17 @@ export const editClip = async (req, res, next) => {
 
         await existingVideo.save();
       } else {
-        return next(
-          new ErrorResponse(`Related Clip ${video.videoId} not found`, 404)
-        );
+        const results = await Youtube.videos.list({
+          maxResults: 1,
+          id: video.videoId,
+          part: "snippet",
+        });
+        const resultVideo = results?.data?.items[0];
+        Object.assign(video, {
+          existing: false,
+          uploader: resultVideo?.snippet?.channelTitle,
+          title: resultVideo?.snippet?.title,
+        });
       }
     }
 

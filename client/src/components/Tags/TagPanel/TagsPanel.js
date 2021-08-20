@@ -85,9 +85,7 @@ const Tags = ({ tags: propTags, onTagSave, onRemoveTag, onAddTag, isClip }) => {
   let filtered = tags;
 
   if (filterCat !== "") {
-    filtered = filtered.filter(
-      (item) => item.catId === parseInt(filterCat, 10)
-    );
+    filtered = filtered.filter((item) => item.catId === filterCat);
   }
 
   if (filterEN !== "") {

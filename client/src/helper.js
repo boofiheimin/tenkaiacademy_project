@@ -1,6 +1,8 @@
 export const tagSortHelper = (tags) =>
   tags.sort(
-    (a, b) => a.catId.localeCompare(b.catId) || a.tagId.localeCompare(b.tagId)
+    (a, b) =>
+      parseInt(a.catId, 10) - parseInt(b.catId, 10) ||
+      parseInt(a.tagId, 10) - parseInt(b.tagId, 10)
   );
 
 export const hhmmssRegEx =
