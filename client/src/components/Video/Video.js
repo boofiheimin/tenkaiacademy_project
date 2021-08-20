@@ -103,7 +103,7 @@ const Video = ({
             <Paper>
               <div className={classes.sectionHeader}>
                 <Typography variant="h6">
-                  {type === VIDEO_TYPE_STREAM ? "Timestamp" : "Source"}
+                  {type === VIDEO_TYPE_STREAM ? "Timestamp" : "Sources"}
                 </Typography>
               </div>
             </Paper>
@@ -198,7 +198,7 @@ const Video = ({
             </div>
             <Hidden lgUp>
               <Box display="flex" paddingLeft={2} paddingBottom={2}>
-                {!matches && (
+                {type === VIDEO_TYPE_STREAM && !matches && (
                   <Button
                     className={classes.mobBtn}
                     variant="outlined"
@@ -351,6 +351,46 @@ const Video = ({
             </Grid>
           )}
         </Grid>
+        {type === VIDEO_TYPE_CLIP && !matches && (
+          <Hidden lgUp>
+            <Grid item xs={12} lg={3}>
+              <Box>
+                <Paper>
+                  <div className={classes.sectionHeader}>
+                    <Typography variant="h6">Sources</Typography>
+                  </div>
+                </Paper>
+                <Box padding={2}>
+                  {srcVideos.map(
+                    ({
+                      id: relatedVId,
+                      title: relatedVTitle,
+                      videoId: relatedVVideoId,
+                      thumbnail: relatedVThumbnail,
+                      uploader: relatedVUploader,
+                      existing,
+                    }) => (
+                      <HorizontalVideoCard
+                        title={relatedVTitle}
+                        videoId={relatedVVideoId}
+                        thumbnail={relatedVThumbnail}
+                        uploader={relatedVUploader}
+                        onCardClick={() =>
+                          onRelatedVideoClick(
+                            relatedVId,
+                            relatedVVideoId,
+                            existing,
+                            VIDEO_TYPE_CLIP
+                          )
+                        }
+                      />
+                    )
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+          </Hidden>
+        )}
         <Grid item xs={12} lg={3}>
           <Box>
             <Paper>
