@@ -110,6 +110,9 @@ const useStyles = makeStyles((theme) => ({
     "& > :not(:last-child)": {
       marginRight: theme.spacing(1),
     },
+    "& > *": {
+      marginBottom: theme.spacing(1),
+    },
   },
   thumbnail: {
     width: "100%",

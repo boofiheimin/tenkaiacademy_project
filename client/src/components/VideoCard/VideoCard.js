@@ -108,7 +108,7 @@ const VideoCard = ({
           <Chip className={classes.invisiblechip} />
         )}
         {tags.slice(0, 2).map(({ tagNameEN }) => (
-          <TypeChip label={tagNameEN} key={Date.now() + Math.random()} />
+          <TypeChip label={tagNameEN} key={Date.now() + Math.random()} isCard />
         ))}
       </CardActions>
       <Divider />

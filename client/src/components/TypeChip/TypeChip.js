@@ -32,16 +32,18 @@ const typeReducer = (type) => {
   }
 };
 
-const TypeChip = ({ label, ...props }) => {
-  const classes = useStyles({ bgColor: typeReducer(label) });
+const TypeChip = ({ label, isCard, ...props }) => {
+  const classes = useStyles({ bgColor: typeReducer(label), isCard });
   return <Chip label={label} {...props} className={classes.root} />;
 };
 
 TypeChip.propTypes = {
   label: PropTypes.string,
+  isCard: PropTypes.bool,
 };
 TypeChip.defaultProps = {
   label: "",
+  isCard: false,
 };
 
 export default TypeChip;
