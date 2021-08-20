@@ -23,7 +23,7 @@ const ClipEditContainer = () => {
 
   useEffect(() => {
     dispatch(getClip(clipId));
-    dispatch(getTags());
+    dispatch(getTags(true));
   }, [clipId]);
 
   const formDataInit = useCallback(() => {

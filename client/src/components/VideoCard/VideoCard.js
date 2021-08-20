@@ -10,6 +10,7 @@ import {
   CardActions,
   Chip,
   Box,
+  Divider,
   Button,
 } from "@material-ui/core";
 import HistoryIcon from "@material-ui/icons/History";
@@ -109,25 +110,34 @@ const VideoCard = ({
         {tags.slice(0, 2).map(({ tagNameEN }) => (
           <TypeChip label={tagNameEN} key={Date.now() + Math.random()} />
         ))}
-        {localStorage.getItem("authToken") && (
-          <>
-            <Button
-              className={classes.mobBtn}
-              variant="outlined"
-              color="secondary"
-              onClick={handleRemoveClick}
-            >
-              Delete
-            </Button>
-            <ConfirmationPopper
-              popperId={id}
-              onPopperConfirm={handlePopperConfirm}
-              onPopperCancel={handlePopperCancel}
-              anchorEl={anchorEl}
-            />
-          </>
-        )}
       </CardActions>
+      <Divider />
+
+      {localStorage.getItem("authToken") && (
+        <CardActions className={classes.cardActions}>
+          <Button
+            className={classes.actionbtn}
+            variant="outlined"
+            href={`/${type}s/${id}/edit`}
+          >
+            Edit
+          </Button>
+          <Button
+            className={classes.actionbtn}
+            variant="outlined"
+            color="secondary"
+            onClick={handleRemoveClick}
+          >
+            Delete
+          </Button>
+          <ConfirmationPopper
+            popperId={id}
+            onPopperConfirm={handlePopperConfirm}
+            onPopperCancel={handlePopperCancel}
+            anchorEl={anchorEl}
+          />
+        </CardActions>
+      )}
     </Card>
   );
 };

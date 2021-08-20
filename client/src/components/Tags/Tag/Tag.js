@@ -118,10 +118,10 @@ const Tag = ({ tag, onSave, onRemove }) => {
 Tag.propTypes = {
   tag: PropTypes.shape({
     _id: PropTypes.string,
-    tagId: PropTypes.number,
+    tagId: PropTypes.string,
     tagNameEN: PropTypes.string,
     tagNameJP: PropTypes.string,
-    catId: PropTypes.number,
+    catId: PropTypes.string,
   }),
   onSave: PropTypes.func,
   onRemove: PropTypes.func,

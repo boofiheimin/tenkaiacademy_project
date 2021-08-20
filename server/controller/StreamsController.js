@@ -90,6 +90,51 @@ export const createStream = async (req, res, next) => {
 
     const newStream = new Stream(videoParams);
     await newStream.save();
+
+    const relatedStreams = await Stream.find({
+      "relatedVideos.videoId": videoId,
+    });
+
+    for (const rStream of relatedStreams) {
+      rStream.relatedVideos = rStream.relatedVideos.map((rVid) => {
+        if (rVid.videoId === videoId) {
+          return {
+            existing: true,
+            id: newStream.id.toString(),
+            title: newStream.title,
+            uploader: newStream.uploader,
+            publishedAt: newStream.publishedAt,
+            thumbnail: newStream.thumbnail,
+            videoId,
+          };
+        }
+        return rVid;
+      });
+      await rStream.save();
+    }
+
+    const relatedClips = await Clip.find({
+      "srcVideos.videoId": videoId,
+    });
+
+    for (const rClip of relatedClips) {
+      rClip.srcVideos = rClip.srcVideos.map((rVid) => {
+        if (rVid.videoId === videoId) {
+          return {
+            existing: true,
+            id: newStream.id.toString(),
+            title: newStream.title,
+            uploader: newStream.uploader,
+            publishedAt: newStream.publishedAt,
+            thumbnail: newStream.thumbnail,
+            videoId,
+          };
+        }
+        return rVid;
+      });
+      await rClip.save();
+    }
+
     res.status(200).json(newStream);
   } catch (error) {
     next(error);
@@ -118,6 +163,10 @@ export const getStream = async (req, res, next) => {
         ],
         as: "clips",
       });
+
+    if (!stream) {
+      return next(new ErrorResponse(("Stream not found", 404)));
+    }
     res.status(200).json(stream);
   } catch (err) {
     next(err);
@@ -231,7 +280,7 @@ export const deleteStream = async (req, res, next) => {
 
     const stream = await Stream.findByIdAndDelete(req.params.id);
     if (!stream) {
-      return next(new ErrorResponse(("stream not found", 404)));
+      return next(new ErrorResponse(("Stream not found", 404)));
     }
     res.status(200).json(stream);
   } catch (err) {

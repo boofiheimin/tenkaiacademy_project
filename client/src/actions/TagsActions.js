@@ -6,9 +6,9 @@ import {
   DELETE_TAG_SUCCESS,
 } from "../constants/actionTypes";
 
-export const getTags = () => async (dispatch) => {
+export const getTags = (clip) => async (dispatch) => {
   try {
-    const { data } = await api.fetchTags();
+    const { data } = await api.fetchTags(clip);
     dispatch({ type: FETCH_TAGS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);

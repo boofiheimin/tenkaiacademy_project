@@ -31,11 +31,11 @@ export const fetchClip = async (id) => API.get(`/clips/${id}`);
 export const editClip = async (id, formData) =>
   API.patch(`/clips/${id}`, formData);
 export const refetchClip = async (id) => API.patch(`/clips/refetch/${id}`);
-export const addClip = async (videoId, srcVideoIds) =>
-  API.post("/clips", { videoId, srcVideoIds });
+export const addClip = async (videoId, srcVideoIds, tag) =>
+  API.post("/clips", { videoId, srcVideoIds, tag });
 export const deleteClip = async (id) => API.delete(`/clips/${id}`);
 
-export const fetchTags = async () => API.get("/tags");
+export const fetchTags = async (clip) => API.get("/tags", { params: { clip } });
 export const createTag = async (tagData) => API.post("/tags", tagData);
 export const editTag = async (id, tagData) => API.patch(`/tags/${id}`, tagData);
 export const deleteTag = async (id) => API.delete(`/tags/${id}`);

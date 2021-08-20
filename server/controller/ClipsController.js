@@ -50,12 +50,16 @@ export const createClip = async (req, res, next) => {
       key: process.env.YOUTUBE_API_KEY || null,
     });
 
-    const { videoId, srcVideoIds } = req.body;
+    const { videoId, srcVideoIds, tag } = req.body;
 
     if (!srcVideoIds) {
       return next(
         new ErrorResponse(`Please provide at least 1 source videoId`, 400)
       );
+    }
+
+    if (!tag) {
+      return next(new ErrorResponse(`Please provide language tag`, 400));
     }
 
     const splitVideoIds = [...new Set(srcVideoIds.split(","))];
@@ -113,7 +117,7 @@ export const createClip = async (req, res, next) => {
         uploader: video?.snippet?.channelTitle,
         duration: moment.duration(video?.contentDetails?.duration).asSeconds(),
         publishedAt: new Date(video?.snippet?.publishedAt),
-        tags: streamsTags,
+        tags: [...streamsTags, tag],
       };
     } else {
       return next(new ErrorResponse(`${videoId} not found`, 404));
@@ -131,6 +135,9 @@ export const getClip = async (req, res, next) => {
   const { id } = req.params;
   try {
     const clip = await Clip.findById(id);
+    if (!clip) {
+      return next(new ErrorResponse(("Clip not found", 404)));
+    }
     res.status(200).json(clip);
   } catch (err) {
     next(err);
@@ -150,8 +157,6 @@ export const editClip = async (req, res, next) => {
 
     const currentClip = await Clip.findById(req.params.id);
 
-    let streamsTags = tags;
-
     let sVideos = srcVideos;
 
     sVideos = sVideos.filter(
@@ -170,7 +175,6 @@ export const editClip = async (req, res, next) => {
           publishedAt: existingSrc.publishedAt,
           thumbnail: existingSrc.thumbnail,
         });
-        streamsTags = [...streamsTags, ...existingSrc.tags];
       } else {
         const results = await Youtube.videos.list({
           maxResults: 1,
@@ -185,11 +189,6 @@ export const editClip = async (req, res, next) => {
         });
       }
     }
-
-    streamsTags = streamsTags.filter(
-      (elem, index) =>
-        streamsTags.findIndex((obj) => obj.tagId === elem.tagId) === index
-    );
 
     let rVideos = relatedVideos;
     rVideos = rVideos.filter(
@@ -238,7 +237,6 @@ export const editClip = async (req, res, next) => {
       req.params.id,
       {
         ...formData,
-        tags: streamsTags,
         srcVideos: sVideos,
         relatedVideos: rVideos,
       },

@@ -1,5 +1,7 @@
 export const tagSortHelper = (tags) =>
-  tags.sort((a, b) => a.catId - b.catId || a.tagId - b.tagId);
+  tags.sort(
+    (a, b) => a.catId.localeCompare(b.catId) || a.tagId.localeCompare(b.tagId)
+  );
 
 export const hhmmssRegEx =
   /^(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)$/g;

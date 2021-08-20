@@ -351,8 +351,8 @@ VideoEdit.propTypes = {
       id: PropTypes.string,
       text: PropTypes.string,
       tagNameJP: PropTypes.string,
-      tagId: PropTypes.number,
-      catId: PropTypes.number,
+      tagId: PropTypes.string,
+      catId: PropTypes.string,
     })
   ),
   onAddTag: PropTypes.func,

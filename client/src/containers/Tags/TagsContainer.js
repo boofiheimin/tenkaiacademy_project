@@ -15,7 +15,7 @@ const TagsContainer = () => {
   const tags = useSelector((state) => state.tags);
 
   useEffect(() => {
-    dispatch(getTags());
+    dispatch(getTags(true));
   }, [dispatch]);
 
   const onAddTag = (tag) => {

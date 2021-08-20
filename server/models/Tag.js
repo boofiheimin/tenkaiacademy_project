@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const tagSchema = mongoose.Schema(
   {
     tagId: {
-      type: Number,
+      type: String,
       unique: true,
-      equired: [true, "Please provide a tagId"],
+      required: [true, "Please provide a tagId"],
     },
     tagNameEN: {
       type: String,
@@ -16,8 +16,12 @@ const tagSchema = mongoose.Schema(
       type: String,
     },
     catId: {
-      type: Number,
+      type: String,
       required: [true, "Please provide a catId"],
+    },
+    isClip: {
+      type: Boolean,
+      default: false,
     },
   },
   {

@@ -93,22 +93,23 @@ export const refetchClip = (id) => async (dispatch) => {
     dispatch({ type: ERROR_NOTIFICATION, message: error.response.data.error });
   }
 };
-export const addClip = (videoId, srcVideoIds, navigate) => async (dispatch) => {
-  try {
-    const { data } = await api.addClip(videoId, srcVideoIds);
-    dispatch({ type: ADD_CLIP_SUCCESS, data, navigate });
-    dispatch({
-      type: SUCCESS_NOTIFICATION,
-      message: "successfully add clip",
-    });
-    navigate(`/clips/${data._id}/edit`);
-  } catch (error) {
-    dispatch({
-      type: ERROR_NOTIFICATION,
-      message: error?.response?.data?.error,
-    });
-  }
-};
+export const addClip =
+  (videoId, srcVideoIds, tag, navigate) => async (dispatch) => {
+    try {
+      const { data } = await api.addClip(videoId, srcVideoIds, tag);
+      dispatch({ type: ADD_CLIP_SUCCESS, data, navigate });
+      dispatch({
+        type: SUCCESS_NOTIFICATION,
+        message: "successfully add clip",
+      });
+      navigate(`/clips/${data._id}/edit`);
+    } catch (error) {
+      dispatch({
+        type: ERROR_NOTIFICATION,
+        message: error?.response?.data?.error,
+      });
+    }
+  };
 
 export const removeClip = (id) => async (dispatch) => {
   try {

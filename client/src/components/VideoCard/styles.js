@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     color: "darkgray",
   },
+  actionbtn: {
+    width: 80,
+  },
 }));
 
 export default useStyles;

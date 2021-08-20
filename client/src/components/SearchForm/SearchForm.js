@@ -36,9 +36,8 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
   useEffect(() => {
     if (options.length > 0) {
       const mappedTag = searchFilter.tags.map((tagId) =>
-        options.find((tag) => tag.tagId === tagId)
+        options.find((tag) => tag.tagId === `${tagId}`)
       );
-
       setFormData({ ...searchFilter, tags: mappedTag });
     }
   }, [searchFilter, options]);

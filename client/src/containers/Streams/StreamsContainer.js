@@ -74,7 +74,7 @@ const StreamsRoute = () => {
     let searchArray = [];
     if (title) searchArray = searchArray.concat(`title=${title}`);
     if (submittedTags.length > 0) {
-      const tagsId = submittedTags.map((tag) => tag.tagId);
+      const tagsId = submittedTags.map((tag) => `"${tag.tagId}"`);
       searchArray = searchArray.concat(`tags=[${tagsId.toString()}]`);
     }
     if (uploader) searchArray = searchArray.concat(`uploader=${uploader}`);
@@ -102,7 +102,8 @@ const StreamsRoute = () => {
   };
 
   tags.sort(
-    (a, b) => a.catId - b.catId || a.tagNameEN.localeCompare(b.tagNameEN)
+    (a, b) =>
+      a.catId.localeCompare(b.catId) || a.tagNameEN.localeCompare(b.tagNameEN)
   );
 
   return (

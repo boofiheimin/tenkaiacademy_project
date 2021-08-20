@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PropTypes } from "prop-types";
 import clsx from "clsx";
 import {
@@ -11,6 +11,8 @@ import {
   CircularProgress,
   TextField,
   DialogActions,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +22,7 @@ import SearchForm from "../SearchForm/SearchForm";
 import useStyles from "./styles";
 
 import { VIDEO_TYPE_CLIP, VIDEO_TYPE_STREAM } from "../../constants/main";
+import { tagSortHelper } from "../../helper";
 
 const Videos = ({
   type,
@@ -39,6 +42,15 @@ const Videos = ({
   const [videoId, setVideoId] = useState("");
   const [srcVideoIds, setSrcVideoId] = useState("");
   const [addVideoOpen, setAddVideoOpen] = useState(false);
+  const [lang, setLang] = useState(null);
+
+  useEffect(() => {
+    if (type === VIDEO_TYPE_CLIP && tags.length > 0) {
+      setLang(
+        tagSortHelper(tags).filter((tag) => tag.catId === "C0")[0]?.tagId
+      );
+    }
+  }, [tags]);
 
   const onVideoIdChange = (e) => {
     setVideoId(e.target.value);
@@ -46,6 +58,9 @@ const Videos = ({
 
   const onSrcVideoIdChange = (e) => {
     setSrcVideoId(e.target.value);
+  };
+  const onLangChange = (e) => {
+    setLang(e.target.value);
   };
 
   const handleOpenAddVideo = () => {
@@ -57,7 +72,10 @@ const Videos = ({
   };
 
   const onAddVideo = () => {
-    handleAddVideo(videoId, srcVideoIds);
+    const { tagId, tagNameEN, tagNameJP } = tags.find(
+      (tag) => tag.tagId === lang
+    );
+    handleAddVideo(videoId, srcVideoIds, { tagId, tagNameEN, tagNameJP });
   };
 
   return (
@@ -130,6 +148,23 @@ const Videos = ({
                 onChange={onSrcVideoIdChange}
               />
               <Typography> separated by comma eg. 12345,23456</Typography>
+              <Box display="flex" alignItems="center">
+                <Typography>Language:</Typography>
+                <Select
+                  value={lang}
+                  onChange={onLangChange}
+                  variant="outlined"
+                  className={classes.moreField}
+                >
+                  {tags
+                    .filter((tag) => tag.catId === "C0")
+                    .map((tag) => (
+                      <MenuItem value={tag.tagId} key={tag.id}>
+                        {tag.tagNameEN}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </Box>
             </>
           )}
         </DialogContent>
