@@ -136,7 +136,7 @@ export const getClip = async (req, res, next) => {
   try {
     const clip = await Clip.findById(id);
     if (!clip) {
-      return next(new ErrorResponse(("Clip not found", 404)));
+      return next(new ErrorResponse("Clip not found", 404));
     }
     res.status(200).json(clip);
   } catch (err) {
@@ -156,6 +156,9 @@ export const editClip = async (req, res, next) => {
     });
 
     const currentClip = await Clip.findById(req.params.id);
+    if (!currentClip) {
+      return next(new ErrorResponse("Clip not found", 404));
+    }
 
     let sVideos = srcVideos;
 
@@ -247,7 +250,7 @@ export const editClip = async (req, res, next) => {
     await clip.save();
 
     res.status(200).json(clip);
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
@@ -267,7 +270,7 @@ export const deleteClip = async (req, res, next) => {
 
     const clip = await Clip.findByIdAndDelete(req.params.id);
     if (!clip) {
-      return next(new ErrorResponse(("clip not found", 404)));
+      return next(new ErrorResponse("Clip not found", 404));
     }
     res.status(200).json(clip);
   } catch (err) {

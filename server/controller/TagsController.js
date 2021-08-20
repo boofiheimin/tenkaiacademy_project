@@ -72,7 +72,7 @@ export const deleteTag = async (req, res, next) => {
   try {
     const tag = await Tag.findByIdAndDelete(req.params.id);
     if (!tag) {
-      return next(new ErrorResponse(("tag not found", 404)));
+      return next(new ErrorResponse("Tag not found", 404));
     }
 
     //cascade delete

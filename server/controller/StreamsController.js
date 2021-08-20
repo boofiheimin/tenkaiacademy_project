@@ -165,7 +165,7 @@ export const getStream = async (req, res, next) => {
       });
 
     if (!stream) {
-      return next(new ErrorResponse(("Stream not found", 404)));
+      return next(new ErrorResponse("Stream not found", 404));
     }
     res.status(200).json(stream);
   } catch (err) {
@@ -280,7 +280,7 @@ export const deleteStream = async (req, res, next) => {
 
     const stream = await Stream.findByIdAndDelete(req.params.id);
     if (!stream) {
-      return next(new ErrorResponse(("Stream not found", 404)));
+      return next(new ErrorResponse("Stream not found", 404));
     }
     res.status(200).json(stream);
   } catch (err) {
