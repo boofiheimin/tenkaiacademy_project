@@ -5,14 +5,17 @@ import ErrorResponse from "../utils/ErrorResponse.js";
 export const getTags = async (req, res, next) => {
   try {
     const { clip } = req.query;
-    const tags = await Tag.find(clip ? {} : { isClip: false }, {
-      _id: 1,
-      catId: 1,
-      tagId: 1,
-      tagNameEN: 1,
-      tagNameJP: 1,
-      isClip: 1,
-    });
+    const tags = await Tag.find(
+      clip ? { tagNameEN: { $ne: "Private" } } : { isClip: false },
+      {
+        _id: 1,
+        catId: 1,
+        tagId: 1,
+        tagNameEN: 1,
+        tagNameJP: 1,
+        isClip: 1,
+      }
+    );
     res.status(200).json(tags);
   } catch (error) {
     return next(error);
@@ -22,7 +25,9 @@ export const getTags = async (req, res, next) => {
 export const createTag = async (req, res, next) => {
   try {
     const tag = req.body;
-    const latestTag = await Tag.find({ isClip: tag.isClip })
+    const latestTag = await Tag.find({
+      isClip: tag.isClip,
+    })
       .sort({ tagId: -1 })
       .collation({ locale: "en_US", numericOrdering: true })
       .limit(1);

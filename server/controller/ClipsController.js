@@ -102,9 +102,7 @@ export const createClip = async (req, res, next) => {
     );
 
     //get rid of private tag
-    streamTags = streamsTags.filter((tag) => {
-      tag.tagNameEN !== "Private";
-    });
+    streamsTags = streamsTags.filter((tag) => tag.tagNameEN !== "Private");
 
     const results = await Youtube.videos.list({
       maxResults: 1,
