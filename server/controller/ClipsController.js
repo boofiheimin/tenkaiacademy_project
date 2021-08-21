@@ -95,11 +95,16 @@ export const createClip = async (req, res, next) => {
         });
       }
     }
-
+    // get rid of unique
     streamsTags = streamsTags.filter(
       (elem, index) =>
         streamsTags.findIndex((obj) => obj.tagId === elem.tagId) === index
     );
+
+    //get rid of private tag
+    streamTags = streamsTags.filter((tag) => {
+      tag.tagNameEN !== "Private";
+    });
 
     const results = await Youtube.videos.list({
       maxResults: 1,
