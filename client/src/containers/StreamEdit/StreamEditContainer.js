@@ -338,6 +338,14 @@ const StreamEditContainer = () => {
     setFormData(newForm);
   };
 
+  const onMirrorChange = (e) => {
+    const newForm = {
+      ...formData,
+      mirror: e.target.value,
+    };
+    setFormData(newForm);
+  };
+
   return (
     <VideoEdit
       formData={formData}
@@ -364,6 +372,7 @@ const StreamEditContainer = () => {
       onDurationChange={onDurationChange}
       onUploaderChange={onUploaderChange}
       onPublishedChange={onPublishedChange}
+      onMirrorChange={onMirrorChange}
       onImportTimestamp={onImportTimestamp}
       onClearTimestamp={onClearTimestamp}
     />

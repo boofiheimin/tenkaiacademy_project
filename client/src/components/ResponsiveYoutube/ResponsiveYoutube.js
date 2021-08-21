@@ -4,7 +4,7 @@ import Youtube from "react-youtube";
 
 import useStyles from "./styles";
 
-const ResponsiveIframe = ({ videoId, videoPos, seekToggle }) => {
+const ResponsiveIframe = ({ videoId, videoPos, seekToggle, mirror }) => {
   const classes = useStyles();
   const [player, setPlayer] = useState(null);
 
@@ -24,11 +24,21 @@ const ResponsiveIframe = ({ videoId, videoPos, seekToggle }) => {
 
   return (
     <div className={classes.container}>
-      <Youtube
-        videoId={videoId}
-        onReady={onReady}
-        opts={{ playerVars: { autoplay: 1 } }}
-      />
+      {mirror ? (
+        <iframe
+          src={mirror}
+          width="640"
+          height="480"
+          allow="autoplay"
+          title="mirror"
+        />
+      ) : (
+        <Youtube
+          videoId={videoId}
+          onReady={onReady}
+          opts={{ playerVars: { autoplay: 1 } }}
+        />
+      )}
     </div>
   );
 };
@@ -37,12 +47,14 @@ ResponsiveIframe.propTypes = {
   videoId: PropTypes.string,
   videoPos: PropTypes.number,
   seekToggle: PropTypes.func,
+  mirror: PropTypes.string,
 };
 
 ResponsiveIframe.defaultProps = {
   videoId: "",
   videoPos: null,
   seekToggle: () => {},
+  mirror: "",
 };
 
 export default ResponsiveIframe;

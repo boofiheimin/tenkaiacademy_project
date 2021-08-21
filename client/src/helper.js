@@ -1,8 +1,10 @@
 export const tagSortHelper = (tags) =>
   tags.sort(
     (a, b) =>
-      parseInt(a.catId, 10) - parseInt(b.catId, 10) ||
-      parseInt(a.tagId, 10) - parseInt(b.tagId, 10)
+      parseInt(a.catId.replace(/C/, ""), 10) -
+        parseInt(b.catId.replace(/C/, ""), 10) ||
+      parseInt(a.tagId.replace(/C/, ""), 10) -
+        parseInt(b.tagId.replace(/C/, ""), 10)
   );
 
 export const hhmmssRegEx =

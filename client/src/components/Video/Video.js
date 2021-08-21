@@ -59,13 +59,14 @@ const Video = ({
     publishedAt,
     thumbnail,
     tags = [],
-    description,
+    description = "",
     timestamps = [],
     uploader,
     clips = [],
     relatedVideos = [],
     relatedTweets = [],
     srcVideos = [],
+    mirror,
   } = video;
 
   const handleDescDialogOpen = () => {
@@ -84,17 +85,19 @@ const Video = ({
   if (notFound) {
     return <NotFound />;
   }
+
   return (
     <Container className={classes.root} maxWidth="xl">
       <Grid container spacing={matchPhoneSize ? 0 : 2}>
         <Grid item xs={matches ? 9 : 12} lg={9}>
-          {tags.some((tag) => tag.tagNameEN === "Private") ? (
+          {tags.some((tag) => tag.tagNameEN === "Private") && !mirror ? (
             <img className={classes.thumbnail} src={thumbnail} alt="" />
           ) : (
             <ResponsiveYoutube
               videoId={videoId}
               videoPos={videoPos}
               seekToggle={seekToggle}
+              mirror={mirror}
             />
           )}
         </Grid>
@@ -166,7 +169,9 @@ const Video = ({
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box paddingTop={1}>
-                      <Typography>{description}</Typography>
+                      {description.split("\n").map((d) => (
+                        <Typography>{d}</Typography>
+                      ))}
                     </Box>
                   </AccordionDetails>
                 </Accordion>
@@ -182,7 +187,9 @@ const Video = ({
               <Box paddingLeft={2} paddingTop={2}>
                 <Typography variant="h6">{uploader}</Typography>
                 <Box paddingTop={1}>
-                  <Typography>{description}</Typography>
+                  {description.split("\n").map((d) => (
+                    <Typography>{d}</Typography>
+                  ))}
                 </Box>
               </Box>
             </Hidden>

@@ -24,8 +24,10 @@ export const createTag = async (req, res, next) => {
     const tag = req.body;
     const latestTag = await Tag.find({ isClip: tag.isClip })
       .sort({ tagId: -1 })
+      .collation({ locale: "en_US", numericOrdering: true })
       .limit(1);
     let index;
+
     if (latestTag.length === 0) {
       index = tag.isClip ? "C1" : 1;
     } else {

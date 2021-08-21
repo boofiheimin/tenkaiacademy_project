@@ -46,6 +46,9 @@ const streamSchema = mongoose.Schema(
       type: String,
       enum: ["youtube-manual", "youtube", "manual"],
     },
+    mirror: {
+      type: String,
+    },
   },
   {
     timestamps: true,

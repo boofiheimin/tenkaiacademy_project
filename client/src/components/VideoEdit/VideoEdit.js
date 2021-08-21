@@ -39,6 +39,7 @@ const VideoEdit = ({
   onPublishedChange,
   onUploaderChange,
   onThumbnailChange,
+  onMirrorChange,
   tags: propTags,
   onAddTag,
   onReorderTag,
@@ -75,6 +76,7 @@ const VideoEdit = ({
     relatedTweets = [],
     relatedVideos = [],
     srcVideos = [],
+    mirror,
   } = formData;
 
   const classes = useStyles();
@@ -200,6 +202,17 @@ const VideoEdit = ({
                       />
                     </MuiPickersUtilsProvider>
                   </div>
+                  {type === VIDEO_TYPE_STREAM && (
+                    <div className={classes.infoInputContainer}>
+                      <Typography>mirror:&nbsp;</Typography>
+                      <TextField
+                        value={mirror}
+                        onChange={onMirrorChange}
+                        disabled={disableVideoInfo}
+                        className={classes.infoInput}
+                      />
+                    </div>
+                  )}
                 </Box>
               </Card>
             </Grid>
@@ -379,6 +392,7 @@ VideoEdit.propTypes = {
   onAddSrc: PropTypes.func,
   onReorderSrc: PropTypes.func,
   onRemoveSrc: PropTypes.func,
+  onMirrorChange: PropTypes.func,
 };
 
 VideoEdit.defaultProps = {
@@ -410,6 +424,7 @@ VideoEdit.defaultProps = {
   onAddSrc: () => {},
   onReorderSrc: () => {},
   onRemoveSrc: () => {},
+  onMirrorChange: () => {},
 };
 
 export default VideoEdit;
