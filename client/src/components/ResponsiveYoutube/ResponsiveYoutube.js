@@ -1,59 +1,93 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import Youtube from "react-youtube";
 
 import useStyles from "./styles";
 
-const ResponsiveIframe = ({ videoId, videoPos, seekToggle, mirror }) => {
-  const classes = useStyles();
-  const [player, setPlayer] = useState(null);
+const ResponsiveIframe = forwardRef(
+  ({ videoId, mirror, onNext, onPlay }, ref) => {
+    const classes = useStyles();
+    const [player, setPlayer] = useState(null);
+    const [playerOn, setPlayerOn] = useState(false);
+    const [playerState, setPlayerState] = useState(-1);
 
-  const onReady = (e) => {
-    setPlayer(e.target);
-  };
+    useEffect(() => {
+      if (videoId) {
+        setPlayerOn(true);
+      }
+    }, []);
 
-  const seekTime = (time = 0) => {
-    player.seekTo(time);
-  };
+    const handleReady = (e) => {
+      setPlayer(e.target);
+      if (videoId) {
+        e.target.loadVideoById(videoId);
+      }
+    };
 
-  useEffect(() => {
-    if (player && videoPos !== null) {
-      seekTime(videoPos);
-    }
-  }, [seekToggle, videoPos]);
+    const handleEnd = (e) => {
+      //  onNext();
+    };
 
-  return (
-    <div className={classes.container}>
-      {mirror ? (
-        <iframe
-          src={mirror}
-          width="640"
-          height="480"
-          allow="autoplay"
-          title="mirror"
-        />
-      ) : (
+    const handleOnPlayerPlay = () => {
+      onPlay();
+    };
+
+    const handleS = () => {
+      const state = player.getPlayerState();
+      if (state === 0 && playerState !== -1) {
+        onNext();
+      }
+      setPlayerState(state);
+    };
+
+    useImperativeHandle(ref, () => ({
+      seekTime(time) {
+        player.seekTo(time);
+      },
+      loadVideo(id, start, end) {
+        if (player) {
+          if (start && end) {
+            player.loadVideoById({
+              videoId: id,
+              startSeconds: start,
+              endSeconds: end,
+            });
+          } else {
+            player.loadVideoById(id);
+          }
+
+          player.playVideo();
+        }
+      },
+    }));
+
+    const renderCase = () => {
+      if (mirror) {
+        return <iframe src={mirror} allow="autoplay" title="mirror" />;
+      }
+      return (
         <Youtube
-          videoId={videoId}
-          onReady={onReady}
+          onReady={handleReady}
           opts={{ playerVars: { autoplay: 1 } }}
+          onEnd={handleEnd}
+          onStateChange={handleS}
+          onPlay={handleOnPlayerPlay}
         />
-      )}
-    </div>
-  );
-};
+      );
+    };
+
+    return <div className={classes.container}>{renderCase()}</div>;
+  }
+);
 
 ResponsiveIframe.propTypes = {
   videoId: PropTypes.string,
-  videoPos: PropTypes.number,
-  seekToggle: PropTypes.func,
+
   mirror: PropTypes.string,
 };
 
 ResponsiveIframe.defaultProps = {
   videoId: "",
-  videoPos: null,
-  seekToggle: () => {},
   mirror: "",
 };
 

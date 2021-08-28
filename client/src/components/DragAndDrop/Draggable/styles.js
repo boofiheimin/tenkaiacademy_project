@@ -1,12 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  listContainer: ({ isDragging, draggableStyle }) => ({
+  listContainer: ({ isDragging, draggableStyle, active }) => ({
     display: "flex",
     alignItems: "center",
     border: "1px solid silver",
     padding: theme.spacing(1),
-    backgroundColor: isDragging ? "lightblue" : "transparent",
+    backgroundColor:
+      isDragging || active ? theme.palette.background.paper : "transparent",
     userSelect: "none",
     position: "relative",
     ...draggableStyle,
@@ -25,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     overflow: "hidden",
+  },
+  actionButton: {
+    minWidth: "1em",
+    marginRight: theme.spacing(1),
   },
 }));
 

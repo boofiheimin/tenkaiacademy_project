@@ -10,7 +10,12 @@ import {
 } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlayCircle, faFilm, faTag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlayCircle,
+  faFilm,
+  faTag,
+  faMusic,
+} from "@fortawesome/free-solid-svg-icons";
 
 import useStyles from "./styles";
 
@@ -63,6 +68,11 @@ const DrawerItems = () => {
           to="/clips"
           primary="Clips"
           icon={<FontAwesomeIcon icon={faFilm} size="lg" />}
+        />
+        <ListItemLink
+          to="/music"
+          primary="Music"
+          icon={<FontAwesomeIcon icon={faMusic} size="lg" />}
         />
       </List>
       {localStorage.getItem("authToken") && (

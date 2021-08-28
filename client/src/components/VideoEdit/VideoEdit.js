@@ -232,6 +232,7 @@ const VideoEdit = ({
                     lists={propTags}
                     onReorderItem={onReorderTag}
                     onRemoveItem={onRemoveTag}
+                    addFrom
                   />
                 </div>
               </Card>
@@ -268,6 +269,7 @@ const VideoEdit = ({
                     onAddItem={onAddVideo}
                     onReorderItem={onReorderVideo}
                     onRemoveItem={onRemoveVideo}
+                    addFrom
                   />
                 </div>
               </Card>
@@ -287,6 +289,7 @@ const VideoEdit = ({
                       onAddItem={onAddTweet}
                       onReorderItem={onReorderTweet}
                       onRemoveItem={onRemoveTweet}
+                      addFrom
                     />
                   </div>
                 </Card>
@@ -306,6 +309,7 @@ const VideoEdit = ({
                       onAddItem={onAddSrc}
                       onReorderItem={onReorderSrc}
                       onRemoveItem={onRemoveSrc}
+                      addFrom
                     />
                   </div>
                 </Card>

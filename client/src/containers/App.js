@@ -16,6 +16,7 @@ import Clips from "./Clips/ClipsContainer";
 import Clip from "./Clip/ClipContainer";
 import ClipEdit from "./ClipEdit/ClipEditContainer";
 import Tags from "./Tags/TagsContainer";
+import Music from "./Music/MusicContainer";
 import NotFound from "./NotFound/NotFoundContainer";
 
 const ScrollToTop = () => {
@@ -63,6 +64,9 @@ const App = () => {
               <Route path="/" element={<Clips />} />
               <Route path="/:id" element={<Clip />} />
               <PrivateRoute path="/:id/edit" element={<ClipEdit />} />
+            </Route>
+            <Route path="music">
+              <Route path="/" element={<Music />} />
             </Route>
             <PrivateRoute path="tags" element={<Tags />} />
           </Route>

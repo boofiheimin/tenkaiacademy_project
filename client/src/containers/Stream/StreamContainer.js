@@ -13,8 +13,6 @@ const StreamContainer = () => {
   const navigate = useNavigate();
   const [clipAcc, setClipAcc] = useState(true);
   const [tabStatus, setTabStatus] = useState(0);
-  const [videoPos, setVideoPos] = useState(null);
-  const [toggle, setToggle] = useState(false);
   const [currentStream, setCurrentStream] = useState({});
   const { id } = useParams();
 
@@ -42,12 +40,6 @@ const StreamContainer = () => {
     setTabStatus(value);
   };
 
-  const handleVideoSeek = (sec) => {
-    // toggle allowed same timestamp to be pressed consecutively
-    setToggle(!toggle);
-    setVideoPos(sec);
-  };
-
   const handleRelatedVideoClick = (
     _id,
     videoId,
@@ -68,9 +60,6 @@ const StreamContainer = () => {
       clipAccordionControl={clipAccordionControl}
       tabControl={tabControl}
       tabStatus={tabStatus}
-      onVideoSeek={handleVideoSeek}
-      videoPos={videoPos}
-      seekToggle={toggle}
       onRelatedVideoClick={handleRelatedVideoClick}
       type={VIDEO_TYPE_STREAM}
       loading={streamLoading}

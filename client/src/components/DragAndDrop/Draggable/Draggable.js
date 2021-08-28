@@ -1,16 +1,20 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Typography, IconButton } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
-import CancelIcon from "@material-ui/icons/Cancel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import ConfirmationPopper from "../../ConfirmationPopper/ConfirmationPopper";
 
 import useStyles from "./styles";
 
-const CustomDraggable = ({ item: { id, text, img }, index, onRemove }) => {
+const CustomDraggable = ({
+  item: { id, text, img },
+  index,
+  onRemove,
+  active,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleRemoveClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -25,23 +29,25 @@ const CustomDraggable = ({ item: { id, text, img }, index, onRemove }) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, { isDragging, draggableStyle }) => {
-        const classes = useStyles({ isDragging, draggableStyle });
+        const classes = useStyles({ isDragging, draggableStyle, active });
         return (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
+          <div ref={provided.innerRef} {...provided.draggableProps}>
             <div className={classes.listContainer}>
-              <FontAwesomeIcon icon={faBars} className={classes.icon} />
+              <div {...provided.dragHandleProps}>
+                <FontAwesomeIcon icon={faBars} className={classes.icon} />
+              </div>
+
               {img && <img src={img} alt="listimg" className={classes.img} />}
               <Typography className={classes.text}>{text}</Typography>
-              <IconButton
-                className={classes.cancel}
-                onClick={handleRemoveClick}
-              >
-                <CancelIcon />
-              </IconButton>
+              {!active && (
+                <Button
+                  className={classes.actionButton}
+                  onClick={handleRemoveClick}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </Button>
+              )}
+
               <ConfirmationPopper
                 popperId={id}
                 onPopperConfirm={handlePopperConfirm}

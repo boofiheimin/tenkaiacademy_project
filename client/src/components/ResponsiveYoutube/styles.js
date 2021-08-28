@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles(() => ({
   container: {
     position: "relative",
-    width: "100%",
+    height: 0,
     overflow: "hidden",
     paddingTop: "56.25%",
     "& iframe": {

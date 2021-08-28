@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { useSelector } from "react-redux";
@@ -37,14 +37,12 @@ import NotFound from "../NotFound/NotFound";
 
 const Video = ({
   video = {},
-  videoPos,
-  seekToggle,
-  onVideoSeek,
   onRelatedVideoClick,
   type,
   loading,
   notFound,
 }) => {
+  const youtubeRef = useRef();
   const classes = useStyles();
   const [descDialog, setDescDialog] = useState(false);
   const matchRegSize = useMediaQuery((theme) => theme.breakpoints.up("lg"));
@@ -77,6 +75,10 @@ const Video = ({
     setDescDialog(false);
   };
 
+  const handleSeek = (time) => {
+    youtubeRef.current.seekTime(time);
+  };
+
   const matches = matchPhoneSize && matchOrientation;
 
   if (loading) {
@@ -95,9 +97,8 @@ const Video = ({
           ) : (
             <ResponsiveYoutube
               videoId={videoId}
-              videoPos={videoPos}
-              seekToggle={seekToggle}
               mirror={mirror}
+              ref={youtubeRef}
             />
           )}
         </Grid>
@@ -113,10 +114,7 @@ const Video = ({
             <div className={classes.timestampContainer}>
               <div className={classes.timestampScroller}>
                 {type === VIDEO_TYPE_STREAM ? (
-                  <Timestamp
-                    timestamps={timestamps}
-                    onVideoSeek={onVideoSeek}
-                  />
+                  <Timestamp timestamps={timestamps} onVideoSeek={handleSeek} />
                 ) : (
                   srcVideos.map(
                     ({
@@ -478,7 +476,7 @@ const Video = ({
 
           <div className={classes.timestampContainer}>
             <div className={classes.timestampScroller}>
-              <Timestamp timestamps={timestamps} onVideoSeek={onVideoSeek} />
+              <Timestamp timestamps={timestamps} onVideoSeek={handleSeek} />
             </div>
           </div>
         </div>
@@ -489,22 +487,17 @@ const Video = ({
 
 Video.propTypes = {
   video: PropTypes.object,
-  videoPos: PropTypes.number,
-  onVideoSeek: PropTypes.func,
+
   onRelatedVideoClick: PropTypes.func,
   type: PropTypes.string,
-  seekToggle: PropTypes.bool,
   loading: PropTypes.bool,
   notFound: PropTypes.bool,
 };
 
 Video.defaultProps = {
   video: {},
-  videoPos: null,
-  onVideoSeek: () => {},
   onRelatedVideoClick: () => {},
   type: VIDEO_TYPE_STREAM,
-  seekToggle: false,
   loading: true,
   notFound: true,
 };

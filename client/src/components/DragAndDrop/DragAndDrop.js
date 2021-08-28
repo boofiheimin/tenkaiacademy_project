@@ -17,6 +17,9 @@ const DragAndDrop = ({
   onReorderItem,
   lists,
   placeholder,
+  addFrom,
+  onClickItem,
+  activeIndex,
 }) => {
   const [items, setItems] = useState(propItems);
   const classes = useStyles({ itemsLength: items.length });
@@ -46,14 +49,16 @@ const DragAndDrop = ({
 
   return (
     <div className={classes.container}>
-      <AddForm
-        label={addItemLabel}
-        placeholder={placeholder}
-        value={addItemValue}
-        onAdd={onAddItem}
-        onChange={onChangeItem}
-        lists={lists}
-      />
+      {addFrom && (
+        <AddForm
+          label={addItemLabel}
+          placeholder={placeholder}
+          value={addItemValue}
+          onAdd={onAddItem}
+          onChange={onChangeItem}
+          lists={lists}
+        />
+      )}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
@@ -68,6 +73,8 @@ const DragAndDrop = ({
                   index={index}
                   key={item.id}
                   onRemove={onRemoveItem}
+                  onClick={onClickItem}
+                  active={activeIndex === index}
                 />
               ))}
               {provided.placeholder}
