@@ -16,7 +16,11 @@ import {
   TableRow,
   withStyles,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
 } from "@material-ui/core";
+import _ from "lodash";
 
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
@@ -58,7 +62,7 @@ const mockSongs = [
     videoId: "o5NMoZGWkDY",
     start: 1199,
     // end: 1408,
-    end: 1204,
+    end: 1200,
     date: new Date(),
   },
 ];
@@ -73,20 +77,46 @@ const Music = () => {
   const [shufflePool, setShufflePool] = useState([]);
   const [loop, setLoop] = useState(false);
   const [shuffle, setShuffle] = useState(false);
-  const [forward, setForward] = useState(true);
+  const [clearQModal, setClearQModal] = useState(false);
 
   useEffect(() => {
-    console.log("CURRENT SONG", currentSong);
-    if (currentSong !== null) {
+    if (currentSong) {
       const { videoId, start, end } = currentSong;
       youtubeRef.current.loadVideo(videoId, start, end);
     }
   }, [currentSong]);
 
-  const handlePlay = (id, start, end) => {
-    youtubeRef.current.loadVideo(id, start, end);
-    setQueue([]);
-    setShuffledList([]);
+  const handlePlay = (id, name, start, end) => {
+    const newItem = {
+      id: uuidv4(),
+      text: name,
+      videoId: id,
+      start,
+      end,
+    };
+    setCurrentSong(newItem);
+    if (queue.length === 0) {
+      setPlayIndex(0);
+      setQueue([newItem]);
+    } else {
+      setClearQModal(true);
+    }
+  };
+
+  const handleClearQPlay = () => {
+    setPlayIndex(0);
+    setQueue([currentSong]);
+    setClearQModal(false);
+  };
+
+  const handleNotClearQPLay = () => {
+    setPlayIndex(queue.length);
+    setQueue([...queue, currentSong]);
+    setClearQModal(false);
+  };
+
+  const handleCloseQModal = () => {
+    setClearQModal(false);
   };
 
   const handleAddToQueue = (id, name, start, end) => {
@@ -100,15 +130,22 @@ const Music = () => {
 
     if (!currentSong) {
       setCurrentSong(newItem);
+      setPlayIndex(queue.length);
     } else if (currentSong && shuffle) {
-      setShufflePool([...shufflePool, newItem.id]);
+      setShufflePool(_.shuffle([...shufflePool, newItem.id]));
     }
-
     const newQueue = [...queue, newItem];
     setQueue(newQueue);
   };
+
   const handleRemove = (id) => {
+    const removedIndex = queue.findIndex((item) => item.id === id);
+    if (removedIndex < playIndex) {
+      setPlayIndex(playIndex - 1);
+    }
     setQueue(queue.filter((item) => item.id !== id));
+    setShuffledList(shuffledList.filter((item) => item !== id));
+    setShufflePool(shufflePool.filter((item) => item !== id));
   };
 
   const handleReorder = (reoderedItem) => {
@@ -120,59 +157,105 @@ const Music = () => {
   };
 
   const handleSkipNext = () => {
-    console.log("SKIPNEXT");
-    let nextIndex = playIndex + 1;
-    if (nextIndex >= queue.length && loop && !shuffle) {
-      nextIndex = 0;
-    } else if (nextIndex >= queue.length && !shuffle) {
-      return setCurrentSong(null);
-    }
-    setForward(true);
-    let nextSong;
     if (shuffle) {
-      console.log(shuffledList.length, queue.length);
-      if (shuffledList.length >= queue.length) {
-        return setCurrentSong(null);
+      const newShuffledList = [...shuffledList, currentSong.id];
+      if (newShuffledList.length === queue.length) {
+        if (loop) {
+          const nextSongId = newShuffledList.shift();
+          const nextSongIndex = queue.findIndex(
+            (item) => item.id === nextSongId
+          );
+          setCurrentSong(queue[nextSongIndex]);
+          setPlayIndex(nextSongIndex);
+          setShuffledList([]);
+          setShufflePool(newShuffledList);
+        } else {
+          setCurrentSong(null);
+          setPlayIndex(queue.length);
+          setShuffledList(newShuffledList);
+        }
+      } else {
+        const newShuffledPool = [...shufflePool];
+        const nextSongId = newShuffledPool.shift();
+        const nextSongIndex = queue.findIndex((item) => item.id === nextSongId);
+        setCurrentSong(queue[nextSongIndex]);
+        setShufflePool(newShuffledPool);
+        setPlayIndex(nextSongIndex);
+        setShuffledList(newShuffledList);
       }
-      const nextSongId =
-        shufflePool[Math.floor(Math.random() * shufflePool.length)];
-      const next = queue.find((song) => song.id === nextSongId);
-      console.log(next, nextSongId);
-
-      nextSong = next ?? currentSong;
     } else {
-      nextSong = queue[nextIndex];
-    }
-
-    return setCurrentSong(nextSong);
-  };
-
-  const handleOnPlayerPlay = () => {
-    let nextIndex;
-    if (forward) {
-      nextIndex = playIndex + 1;
-    } else {
-      nextIndex = playIndex - 1;
-    }
-    if (nextIndex >= queue.length && loop && !shuffle) {
-      setPlayIndex(0);
-    } else if (shuffle) {
-      setShufflePool(shufflePool.filter((id) => id !== currentSong?.id));
-      setShuffledList([...shuffledList, currentSong?.id]);
-      console.log(currentSong?.id, queue);
-      console.log(queue.findIndex((song) => song.id === currentSong?.id));
-      setPlayIndex(queue.findIndex((song) => song.id === currentSong?.id));
-    } else {
+      let nextIndex = playIndex + 1;
+      if (nextIndex >= queue.length) {
+        if (loop) {
+          nextIndex = 0;
+          const nextSong = queue[nextIndex];
+          setCurrentSong(nextSong);
+        } else setCurrentSong(null);
+      } else {
+        const nextSong = queue[nextIndex];
+        setCurrentSong(nextSong);
+      }
       setPlayIndex(nextIndex);
     }
   };
 
   const handleSkipPrev = () => {
-    const nextIndex = playIndex - 1;
-    setForward(false);
-    const nextSong = queue[nextIndex];
-    const { videoId, start, end } = nextSong;
-    youtubeRef.current.loadVideo(videoId, start, end);
+    if (shuffle) {
+      if (shuffledList.length === 0) {
+        if (loop) {
+          let newShuffledList = _.reverse(shufflePool);
+          const prevSongId = newShuffledList.shift();
+          const prevSongIndex = queue.findIndex(
+            (item) => item.id === prevSongId
+          );
+          if (currentSong) {
+            newShuffledList = [currentSong.id, ...newShuffledList];
+          }
+
+          setCurrentSong(queue[prevSongIndex]);
+          setPlayIndex(prevSongIndex);
+          setShuffledList(newShuffledList);
+          setShufflePool([]);
+        } else youtubeRef.current.seekTime(currentSong?.start || 0);
+      } else {
+        const newShuffledList = [...shuffledList];
+        const prevSongId = newShuffledList.pop();
+        const prevSongIndex = queue.findIndex((item) => item.id === prevSongId);
+        setCurrentSong(queue[prevSongIndex]);
+        setShuffledList(newShuffledList);
+        setPlayIndex(prevSongIndex);
+        if (currentSong) {
+          setShufflePool([currentSong.id, ...shufflePool]);
+        }
+      }
+    } else {
+      let prevIndex = playIndex - 1;
+      if (prevIndex < 0) {
+        if (loop) {
+          prevIndex = queue.length - 1;
+          const prevSong = queue[prevIndex];
+          setCurrentSong(prevSong);
+          setPlayIndex(prevIndex);
+        } else youtubeRef.current.seekTime(currentSong?.start || 0);
+      } else {
+        const prevSong = queue[prevIndex];
+        setCurrentSong(prevSong);
+        setPlayIndex(prevIndex);
+      }
+    }
+  };
+
+  const onQueueClick = (index) => {
+    const nextSong = queue[index];
+    if (shuffle) {
+      setCurrentSong(nextSong);
+      const newShuffledList = [...shuffledList, currentSong.id];
+      setShuffledList(newShuffledList.filter((id) => id !== nextSong.id));
+      setShufflePool(shufflePool.filter((id) => id !== nextSong.id));
+    } else {
+      setCurrentSong(nextSong);
+      setPlayIndex(index);
+    }
   };
 
   const toggleLoop = () => {
@@ -180,14 +263,14 @@ const Music = () => {
   };
 
   const toggleShuffle = () => {
+    setShuffle(!shuffle);
+    setShuffledList([]);
     if (!shuffle) {
-      setShuffledList([]);
       const pool = queue
         .filter((item) => item.id !== currentSong?.id)
         .map((item) => item.id);
-      setShufflePool(pool);
+      setShufflePool(_.shuffle(pool));
     }
-    setShuffle(!shuffle);
   };
 
   return (
@@ -198,13 +281,21 @@ const Music = () => {
             <ResponsiveYoutube
               ref={youtubeRef}
               onNext={handleSkipNext}
-              onPlay={handleOnPlayerPlay}
+              showPlaceholder={
+                queue.length === 0 || playIndex > queue.length - 1
+              }
             />
           </Grid>
           <Grid item xs={3}>
             <Paper>
               <div className={classes.sectionHeader}>
-                <Typography variant="h6">Queue</Typography>
+                <Typography variant="h6">
+                  Queue
+                  {!(queue.length === 0 || playIndex >= queue.length) &&
+                    `: ${shuffle ? shuffledList.length + 1 : playIndex + 1}/${
+                      queue.length
+                    }`}
+                </Typography>
                 <div>
                   <Button
                     className={classes.actionButton}
@@ -215,7 +306,7 @@ const Music = () => {
                   </Button>
                   <Button
                     className={classes.actionButton}
-                    disabled={queue.length === 0}
+                    disabled={queue.length === 0 || playIndex >= queue.length}
                     onClick={handleSkipNext}
                   >
                     <SkipNextIcon />
@@ -241,6 +332,7 @@ const Music = () => {
                   onReorderItem={handleReorder}
                   onRemoveItem={handleRemove}
                   activeIndex={playIndex}
+                  onItemClick={onQueueClick}
                 />
               </div>
             </div>
@@ -285,6 +377,27 @@ const Music = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={clearQModal} onClose={handleCloseQModal}>
+        <DialogContent dividers>
+          <Typography>Do you wish to clear the queue?</Typography>
+        </DialogContent>
+        <DialogActions dividers>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClearQPlay}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleNotClearQPLay}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

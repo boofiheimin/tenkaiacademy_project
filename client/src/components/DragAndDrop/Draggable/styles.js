@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cancel: {},
   text: {
-    flexGrow: 1,
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -30,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
   actionButton: {
     minWidth: "1em",
     marginRight: theme.spacing(1),
+  },
+  clickable: {
+    cursor: "pointer",
+    flexGrow: 1,
   },
 }));
 

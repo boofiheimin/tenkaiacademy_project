@@ -28,6 +28,7 @@
     "history": "^5.0.0",
     "json2mq": "^0.2.0",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "prop-types": "^15.7.2",

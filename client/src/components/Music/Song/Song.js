@@ -24,7 +24,7 @@ const Song = ({
 }) => {
   const classes = useStyles();
   const handlePlay = () => {
-    onPlay(videoId, start, end);
+    onPlay(videoId, name, start, end);
   };
 
   const handleAddToQueue = () => {

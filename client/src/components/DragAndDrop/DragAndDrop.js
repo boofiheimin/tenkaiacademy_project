@@ -18,7 +18,7 @@ const DragAndDrop = ({
   lists,
   placeholder,
   addFrom,
-  onClickItem,
+  onItemClick,
   activeIndex,
 }) => {
   const [items, setItems] = useState(propItems);
@@ -73,7 +73,7 @@ const DragAndDrop = ({
                   index={index}
                   key={item.id}
                   onRemove={onRemoveItem}
-                  onClick={onClickItem}
+                  onItemClick={onItemClick}
                   active={activeIndex === index}
                 />
               ))}

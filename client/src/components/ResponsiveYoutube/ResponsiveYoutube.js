@@ -4,9 +4,11 @@ import Youtube from "react-youtube";
 
 import useStyles from "./styles";
 
+import placeholder from "../../assets/images/Placeholder.jfif";
+
 const ResponsiveIframe = forwardRef(
-  ({ videoId, mirror, onNext, onPlay }, ref) => {
-    const classes = useStyles();
+  ({ videoId, mirror, onNext, showPlaceholder }, ref) => {
+    const classes = useStyles({ showPlaceholder });
     const [player, setPlayer] = useState(null);
     const [playerOn, setPlayerOn] = useState(false);
     const [playerState, setPlayerState] = useState(-1);
@@ -28,11 +30,7 @@ const ResponsiveIframe = forwardRef(
       //  onNext();
     };
 
-    const handleOnPlayerPlay = () => {
-      onPlay();
-    };
-
-    const handleS = () => {
+    const handleStateChange = () => {
       const state = player.getPlayerState();
       if (state === 0 && playerState !== -1) {
         onNext();
@@ -55,8 +53,6 @@ const ResponsiveIframe = forwardRef(
           } else {
             player.loadVideoById(id);
           }
-
-          player.playVideo();
         }
       },
     }));
@@ -66,13 +62,15 @@ const ResponsiveIframe = forwardRef(
         return <iframe src={mirror} allow="autoplay" title="mirror" />;
       }
       return (
-        <Youtube
-          onReady={handleReady}
-          opts={{ playerVars: { autoplay: 1 } }}
-          onEnd={handleEnd}
-          onStateChange={handleS}
-          onPlay={handleOnPlayerPlay}
-        />
+        <>
+          <img src={placeholder} alt="" />
+          <Youtube
+            onReady={handleReady}
+            opts={{ playerVars: { autoplay: 1 } }}
+            onEnd={handleEnd}
+            onStateChange={handleStateChange}
+          />
+        </>
       );
     };
 

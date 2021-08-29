@@ -14,6 +14,7 @@ const CustomDraggable = ({
   index,
   onRemove,
   active,
+  onItemClick,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleRemoveClick = (e) => {
@@ -26,6 +27,9 @@ const CustomDraggable = ({
   const handlePopperCancel = () => {
     setAnchorEl(null);
   };
+  const handleOnClick = () => {
+    onItemClick(index);
+  };
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, { isDragging, draggableStyle }) => {
@@ -36,9 +40,15 @@ const CustomDraggable = ({
               <div {...provided.dragHandleProps}>
                 <FontAwesomeIcon icon={faBars} className={classes.icon} />
               </div>
-
-              {img && <img src={img} alt="listimg" className={classes.img} />}
-              <Typography className={classes.text}>{text}</Typography>
+              <div
+                className={classes.clickable}
+                onClick={handleOnClick}
+                role="button"
+                tabIndex={0}
+              >
+                {img && <img src={img} alt="listimg" className={classes.img} />}
+                <Typography className={classes.text}>{text}</Typography>
+              </div>
               {!active && (
                 <Button
                   className={classes.actionButton}
@@ -47,14 +57,13 @@ const CustomDraggable = ({
                   <FontAwesomeIcon icon={faTimes} />
                 </Button>
               )}
-
-              <ConfirmationPopper
-                popperId={id}
-                onPopperConfirm={handlePopperConfirm}
-                onPopperCancel={handlePopperCancel}
-                anchorEl={anchorEl}
-              />
             </div>
+            <ConfirmationPopper
+              popperId={id}
+              onPopperConfirm={handlePopperConfirm}
+              onPopperCancel={handlePopperCancel}
+              anchorEl={anchorEl}
+            />
           </div>
         );
       }}
