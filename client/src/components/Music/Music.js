@@ -283,7 +283,9 @@ const Music = () => {
     <Container className={classes.root}>
       {localStorage.getItem("authToken") && (
         <Box display="flex" padding={3} justifyContent="flex-end" width="100%">
-          <Button variant="outlined">Manage Songs</Button>
+          <Button variant="outlined" href="/music/edit">
+            Manage Songs
+          </Button>
         </Box>
       )}
       <Box width="100%">

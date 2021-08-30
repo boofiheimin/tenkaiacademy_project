@@ -9,6 +9,7 @@ import authRoute from "./routes/AuthRoute.js";
 import streamsRoute from "./routes/StreamsRoute.js";
 import clipsRoute from "./routes/ClipsRoute.js";
 import tagsRoute from "./routes/TagsRoute.js";
+import artistsRoute from "./routes/ArtistsRoute.js";
 
 const app = express();
 dotenv.config();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/streams", streamsRoute);
 app.use("/api/v1/tags", tagsRoute);
+app.use("/api/v1/artists", artistsRoute);
 app.use("/api/v1/clips", clipsRoute);
 
 // Error Handler

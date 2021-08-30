@@ -39,3 +39,10 @@ export const fetchTags = async (clip) => API.get("/tags", { params: { clip } });
 export const createTag = async (tagData) => API.post("/tags", tagData);
 export const editTag = async (id, tagData) => API.patch(`/tags/${id}`, tagData);
 export const deleteTag = async (id) => API.delete(`/tags/${id}`);
+
+export const fetchArtists = async () => API.get("/artists");
+export const createArtist = async (artistData) =>
+  API.post("/artists", artistData);
+export const editArtist = async (id, artistData) =>
+  API.patch(`/artists/${id}`, artistData);
+export const deleteArtist = async (id) => API.delete(`/artists/${id}`);

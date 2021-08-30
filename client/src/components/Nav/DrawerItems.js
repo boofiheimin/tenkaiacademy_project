@@ -84,6 +84,16 @@ const DrawerItems = () => {
               primary="Tags"
               icon={<FontAwesomeIcon icon={faTag} size="lg" />}
             />
+            <ListItemLink
+              to="/artists"
+              primary="Artists"
+              icon={<FontAwesomeIcon icon={faMusic} size="lg" />}
+            />
+            <ListItemLink
+              to="/songs"
+              primary="Songs"
+              icon={<FontAwesomeIcon icon={faMusic} size="lg" />}
+            />
           </List>
         </>
       )}
