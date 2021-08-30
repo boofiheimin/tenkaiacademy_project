@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 import Youtube from "react-youtube";
 
 import useStyles from "./styles";
@@ -10,24 +10,13 @@ const ResponsiveIframe = forwardRef(
   ({ videoId, mirror, onNext, showPlaceholder }, ref) => {
     const classes = useStyles({ showPlaceholder });
     const [player, setPlayer] = useState(null);
-    const [playerOn, setPlayerOn] = useState(false);
     const [playerState, setPlayerState] = useState(-1);
-
-    useEffect(() => {
-      if (videoId) {
-        setPlayerOn(true);
-      }
-    }, []);
 
     const handleReady = (e) => {
       setPlayer(e.target);
       if (videoId) {
         e.target.loadVideoById(videoId);
       }
-    };
-
-    const handleEnd = (e) => {
-      //  onNext();
     };
 
     const handleStateChange = () => {
@@ -67,7 +56,6 @@ const ResponsiveIframe = forwardRef(
           <Youtube
             onReady={handleReady}
             opts={{ playerVars: { autoplay: 1 } }}
-            onEnd={handleEnd}
             onStateChange={handleStateChange}
           />
         </>
@@ -80,13 +68,16 @@ const ResponsiveIframe = forwardRef(
 
 ResponsiveIframe.propTypes = {
   videoId: PropTypes.string,
-
+  onNext: PropTypes.func,
   mirror: PropTypes.string,
+  showPlaceholder: PropTypes.bool,
 };
 
 ResponsiveIframe.defaultProps = {
   videoId: "",
   mirror: "",
+  onNext: () => {},
+  showPlaceholder: false,
 };
 
 export default ResponsiveIframe;

@@ -79,6 +79,8 @@ CustomDraggable.propTypes = {
   }),
   index: PropTypes.number.isRequired,
   onRemove: PropTypes.func,
+  active: PropTypes.bool,
+  onItemClick: PropTypes.func,
 };
 
 CustomDraggable.defaultProps = {
@@ -88,6 +90,8 @@ CustomDraggable.defaultProps = {
     img: "",
   },
   onRemove: () => {},
+  active: false,
+  onItemClick: () => {},
 };
 
 export default CustomDraggable;

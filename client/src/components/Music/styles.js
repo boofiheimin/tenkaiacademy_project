@@ -51,6 +51,14 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     marginRight: theme.spacing(1),
   },
+  tablePagination: {
+    padding: theme.spacing(1),
+    display: "flex",
+    justifyContent: "flex-end",
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1),
+    },
+  },
 }));
 
 export default useStyles;

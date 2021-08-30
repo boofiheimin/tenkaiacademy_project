@@ -60,4 +60,26 @@ const Song = ({
   );
 };
 
+Song.propTypes = {
+  name: PropTypes.string,
+  artist: PropTypes.string,
+  date: PropTypes.instanceOf(Date),
+  onPlay: PropTypes.func,
+  onAddQueue: PropTypes.func,
+  start: PropTypes.number,
+  end: PropTypes.number,
+  videoId: PropTypes.string,
+};
+
+Song.defaultProps = {
+  name: "",
+  artist: "",
+  date: new Date(),
+  onPlay: () => {},
+  onAddQueue: () => {},
+  start: 0,
+  end: 0,
+  videoId: "",
+};
+
 export default Song;

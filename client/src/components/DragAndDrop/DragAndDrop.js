@@ -17,7 +17,7 @@ const DragAndDrop = ({
   onReorderItem,
   lists,
   placeholder,
-  addFrom,
+  addForm,
   onItemClick,
   activeIndex,
 }) => {
@@ -49,7 +49,7 @@ const DragAndDrop = ({
 
   return (
     <div className={classes.container}>
-      {addFrom && (
+      {addForm && (
         <AddForm
           label={addItemLabel}
           placeholder={placeholder}
@@ -96,6 +96,9 @@ DragAndDrop.propTypes = {
   onReorderItem: PropTypes.func,
   lists: PropTypes.array,
   placeholder: PropTypes.string,
+  addForm: PropTypes.bool,
+  onItemClick: PropTypes.func,
+  activeIndex: PropTypes.number,
 };
 
 DragAndDrop.defaultProps = {
@@ -108,6 +111,9 @@ DragAndDrop.defaultProps = {
   onReorderItem: () => {},
   lists: [],
   placeholder: "",
+  addForm: false,
+  onItemClick: () => {},
+  activeIndex: -1,
 };
 
 export default DragAndDrop;

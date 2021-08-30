@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import {
   Box,
@@ -27,9 +26,13 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 import LoopIcon from "@material-ui/icons/Loop";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
 
-import Song from "./Song/Song";
-import useStyles from "./styles";
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import LastPageIcon from "@material-ui/icons/LastPage";
 import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
+import useStyles from "./styles";
+import Song from "./Song/Song";
 
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 
@@ -66,6 +69,9 @@ const mockSongs = [
     date: new Date(),
   },
 ];
+
+const totalPages = 15;
+const page = 1;
 
 const Music = () => {
   const classes = useStyles();
@@ -275,6 +281,11 @@ const Music = () => {
 
   return (
     <Container className={classes.root}>
+      {localStorage.getItem("authToken") && (
+        <Box display="flex" padding={3} justifyContent="flex-end" width="100%">
+          <Button variant="outlined">Manage Songs</Button>
+        </Box>
+      )}
       <Box width="100%">
         <Grid container>
           <Grid item xs={9}>
@@ -376,6 +387,27 @@ const Music = () => {
             ))}
           </TableBody>
         </Table>
+        <div className={classes.tablePagination}>
+          <Typography>{`Page ${page} of ${totalPages}`}</Typography>
+          <Button className={classes.actionButton} disabled={page === 1}>
+            <FirstPageIcon />
+          </Button>
+          <Button className={classes.actionButton} disabled={page === 1}>
+            <KeyboardArrowLeft />
+          </Button>
+          <Button
+            className={classes.actionButton}
+            disabled={page === totalPages}
+          >
+            <KeyboardArrowRight />
+          </Button>
+          <Button
+            className={classes.actionButton}
+            disabled={page === totalPages}
+          >
+            <LastPageIcon />
+          </Button>
+        </div>
       </TableContainer>
       <Dialog open={clearQModal} onClose={handleCloseQModal}>
         <DialogContent dividers>
