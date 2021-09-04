@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import errorHandler from "./middleware/ErrorMiddleware.js";
+import errorHandler from "./middleware/error.middleware.js";
 
-import authRoute from "./routes/AuthRoute.js";
-import streamsRoute from "./routes/StreamsRoute.js";
-import clipsRoute from "./routes/ClipsRoute.js";
-import tagsRoute from "./routes/TagsRoute.js";
-import artistsRoute from "./routes/ArtistsRoute.js";
+import authRoute from "./routes/auth.route.js";
+import streamsRoute from "./routes/streams.route.js";
+import clipsRoute from "./routes/clips.route.js";
+import tagsRoute from "./routes/tags.route.js";
+import artistsRoute from "./routes/artists.route.js";
 
 const app = express();
 dotenv.config();

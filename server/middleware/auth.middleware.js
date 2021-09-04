@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import BlackListToken from "../models/BlackListToken.js";
-import ErrorResponse from "../utils/ErrorResponse.js";
+import User from "../models/user.js";
+import BlackListToken from "../models/blackListToken.js";
+import ErrorResponse from "../utils/errorResponse.js";
 
 export const authorize = (roles = []) => {
   if (typeof roles === "string") {

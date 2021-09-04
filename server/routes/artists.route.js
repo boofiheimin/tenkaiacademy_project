@@ -5,9 +5,9 @@ import {
   createArtist,
   editArtist,
   deleteArtist,
-} from "../controller/ArtistsController.js";
+} from "../controller/artists.controller.js";
 
-import { authorize } from "../middleware/AuthMiddleware.js";
+import { authorize } from "../middleware/auth.middleware.js";
 import { ADMIN, SUPERADMIN } from "../constants/userRoles.js";
 
 const router = express.Router();

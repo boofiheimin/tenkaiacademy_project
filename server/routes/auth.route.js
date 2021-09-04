@@ -5,8 +5,8 @@ import {
   login,
   logout,
   authenticate,
-} from "../controller/AuthController.js";
-import { authorize } from "../middleware/AuthMiddleware.js";
+} from "../controller/auth.controller.js";
+import { authorize } from "../middleware/auth.middleware.js";
 import { ADMIN, SUPERADMIN } from "../constants/userRoles.js";
 
 const router = express.Router();

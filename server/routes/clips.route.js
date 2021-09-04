@@ -7,9 +7,9 @@ import {
   editClip,
   refetchClip,
   deleteClip,
-} from "../controller/ClipsController.js";
+} from "../controller/clips.controller.js";
 
-import { authorize } from "../middleware/AuthMiddleware.js";
+import { authorize } from "../middleware/auth.middleware.js";
 import { ADMIN, SUPERADMIN } from "../constants/userRoles.js";
 
 const router = express.Router();

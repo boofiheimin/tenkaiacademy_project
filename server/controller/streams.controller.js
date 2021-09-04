@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Stream from "../models/Stream.js";
-import Clip from "../models/Clip.js";
-import Tag from "../models/Tag.js";
-import ErrorResponse from "../utils/ErrorResponse.js";
+import Stream from "../models/stream.js";
+import Clip from "../models/clip.js";
+import Tag from "../models/tag.js";
+import ErrorResponse from "../utils/errorResponse.js";
 
 import Youtube from "youtube-api";
 import moment from "moment";

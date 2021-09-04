@@ -5,9 +5,9 @@ import {
   createTag,
   editTag,
   deleteTag,
-} from "../controller/TagsController.js";
+} from "../controller/tags.controller.js";
 
-import { authorize } from "../middleware/AuthMiddleware.js";
+import { authorize } from "../middleware/auth.middleware.js";
 import { ADMIN, SUPERADMIN } from "../constants/userRoles.js";
 
 const router = express.Router();

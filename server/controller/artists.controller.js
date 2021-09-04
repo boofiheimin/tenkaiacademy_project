@@ -1,6 +1,6 @@
-import Artist from "../models/Artist.js";
-import Stream from "../models/Stream.js";
-import ErrorResponse from "../utils/ErrorResponse.js";
+import Artist from "../models/artist.js";
+import Stream from "../models/stream.js";
+import ErrorResponse from "../utils/errorResponse.js";
 
 export const getArtists = async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
-import Tag from "../models/Tag.js";
-import Stream from "../models/Stream.js";
-import ErrorResponse from "../utils/ErrorResponse.js";
+import Tag from "../models/tag.js";
+import Stream from "../models/stream.js";
+import ErrorResponse from "../utils/errorResponse.js";
 
 export const getTags = async (req, res, next) => {
   try {
