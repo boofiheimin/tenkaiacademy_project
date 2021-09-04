@@ -4,22 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { ThemeProvider, createTheme } from "@material-ui/core";
 
 import { authen } from "../actions/AuthActions";
-import PrivateRoute from "./Routing/PrivateRoute";
+import PrivateRoute from "./Routing/privateRoute";
 
-import Nav from "./Nav/NavContainer";
-import Login from "./Login/LoginContainer";
-import Landing from "./Landing/LandingContainer";
-import Streams from "./Streams/StreamsContainer";
-import Stream from "./Stream/StreamContainer";
-import StreamEdit from "./StreamEdit/StreamEditContainer";
-import Clips from "./Clips/ClipsContainer";
-import Clip from "./Clip/ClipContainer";
-import ClipEdit from "./ClipEdit/ClipEditContainer";
-import Tags from "./Tags/TagsContainer";
-import Music from "./Music/MusicContainer";
-import MusicEdit from "./MusicEdit/MusicEditContainer";
+import Nav from "./Nav/nav.container";
+import Login from "./Login/login.container";
+import Landing from "./Landing/landing.container";
+import Streams from "./Streams/streams.container";
+import Stream from "./Stream/stream.container";
+import StreamEdit from "./StreamEdit/streamEdit.container";
+import Clips from "./Clips/clips.container";
+import Clip from "./Clip/clip.container";
+import ClipEdit from "./ClipEdit/clipEdit.container";
+import Tags from "./Tags/tags.container";
+import Music from "./Music/music.container";
+import MusicEdit from "./MusicEdit/musicEdit.container";
 import Artists from "./Artists/artists.container";
-import NotFound from "./NotFound/NotFoundContainer";
+import NotFound from "./NotFound/notFound.container";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
