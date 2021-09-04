@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import VideoCardStory from "./videoCardStory";
 
 import { GAME, TALK, PRIVATE } from "../constants/videoTypes";
@@ -33,11 +34,22 @@ export default {
   },
 };
 
-const Template = ({ tags, type, ...restargs }) => {
+const Template = (props) => {
   // eslint-disable-next-line no-param-reassign
+  const { tags, type, ...restargs } = props;
   tags[0] = { id: 1, tagNameEN: type };
 
   return <VideoCardStory tags={tags} {...restargs} />;
+};
+
+Template.propTypes = {
+  tags: PropTypes.array,
+  type: PropTypes.string,
+};
+
+Template.defaultProps = {
+  tags: [],
+  type: "GAME",
 };
 
 export const Primary = Template.bind({});

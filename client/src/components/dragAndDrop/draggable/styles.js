@@ -33,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
   clickable: {
     cursor: "pointer",
     flexGrow: 1,
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
