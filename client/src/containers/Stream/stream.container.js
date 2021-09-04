@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { setVideoMode } from "../../actions/GlobalActions";
 import { getStream } from "../../actions/StreamsActions";
 
-import Video from "../../components/Video/Video";
+import Video from "../../components/Video/video";
 
 import { VIDEO_TYPE_STREAM } from "../../constants/main";
 

@@ -17,9 +17,9 @@ import HistoryIcon from "@material-ui/icons/History";
 import moment from "moment";
 
 import useStyles from "./styles";
-import ConfirmationPopper from "../ConfirmationPopper/ConfirmationPopper";
+import ConfirmationPopper from "../ConfirmationPopper/confirmationPopper";
 
-import TypeChip from "../TypeChip/TypeChip";
+import TypeChip from "../TypeChip/typeChip";
 
 import { VIDEO_TYPE_STREAM } from "../../constants/main";
 

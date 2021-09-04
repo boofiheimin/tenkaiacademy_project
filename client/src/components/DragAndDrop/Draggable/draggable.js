@@ -5,7 +5,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import ConfirmationPopper from "../../ConfirmationPopper/ConfirmationPopper";
+import ConfirmationPopper from "../../ConfirmationPopper/confirmationPopper";
 
 import useStyles from "./styles";
 

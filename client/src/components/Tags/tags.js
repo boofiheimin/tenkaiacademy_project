@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Box, Tabs, Tab, AppBar } from "@material-ui/core";
-import TagsPanel from "./TagPanel/TagsPanel";
+import TagsPanel from "./TagPanel/tagsPanel";
 
 import useStyles from "./styles";
 

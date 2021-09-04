@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { Box, Typography, Divider } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import VideoCard from "../VideoCard/VideoCard";
+import VideoCard from "../VideoCard/videoCard";
 
-import ShurikenSpinner from "../ShurikenSpinner/ShurikenSpinner";
+import ShurikenSpinner from "../ShurikenSpinner/shurikenSpinner";
 
 import { VIDEO_TYPE_STREAM } from "../../constants/main";
 

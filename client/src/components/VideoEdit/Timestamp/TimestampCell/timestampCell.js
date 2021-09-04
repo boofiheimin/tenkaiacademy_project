@@ -13,7 +13,7 @@ import {
   faMinusSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import ConfirmationPopper from "../../../ConfirmationPopper/ConfirmationPopper";
+import ConfirmationPopper from "../../../ConfirmationPopper/confirmationPopper";
 import { secondsTohhmmss, hhmmssRegEx } from "../../../../helper";
 
 import useStyles from "./styles";

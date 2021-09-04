@@ -18,9 +18,9 @@ import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTimes, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
-import DragAndDrop from "../DragAndDrop/DragAndDrop";
-import Timestamp from "./Timestamp/Timestamp";
-import ImportTimestampModal from "./ImportTimestampModal/ImportTimestampModal";
+import DragAndDrop from "../DragAndDrop/dragAndDrop";
+import Timestamp from "./Timestamp/timestamp";
+import ImportTimestampModal from "./ImportTimestampModal/importTimestampModal";
 
 import useStyles from "./styles";
 

@@ -17,8 +17,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
-import VideoCards from "../VideoCards/VideoCards";
-import SearchForm from "../SearchForm/SearchForm";
+import VideoCards from "../VideoCards/videoCards";
+import SearchForm from "../SearchForm/searchForm";
 import useStyles from "./styles";
 
 import { VIDEO_TYPE_CLIP, VIDEO_TYPE_STREAM } from "../../constants/main";

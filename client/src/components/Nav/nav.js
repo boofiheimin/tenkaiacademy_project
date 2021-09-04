@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import json2mq from "json2mq";
 import { Alert } from "@material-ui/lab";
-import DrawerItems from "./DrawerItems";
+import DrawerItems from "./drawerItems";
 import useStyles from "./styles";
 
 // eslint-disable-next-line import/no-mutable-exports

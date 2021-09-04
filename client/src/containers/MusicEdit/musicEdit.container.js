@@ -1,4 +1,4 @@
-import MusicEdit from "../../components/MusicEdit/MusicEdit";
+import MusicEdit from "../../components/MusicEdit/musicEdit";
 
 const MusicEditContainer = () => <MusicEdit />;
 

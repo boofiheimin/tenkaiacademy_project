@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import TimestampCell from "./TimestampCell/TimestampCell";
+import TimestampCell from "./TimestampCell/timestampCell";
 
 import { hhmmssRegEx } from "../../../helper";
 

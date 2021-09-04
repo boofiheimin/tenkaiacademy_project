@@ -13,7 +13,7 @@ import {
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
-import Videos from "../../components/Videos/Videos";
+import Videos from "../../components/Videos/videos";
 
 import { useQuery } from "../../utils";
 import { VIDEOS_FETCH_LIMIT, VIDEO_TYPE_CLIP } from "../../constants/main";

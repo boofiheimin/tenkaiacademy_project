@@ -10,7 +10,7 @@ import {
 } from "../../actions/StreamsActions";
 import { getTags } from "../../actions/TagsActions";
 
-import VideoEdit from "../../components/VideoEdit/VideoEdit";
+import VideoEdit from "../../components/VideoEdit/videoEdit";
 
 import { youtubeThumbnailGetter } from "../../helper";
 

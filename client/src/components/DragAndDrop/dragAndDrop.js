@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-import Draggable from "./Draggable/Draggable";
-import AddForm from "./AddForm/AddForm";
+import Draggable from "./Draggable/draggable";
+import AddForm from "./AddForm/addForm";
 
 import useStyles from "./styles";
 

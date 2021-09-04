@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getClip, editClip, refetchClip } from "../../actions/ClipsActions";
 import { getTags } from "../../actions/TagsActions";
 
-import VideoEdit from "../../components/VideoEdit/VideoEdit";
+import VideoEdit from "../../components/VideoEdit/videoEdit";
 
 import { youtubeThumbnailGetter } from "../../helper";
 

@@ -30,11 +30,11 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
+import ResponsiveYoutube from "../ResponsiveYoutube/responsiveYoutube";
 import useStyles from "./styles";
-import Song from "./Song/Song";
+import Song from "./Song/song";
 
-import DragAndDrop from "../DragAndDrop/DragAndDrop";
+import DragAndDrop from "../DragAndDrop/dragAndDrop";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

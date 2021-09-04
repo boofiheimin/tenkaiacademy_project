@@ -1,5 +1,5 @@
 import { Box } from "@material-ui/core";
-import ShurikenSpinner from "../ShurikenSpinner/ShurikenSpinner";
+import ShurikenSpinner from "../ShurikenSpinner/shurikenSpinner";
 
 const Loading = () => (
   <Box

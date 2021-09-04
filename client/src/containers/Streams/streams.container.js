@@ -14,7 +14,7 @@ import {
 import { getTags } from "../../actions/TagsActions";
 import { setVideoMode } from "../../actions/GlobalActions";
 
-import Videos from "../../components/Videos/Videos";
+import Videos from "../../components/Videos/videos";
 
 import { useQuery } from "../../utils";
 import { VIDEO_TYPE_STREAM, VIDEOS_FETCH_LIMIT } from "../../constants/main";

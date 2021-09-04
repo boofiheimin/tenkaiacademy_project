@@ -13,7 +13,7 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core";
-import Artist from "./Artist/Artist";
+import Artist from "./Artist/artist";
 
 import useStyles from "./styles";
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../actions/AuthActions";
 import { clearNotification, toggleSiteMode } from "../../actions/GlobalActions";
-import Nav from "../../components/Nav/Nav";
+import Nav from "../../components/Nav/nav";
 
 const NavContainer = () => {
   const [open, setOpen] = useState(true);

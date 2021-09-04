@@ -23,17 +23,17 @@ import { TwitterTweetEmbed } from "react-twitter-embed";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import json2mq from "json2mq";
 
-import ResponsiveYoutube from "../ResponsiveYoutube/ResponsiveYoutube";
+import ResponsiveYoutube from "../ResponsiveYoutube/responsiveYoutube";
 
 import useStyles from "./styles";
 
-import Timestamp from "./Timestamp/Timestamp";
-import HorizontalVideoCard from "../HorizontalVideoCard/HorizontalVideoCard";
-import TypeChip from "../TypeChip/TypeChip";
+import Timestamp from "./Timestamp/timestamp";
+import HorizontalVideoCard from "../HorizontalVideoCard/horizontalVideoCard";
+import TypeChip from "../TypeChip/typeChip";
 
 import { VIDEO_TYPE_STREAM, VIDEO_TYPE_CLIP } from "../../constants/main";
-import Loading from "../Loading/Loading";
-import NotFound from "../NotFound/NotFound";
+import Loading from "../Loading/loading";
+import NotFound from "../NotFound/notFound";
 
 const Video = ({
   video = {},

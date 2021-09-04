@@ -13,7 +13,7 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core";
-import Tag from "../Tag/Tag";
+import Tag from "../Tag/tag";
 
 import useStyles from "./styles";
 

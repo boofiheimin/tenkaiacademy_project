@@ -8,7 +8,7 @@ import {
   editTag,
 } from "../../actions/TagsActions";
 
-import Tags from "../../components/Tags/Tags";
+import Tags from "../../components/Tags/tags";
 
 const TagsContainer = () => {
   const dispatch = useDispatch();

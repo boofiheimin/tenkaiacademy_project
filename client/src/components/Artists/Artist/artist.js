@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./styles";
 
-import ConfirmationPopper from "../../ConfirmationPopper/ConfirmationPopper";
+import ConfirmationPopper from "../../ConfirmationPopper/confirmationPopper";
 
 const Artist = ({ artist, onSave, onRemove }) => {
   const [mode, setMode] = useState(false);

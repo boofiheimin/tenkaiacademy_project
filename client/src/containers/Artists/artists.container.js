@@ -8,7 +8,7 @@ import {
   editArtist,
 } from "../../actions/ArtistsActions";
 
-import Artists from "../../components/Artists/Artists";
+import Artists from "../../components/Artists/artists";
 
 const ArtistsContainer = () => {
   const dispatch = useDispatch();
