@@ -1,4 +1,4 @@
-import DragAndDropStory from "./DragAndDropStory";
+import DragAndDropStory from "./dragAndDropStory";
 
 export default {
   title: "DragAndDrop",

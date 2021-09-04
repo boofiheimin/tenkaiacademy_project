@@ -1,4 +1,4 @@
-import HorizontalVideoCard from "../components/HorizontalVideoCard/HorizontalVideoCard";
+import HorizontalVideoCard from "../components/horizontalVideoCard/horizontalVideoCard";
 
 const HorizontalVideoCardStory = (props) => <HorizontalVideoCard {...props} />;
 

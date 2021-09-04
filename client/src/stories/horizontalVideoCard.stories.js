@@ -1,6 +1,4 @@
-import HorizontalVideoCard from "./HorizontalVideoCard";
-
-import { GAME, TALK, PRIVATE } from "../constants/videoTypes";
+import HorizontalVideoCard from "./horizontalVideoCard";
 
 export default {
   title: "HorizontalVideoCard",

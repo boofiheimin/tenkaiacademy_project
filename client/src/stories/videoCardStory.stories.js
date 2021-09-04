@@ -1,4 +1,4 @@
-import VideoCardStory from "./VideoCardStory";
+import VideoCardStory from "./videoCardStory";
 
 import { GAME, TALK, PRIVATE } from "../constants/videoTypes";
 
