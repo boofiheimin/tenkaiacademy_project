@@ -19,6 +19,8 @@ import Tags from "./tags/tags.container";
 import Music from "./music/music.container";
 import MusicEdit from "./musicEdit/musicEdit.container";
 import Artists from "./artists/artists.container";
+import Songs from "./songs/songs.container";
+
 import NotFound from "./notFound/notFound.container";
 
 const ScrollToTop = () => {
@@ -73,7 +75,7 @@ const App = () => {
             </Route>
             <PrivateRoute path="tags" element={<Tags />} />
             <PrivateRoute path="artists" element={<Artists />} />
-            <PrivateRoute path="songs" element={<Tags />} />
+            <PrivateRoute path="songs" element={<Songs />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
