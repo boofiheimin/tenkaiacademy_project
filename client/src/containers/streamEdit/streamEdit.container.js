@@ -7,8 +7,8 @@ import {
   getStream,
   editStream,
   refetchStream,
-} from "../../actions/StreamsActions";
-import { getTags } from "../../actions/TagsActions";
+} from "../../actions/streams.actions";
+import { getTags } from "../../actions/tags.actions";
 
 import VideoEdit from "../../components/videoEdit/videoEdit";
 

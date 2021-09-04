@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ThemeProvider, createTheme } from "@material-ui/core";
 
-import { authen } from "../actions/AuthActions";
+import { authen } from "../actions/auth.actions";
 import PrivateRoute from "./routing/privateRoute";
 
 import Nav from "./nav/nav.container";

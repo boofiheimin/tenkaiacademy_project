@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getClip, editClip, refetchClip } from "../../actions/ClipsActions";
-import { getTags } from "../../actions/TagsActions";
+import { getClip, editClip, refetchClip } from "../../actions/clips.actions";
+import { getTags } from "../../actions/tags.actions";
 
 import VideoEdit from "../../components/videoEdit/videoEdit";
 

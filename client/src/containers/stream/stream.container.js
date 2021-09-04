@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { setVideoMode } from "../../actions/GlobalActions";
-import { getStream } from "../../actions/StreamsActions";
+import { setVideoMode } from "../../actions/global.actions";
+import { getStream } from "../../actions/streams.actions";
 
 import Video from "../../components/video/video";
 

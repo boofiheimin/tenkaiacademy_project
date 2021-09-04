@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../actions/AuthActions";
-import { clearNotification, toggleSiteMode } from "../../actions/GlobalActions";
+import { logout } from "../../actions/auth.actions";
+import {
+  clearNotification,
+  toggleSiteMode,
+} from "../../actions/global.actions";
 import Nav from "../../components/nav/nav";
 
 const NavContainer = () => {

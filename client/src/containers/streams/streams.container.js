@@ -10,9 +10,9 @@ import {
   refetchAll,
   addStream,
   removeStream,
-} from "../../actions/StreamsActions";
-import { getTags } from "../../actions/TagsActions";
-import { setVideoMode } from "../../actions/GlobalActions";
+} from "../../actions/streams.actions";
+import { getTags } from "../../actions/tags.actions";
+import { setVideoMode } from "../../actions/global.actions";
 
 import Videos from "../../components/videos/videos";
 

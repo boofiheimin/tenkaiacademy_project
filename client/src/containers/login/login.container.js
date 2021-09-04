@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../actions/AuthActions";
+import { login } from "../../actions/auth.actions";
 
 import LoginForm from "../../components/loginForm/loginForm";
 

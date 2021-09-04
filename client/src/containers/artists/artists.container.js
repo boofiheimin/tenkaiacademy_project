@@ -6,7 +6,7 @@ import {
   createArtist,
   deleteArtist,
   editArtist,
-} from "../../actions/ArtistsActions";
+} from "../../actions/artists.actions";
 
 import Artists from "../../components/artists/artists";
 

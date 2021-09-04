@@ -9,9 +9,9 @@ import {
   getMoreClips,
   addClip,
   removeClip,
-} from "../../actions/ClipsActions";
-import { getTags } from "../../actions/TagsActions";
-import { setVideoMode } from "../../actions/GlobalActions";
+} from "../../actions/clips.actions";
+import { getTags } from "../../actions/tags.actions";
+import { setVideoMode } from "../../actions/global.actions";
 
 import Videos from "../../components/videos/videos";
 

@@ -6,7 +6,7 @@ import {
   createTag,
   deleteTag,
   editTag,
-} from "../../actions/TagsActions";
+} from "../../actions/tags.actions";
 
 import Tags from "../../components/tags/tags";
 
