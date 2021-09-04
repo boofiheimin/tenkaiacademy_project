@@ -3,7 +3,12 @@
     "plugins": ["prettier"],
     "parser": "babel-eslint",
     "rules": {
-      "prettier/prettier": "error",
+      "prettier/prettier" : [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ],
       "no-unused-vars": "warn",
       "react/prop-types": "warn",
       "react/forbid-prop-types": "off",

@@ -18,7 +18,7 @@ import ClipEdit from "./ClipEdit/ClipEditContainer";
 import Tags from "./Tags/TagsContainer";
 import Music from "./Music/MusicContainer";
 import MusicEdit from "./MusicEdit/MusicEditContainer";
-import Artists from "./Artists/ArtistsContainer";
+import Artists from "./Artists/artists.container";
 import NotFound from "./NotFound/NotFoundContainer";
 
 const ScrollToTop = () => {
