@@ -48,18 +48,21 @@ const StyledTableCell = withStyles((theme) => ({
 
 const mockSongs = [
   {
+    id: uuidv4(),
     name: "秒針を噛む",
     artist: "ずっと真夜中でいいのに。",
     videoId: "_kT4a8IzM70",
     date: new Date(),
   },
   {
+    id: uuidv4(),
     name: "ヒバナ",
     artist: "DECO*27",
     videoId: "USrIMGRBA78",
     date: new Date(),
   },
   {
+    id: uuidv4(),
     name: "Kaibutsu",
     artist: "YOASOBI",
     videoId: "o5NMoZGWkDY",
@@ -385,6 +388,7 @@ const Music = () => {
                 {...song}
                 onPlay={handlePlay}
                 onAddQueue={handleAddToQueue}
+                key={song.id}
               />
             ))}
           </TableBody>
