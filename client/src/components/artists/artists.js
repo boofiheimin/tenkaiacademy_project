@@ -76,8 +76,6 @@ const Artists = ({
     filtered = filtered.filter((item) => item.artistNameJP.includes(filterJP));
   }
 
-  console.log(artists);
-
   return (
     <Container>
       <div className={classes.input}>

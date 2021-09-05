@@ -61,7 +61,6 @@ const Songs = ({
     }
 
     if (songNameEN !== "" && artistsValue !== null) {
-      console.log(artistsValue);
       const artistIds = artistsValue.map((a) => a.artistId);
       onAddSong({
         songNameEN,
@@ -215,7 +214,21 @@ Songs.propTypes = {
       songId: PropTypes.string,
       songNameEN: PropTypes.string,
       songNameJP: PropTypes.string,
-      catId: PropTypes.string,
+      artists: PropTypes.arrayOf(
+        PropTypes.shape({
+          artistNameEN: PropTypes.string,
+          artistNameJP: PropTypes.string,
+          artistId: PropTypes.string,
+        })
+      ),
+    })
+  ),
+  artists: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      artistNameEN: PropTypes.string,
+      artistNameJP: PropTypes.string,
+      artistId: PropTypes.string,
     })
   ),
   onSongSave: PropTypes.func,
@@ -224,6 +237,7 @@ Songs.propTypes = {
 };
 Songs.defaultProps = {
   songs: [],
+  artists: [],
   onSongSave: () => {},
   onRemoveSong: () => {},
   onAddSong: () => {},

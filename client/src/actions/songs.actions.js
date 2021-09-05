@@ -9,7 +9,6 @@ import {
 export const getSongs = () => async (dispatch) => {
   try {
     const { data } = await api.fetchSongs();
-    console.log(data);
     dispatch({ type: FETCH_SONGS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);

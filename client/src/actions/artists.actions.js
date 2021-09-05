@@ -9,7 +9,6 @@ import {
 export const getArtists = () => async (dispatch) => {
   try {
     const { data } = await api.fetchArtists();
-    console.log(data);
     dispatch({ type: FETCH_ARTISTS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);

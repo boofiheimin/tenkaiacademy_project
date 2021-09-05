@@ -24,14 +24,12 @@ const Artist = ({ song, onSave, onRemove, artists }) => {
   const [songNameEN, setEN] = useState("");
   const [songNameJP, setJP] = useState("");
   const [artistNames, setArtist] = useState([]);
-  const [catId, setCatId] = useState(song.catId);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [artistsValue, setArtistValue] = useState(null);
+  const [artistsValue, setArtistValue] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    console.log(song);
-    if (artists.length > 0) {
+    if (Array.isArray(artists)) {
       setEN(song.songNameEN);
       setJP(song.songNameJP);
       setArtist(song.artists.map((a) => a.artistNameEN));
@@ -39,9 +37,7 @@ const Artist = ({ song, onSave, onRemove, artists }) => {
       const initArtistValue = song.artists.map((sa) =>
         artists.find((artist) => artist.artistId === sa.artistId)
       );
-      console.log(initArtistValue);
       setArtistValue(initArtistValue);
-      setCatId(song.catId);
     }
   }, [song, artists]);
 
@@ -88,8 +84,6 @@ const Artist = ({ song, onSave, onRemove, artists }) => {
 
   const { songId } = song;
   const classes = useStyles();
-
-  console.log(artistsValue);
 
   return (
     <TableRow key={songId}>
@@ -167,8 +161,22 @@ Artist.propTypes = {
     songId: PropTypes.string,
     songNameEN: PropTypes.string,
     songNameJP: PropTypes.string,
-    catId: PropTypes.string,
+    artists: PropTypes.arrayOf(
+      PropTypes.shape({
+        artistNameEN: PropTypes.string,
+        artistNameJP: PropTypes.string,
+        artistId: PropTypes.string,
+      })
+    ),
   }),
+  artists: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      artistNameEN: PropTypes.string,
+      artistNameJP: PropTypes.string,
+      artistId: PropTypes.string,
+    })
+  ),
   onSave: PropTypes.func,
   onRemove: PropTypes.func,
 };
@@ -179,8 +187,9 @@ Artist.defaultProps = {
     songId: null,
     songNameEN: "",
     songNameJP: "",
-    catId: null,
+    artists: [],
   },
+  artists: [],
   onSave: () => {},
   onRemove: () => {},
 };
