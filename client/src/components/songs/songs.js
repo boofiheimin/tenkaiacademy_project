@@ -14,6 +14,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import Song from "./song/song";
 
 import useStyles from "./styles";
@@ -27,13 +28,14 @@ const Songs = ({
 }) => {
   const classes = useStyles();
   const [songNameEN, setEN] = useState("");
-  const [artistValue, setArtistValue] = useState(null);
+  const [artistsValue, setArtistsValue] = useState([]);
   const [songNameJP, setJP] = useState("");
   const [songs, setSongs] = useState(propSongs);
   const [enError, setENError] = useState(false);
   const [artistError, setArtistError] = useState(false);
   const [filterEN, setFilterEN] = useState("");
   const [filterJP, setFilterJP] = useState("");
+  const [filterArtist, setFilterArtist] = useState("");
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
@@ -47,21 +49,24 @@ const Songs = ({
     setJP(e.target.value);
   };
   const handleOnArtistChange = (e, v) => {
-    setArtistValue(v);
+    setArtistsValue(v);
   };
 
   const handleAddSong = () => {
     if (songNameEN === "") {
       setENError(true);
     }
-    if (artistValue === null) {
+    if (artistsValue.length === 0) {
       setArtistError(true);
     }
 
-    if (songNameEN !== "" && artistValue !== null) {
+    if (songNameEN !== "" && artistsValue !== null) {
+      console.log(artistsValue);
+      const artistIds = artistsValue.map((a) => a.artistId);
       onAddSong({
         songNameEN,
         songNameJP,
+        artistIds,
       });
       setEN("");
       setJP("");
@@ -81,6 +86,11 @@ const Songs = ({
     setFilterJP(value);
   };
 
+  const handleArtistSearch = (e) => {
+    const { value } = e.target;
+    setFilterArtist(value);
+  };
+
   const handleInputChange = (e, v) => {
     setInputValue(v);
   };
@@ -94,7 +104,11 @@ const Songs = ({
     filtered = filtered.filter((item) => item.songNameJP.includes(filterJP));
   }
 
-  console.log(songs);
+  if (filterArtist !== "") {
+    filtered = filtered.filter((item) =>
+      item.artistNameEN.includes(filterArtist)
+    );
+  }
 
   return (
     <Container>
@@ -112,8 +126,9 @@ const Songs = ({
           onChange={handleJPChange}
         />
         <Autocomplete
+          multiple
           options={artists}
-          value={artistValue}
+          value={artistsValue}
           onChange={handleOnArtistChange}
           inputValue={inputValue}
           onInputChange={handleInputChange}
@@ -166,8 +181,8 @@ const Songs = ({
                   <div>Artist EN</div>
                   <input
                     type="text"
-                    onChange={handleJPSearch}
-                    placeholder="search by jp"
+                    onChange={handleArtistSearch}
+                    placeholder="search by artist"
                   />
                 </TableCell>
                 <TableCell style={{ width: "20%" }} align="right">
@@ -182,6 +197,7 @@ const Songs = ({
                   onSave={onSongSave}
                   onRemove={onRemoveSong}
                   key={song._id}
+                  artists={artists}
                 />
               ))}
             </TableBody>

@@ -46,3 +46,9 @@ export const createArtist = async (artistData) =>
 export const editArtist = async (id, artistData) =>
   API.patch(`/artists/${id}`, artistData);
 export const deleteArtist = async (id) => API.delete(`/artists/${id}`);
+
+export const fetchSongs = async () => API.get("/songs");
+export const createSong = async (songData) => API.post("/songs", songData);
+export const editSong = async (id, songData) =>
+  API.patch(`/songs/${id}`, songData);
+export const deleteSong = async (id) => API.delete(`/songs/${id}`);

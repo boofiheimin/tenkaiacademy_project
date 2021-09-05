@@ -4,6 +4,7 @@ import clips from "./clips.reducer";
 import auth from "./auth.reducer";
 import tags from "./tags.reducer";
 import artists from "./artists.reducer";
+import songs from "./songs.reducer";
 import global from "./global.reducer";
 
 export default combineReducers({
@@ -13,4 +14,5 @@ export default combineReducers({
   global,
   clips,
   artists,
+  songs,
 });

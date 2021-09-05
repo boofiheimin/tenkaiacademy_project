@@ -1,5 +1,5 @@
 import Artist from "../models/artist.js";
-import Stream from "../models/stream.js";
+import Song from "../models/stream.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 export const getArtists = async (req, res, next) => {

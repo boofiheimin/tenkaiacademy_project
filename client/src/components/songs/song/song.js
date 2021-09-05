@@ -13,33 +13,53 @@ import {
   faSave,
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import useStyles from "./styles";
 
 import ConfirmationPopper from "../../confirmationPopper/confirmationPopper";
 
-const Artist = ({ song, onSave, onRemove }) => {
+const Artist = ({ song, onSave, onRemove, artists }) => {
   const [mode, setMode] = useState(false);
-  const [songNameEN, setEN] = useState(song.songNameEN);
-  const [songNameJP, setJP] = useState(song.songNameJP);
+  const [songNameEN, setEN] = useState("");
+  const [songNameJP, setJP] = useState("");
+  const [artistNames, setArtist] = useState([]);
   const [catId, setCatId] = useState(song.catId);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [artistsValue, setArtistValue] = useState(null);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    setEN(song.songNameEN);
-    setJP(song.songNameJP);
-    setCatId(song.catId);
-  }, [song]);
+    console.log(song);
+    if (artists.length > 0) {
+      setEN(song.songNameEN);
+      setJP(song.songNameJP);
+      setArtist(song.artists.map((a) => a.artistNameEN));
+
+      const initArtistValue = song.artists.map((sa) =>
+        artists.find((artist) => artist.artistId === sa.artistId)
+      );
+      console.log(initArtistValue);
+      setArtistValue(initArtistValue);
+      setCatId(song.catId);
+    }
+  }, [song, artists]);
 
   const toggleState = () => {
+    const artistIds = artistsValue.map((a) => a.artistId);
     if (mode) {
       onSave(song._id, {
         songNameEN,
         songNameJP,
-        catId,
         songId: song.songId,
+        artistIds,
       });
     }
     setMode(!mode);
+  };
+
+  const handleOnArtistChange = (e, v) => {
+    setArtistValue(v);
   };
 
   const handleENChange = (e) => {
@@ -62,8 +82,15 @@ const Artist = ({ song, onSave, onRemove }) => {
     setAnchorEl(null);
   };
 
+  const handleInputChange = (e, v) => {
+    setInputValue(v);
+  };
+
   const { songId } = song;
   const classes = useStyles();
+
+  console.log(artistsValue);
+
   return (
     <TableRow key={songId}>
       <TableCell component="th" scope="row">
@@ -84,7 +111,33 @@ const Artist = ({ song, onSave, onRemove }) => {
         )}
       </TableCell>
       <TableCell>
-        <Typography>Kenshi Yonezu</Typography>
+        {mode ? (
+          <Autocomplete
+            multiple
+            options={artists}
+            value={artistsValue}
+            onChange={handleOnArtistChange}
+            inputValue={inputValue}
+            onInputChange={handleInputChange}
+            getOptionSelected={(o, v) => o._id === v._id}
+            getOptionLabel={(o) => (o.artistNameEN ? o.artistNameEN : "")}
+            className={classes.artistsSelector}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            )}
+          />
+        ) : (
+          artistNames.map((name, index) => (
+            <Typography>{`${name}${
+              index !== artistNames.length - 1 ? "," : ""
+            }`}</Typography>
+          ))
+        )}
       </TableCell>
       <TableCell align="right">
         <Button

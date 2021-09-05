@@ -9,7 +9,6 @@ const artistSchema = mongoose.Schema(
     },
     artistNameEN: {
       type: String,
-      unique: true,
       required: [true, "Please provide a artistNameEN"],
     },
     artistNameJP: {
