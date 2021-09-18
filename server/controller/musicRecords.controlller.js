@@ -15,8 +15,7 @@ export const getMusicRecords = async (req, res, next) => {
 
 export const createMusicRecord = async (req, res, next) => {
   try {
-    console.log("WHAT");
-    const { songId, videoId, songStart, songEnd } = req.body;
+    const { songId, videoId, songStart, songEnd, isScuffed } = req.body;
 
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
@@ -41,6 +40,7 @@ export const createMusicRecord = async (req, res, next) => {
       },
       songStart,
       songEnd,
+      isScuffed,
     };
 
     console.log(newMusicRecordParams);
@@ -56,7 +56,23 @@ export const createMusicRecord = async (req, res, next) => {
 
 export const editMusicRecord = async (req, res, next) => {
   try {
-    // res.status(200).json(song);
+    const { songId, videoId, songStart, songEnd, isScuffed } = req.body;
+    const song = await Song.findOne({ songId });
+    const stream = await Stream.findOne({ videoId });
+
+    if (!song || !stream) {
+      return next(new ErrorResponse(`Song or Stream NotFound`, 404));
+    }
+
+    const newMusicRecord = await MusicRecord.findByIdAndUpdate(
+      req.params.id,
+      { songId, videoId, songStart, songEnd, isScuffed },
+      {
+        new: true,
+      }
+    );
+    await newMusicRecord.save();
+    res.status(200).json(newMusicRecord);
   } catch (err) {
     return next(error);
   }
@@ -64,7 +80,12 @@ export const editMusicRecord = async (req, res, next) => {
 
 export const deleteMusicRecord = async (req, res, next) => {
   try {
-    //  res.status(200).json(song);
+    const musicRecord = await MusicRecord.findByIdAndDelete(req.params.id);
+    if (!musicRecord) {
+      return next(new ErrorResponse("Music Record not found", 404));
+    }
+
+    res.status(200).json(musicRecord);
   } catch (err) {
     return next(error);
   }

@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   Typography,
+  Checkbox,
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -66,18 +67,18 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
   //     setJP(e.target.value);
   //   };
 
-  //   const handleRemove = (e) => {
-  //     setAnchorEl(e.currentTarget);
-  //   };
+  const handleRemove = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
 
-  //   const handlePopperConfirm = () => {
-  //     onRemove(song._id);
-  //     setAnchorEl(null);
-  //   };
+  const handlePopperConfirm = () => {
+    onRemove(record._id);
+    setAnchorEl(null);
+  };
 
-  //   const handlePopperCancel = () => {
-  //     setAnchorEl(null);
-  //   };
+  const handlePopperCancel = () => {
+    setAnchorEl(null);
+  };
 
   //   const handleInputChange = (e, v) => {
   //     setInputValue(v);
@@ -85,17 +86,41 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
 
   const classes = useStyles();
 
-  const { _id, songNameEN, artistNameEN, streamedAt } = record;
+  const {
+    songData,
+    streamData,
+    songStart,
+    songEnd,
+    isScuffed = false,
+  } = record;
+  const artistNames = songData.artists.map((artist) => artist.artistNameEN);
 
   return (
     <TableRow>
-      <TableCell component="th" scope="row">
-        <Typography>{_id}</Typography>
-      </TableCell>
-      <TableCell>{songNameEN}</TableCell>
-      <TableCell>{artistNameEN}</TableCell>
+      <TableCell>{songData.songNameEN}</TableCell>
       <TableCell>
-        <Typography>{moment(streamedAt).format("DD/MM/yyyy")}</Typography>
+        {artistNames.map((name, index) => (
+          <Typography>{`${name}${
+            index !== artistNames.length - 1 ? "," : ""
+          }`}</Typography>
+        ))}
+      </TableCell>
+      <TableCell>
+        <Typography>{streamData.videoId}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>
+          {moment(streamData.publishedAt).format("DD/MM/yyyy")}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{songStart}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{songEnd}</Typography>
+      </TableCell>
+      <TableCell>
+        <Checkbox checked={isScuffed} disabled />
       </TableCell>
       <TableCell align="right">
         <Button
@@ -105,12 +130,13 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
         >
           <FontAwesomeIcon icon={mode ? faSave : faEdit} />
         </Button>
-        <Button className={classes.actionButton}>
+        <Button className={classes.actionButton} onClick={handleRemove}>
           <FontAwesomeIcon icon={faMinusSquare} />
         </Button>
         <ConfirmationPopper
-          //   onPopperConfirm={handlePopperConfirm}
-          //   onPopperCancel={handlePopperCancel}
+          popperId={record._id}
+          onPopperConfirm={handlePopperConfirm}
+          onPopperCancel={handlePopperCancel}
           anchorEl={anchorEl}
         />
       </TableCell>

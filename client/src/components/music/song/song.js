@@ -13,7 +13,7 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import useStyles from "./styles";
 
 const Song = ({ record, onPlay, onAddQueue }) => {
-  const { streamData, songData, songStart, songEnd } = record;
+  const { streamData, songData, songStart, songEnd, isScuffed } = record;
   const classes = useStyles();
   const handlePlay = () => {
     onPlay(streamData.videoId, songData.songNameEN, songStart, songEnd);
@@ -28,16 +28,16 @@ const Song = ({ record, onPlay, onAddQueue }) => {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{songData.songNameEN}</Typography>
+        <Typography>{`${songData.songNameEN}${
+          isScuffed ? " (scuffed)" : ""
+        }`}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>
-          {artistNames.map((name, index) => (
-            <Typography>{`${name}${
-              index !== artistNames.length - 1 ? "," : ""
-            }`}</Typography>
-          ))}
-        </Typography>
+        {artistNames.map((name, index) => (
+          <Typography>{`${name}${
+            index !== artistNames.length - 1 ? "," : ""
+          }`}</Typography>
+        ))}
       </TableCell>
       <TableCell>
         <Typography>

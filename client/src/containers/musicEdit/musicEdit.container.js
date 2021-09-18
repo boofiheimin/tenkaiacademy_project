@@ -2,7 +2,12 @@ import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-// import { getArtists } from "../../actions/artists.actions";
+import {
+  getMusicRecords,
+  createMusicRecord,
+  deleteMusicRecord,
+} from "../../actions/musicRecords.actions";
+import { getSongs } from "../../actions/songs.actions";
 
 // import {
 //   getSongs,
@@ -16,32 +21,32 @@ import MusicEdit from "../../components/musicEdit/musicEdit";
 const MusicEditContainer = () => {
   const dispatch = useDispatch();
   const musicRecords = useSelector((state) => state.musicRecords);
+  const songs = useSelector((state) => state.songs);
 
   useEffect(() => {
-    // dispatch(getSongs());
+    dispatch(getMusicRecords());
+    dispatch(getSongs());
   }, [dispatch]);
 
-  const onAddSong = (song) => {
-    //  dispatch(createSong(song));
+  const handleAddMusicRecord = (recordParam) => {
+    dispatch(createMusicRecord(recordParam));
   };
-  const onRemoveSong = (id) => {
-    //    dispatch(deleteSong(id));
+  const handleRemoveMusicRecord = (id) => {
+    dispatch(deleteMusicRecord(id));
   };
 
   const onSongSave = (id, song) => {
     //     dispatch(editSong(id, song));
   };
 
+  console.log(songs);
+
   return (
     <MusicEdit
-      musicRecords={[
-        {
-          _id: "1",
-          songNameEN: "Byoushin wo Kamu",
-          artistNameEN: "ZUTOMAYO",
-          streamedAt: new Date(),
-        },
-      ]}
+      musicRecords={musicRecords}
+      songs={songs}
+      onAddMusicRecord={handleAddMusicRecord}
+      onRemoveMusicRecord={handleRemoveMusicRecord}
     />
   );
 };

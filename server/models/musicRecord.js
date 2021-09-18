@@ -48,6 +48,10 @@ const musicRecordSchema = mongoose.Schema(
     songEnd: {
       type: Number,
     },
+    isScuffed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
