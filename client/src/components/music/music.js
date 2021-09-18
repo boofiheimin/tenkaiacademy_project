@@ -76,7 +76,7 @@ const mockSongs = [
 const totalPages = 15;
 const page = 1;
 
-const Music = () => {
+const Music = ({ musicRecords }) => {
   const classes = useStyles();
   const youtubeRef = useRef();
   const [queue, setQueue] = useState([]);
@@ -383,12 +383,12 @@ const Music = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {mockSongs.map((song) => (
+            {musicRecords.map((record) => (
               <Song
-                {...song}
+                record={record}
                 onPlay={handlePlay}
                 onAddQueue={handleAddToQueue}
-                key={song.id}
+                key={record._id}
               />
             ))}
           </TableBody>

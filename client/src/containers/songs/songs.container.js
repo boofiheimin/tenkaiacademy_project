@@ -12,7 +12,7 @@ import {
 
 import Songs from "../../components/songs/songs";
 
-const ArtistsContainer = () => {
+const SongsContainer = () => {
   const dispatch = useDispatch();
   const artists = useSelector((state) => state.artists);
   const songs = useSelector((state) => state.songs);
@@ -44,4 +44,4 @@ const ArtistsContainer = () => {
   );
 };
 
-export default ArtistsContainer;
+export default SongsContainer;

@@ -12,35 +12,37 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import useStyles from "./styles";
 
-const Song = ({
-  name,
-  artist,
-  date,
-  onPlay,
-  onAddQueue,
-  start,
-  end,
-  videoId,
-}) => {
+const Song = ({ record, onPlay, onAddQueue }) => {
+  const { streamData, songData, songStart, songEnd } = record;
   const classes = useStyles();
   const handlePlay = () => {
-    onPlay(videoId, name, start, end);
+    onPlay(streamData.videoId, songData.songNameEN, songStart, songEnd);
   };
 
   const handleAddToQueue = () => {
-    onAddQueue(videoId, name, start, end);
+    onAddQueue(streamData.videoId, songData.songNameEN, songStart, songEnd);
   };
+
+  const artistNames = songData.artists.map((artist) => artist.artistNameEN);
 
   return (
     <TableRow>
       <TableCell>
-        <Typography>{name}</Typography>
+        <Typography>{songData.songNameEN}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{artist}</Typography>
+        <Typography>
+          {artistNames.map((name, index) => (
+            <Typography>{`${name}${
+              index !== artistNames.length - 1 ? "," : ""
+            }`}</Typography>
+          ))}
+        </Typography>
       </TableCell>
       <TableCell>
-        <Typography>{moment(date).format("DD/MM/yyyy")}</Typography>
+        <Typography>
+          {moment(streamData.publishedAt).format("DD/MM/yyyy")}
+        </Typography>
       </TableCell>
       <TableCell align="right">
         <Typography>
@@ -61,25 +63,13 @@ const Song = ({
 };
 
 Song.propTypes = {
-  name: PropTypes.string,
-  artist: PropTypes.string,
-  date: PropTypes.instanceOf(Date),
   onPlay: PropTypes.func,
   onAddQueue: PropTypes.func,
-  start: PropTypes.number,
-  end: PropTypes.number,
-  videoId: PropTypes.string,
 };
 
 Song.defaultProps = {
-  name: "",
-  artist: "",
-  date: new Date(),
   onPlay: () => {},
   onAddQueue: () => {},
-  start: 0,
-  end: 0,
-  videoId: "",
 };
 
 export default Song;
