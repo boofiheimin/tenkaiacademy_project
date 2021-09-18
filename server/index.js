@@ -11,6 +11,7 @@ import clipsRoute from "./routes/clips.route.js";
 import tagsRoute from "./routes/tags.route.js";
 import artistsRoute from "./routes/artists.route.js";
 import songsRoute from "./routes/songs.route.js";
+import musicRecordRoute from "./routes/musicRecords.route.js";
 const app = express();
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/v1/tags", tagsRoute);
 app.use("/api/v1/artists", artistsRoute);
 app.use("/api/v1/songs", songsRoute);
 app.use("/api/v1/clips", clipsRoute);
+app.use("/api/v1/musicRecords", musicRecordRoute);
 
 // Error Handler
 
