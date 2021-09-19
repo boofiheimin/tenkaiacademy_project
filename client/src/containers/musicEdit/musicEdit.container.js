@@ -6,6 +6,7 @@ import {
   getMusicRecords,
   createMusicRecord,
   deleteMusicRecord,
+  editMusicRecord,
 } from "../../actions/musicRecords.actions";
 import { getSongs } from "../../actions/songs.actions";
 
@@ -35,11 +36,9 @@ const MusicEditContainer = () => {
     dispatch(deleteMusicRecord(id));
   };
 
-  const onSongSave = (id, song) => {
-    //     dispatch(editSong(id, song));
+  const handleMusicRecordSave = (id, data) => {
+    dispatch(editMusicRecord(id, data));
   };
-
-  console.log(songs);
 
   return (
     <MusicEdit
@@ -47,6 +46,7 @@ const MusicEditContainer = () => {
       songs={songs}
       onAddMusicRecord={handleAddMusicRecord}
       onRemoveMusicRecord={handleRemoveMusicRecord}
+      onMusicRecordSave={handleMusicRecordSave}
     />
   );
 };

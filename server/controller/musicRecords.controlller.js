@@ -43,8 +43,6 @@ export const createMusicRecord = async (req, res, next) => {
       isScuffed,
     };
 
-    console.log(newMusicRecordParams);
-
     const newMusicRecord = new MusicRecord(newMusicRecordParams);
     await newMusicRecord.save();
 
@@ -57,6 +55,7 @@ export const createMusicRecord = async (req, res, next) => {
 export const editMusicRecord = async (req, res, next) => {
   try {
     const { songId, videoId, songStart, songEnd, isScuffed } = req.body;
+
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
 
@@ -64,9 +63,26 @@ export const editMusicRecord = async (req, res, next) => {
       return next(new ErrorResponse(`Song or Stream NotFound`, 404));
     }
 
+    const { songNameEN, songNameJP, artists } = song;
+    const { publishedAt } = stream;
+
     const newMusicRecord = await MusicRecord.findByIdAndUpdate(
       req.params.id,
-      { songId, videoId, songStart, songEnd, isScuffed },
+      {
+        songData: {
+          songId,
+          songNameEN,
+          songNameJP,
+          artists,
+        },
+        streamData: {
+          videoId,
+          publishedAt,
+        },
+        songStart,
+        songEnd,
+        isScuffed,
+      },
       {
         new: true,
       }
@@ -74,7 +90,7 @@ export const editMusicRecord = async (req, res, next) => {
     await newMusicRecord.save();
     res.status(200).json(newMusicRecord);
   } catch (err) {
-    return next(error);
+    return next(err);
   }
 };
 

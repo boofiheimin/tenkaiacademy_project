@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     display: "flex",
     alignItems: "center",
+    overflow: "hidden",
   },
 }));
 

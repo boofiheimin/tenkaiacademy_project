@@ -32,6 +32,7 @@ const MusicEdit = ({
   songs,
   onAddMusicRecord,
   onRemoveMusicRecord,
+  onMusicRecordSave,
 }) => {
   const [songValue, setSongValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
@@ -85,7 +86,6 @@ const MusicEdit = ({
   };
 
   const handleClear = () => {
-    console.log("clear");
     setVideoId("");
     setSongStart("");
     setSongEnd("");
@@ -192,10 +192,10 @@ const MusicEdit = ({
                   <Typography>videoId</Typography>
                 </TableCell>
                 <TableCell style={{ width: "10%" }}>
-                  <Typography>Stream date</Typography>
+                  <Typography>Date</Typography>
                 </TableCell>
-                <TableCell style={{ width: "5%" }}>start</TableCell>
-                <TableCell style={{ width: "5%" }}>end</TableCell>
+                <TableCell style={{ width: "5%" }}>Start</TableCell>
+                <TableCell style={{ width: "5%" }}>End</TableCell>
                 <TableCell style={{ width: "5%" }}>isScuffed</TableCell>
                 <TableCell style={{ width: "10%" }} align="right">
                   Action
@@ -207,6 +207,8 @@ const MusicEdit = ({
                 <MusicRecord
                   record={musicRecord}
                   onRemove={onRemoveMusicRecord}
+                  onSave={onMusicRecordSave}
+                  songs={songs}
                 />
               ))}
             </TableBody>

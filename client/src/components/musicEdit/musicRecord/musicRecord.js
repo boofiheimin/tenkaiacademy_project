@@ -8,6 +8,7 @@ import {
   Button,
   Typography,
   Checkbox,
+  Box,
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,51 +22,60 @@ import useStyles from "./styles";
 
 import ConfirmationPopper from "../../confirmationPopper/confirmationPopper";
 
-const MusicRecord = ({ record = {}, onSave, onRemove }) => {
+const MusicRecord = ({ record = {}, onSave, onRemove, songs }) => {
+  const {
+    songData,
+    streamData,
+    songStart: propSongStart,
+    songEnd: propSongEnd,
+    isScuffed: propIsScuffed,
+  } = record;
   const [mode, setMode] = useState(false);
-  //   const [songNameEN, setEN] = useState("");
-  //   const [songNameJP, setJP] = useState("");
-  //   const [artistNames, setArtist] = useState([]);
+  const [videoId, setVideoId] = useState("");
+  const [songStart, setSongStart] = useState("");
+  const [songEnd, setSongEnd] = useState("");
+  const [isScuffed, setIsScuffed] = useState(false);
+  const [publishedAt, setPublishedAt] = useState("");
+  const [songError, setSongError] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState(null);
-  //   const [artistsValue, setArtistValue] = useState([]);
-  //   const [inputValue, setInputValue] = useState("");
+  const [songValue, setSongValue] = useState(null);
+  const [inputValue, setInputValue] = useState("");
 
-  //   useEffect(() => {
-  //     if (Array.isArray(artists)) {
-  //       setEN(song.songNameEN);
-  //       setJP(song.songNameJP);
-  //       setArtist(song.artists.map((a) => a.artistNameEN));
-
-  //       const initArtistValue = song.artists.map((sa) =>
-  //         artists.find((artist) => artist.artistId === sa.artistId)
-  //       );
-  //       setArtistValue(initArtistValue);
-  //     }
-  //   }, [song, artists]);
+  useEffect(() => {
+    if (record) {
+      setVideoId(streamData.videoId);
+      setSongStart(propSongStart);
+      setSongEnd(propSongEnd);
+      setIsScuffed(propIsScuffed);
+      setPublishedAt(streamData.publishedAt);
+      setSongValue(songs.find((song) => song.songId === songData.songId));
+    }
+  }, [record]);
 
   const toggleState = () => {
-    //   const artistIds = artistsValue.map((a) => a.artistId);
-    //   if (mode) {
-    //     onSave(song._id, {
-    //       songNameEN,
-    //       songNameJP,
-    //       songId: song.songId,
-    //       artistIds,
-    //     });
-    //   }
+    if (mode) {
+      onSave(record._id, {
+        videoId,
+        songId: songValue.songId,
+        songStart,
+        songEnd,
+        isScuffed,
+      });
+    }
     setMode(!mode);
   };
 
-  //   const handleOnArtistChange = (e, v) => {
-  //     setArtistValue(v);
-  //   };
-
-  //   const handleENChange = (e) => {
-  //     setEN(e.target.value);
-  //   };
-  //   const handleJPChange = (e) => {
-  //     setJP(e.target.value);
-  //   };
+  const handleVideoIdChange = (e) => {
+    setVideoId(e.target.value);
+    setPublishedAt(null);
+  };
+  const handleSongStartChange = (e) => {
+    setSongStart(e.target.value);
+  };
+  const handleSongEndChange = (e) => {
+    setSongEnd(e.target.value);
+  };
 
   const handleRemove = (e) => {
     setAnchorEl(e.currentTarget);
@@ -80,24 +90,52 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
     setAnchorEl(null);
   };
 
-  //   const handleInputChange = (e, v) => {
-  //     setInputValue(v);
-  //   };
+  const handleIsScuffedChange = (e) => {
+    setIsScuffed(e.target.checked);
+  };
+
+  const handleOnSongChange = (e, v) => {
+    setSongValue(v);
+  };
+
+  const handleInputChange = (e, v) => {
+    setInputValue(v);
+  };
 
   const classes = useStyles();
 
-  const {
-    songData,
-    streamData,
-    songStart,
-    songEnd,
-    isScuffed = false,
-  } = record;
   const artistNames = songData.artists.map((artist) => artist.artistNameEN);
 
   return (
     <TableRow>
-      <TableCell>{songData.songNameEN}</TableCell>
+      <TableCell>
+        {mode ? (
+          <Autocomplete
+            options={songs}
+            value={songValue}
+            onChange={handleOnSongChange}
+            inputValue={inputValue}
+            onInputChange={handleInputChange}
+            getOptionSelected={(o, v) => o._id === v._id}
+            getOptionLabel={(o) => (o.songNameEN ? o.songNameEN : "")}
+            className={classes.songSelector}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                label="Song"
+                error={songError}
+                style={{ width: "80%" }}
+                helperText={songError ? "Please select Song" : null}
+              />
+            )}
+          />
+        ) : (
+          songData.songNameEN
+        )}
+      </TableCell>
       <TableCell>
         {artistNames.map((name, index) => (
           <Typography>{`${name}${
@@ -106,21 +144,43 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
         ))}
       </TableCell>
       <TableCell>
-        <Typography>{streamData.videoId}</Typography>
+        <Box width="110px">
+          {mode ? (
+            <TextField value={videoId} onChange={handleVideoIdChange} />
+          ) : (
+            <Typography>{videoId}</Typography>
+          )}
+        </Box>
       </TableCell>
       <TableCell>
         <Typography>
-          {moment(streamData.publishedAt).format("DD/MM/yyyy")}
+          {publishedAt ? moment(publishedAt).format("DD/MM/yyyy") : "---"}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography>{songStart}</Typography>
+        <Box width="38px">
+          {mode ? (
+            <TextField value={songStart} onChange={handleSongStartChange} />
+          ) : (
+            <Typography>{songStart}</Typography>
+          )}
+        </Box>
       </TableCell>
       <TableCell>
-        <Typography>{songEnd}</Typography>
+        <Box width="38px">
+          {mode ? (
+            <TextField value={songEnd} onChange={handleSongEndChange} />
+          ) : (
+            <Typography>{songEnd}</Typography>
+          )}
+        </Box>
       </TableCell>
       <TableCell>
-        <Checkbox checked={isScuffed} disabled />
+        <Checkbox
+          checked={isScuffed}
+          disabled={!mode}
+          onChange={handleIsScuffedChange}
+        />
       </TableCell>
       <TableCell align="right">
         <Button
@@ -135,6 +195,7 @@ const MusicRecord = ({ record = {}, onSave, onRemove }) => {
         </Button>
         <ConfirmationPopper
           popperId={record._id}
+          b
           onPopperConfirm={handlePopperConfirm}
           onPopperCancel={handlePopperCancel}
           anchorEl={anchorEl}
