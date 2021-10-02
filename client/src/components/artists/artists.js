@@ -15,25 +15,15 @@ import {
 } from "@material-ui/core";
 import Artist from "./artist/artist";
 
+import CommonTable from "../commonTable/commonTable";
+
 import useStyles from "./styles";
 
-const Artists = ({
-  artists: propArtists,
-  onArtistSave,
-  onRemoveArtist,
-  onAddArtist,
-}) => {
+const Artists = ({ artists, onArtistSave, onRemoveArtist, onAddArtist }) => {
   const classes = useStyles();
   const [artistNameEN, setEN] = useState("");
   const [artistNameJP, setJP] = useState("");
-  const [artists, setArtists] = useState(propArtists);
   const [enError, setENError] = useState(false);
-  const [filterEN, setFilterEN] = useState("");
-  const [filterJP, setFilterJP] = useState("");
-
-  useEffect(() => {
-    setArtists(propArtists);
-  }, [propArtists]);
 
   const handleENChange = (e) => {
     setEN(e.target.value);
@@ -57,28 +47,9 @@ const Artists = ({
     }
   };
 
-  const handleENSearch = (e) => {
-    const { value } = e.target;
-    setFilterEN(value);
-  };
-
-  const handleJPSearch = (e) => {
-    const { value } = e.target;
-    setFilterJP(value);
-  };
-
-  let filtered = artists;
-
-  if (filterEN !== "") {
-    filtered = filtered.filter((item) => item.artistNameEN.includes(filterEN));
-  }
-  if (filterJP !== "") {
-    filtered = filtered.filter((item) => item.artistNameJP.includes(filterJP));
-  }
-
   return (
     <Container>
-      <div className={classes.input}>
+      {/* <div className={classes.input}>
         <TextField
           label="Artist name EN"
           value={artistNameEN}
@@ -94,9 +65,33 @@ const Artists = ({
         <Button variant="contained" onClick={handleAddArtist}>
           Add Artist
         </Button>
-      </div>
+      </div> */}
       <Divider />
-      <div className={classes.artistTable}>
+      <CommonTable
+        columnOptions={[
+          { name: "id", width: "10%", value: "artistId" },
+          {
+            name: "Artist name EN",
+            width: "35%",
+            filter: true,
+            value: "artistNameEN",
+            input: true,
+          },
+          {
+            name: "Artist name JP",
+            width: "35%",
+            filter: true,
+            value: "artistNameJP",
+            input: true,
+          },
+          { name: "Action", width: "20%" },
+        ]}
+        rowComponent={<Artist />}
+        data={artists}
+        onRowSave={onArtistSave}
+        onRowRemove={onRemoveArtist}
+      />
+      {/* <div className={classes.artistTable}>
         <TableContainer component={Paper}>
           <Table
             className={classes.table}
@@ -139,7 +134,7 @@ const Artists = ({
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </div> */}
     </Container>
   );
 };

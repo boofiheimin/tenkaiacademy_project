@@ -26,6 +26,8 @@ const ArtistsContainer = () => {
   };
 
   const onArtistSave = (id, artist) => {
+    console.log(id, artist);
+
     dispatch(editArtist(id, artist));
   };
 
