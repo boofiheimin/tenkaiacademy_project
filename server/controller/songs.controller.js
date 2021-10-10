@@ -38,6 +38,8 @@ export const createSong = async (req, res, next) => {
 
     const artists = [];
 
+    console.log(song);
+
     for (const artistId of song.artistIds) {
       const artist = await Artist.findOne({ artistId: artistId });
       if (!artist) {

@@ -1,6 +1,11 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > input": {
+      width: "100%",
+    },
+  },
   header: {
     padding: theme.spacing(2),
   },
@@ -17,9 +22,12 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
     overflowX: "auto",
   },
-  root: {
-    "& > input": {
-      width: "100%",
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: theme.spacing(1),
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1),
     },
   },
 }));

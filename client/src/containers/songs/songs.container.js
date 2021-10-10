@@ -10,7 +10,7 @@ import {
   editSong,
 } from "../../actions/songs.actions";
 
-import Songs from "../../components/songs/songs";
+import CommonTable from "../../components/commonTable/commonTable";
 
 const SongsContainer = () => {
   const dispatch = useDispatch();
@@ -22,24 +22,63 @@ const SongsContainer = () => {
     dispatch(getSongs());
   }, [dispatch]);
 
+  const mappedInputToParameters = (input) => ({
+    ...input,
+    artistIds: input.artists.map(({ artistId }) => artistId),
+  });
+
   const onAddSong = (song) => {
-    dispatch(createSong(song));
+    dispatch(createSong(mappedInputToParameters(song)));
   };
   const onRemoveSong = (id) => {
     dispatch(deleteSong(id));
   };
 
   const onSongSave = (id, song) => {
-    dispatch(editSong(id, song));
+    dispatch(editSong(id, mappedInputToParameters(song)));
   };
 
+  const mappedSong = songs.map((song) => ({
+    ...song,
+    artistsLabel: song.artists.map(({ artistNameEN }) => artistNameEN),
+  }));
+
   return (
-    <Songs
-      songs={songs}
-      artists={artists}
-      onAddSong={onAddSong}
-      onRemoveSong={onRemoveSong}
-      onSongSave={onSongSave}
+    <CommonTable
+      columnOptions={[
+        { name: "id", width: "10%", value: "songId" },
+        {
+          name: "Song name EN",
+          width: "30%",
+          filter: true,
+          value: "songNameEN",
+          input: true,
+          required: true,
+        },
+        {
+          name: "Song name JP",
+          width: "30%",
+          filter: true,
+          value: "songNameJP",
+          input: true,
+        },
+        {
+          name: "Artist EN",
+          width: "30%",
+          filter: true,
+          value: "artists",
+          displayValue: "artistsLabel",
+          input: true,
+          optionLabel: "artistNameEN",
+          options: artists,
+          required: true,
+        },
+        { name: "Action", width: "20%" },
+      ]}
+      data={mappedSong}
+      onRowSave={onSongSave}
+      onRowRemove={onRemoveSong}
+      onRowAdd={onAddSong}
     />
   );
 };

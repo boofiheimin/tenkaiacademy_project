@@ -70,7 +70,7 @@ export const editTag = async (req, res, next) => {
     );
 
     res.status(200).json(tag);
-  } catch (err) {
+  } catch (error) {
     return next(error);
   }
 };
@@ -96,7 +96,7 @@ export const deleteTag = async (req, res, next) => {
       }
     );
     res.status(200).json(tag);
-  } catch (err) {
+  } catch (error) {
     return next(error);
   }
 };

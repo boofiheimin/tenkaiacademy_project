@@ -1,30 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import {
-  TableRow,
-  TableCell,
-  TextField,
-  Button,
-  Typography,
-} from "@material-ui/core";
+
+import { isArray } from "lodash";
+import { TableRow, TableCell, Button, Typography } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMinusSquare,
-  faSave,
-  faEdit,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMinusSquare, faEdit } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./styles";
 
 import ConfirmationPopper from "../../confirmationPopper/confirmationPopper";
 
 const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
   const classes = useStyles();
-  const [mode, setMode] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const toggleState = () => {
-    setMode(!mode);
-  };
 
   const handleRemove = (e) => {
     setAnchorEl(e.currentTarget);
@@ -40,13 +27,24 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
   };
 
   const cells = [];
-  columnOptions.forEach(({ value }) => {
-    if (value) {
-      cells.push(
-        <TableCell>
-          <Typography>{row[value]}</Typography>
-        </TableCell>
-      );
+  columnOptions.forEach(({ displayValue, value }) => {
+    const display = displayValue || value;
+    if (display) {
+      if (isArray(row[display])) {
+        cells.push(
+          <TableCell>
+            {row[display].map((element) => (
+              <Typography>{element}</Typography>
+            ))}
+          </TableCell>
+        );
+      } else {
+        cells.push(
+          <TableCell>
+            <Typography>{row[display]}</Typography>
+          </TableCell>
+        );
+      }
     }
   });
 
@@ -73,6 +71,18 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
       </TableCell>
     </TableRow>
   );
+};
+
+CommonRow.propTypes = {
+  columnOptions: PropTypes.array.isRequired,
+  row: PropTypes.object.isRequired,
+  onEdit: PropTypes.func,
+  onRemove: PropTypes.func,
+};
+
+CommonRow.defaultProps = {
+  onEdit: () => {},
+  onRemove: () => {},
 };
 
 export default CommonRow;

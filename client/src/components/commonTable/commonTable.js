@@ -1,5 +1,7 @@
-import { useState, useEffect, cloneElement } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
+  Container,
   Table,
   TableBody,
   TableCell,
@@ -15,7 +17,7 @@ import {
   Box,
 } from "@material-ui/core";
 
-import { omit } from "lodash";
+import { isArray, isEmpty, omit } from "lodash";
 
 import useStyles from "./styles";
 
@@ -24,45 +26,60 @@ import CommonForm from "./commonForm/commonForm";
 
 const CommonTable = ({
   columnOptions,
-  rowComponent,
   data: propData,
   onRowSave,
   onRowRemove,
+  onRowAdd,
 }) => {
   const classes = useStyles();
   const [data, setData] = useState(propData);
   const [createData, setCreateData] = useState({});
   const [editData, setEditData] = useState({});
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState({});
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  const initCreateData = () => {
+    let initData = {};
+    columnOptions.forEach(
+      ({ input, value, name, options, optionLabel, required }) => {
+        if (input) {
+          initData = {
+            ...initData,
+            [value]: {
+              value: "",
+              name,
+              input: true,
+              ...(options &&
+                options.length > 0 && {
+                  options,
+                  value: [],
+                  optionLabel,
+                }),
+              ...(required && {
+                required: true,
+              }),
+            },
+          };
+        }
+      }
+    );
+
+    return initData;
+  };
 
   useEffect(() => {
     setData(propData);
-    const filterHeader = [];
-    let initCreateData = {};
-    columnOptions.forEach(({ input, value, name }) => {
-      filterHeader.push("");
-      if (input) {
-        initCreateData = {
-          ...initCreateData,
-          [value]: { value: null, name, input: true },
-        };
-      }
-    });
-
-    setCreateData(initCreateData);
-    setFilters(filterHeader);
+    setCreateData(initCreateData());
   }, [propData]);
 
   const inputOptions = columnOptions.filter(({ input }) => input);
 
-  const handleFilterChange = (index, event) => {
-    const newFilters = filters.map((filter, filtersIndex) => {
-      if (filtersIndex === index) {
-        return event.target.value;
-      }
-      return filter;
-    });
+  const handleFilterChange = (key, event) => {
+    const newFilters = {
+      ...filters,
+      [key]: event.target.value,
+    };
     setFilters(newFilters);
   };
 
@@ -72,16 +89,25 @@ const CommonTable = ({
 
   const handleRowEdit = (index) => {
     let newEditData = {};
-
-    inputOptions.forEach(({ value, name }) => {
+    inputOptions.forEach(({ value, name, options, optionLabel, required }) => {
       newEditData = {
         ...newEditData,
-        [value]: { value: data[index][value], name, input: true },
+        [value]: {
+          value: data[index][value],
+          name,
+          input: true,
+          ...(options &&
+            options.length > 0 && {
+              options,
+              value: data[index][value],
+              optionLabel,
+            }),
+          ...(required && {
+            required: true,
+          }),
+        },
       };
     });
-
-    console.log(newEditData);
-
     setEditData({ _id: data[index]._id, ...newEditData });
     setOpenEditModal(true);
   };
@@ -90,94 +116,158 @@ const CommonTable = ({
     setEditData(formData);
   };
 
+  const handleOnCreateFormChange = (formData) => {
+    setCreateData(formData);
+  };
+
+  const handleClearCreateData = () => {
+    setCreateData(initCreateData());
+    setFieldErrors({});
+  };
+
   const handleRowSave = () => {
     let saveData = {};
-
     Object.keys(omit(editData, "_id")).forEach((key) => {
       saveData = { ...saveData, [key]: editData[key].value };
     });
     onRowSave(editData._id, saveData);
     setOpenEditModal(false);
+    handleClearCreateData();
   };
+
+  const handleRowAdd = () => {
+    let addData = {};
+    let errors = {};
+    Object.keys(omit(createData, "_id")).forEach((key) => {
+      if (createData[key].required) {
+        if (!createData[key].value || createData[key].value.length === 0) {
+          errors = { ...errors, [key]: true };
+        }
+      }
+      addData = { ...addData, [key]: createData[key].value };
+    });
+
+    if (!isEmpty(errors)) {
+      setFieldErrors(errors);
+    } else {
+      onRowAdd(addData);
+      handleClearCreateData();
+    }
+  };
+
   let filteredRows = data;
 
-  filters.forEach((filter, index) => {
-    if (filter !== "") {
-      filteredRows = filteredRows.filter((item) =>
-        Object.values(item)[index].includes(filter)
-      );
+  Object.keys(filters).forEach((key) => {
+    if (filters[key]) {
+      filteredRows = filteredRows.filter((item) => {
+        if (isArray(item[key])) {
+          return item[key]
+            .join()
+            .toLowerCase()
+            .includes(filters[key].toLowerCase());
+        }
+        return item[key].toLowerCase().includes(filters[key].toLowerCase());
+      });
     }
   });
 
   return (
-    <div className={classes.root}>
-      <Box marginTop={2} marginBottom={2}>
-        <Paper elevation={3}>
-          <Box padding={2}>
-            <CommonForm
-              onFormChange={handleOnEditFormChange}
-              data={createData}
-            />
-            <Box display="flex" justifyContent="flex-end">
-              <Button variant="outlined">Clear</Button>
-              <Button variant="outlined">Submit</Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
-
-      <TableContainer component={Paper}>
-        <Table className={classes.table} size="small">
-          <TableHead>
-            <TableRow>
-              {columnOptions.map(({ name, width, filter }, index) => (
-                <TableCell
-                  style={{ width: width }}
-                  align={index === columnOptions.length - 1 ? "right" : "left"}
-                >
-                  <Typography>{name}</Typography>
-                  {filter && (
-                    <input
-                      type="text"
-                      onChange={(event) => handleFilterChange(index, event)}
-                      placeholder={`search by ${name}`}
-                    />
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows.map((row, index) => (
-              <CommonRow
-                columnOptions={columnOptions}
-                row={row}
-                onEdit={() => handleRowEdit(index)}
-                onRemove={onRowRemove}
+    <Container>
+      <div className={classes.root}>
+        <Box marginTop={2} marginBottom={2}>
+          <Paper elevation={3}>
+            <Box padding={2}>
+              <CommonForm
+                fieldErrors={fieldErrors}
+                onFormChange={handleOnCreateFormChange}
+                data={createData}
               />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
-        <DialogContent dividers>
-          <CommonForm onFormChange={handleOnEditFormChange} data={editData} />
-        </DialogContent>
-        <DialogActions dividers>
-          <Button variant="contained" color="primary" onClick={handleRowSave}>
-            Yes
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleCloseEditModal}
-          >
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+              <div className={classes.buttonContainer}>
+                <Button variant="outlined" onClick={handleClearCreateData}>
+                  Clear
+                </Button>
+                <Button variant="outlined" onClick={handleRowAdd}>
+                  Submit
+                </Button>
+              </div>
+            </Box>
+          </Paper>
+        </Box>
+
+        <TableContainer component={Paper}>
+          <Table className={classes.table} size="small">
+            <TableHead>
+              <TableRow>
+                {columnOptions.map(
+                  ({ name, width, filter, value, displayValue }, index) => (
+                    <TableCell
+                      style={{ width: width }}
+                      align={
+                        index === columnOptions.length - 1 ? "right" : "left"
+                      }
+                    >
+                      <Typography>{name}</Typography>
+                      {filter && (
+                        <input
+                          type="text"
+                          onChange={(event) =>
+                            handleFilterChange(displayValue || value, event)
+                          }
+                          placeholder={`search by ${name}`}
+                        />
+                      )}
+                    </TableCell>
+                  )
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredRows.map((row, index) => (
+                <CommonRow
+                  columnOptions={columnOptions}
+                  row={row}
+                  onEdit={() => handleRowEdit(index)}
+                  onRemove={onRowRemove}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+          <DialogContent dividers>
+            <CommonForm onFormChange={handleOnEditFormChange} data={editData} />
+          </DialogContent>
+          <DialogActions dividers>
+            <Button variant="contained" color="primary" onClick={handleRowSave}>
+              Yes
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCloseEditModal}
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </Container>
   );
+};
+
+CommonTable.propTypes = {
+  columnOptions: PropTypes.array.isRequired,
+  data: PropTypes.array,
+  onRowSave: PropTypes.func,
+  onRowAdd: PropTypes.func,
+  onRowRemove: PropTypes.func,
+};
+
+CommonTable.defaultProps = {
+  data: [],
+  onRowSave: () => {},
+  onRowAdd: () => {},
+  onRowRemove: () => {},
 };
 
 export default CommonTable;
