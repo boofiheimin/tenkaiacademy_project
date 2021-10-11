@@ -68,7 +68,7 @@ const SongsContainer = () => {
           filter: true,
           value: "artists",
           displayValue: "artistsLabel",
-          input: true,
+          input: "multi",
           optionLabel: "artistNameEN",
           options: artists,
           required: true,

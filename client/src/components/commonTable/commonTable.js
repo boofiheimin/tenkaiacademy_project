@@ -17,12 +17,14 @@ import {
   Box,
 } from "@material-ui/core";
 
-import { isArray, isEmpty, omit } from "lodash";
+import { isArray, isEmpty, isNaN, omit, toNumber } from "lodash";
 
 import useStyles from "./styles";
 
 import CommonRow from "./commonRow/commonRow";
 import CommonForm from "./commonForm/commonForm";
+
+import { extractValueFromPath } from "../../helper";
 
 const CommonTable = ({
   columnOptions,
@@ -37,27 +39,45 @@ const CommonTable = ({
   const [editData, setEditData] = useState({});
   const [filters, setFilters] = useState({});
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [requiredErrors, setRequiredErrors] = useState({
+    create: {},
+    edit: {},
+  });
+  const [typeCheckErrors, setTypeCheckError] = useState({
+    create: {},
+    edit: {},
+  });
 
   const initCreateData = () => {
     let initData = {};
     columnOptions.forEach(
-      ({ input, value, name, options, optionLabel, required }) => {
+      ({
+        input,
+        value,
+        name,
+        options,
+        optionLabel,
+        required,
+        inputValidation,
+      }) => {
         if (input) {
           initData = {
             ...initData,
             [value]: {
-              value: "",
+              value: input === "boolean" ? false : "",
               name,
-              input: true,
+              input,
               ...(options &&
                 options.length > 0 && {
                   options,
-                  value: [],
+                  value: input === "multi" ? [] : null,
                   optionLabel,
                 }),
               ...(required && {
                 required: true,
+              }),
+              ...(inputValidation && {
+                inputValidation,
               }),
             },
           };
@@ -89,25 +109,39 @@ const CommonTable = ({
 
   const handleRowEdit = (index) => {
     let newEditData = {};
-    inputOptions.forEach(({ value, name, options, optionLabel, required }) => {
-      newEditData = {
-        ...newEditData,
-        [value]: {
-          value: data[index][value],
-          name,
-          input: true,
-          ...(options &&
-            options.length > 0 && {
-              options,
-              value: data[index][value],
-              optionLabel,
+    inputOptions.forEach(
+      ({
+        value,
+        name,
+        options,
+        optionLabel,
+        required,
+        input,
+        displayValue,
+        inputValidation,
+      }) => {
+        newEditData = {
+          ...newEditData,
+          [value]: {
+            value: extractValueFromPath(data[index], displayValue || value),
+            name,
+            input,
+            ...(options &&
+              options.length > 0 && {
+                options,
+                optionLabel,
+                value: extractValueFromPath(data[index], value),
+              }),
+            ...(required && {
+              required: true,
             }),
-          ...(required && {
-            required: true,
-          }),
-        },
-      };
-    });
+            ...(inputValidation && {
+              inputValidation,
+            }),
+          },
+        };
+      }
+    );
     setEditData({ _id: data[index]._id, ...newEditData });
     setOpenEditModal(true);
   };
@@ -122,33 +156,70 @@ const CommonTable = ({
 
   const handleClearCreateData = () => {
     setCreateData(initCreateData());
-    setFieldErrors({});
+    setRequiredErrors({ ...requiredErrors, create: {} });
+    setTypeCheckError({ ...typeCheckErrors, create: {} });
   };
 
   const handleRowSave = () => {
+    setRequiredErrors({ ...requiredErrors, edit: {} });
+    setTypeCheckError({ ...typeCheckErrors, edit: {} });
     let saveData = {};
+    let rErrors = {};
+    let tErrors = {};
     Object.keys(omit(editData, "_id")).forEach((key) => {
+      if (editData[key].required) {
+        if (!editData[key].value || editData[key].value.length === 0) {
+          rErrors = { ...rErrors, [key]: true };
+        }
+      }
+      if (editData[key].inputValidation) {
+        if (editData[key].inputValidation === "number") {
+          if (isNaN(toNumber(editData[key].value))) {
+            tErrors = { ...tErrors, [key]: true };
+          }
+        }
+      }
       saveData = { ...saveData, [key]: editData[key].value };
     });
-    onRowSave(editData._id, saveData);
-    setOpenEditModal(false);
-    handleClearCreateData();
+    if (!isEmpty(rErrors) || !isEmpty(tErrors)) {
+      if (!isEmpty(rErrors))
+        setRequiredErrors({ ...requiredErrors, edit: rErrors });
+      if (!isEmpty(tErrors))
+        setTypeCheckError({ ...requiredErrors, edit: tErrors });
+    } else {
+      onRowSave(editData._id, saveData);
+      setOpenEditModal(false);
+      setRequiredErrors({ ...requiredErrors, edit: {} });
+      setTypeCheckError({ ...typeCheckErrors, edit: {} });
+    }
   };
 
   const handleRowAdd = () => {
+    setRequiredErrors({ ...requiredErrors, create: {} });
+    setTypeCheckError({ ...typeCheckErrors, create: {} });
     let addData = {};
-    let errors = {};
+    let rErrors = {};
+    let tErrors = {};
     Object.keys(omit(createData, "_id")).forEach((key) => {
       if (createData[key].required) {
         if (!createData[key].value || createData[key].value.length === 0) {
-          errors = { ...errors, [key]: true };
+          rErrors = { ...rErrors, [key]: true };
+        }
+      }
+      if (createData[key].inputValidation) {
+        if (createData[key].inputValidation === "number") {
+          if (isNaN(toNumber(createData[key].value))) {
+            tErrors = { ...tErrors, [key]: true };
+          }
         }
       }
       addData = { ...addData, [key]: createData[key].value };
     });
-
-    if (!isEmpty(errors)) {
-      setFieldErrors(errors);
+    if (!isEmpty(rErrors) || !isEmpty(tErrors)) {
+      if (!isEmpty(rErrors))
+        setRequiredErrors({ ...requiredErrors, create: rErrors });
+      if (!isEmpty(tErrors))
+        setTypeCheckError({ ...requiredErrors, create: tErrors });
     } else {
       onRowAdd(addData);
       handleClearCreateData();
@@ -160,13 +231,15 @@ const CommonTable = ({
   Object.keys(filters).forEach((key) => {
     if (filters[key]) {
       filteredRows = filteredRows.filter((item) => {
-        if (isArray(item[key])) {
-          return item[key]
+        const itemKey = extractValueFromPath(item, key);
+
+        if (isArray(itemKey)) {
+          return itemKey
             .join()
             .toLowerCase()
             .includes(filters[key].toLowerCase());
         }
-        return item[key].toLowerCase().includes(filters[key].toLowerCase());
+        return itemKey.toLowerCase().includes(filters[key].toLowerCase());
       });
     }
   });
@@ -178,7 +251,8 @@ const CommonTable = ({
           <Paper elevation={3}>
             <Box padding={2}>
               <CommonForm
-                fieldErrors={fieldErrors}
+                requiredErrors={requiredErrors.create}
+                typeCheckErrors={typeCheckErrors.create}
                 onFormChange={handleOnCreateFormChange}
                 data={createData}
               />
@@ -235,7 +309,12 @@ const CommonTable = ({
         </TableContainer>
         <Dialog open={openEditModal} onClose={handleCloseEditModal}>
           <DialogContent dividers>
-            <CommonForm onFormChange={handleOnEditFormChange} data={editData} />
+            <CommonForm
+              requiredErrors={requiredErrors.edit}
+              typeCheckErrors={typeCheckErrors.edit}
+              onFormChange={handleOnEditFormChange}
+              data={editData}
+            />
           </DialogContent>
           <DialogActions dividers>
             <Button variant="contained" color="primary" onClick={handleRowSave}>

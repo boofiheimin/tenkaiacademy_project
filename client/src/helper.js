@@ -15,3 +15,12 @@ export const secondsTohhmmss = (seconds) =>
 
 export const youtubeThumbnailGetter = (videoId) =>
   `https://i.ytimg.com/vi/${videoId}/0.jpg`;
+
+export const extractValueFromPath = (value, path = "") => {
+  const paths = path.split(".");
+  const curPath = paths.shift();
+  if (paths.length === 0) {
+    return value[curPath];
+  }
+  return extractValueFromPath(value[curPath], paths.join("."));
+};

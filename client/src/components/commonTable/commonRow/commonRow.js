@@ -1,13 +1,21 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-import { isArray } from "lodash";
-import { TableRow, TableCell, Button, Typography } from "@material-ui/core";
+import { isArray, isBoolean } from "lodash";
+import {
+  TableRow,
+  TableCell,
+  Button,
+  Typography,
+  Checkbox,
+} from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusSquare, faEdit } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./styles";
 
 import ConfirmationPopper from "../../confirmationPopper/confirmationPopper";
+
+import { extractValueFromPath } from "../../../helper";
 
 const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
   const classes = useStyles();
@@ -29,19 +37,27 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
   const cells = [];
   columnOptions.forEach(({ displayValue, value }) => {
     const display = displayValue || value;
+    const rowDisplay = extractValueFromPath(row, display);
+
     if (display) {
-      if (isArray(row[display])) {
+      if (isArray(rowDisplay)) {
         cells.push(
           <TableCell>
-            {row[display].map((element) => (
+            {rowDisplay.map((element) => (
               <Typography>{element}</Typography>
             ))}
+          </TableCell>
+        );
+      } else if (isBoolean(rowDisplay)) {
+        cells.push(
+          <TableCell>
+            <Checkbox checked={rowDisplay} disabled />
           </TableCell>
         );
       } else {
         cells.push(
           <TableCell>
-            <Typography>{row[display]}</Typography>
+            <Typography>{rowDisplay}</Typography>
           </TableCell>
         );
       }

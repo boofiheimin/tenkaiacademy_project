@@ -2,26 +2,23 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { omit } from "lodash";
-import { TextField } from "@material-ui/core";
+import { Checkbox, TextField, FormControlLabel } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const CommonForm = ({ data, onFormChange, fieldErrors }) => {
+const CommonForm = ({
+  data,
+  onFormChange,
+  requiredErrors,
+  typeCheckErrors,
+}) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleFormChange = (key, event) => {
-    const newData = {
-      ...data,
-      [key]: { ...data[key], value: event.target.value },
-    };
-
-    onFormChange(newData);
-  };
-
-  const handleOnValueChange = (key, value) => {
+  const handleFormChange = (key, value) => {
     const newData = {
       ...data,
       [key]: { ...data[key], value },
     };
+
     onFormChange(newData);
   };
 
@@ -32,13 +29,36 @@ const CommonForm = ({ data, onFormChange, fieldErrors }) => {
   return (
     <div>
       {Object.keys(omit(data, "_id")).map((key) => {
+        let helperText = null;
+        if (typeCheckErrors[key]) {
+          helperText = `Wrong input for type ${data[key].inputValidation} `;
+        }
+        if (requiredErrors[key]) {
+          helperText = "Required";
+        }
+
+        if (data[key].input === "boolean") {
+          return (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data[key].value}
+                  onChange={(event) =>
+                    handleFormChange(key, event.target.checked)
+                  }
+                />
+              }
+              label={data[key].name}
+            />
+          );
+        }
         if (data[key].options) {
           return (
             <Autocomplete
-              multiple
+              multiple={data[key].input === "multi"}
               options={data[key].options}
               value={data[key].value}
-              onChange={(event, _value) => handleOnValueChange(key, _value)}
+              onChange={(event, _value) => handleFormChange(key, _value)}
               inputValue={inputValue}
               onInputChange={handleInputChange}
               getOptionSelected={(o, v) => o._id === v._id}
@@ -50,23 +70,24 @@ const CommonForm = ({ data, onFormChange, fieldErrors }) => {
                     shrink: true,
                   }}
                   label={data[key].name}
-                  error={fieldErrors[key]}
-                  helperText={fieldErrors[key] ? "Required" : null}
+                  error={requiredErrors[key]}
+                  helperText={helperText}
                 />
               )}
             />
           );
         }
+
         return (
           <div>
             <TextField
               fullWidth
               label={data[key].name}
               value={data[key].value}
-              onChange={(event) => handleFormChange(key, event)}
+              onChange={(event) => handleFormChange(key, event.target.value)}
               key={`${data._id}_${data[key].name}`}
-              error={fieldErrors[key]}
-              helperText={fieldErrors[key] ? "Required" : null}
+              error={requiredErrors[key] || typeCheckErrors[key]}
+              helperText={helperText}
             />
           </div>
         );
@@ -78,13 +99,15 @@ const CommonForm = ({ data, onFormChange, fieldErrors }) => {
 CommonForm.propTypes = {
   data: PropTypes.object,
   onFormChange: PropTypes.func,
-  fieldErrors: PropTypes.object,
+  requiredErrors: PropTypes.object,
+  typeCheckErrors: PropTypes.object,
 };
 
 CommonForm.defaultProps = {
   data: {},
   onFormChange: () => {},
-  fieldErrors: {},
+  requiredErrors: {},
+  typeCheckErrors: {},
 };
 
 export default CommonForm;

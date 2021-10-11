@@ -9,7 +9,6 @@ import {
 export const getMusicRecords = () => async (dispatch) => {
   try {
     const { data } = await api.fetchMusicRecords();
-    console.log("bruh", data);
     dispatch({ type: FETCH_MUSICRECORDS_SUCCESS, data });
   } catch (error) {
     console.log(error.message);
