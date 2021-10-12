@@ -40,7 +40,7 @@ const MusicEditContainer = () => {
 
   musicRecords.sort((a, b) => {
     if (b.streamData.publishedAt === a.streamData.publishedAt) {
-      return a.songStart - b.songStart;
+      return a.songIndex - b.songIndex;
     }
     return (
       new Date(b.streamData.publishedAt) - new Date(a.streamData.publishedAt)
@@ -95,6 +95,14 @@ const MusicEditContainer = () => {
           width: "10%",
           value: "streamData.publishedAt",
           displayValue: "dateLabel",
+        },
+        {
+          name: "Song Index",
+          value: "songIndex",
+          input: "text",
+          inputValidation: "number",
+          required: true,
+          hidden: true,
         },
         {
           name: "Start",

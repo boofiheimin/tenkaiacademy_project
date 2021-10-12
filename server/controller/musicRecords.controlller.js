@@ -14,8 +14,15 @@ export const getMusicRecords = async (req, res, next) => {
 
 export const createMusicRecord = async (req, res, next) => {
   try {
-    const { songId, videoId, proxyVideoId, songStart, songEnd, isScuffed } =
-      req.body;
+    const {
+      songId,
+      videoId,
+      proxyVideoId,
+      songStart,
+      songEnd,
+      isScuffed,
+      songIndex,
+    } = req.body;
 
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
@@ -46,6 +53,7 @@ export const createMusicRecord = async (req, res, next) => {
       songStart,
       songEnd,
       isScuffed,
+      songIndex,
     };
 
     const newMusicRecord = new MusicRecord(newMusicRecordParams);
@@ -59,8 +67,15 @@ export const createMusicRecord = async (req, res, next) => {
 
 export const editMusicRecord = async (req, res, next) => {
   try {
-    const { songId, videoId, proxyVideoId, songStart, songEnd, isScuffed } =
-      req.body;
+    const {
+      songId,
+      videoId,
+      proxyVideoId,
+      songStart,
+      songEnd,
+      isScuffed,
+      songIndex,
+    } = req.body;
 
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
@@ -93,6 +108,7 @@ export const editMusicRecord = async (req, res, next) => {
         songStart,
         songEnd,
         isScuffed,
+        songIndex,
       },
       {
         new: true,
