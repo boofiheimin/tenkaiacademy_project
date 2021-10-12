@@ -76,6 +76,12 @@ const MusicEditContainer = () => {
           filter: true,
         },
         {
+          name: "proxy videoId",
+          value: "proxyVideoId",
+          input: "text",
+          hidden: true,
+        },
+        {
           name: "Date",
           width: "10%",
           value: "streamData.publishedAt",

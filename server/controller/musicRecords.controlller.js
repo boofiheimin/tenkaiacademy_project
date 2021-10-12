@@ -1,4 +1,3 @@
-import Artist from "../models/artist.js";
 import MusicRecord from "../models/musicRecord.js";
 import Song from "../models/song.js";
 import Stream from "../models/stream.js";
@@ -15,13 +14,18 @@ export const getMusicRecords = async (req, res, next) => {
 
 export const createMusicRecord = async (req, res, next) => {
   try {
-    const { songId, videoId, songStart, songEnd, isScuffed } = req.body;
+    const { songId, videoId, proxyVideoId, songStart, songEnd, isScuffed } =
+      req.body;
 
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
 
-    if (!song || !stream) {
-      return next(new ErrorResponse(`Song or Stream NotFound`, 404));
+    if (!song) {
+      return next(new ErrorResponse(`Song Not Found`, 404));
+    }
+
+    if (!stream) {
+      return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
     const { songNameEN, songNameJP, artists } = song;
@@ -36,6 +40,7 @@ export const createMusicRecord = async (req, res, next) => {
       },
       streamData: {
         videoId,
+        proxyVideoId,
         publishedAt,
       },
       songStart,
@@ -54,13 +59,18 @@ export const createMusicRecord = async (req, res, next) => {
 
 export const editMusicRecord = async (req, res, next) => {
   try {
-    const { songId, videoId, songStart, songEnd, isScuffed } = req.body;
+    const { songId, videoId, proxyVideoId, songStart, songEnd, isScuffed } =
+      req.body;
 
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
 
-    if (!song || !stream) {
-      return next(new ErrorResponse(`Song or Stream NotFound`, 404));
+    if (!song) {
+      return next(new ErrorResponse(`Song Not Found`, 404));
+    }
+
+    if (!stream) {
+      return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
     const { songNameEN, songNameJP, artists } = song;
@@ -77,6 +87,7 @@ export const editMusicRecord = async (req, res, next) => {
         },
         streamData: {
           videoId,
+          proxyVideoId,
           publishedAt,
         },
         songStart,

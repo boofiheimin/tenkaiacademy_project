@@ -272,27 +272,29 @@ const CommonTable = ({
           <Table className={classes.table} size="small">
             <TableHead>
               <TableRow>
-                {columnOptions.map(
-                  ({ name, width, filter, value, displayValue }, index) => (
-                    <TableCell
-                      style={{ width: width }}
-                      align={
-                        index === columnOptions.length - 1 ? "right" : "left"
-                      }
-                    >
-                      <Typography>{name}</Typography>
-                      {filter && (
-                        <input
-                          type="text"
-                          onChange={(event) =>
-                            handleFilterChange(displayValue || value, event)
-                          }
-                          placeholder={`search by ${name}`}
-                        />
-                      )}
-                    </TableCell>
-                  )
-                )}
+                {columnOptions
+                  .filter(({ hidden }) => !hidden)
+                  .map(
+                    ({ name, width, filter, value, displayValue }, index) => (
+                      <TableCell
+                        style={{ width: width }}
+                        align={
+                          index === columnOptions.length - 1 ? "right" : "left"
+                        }
+                      >
+                        <Typography>{name}</Typography>
+                        {filter && (
+                          <input
+                            type="text"
+                            onChange={(event) =>
+                              handleFilterChange(displayValue || value, event)
+                            }
+                            placeholder={`search by ${name}`}
+                          />
+                        )}
+                      </TableCell>
+                    )
+                  )}
               </TableRow>
             </TableHead>
             <TableBody>

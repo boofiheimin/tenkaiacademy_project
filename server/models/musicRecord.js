@@ -25,6 +25,9 @@ const videoSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    proxyVideoId: {
+      type: String,
+    },
     publishedAt: {
       type: Date,
     },

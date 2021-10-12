@@ -14,13 +14,16 @@ import useStyles from "./styles";
 
 const Song = ({ record, onPlay, onAddQueue }) => {
   const { streamData, songData, songStart, songEnd, isScuffed } = record;
+
+  const videoId = streamData.proxyVideoId || streamData.videoId;
+
   const classes = useStyles();
   const handlePlay = () => {
-    onPlay(streamData.videoId, songData.songNameEN, songStart, songEnd);
+    onPlay(videoId, songData.songNameEN, songStart, songEnd);
   };
 
   const handleAddToQueue = () => {
-    onAddQueue(streamData.videoId, songData.songNameEN, songStart, songEnd);
+    onAddQueue(videoId, songData.songNameEN, songStart, songEnd);
   };
 
   const artistNames = songData.artists.map((artist) => artist.artistNameEN);
