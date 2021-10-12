@@ -1,5 +1,6 @@
 import Artist from "../models/artist.js";
 import Song from "../models/song.js";
+import MusicRecord from "../models/musicRecord.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 export const getArtists = async (req, res, next) => {
@@ -48,12 +49,25 @@ export const editArtist = async (req, res, next) => {
     await artist.save();
 
     //cascasde update
-    const songs = await Song.updateMany(
-      { "artists.artistId": req.body.artistId },
+    await Song.updateMany(
+      { "artists.artistId": artist.artistId },
       {
         $set: {
           "artists.$.artistNameEN": req.body.artistNameEN,
           "artists.$.artistNameJP": req.body.artistNameJP,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    await MusicRecord.updateMany(
+      { "songData.artists.artistId": artist.artistId },
+      {
+        $set: {
+          "songData.artists.$.artistNameEN": req.body.artistNameEN,
+          "songData.artists.$.artistNameJP": req.body.artistNameJP,
         },
       },
       {
@@ -75,12 +89,22 @@ export const deleteArtist = async (req, res, next) => {
     }
 
     // //cascade delete
-
     await Song.updateMany(
       { "artists.artistId": artist.artistId },
       {
         $pull: {
           artists: { artistId: artist.artistId },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    await MusicRecord.updateMany(
+      { "songData.artists.artistId": artist.artistId },
+      {
+        $pull: {
+          "songData.artists": { artistId: artist.artistId },
         },
       },
       {

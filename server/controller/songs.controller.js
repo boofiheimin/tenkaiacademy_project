@@ -1,4 +1,5 @@
 import Artist from "../models/artist.js";
+import MusicRecord from "../models/musicRecord.js";
 import Song from "../models/song.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
@@ -91,22 +92,23 @@ export const editSong = async (req, res, next) => {
     );
     await song.save();
 
-    // //cascasde update
-    // await Stream.updateMany(
-    //   { "songs.songId": req.body.songId },
-    //   {
-    //     $set: {
-    //       "songs.$.songNameEN": req.body.songNameEN,
-    //       "songs.$.songNameJP": req.body.songNameJP,
-    //     },
-    //   },
-    //   {
-    //     new: true,
-    //   }
-    // );
+    //cascasde update
+    await MusicRecord.updateMany(
+      { "songData.songId": song.songId },
+      {
+        $set: {
+          "songData.artists": artists,
+          "songData.songNameEN": songParams.songNameEN,
+          "songData.songNameJP": songParams.songNameJP,
+        },
+      },
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json(song);
-  } catch (err) {
+  } catch (error) {
     return next(error);
   }
 };
@@ -119,21 +121,10 @@ export const deleteSong = async (req, res, next) => {
     }
 
     // //cascade delete
-
-    // await Stream.updateMany(
-    //   { "songs.songId": song.songId },
-    //   {
-    //     $pull: {
-    //       songs: { songId: song.songId },
-    //     },
-    //   },
-    //   {
-    //     new: true,
-    //   }
-    // );
+    await MusicRecord.deleteMany({ "songData.songId": song.songId });
 
     res.status(200).json(song);
-  } catch (err) {
+  } catch (error) {
     return next(error);
   }
 };
