@@ -64,7 +64,7 @@ const SongsContainer = () => {
         },
         {
           name: "Artist EN",
-          width: "30%",
+          width: "20%",
           filter: true,
           value: "artists",
           displayValue: "artistsLabel",
@@ -73,7 +73,7 @@ const SongsContainer = () => {
           options: artists,
           required: true,
         },
-        { name: "Action", width: "20%" },
+        { name: "Action", width: "30%" },
       ]}
       data={mappedSong}
       onRowSave={onSongSave}

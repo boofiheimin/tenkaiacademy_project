@@ -15,6 +15,7 @@ import {
   DialogActions,
   Button,
   Box,
+  TablePagination,
 } from "@material-ui/core";
 
 import { isArray, isEmpty, isNaN, omit, toNumber } from "lodash";
@@ -32,6 +33,7 @@ const CommonTable = ({
   onRowSave,
   onRowRemove,
   onRowAdd,
+  defaultRowsPerPage,
 }) => {
   const classes = useStyles();
   const [data, setData] = useState(propData);
@@ -47,6 +49,8 @@ const CommonTable = ({
     create: {},
     edit: {},
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
   const initCreateData = () => {
     let initData = {};
@@ -226,6 +230,15 @@ const CommonTable = ({
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   let filteredRows = data;
 
   Object.keys(filters).forEach((key) => {
@@ -243,6 +256,12 @@ const CommonTable = ({
       });
     }
   });
+
+  const currentPageNumber = page * rowsPerPage;
+  const paginatedRows = filteredRows.slice(
+    currentPageNumber,
+    currentPageNumber + rowsPerPage
+  );
 
   return (
     <Container>
@@ -298,7 +317,7 @@ const CommonTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredRows.map((row, index) => (
+              {paginatedRows.map((row, index) => (
                 <CommonRow
                   columnOptions={columnOptions}
                   row={row}
@@ -309,6 +328,16 @@ const CommonTable = ({
             </TableBody>
           </Table>
         </TableContainer>
+        <div className={classes.tablePagination}>
+          <TablePagination
+            component="div"
+            count={filteredRows.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
         <Dialog open={openEditModal} onClose={handleCloseEditModal}>
           <DialogContent dividers>
             <CommonForm
@@ -342,6 +371,7 @@ CommonTable.propTypes = {
   onRowSave: PropTypes.func,
   onRowAdd: PropTypes.func,
   onRowRemove: PropTypes.func,
+  defaultRowsPerPage: PropTypes.number,
 };
 
 CommonTable.defaultProps = {
@@ -349,6 +379,7 @@ CommonTable.defaultProps = {
   onRowSave: () => {},
   onRowAdd: () => {},
   onRowRemove: () => {},
+  defaultRowsPerPage: 10,
 };
 
 export default CommonTable;

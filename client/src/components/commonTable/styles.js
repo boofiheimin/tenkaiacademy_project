@@ -30,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
     },
   },
+  tablePagination: {
+    padding: theme.spacing(1),
+    display: "flex",
+    justifyContent: "flex-end",
+  },
 }));
 
 export default useStyles;

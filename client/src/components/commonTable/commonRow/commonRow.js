@@ -35,34 +35,36 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
   };
 
   const cells = [];
-  columnOptions.forEach(({ displayValue, value }) => {
-    const display = displayValue || value;
-    const rowDisplay = extractValueFromPath(row, display);
+  columnOptions
+    .filter(({ hidden }) => !hidden)
+    .forEach(({ displayValue, value }) => {
+      const display = displayValue || value;
+      const rowDisplay = extractValueFromPath(row, display);
 
-    if (display) {
-      if (isArray(rowDisplay)) {
-        cells.push(
-          <TableCell>
-            {rowDisplay.map((element) => (
-              <Typography>{element}</Typography>
-            ))}
-          </TableCell>
-        );
-      } else if (isBoolean(rowDisplay)) {
-        cells.push(
-          <TableCell>
-            <Checkbox checked={rowDisplay} disabled />
-          </TableCell>
-        );
-      } else {
-        cells.push(
-          <TableCell>
-            <Typography>{rowDisplay}</Typography>
-          </TableCell>
-        );
+      if (display) {
+        if (isArray(rowDisplay)) {
+          cells.push(
+            <TableCell>
+              {rowDisplay.map((element) => (
+                <Typography>{element}</Typography>
+              ))}
+            </TableCell>
+          );
+        } else if (isBoolean(rowDisplay)) {
+          cells.push(
+            <TableCell>
+              <Checkbox checked={rowDisplay} disabled />
+            </TableCell>
+          );
+        } else {
+          cells.push(
+            <TableCell>
+              <Typography>{rowDisplay}</Typography>
+            </TableCell>
+          );
+        }
       }
-    }
-  });
+    });
 
   return (
     <TableRow key={row._id}>

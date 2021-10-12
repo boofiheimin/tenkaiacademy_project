@@ -43,6 +43,7 @@ const Tags = ({ tags, onTagSave, onRemoveTag, onAddTag, isClip }) => {
       onRowSave={onTagSave}
       onRowRemove={onRemoveTag}
       onRowAdd={(tag) => onAddTag({ ...tag, isClip })}
+      defaultRowsPerPage={50}
     />
   );
 };

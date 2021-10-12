@@ -38,6 +38,15 @@ const MusicEditContainer = () => {
     dispatch(editMusicRecord(id, mappedInputToParameters(recordParam)));
   };
 
+  musicRecords.sort((a, b) => {
+    if (b.streamData.publishedAt === a.streamData.publishedAt) {
+      return a.songStart - b.songStart;
+    }
+    return (
+      new Date(b.streamData.publishedAt) - new Date(a.streamData.publishedAt)
+    );
+  });
+
   const mappedMusicRecords = musicRecords.map((musicRecord) => ({
     ...musicRecord,
     artistsLabel: musicRecord.songData.artists.map(
