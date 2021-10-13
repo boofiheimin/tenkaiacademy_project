@@ -2,9 +2,9 @@ import { useRef } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 
-import MenuIcon from "@material-ui/icons/Menu";
-import CloseIcon from "@material-ui/icons/Close";
-import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 
 import { Outlet } from "react-router-dom";
 import {
@@ -18,9 +18,9 @@ import {
   useTheme,
   useMediaQuery,
   Snackbar,
-} from "@material-ui/core";
+  Alert,
+} from "@mui/material";
 import json2mq from "json2mq";
-import { Alert } from "@material-ui/lab";
 import DrawerItems from "./drawerItems";
 import useStyles from "./styles";
 
@@ -44,7 +44,7 @@ const Nav = ({
   const outletRef = useRef(null);
   const classes = useStyles();
   const theme = useTheme();
-  const matchSize = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
 
   const matches = matchSize || videoMode;
@@ -62,6 +62,7 @@ const Nav = ({
                 edge="start"
                 onClick={handleDrawerToggleMobile}
                 className={classes.menuButton}
+                size="large"
               >
                 <MenuIcon />
               </IconButton>
@@ -72,6 +73,7 @@ const Nav = ({
                 edge="start"
                 onClick={handleDrawerToggle}
                 className={classes.menuButton}
+                size="large"
               >
                 <MenuIcon />
               </IconButton>
@@ -80,7 +82,7 @@ const Nav = ({
             <Typography variant="h6" noWrap className={classes.title}>
               Tenkai Academy Project
             </Typography>
-            <IconButton onClick={onSiteModeToggle}>
+            <IconButton onClick={onSiteModeToggle} size="large">
               <EmojiObjectsIcon />
             </IconButton>
             {isLogin && (

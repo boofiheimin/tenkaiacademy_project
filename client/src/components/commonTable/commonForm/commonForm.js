@@ -2,8 +2,8 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { omit } from "lodash";
-import { Checkbox, TextField, FormControlLabel } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Checkbox, TextField, FormControlLabel, Box } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const CommonForm = ({
   data,
@@ -39,47 +39,51 @@ const CommonForm = ({
 
         if (data[key].input === "boolean") {
           return (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={data[key].value}
-                  onChange={(event) =>
-                    handleFormChange(key, event.target.checked)
-                  }
-                />
-              }
-              label={data[key].name}
-            />
+            <Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={data[key].value}
+                    onChange={(event) =>
+                      handleFormChange(key, event.target.checked)
+                    }
+                  />
+                }
+                label={data[key].name}
+              />
+            </Box>
           );
         }
         if (data[key].options) {
           return (
-            <Autocomplete
-              multiple={data[key].input === "multi"}
-              options={data[key].options}
-              value={data[key].value}
-              onChange={(event, _value) => handleFormChange(key, _value)}
-              inputValue={inputValue}
-              onInputChange={handleInputChange}
-              getOptionSelected={(o, v) => o._id === v._id}
-              getOptionLabel={(o) => o[data[key].optionLabel] || ""}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  label={data[key].name}
-                  error={requiredErrors[key]}
-                  helperText={helperText}
-                />
-              )}
-            />
+            <Box marginBottom={1}>
+              <Autocomplete
+                multiple={data[key].input === "multi"}
+                options={data[key].options}
+                value={data[key].value}
+                onChange={(event, _value) => handleFormChange(key, _value)}
+                inputValue={inputValue}
+                onInputChange={handleInputChange}
+                isOptionEqualToValue={(o, v) => o._id === v._id}
+                getOptionLabel={(o) => o[data[key].optionLabel] || ""}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    label={data[key].name}
+                    error={requiredErrors[key]}
+                    helperText={helperText}
+                  />
+                )}
+              />
+            </Box>
           );
         }
 
         return (
-          <div>
+          <Box marginBottom={1}>
             <TextField
               fullWidth
               label={data[key].name}
@@ -89,7 +93,7 @@ const CommonForm = ({
               error={requiredErrors[key] || typeCheckErrors[key]}
               helperText={helperText}
             />
-          </div>
+          </Box>
         );
       })}
     </div>

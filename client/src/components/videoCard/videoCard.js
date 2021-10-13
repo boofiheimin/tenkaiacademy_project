@@ -12,8 +12,8 @@ import {
   Box,
   Divider,
   Button,
-} from "@material-ui/core";
-import HistoryIcon from "@material-ui/icons/History";
+} from "@mui/material";
+import HistoryIcon from "@mui/icons-material/History";
 import moment from "moment";
 
 import useStyles from "./styles";
@@ -58,7 +58,7 @@ const VideoCard = ({
   };
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} raised>
       <CardActionArea href={`/${type}s/${id}`}>
         <Box position="relative">
           <CardMedia

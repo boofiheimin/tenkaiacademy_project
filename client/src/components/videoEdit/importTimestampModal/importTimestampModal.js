@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+} from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { hhmmssRegEx } from "../../../helper";
 
 import useStyles from "./styles";

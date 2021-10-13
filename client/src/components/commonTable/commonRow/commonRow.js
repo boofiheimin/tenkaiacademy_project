@@ -8,7 +8,7 @@ import {
   Button,
   Typography,
   Checkbox,
-} from "@material-ui/core";
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusSquare, faEdit } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./styles";

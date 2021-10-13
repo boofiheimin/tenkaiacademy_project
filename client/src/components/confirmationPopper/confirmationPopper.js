@@ -6,7 +6,7 @@ import {
   Typography,
   CardActions,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 
 const ConfirmationPopper = ({
   popperId,

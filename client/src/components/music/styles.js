@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down("xl")]: {
       minWidth: 300,
       overflowX: "auto",
     },

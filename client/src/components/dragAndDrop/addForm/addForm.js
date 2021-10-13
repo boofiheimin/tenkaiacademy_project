@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { TextField, IconButton, Box } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { TextField, IconButton, Box } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const AddForm = ({ label, placeholder, onAdd, lists }) => {
   // setting textfield value to null is going to give an error. but this is a correct approach for our case
@@ -36,7 +36,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" borderRadius={8} padding={1}>
+    <Box display="flex" justifyContent="center" borderRadius="8px" padding={1}>
       {lists.length > 0 ? (
         <Autocomplete
           options={options}
@@ -44,7 +44,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
           onChange={handleOnChange}
           inputValue={inputValue}
           onInputChange={handleInputChange}
-          getOptionSelected={(o, v) => o._id === v._id}
+          isOptionEqualToValue={(o, v) => o._id === v._id}
           getOptionLabel={(o) => (o.tagNameEN ? o.tagNameEN : "")}
           style={{ width: "80%" }}
           renderInput={(params) => (
@@ -70,7 +70,7 @@ const AddForm = ({ label, placeholder, onAdd, lists }) => {
         />
       )}
 
-      <IconButton onClick={handleOnAdd} disabled={!value}>
+      <IconButton onClick={handleOnAdd} disabled={!value} size="large">
         <AddIcon />
       </IconButton>
     </Box>

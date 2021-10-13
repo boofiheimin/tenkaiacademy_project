@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Card, Typography, CardActionArea } from "@material-ui/core";
+import { Card, Typography, CardActionArea } from "@mui/material";
 
 import useStyles from "./styles";
 import { youtubeThumbnailGetter } from "../../helper";

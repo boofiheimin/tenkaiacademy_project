@@ -16,7 +16,7 @@ import {
   Button,
   Box,
   TablePagination,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { isArray, isEmpty, isNaN, omit, toNumber } from "lodash";
 

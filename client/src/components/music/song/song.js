@@ -6,10 +6,10 @@ import {
   Button,
   Typography,
   Tooltip,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import useStyles from "./styles";
 
 const Song = ({ record, onPlay, onAddQueue }) => {

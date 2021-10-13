@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {
-  TableCell,
-  TextField,
-  TextareaAutosize,
-  Button,
-} from "@material-ui/core";
+import { TableCell, TextField, TextareaAutosize, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSave,

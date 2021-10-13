@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -8,12 +8,12 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingLeft: theme.spacing(8),
     paddingRight: theme.spacing(8),
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down("xl")]: {
       padding: 0,
     },
   },
   sectionHeader: {
-    padding: `${theme.spacing(1)}px  ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1)}  ${theme.spacing(2)}`,
     // background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
     // color: "white",
   },
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down("xl")]: {
       minWidth: 300,
       overflowX: "auto",
     },

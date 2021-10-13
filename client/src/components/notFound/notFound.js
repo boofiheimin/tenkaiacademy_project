@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Typography } from "@material-ui/core";
+import { Box, CssBaseline, Typography } from "@mui/material";
 import ppbored from "../../assets/images/ppbored.png";
 
 const NotFound = () => (

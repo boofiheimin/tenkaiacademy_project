@@ -13,23 +13,23 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  withStyles,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-} from "@material-ui/core";
+} from "@mui/material";
+import withStyles from "@mui/styles/withStyles";
 import _ from "lodash";
 
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import LoopIcon from "@material-ui/icons/Loop";
-import ShuffleIcon from "@material-ui/icons/Shuffle";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import LoopIcon from "@mui/icons-material/Loop";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
 
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import LastPageIcon from "@material-ui/icons/LastPage";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
 import ResponsiveYoutube from "../responsiveYoutube/responsiveYoutube";
 import useStyles from "./styles";
 import Song from "./song/song";

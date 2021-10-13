@@ -11,10 +11,13 @@ import {
   Divider,
   TextareaAutosize,
   TextField,
-} from "@material-ui/core";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTimes, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -90,7 +93,7 @@ const VideoEdit = (props) => {
     <Container>
       <Box display="flex" flexDirection="column" height="100%">
         <Box display="flex" alignItems="center" padding={1}>
-          <IconButton onClick={goBack}>
+          <IconButton onClick={goBack} size="large">
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h5">Edit Form</Typography>
@@ -193,7 +196,7 @@ const VideoEdit = (props) => {
                   </div>
                   <div className={classes.infoInputContainer}>
                     <Typography>publisedAt:&nbsp;</Typography>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DateTimePicker
                         variant="inline"
                         format="MM/dd/yyyy HH:mm:ss "
@@ -202,7 +205,7 @@ const VideoEdit = (props) => {
                         onChange={onPublishedChange}
                         disabled={disableVideoInfo}
                       />
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                   </div>
                   {type === VIDEO_TYPE_STREAM && (
                     <div className={classes.infoInputContainer}>

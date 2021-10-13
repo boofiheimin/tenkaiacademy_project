@@ -1,22 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import {
-  TextField,
-  Button,
-  IconButton,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from "@material-ui/icons/Clear";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import { TextField, Button, IconButton, Select, MenuItem } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import Autocomplete from "@mui/material/Autocomplete";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+
+import DatePicker from "@mui/lab/DatePicker";
+
 import useStyles from "./styles";
 
 const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
@@ -153,7 +148,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
             onChange={handleTagsChange}
             inputValue={inputValue}
             onInputChange={handleInputChange}
-            getOptionSelected={(o, v) => o.tagId === v.tagId}
+            isOptionEqualToValue={(o, v) => o.tagId === v.tagId}
             getOptionLabel={(o) => (o.tagNameEN ? o.tagNameEN : "")}
             onKeyPress={handleKeypress}
             renderInput={(params) => (
@@ -179,7 +174,7 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
           </Button>
         </div>
       </div>
-      <IconButton onClick={toggleOption}>
+      <IconButton onClick={toggleOption} size="large">
         {moreOption ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
       <div className={classes.advSearch} ref={accPanel}>
@@ -192,30 +187,30 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
             onChange={handleSearchUploaderChange}
             onKeyPress={handleKeypress}
           />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
               variant="inline"
               inputVariant="outlined"
               value={formData.from}
               onChange={handleFromChange}
               format="dd/MM/yyyy "
-              label="From"
               onKeyPress={handleKeypress}
               className={classes.moreField}
+              renderInput={() => <TextField label="From" />}
             />
-          </MuiPickersUtilsProvider>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
               variant="inline"
               inputVariant="outlined"
               value={formData.to}
               onChange={handleToChange}
               format="dd/MM/yyyy  "
-              label="To"
               onKeyPress={handleKeypress}
               className={classes.moreField}
+              renderInput={() => <TextField label="To" />}
             />
-          </MuiPickersUtilsProvider>
+          </LocalizationProvider>
           <Select
             value={formData.sort}
             onChange={handleSortChange}

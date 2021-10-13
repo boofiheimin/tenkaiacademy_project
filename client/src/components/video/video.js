@@ -17,10 +17,10 @@ import {
   Slide,
   IconButton,
   useMediaQuery,
-} from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import { TwitterTweetEmbed } from "react-twitter-embed";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import json2mq from "json2mq";
 
 import ResponsiveYoutube from "../responsiveYoutube/responsiveYoutube";
@@ -46,7 +46,7 @@ const Video = ({
   const classes = useStyles();
   const [descDialog, setDescDialog] = useState(false);
   const matchRegSize = useMediaQuery((theme) => theme.breakpoints.up("lg"));
-  const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const matchPhoneSize = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "landscape" }));
   const { siteMode } = useSelector((state) => state.global);
 
@@ -146,7 +146,7 @@ const Video = ({
         <Grid item xs={12} lg={9}>
           <Paper>
             <Box display="flex" alignItems="center">
-              <Hidden mdDown>
+              <Hidden lgDown>
                 <Typography variant="h6" className={classes.videoTitle}>
                   {title}
                 </Typography>
@@ -175,7 +175,7 @@ const Video = ({
                 </Accordion>
               </Hidden>
             </Box>
-            <Hidden mdDown>
+            <Hidden lgDown>
               <Typography
                 className={classes.publishedAt}
               >{`Published at ${moment(publishedAt).format(
@@ -228,7 +228,7 @@ const Video = ({
           {type === VIDEO_TYPE_STREAM && (
             <Grid item container spacing={2} className={classes.thirdGrid}>
               <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
+                <Hidden lgDown>
                   <Paper>
                     <div className={classes.sectionHeader}>
                       <Typography variant="h6">Related Tweets</Typography>
@@ -274,7 +274,7 @@ const Video = ({
                 </Hidden>
               </Grid>
               <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
+                <Hidden lgDown>
                   <Paper>
                     <div className={classes.sectionHeader}>
                       <Typography variant="h6">Related Videos</Typography>
@@ -469,6 +469,7 @@ const Video = ({
               className={classes.clrBtn}
               variant="contained"
               onClick={handleDescDialogClose}
+              size="large"
             >
               <ClearIcon />
             </IconButton>

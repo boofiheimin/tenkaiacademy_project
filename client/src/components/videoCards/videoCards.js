@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Typography, Divider } from "@material-ui/core";
+import { Box, Typography, Divider } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import VideoCard from "../videoCard/videoCard";
@@ -47,7 +47,7 @@ const VideoCards = ({
             display="grid"
             alignItems="center"
             gridTemplateColumns="repeat(auto-fit, 300px)"
-            gridGap="10px"
+            gap="10px"
             justifyContent="center"
           >
             {!loading &&

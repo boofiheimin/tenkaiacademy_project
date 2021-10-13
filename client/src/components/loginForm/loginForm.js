@@ -7,8 +7,8 @@ import {
   Typography,
   Container,
   Paper,
-} from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
+} from "@mui/material";
+import { LockOutlined } from "@mui/icons-material";
 
 import useStyles from "./styles";
 
