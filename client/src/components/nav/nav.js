@@ -114,6 +114,7 @@ const Nav = ({
             keepMounted: true,
           }}
         >
+          <div className={classes.drawerHeader} />
           <DrawerItems classes={classes} />
         </Drawer>
       ) : (

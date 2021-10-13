@@ -1,12 +1,9 @@
 import { useEffect, useMemo } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-  createTheme,
-  adaptV4Theme,
-} from "@mui/material";
+import { StyledEngineProvider } from "@mui/material";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { authen } from "../actions/auth.actions";
 import PrivateRoute from "./routing/privateRoute";
@@ -45,16 +42,14 @@ const App = () => {
   const dispatch = useDispatch();
   const { siteMode } = useSelector((state) => state.global);
   const theme = useMemo(() =>
-    createTheme(
-      adaptV4Theme({
-        palette: {
-          mode: siteMode,
-        },
-        typography: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
-        },
-      })
-    )
+    createTheme({
+      palette: {
+        mode: siteMode,
+      },
+      typography: {
+        fontFamily: ["Rubik", "sans-serif"].join(","),
+      },
+    })
   );
 
   useEffect(() => {

@@ -95,6 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listRoot: {
     width: "100%",
+    height: "100%",
     backgroundColor: theme.palette.background.paper,
   },
   outlet: {
