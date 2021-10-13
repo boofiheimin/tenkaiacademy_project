@@ -4,8 +4,6 @@ import Youtube from "react-youtube";
 
 import useStyles from "./styles";
 
-import placeholder from "../../assets/images/Placeholder.jfif";
-
 const ResponsiveIframe = forwardRef(
   ({ videoId, mirror, onNext, showPlaceholder }, ref) => {
     const classes = useStyles({ showPlaceholder });
@@ -21,7 +19,8 @@ const ResponsiveIframe = forwardRef(
 
     const handleStateChange = () => {
       const state = player.getPlayerState();
-      if (state === 0 && playerState !== -1) {
+      if (playerState === 1 && state === 0) {
+        // Player will only trigger onNext when the state change from playing to end
         onNext();
       }
       setPlayerState(state);
@@ -52,7 +51,6 @@ const ResponsiveIframe = forwardRef(
       }
       return (
         <>
-          <img src={placeholder} alt="" />
           <Youtube
             onReady={handleReady}
             opts={{ playerVars: { autoplay: 1 } }}

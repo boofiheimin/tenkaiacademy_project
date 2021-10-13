@@ -28,6 +28,9 @@ import Songs from "./songs/songs.container";
 
 import NotFound from "./notFound/notFound.container";
 
+import "simplebar/dist/simplebar.min.css";
+import "./app.css";
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 

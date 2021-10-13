@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid silver",
     padding: theme.spacing(1),
     backgroundColor:
-      isDragging || active ? theme.palette.background.paper : "transparent",
+      isDragging || active ? theme.palette.action.selected : "transparent",
     userSelect: "none",
     position: "relative",
     ...draggableStyle,
