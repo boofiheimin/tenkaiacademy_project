@@ -29,6 +29,7 @@ const MusicContainer = () => {
 
   const handleSearchChange = (text) => {
     setSearch(text);
+    setPage(0);
   };
 
   return (
