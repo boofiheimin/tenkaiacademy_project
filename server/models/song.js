@@ -14,6 +14,13 @@ const songSchema = mongoose.Schema(
     songNameJP: {
       type: String,
     },
+    subSongNameEN: {
+      type: String,
+    },
+    duration: {
+      type: Number,
+      required: [true, "Please provide song's duration"],
+    },
     artists: {
       type: Array,
       default: [],

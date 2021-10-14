@@ -56,6 +56,13 @@ const SongsContainer = () => {
           required: true,
         },
         {
+          name: "Sub name EN",
+          value: "subSongNameEN",
+          input: true,
+          hidden: true,
+          placeholder: "For search",
+        },
+        {
           name: "Song name JP",
           width: "30%",
           filter: true,
@@ -73,7 +80,15 @@ const SongsContainer = () => {
           options: artists,
           required: true,
         },
-        { name: "Action", width: "30%" },
+        {
+          name: "Duration",
+          width: "5%",
+          value: "duration",
+          input: true,
+          inputValidation: "number",
+          required: true,
+        },
+        { name: "Action", width: "25%" },
       ]}
       data={mappedSong}
       onRowSave={onSongSave}

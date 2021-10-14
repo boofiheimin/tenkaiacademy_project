@@ -11,8 +11,10 @@ export const getSongs = async (req, res, next) => {
         _id: 1,
         songId: 1,
         songNameEN: 1,
+        subSongNameEN: 1,
         songNameJP: 1,
         artists: 1,
+        duration: 1,
       }
     );
     res.status(200).json(songs);
@@ -38,9 +40,6 @@ export const createSong = async (req, res, next) => {
     // Bind Artist
 
     const artists = [];
-
-    console.log(song);
-
     for (const artistId of song.artistIds) {
       const artist = await Artist.findOne({ artistId: artistId });
       if (!artist) {
@@ -68,7 +67,6 @@ export const createSong = async (req, res, next) => {
 export const editSong = async (req, res, next) => {
   try {
     const songParams = req.body;
-
     // Bind Artist
     const artists = [];
 
@@ -99,6 +97,7 @@ export const editSong = async (req, res, next) => {
         $set: {
           "songData.artists": artists,
           "songData.songNameEN": songParams.songNameEN,
+          "songData.subSongNameEN": songParams.subSongNameEN,
           "songData.songNameJP": songParams.songNameJP,
         },
       },

@@ -34,6 +34,10 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
     setAnchorEl(null);
   };
 
+  const handleEdit = () => {
+    onEdit(row._id);
+  };
+
   const cells = [];
   columnOptions
     .filter(({ hidden }) => !hidden)
@@ -72,7 +76,7 @@ const CommonRow = ({ columnOptions, row, onEdit, onRemove }) => {
       <TableCell align="right">
         <Button
           className={classes.actionButton}
-          onClick={onEdit}
+          onClick={handleEdit}
           key="fas fa-edit"
         >
           <FontAwesomeIcon icon={faEdit} />

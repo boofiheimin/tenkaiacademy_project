@@ -63,6 +63,7 @@ const CommonTable = ({
         optionLabel,
         required,
         inputValidation,
+        placeholder,
       }) => {
         if (input) {
           initData = {
@@ -83,6 +84,7 @@ const CommonTable = ({
               ...(inputValidation && {
                 inputValidation,
               }),
+              placeholder,
             },
           };
         }
@@ -111,8 +113,11 @@ const CommonTable = ({
     setOpenEditModal(false);
   };
 
-  const handleRowEdit = (index) => {
+  const handleRowEdit = (id) => {
     let newEditData = {};
+
+    const index = data.findIndex(({ _id }) => id === _id);
+
     inputOptions.forEach(
       ({
         value,
@@ -123,6 +128,7 @@ const CommonTable = ({
         input,
         displayValue,
         inputValidation,
+        placeholder,
       }) => {
         newEditData = {
           ...newEditData,
@@ -142,6 +148,7 @@ const CommonTable = ({
             ...(inputValidation && {
               inputValidation,
             }),
+            placeholder,
           },
         };
       }
@@ -317,11 +324,11 @@ const CommonTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedRows.map((row, index) => (
+              {paginatedRows.map((row) => (
                 <CommonRow
                   columnOptions={columnOptions}
                   row={row}
-                  onEdit={() => handleRowEdit(index)}
+                  onEdit={handleRowEdit}
                   onRemove={onRowRemove}
                 />
               ))}
@@ -333,8 +340,8 @@ const CommonTable = ({
             component="div"
             count={filteredRows.length}
             page={page}
-            onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>

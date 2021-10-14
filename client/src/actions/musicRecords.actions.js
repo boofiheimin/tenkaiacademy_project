@@ -6,14 +6,22 @@ import {
   DELETE_MUSICRECORD_SUCCESS,
 } from "../constants/actionTypes";
 
-export const getMusicRecords = () => async (dispatch) => {
-  try {
-    const { data } = await api.fetchMusicRecords();
-    dispatch({ type: FETCH_MUSICRECORDS_SUCCESS, data });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+export const getMusicRecords =
+  (textSearch, limit, page) => async (dispatch) => {
+    try {
+      const { data } = await api.fetchMusicRecords(textSearch, limit, page + 1);
+
+      const { docs, totalDocs } = data;
+
+      dispatch({
+        type: FETCH_MUSICRECORDS_SUCCESS,
+        data: docs,
+        total: totalDocs,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
 export const createMusicRecord = (recordData) => async (dispatch) => {
   try {

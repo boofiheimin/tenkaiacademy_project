@@ -1,7 +1,8 @@
+import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { shuffle as _shuffle } from "lodash";
 import {
+  Container,
   Box,
   Grid,
   Button,
@@ -9,13 +10,23 @@ import {
   DialogActions,
   DialogContent,
   Typography,
+  TextField,
 } from "@mui/material";
 
 import ResponsiveIframe from "../responsiveYoutube/responsiveYoutube";
 
 import QueueManager from "./queueManager/queueManager";
+import Records from "./records/records";
 
-const Music = () => {
+const Music = ({
+  musicRecords,
+  rowsPerPage,
+  page,
+  recordCount,
+  onPageChange,
+  onRowsPerPageChange,
+  onSearch,
+}) => {
   const youtubeRef = useRef();
   const [currentSong, setCurrentSong] = useState([]);
   const [loop, setLoop] = useState(false);
@@ -24,8 +35,8 @@ const Music = () => {
   const [pool, setPool] = useState([]);
   const [playedList, setPlayedList] = useState([]);
   const [clearQModal, setClearQModal] = useState(false);
-
   const [pendingSong, setPendingSong] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (currentSong[0]) {
@@ -36,20 +47,18 @@ const Music = () => {
     }
   }, [currentSong]);
 
-  const handleAddToQueue = () => {
-    const dummy = { id: uuidv4(), text: "Madorami", videoId: "yP8Wn3rqYck" };
-
+  const handleAddToQueue = (song) => {
     if (currentSong.length === 0) {
-      setCurrentSong([dummy]);
+      setCurrentSong([song]);
     } else {
-      let newPool = [...pool, dummy];
+      let newPool = [...pool, song];
       if (shuffle) {
         newPool = _shuffle(newPool);
       }
       setPool(newPool);
     }
 
-    setOrderedQueue([...orderedQueue, dummy]);
+    setOrderedQueue([...orderedQueue, song]);
   };
 
   const handleNext = () => {
@@ -153,12 +162,11 @@ const Music = () => {
     setOrderedQueue(reoderedItem);
   };
 
-  const handlePlay = () => {
+  const handlePlay = (song) => {
     if (orderedQueue.length === 0) {
-      handleAddToQueue();
+      handleAddToQueue(song);
     } else {
-      const dummy = { id: uuidv4(), text: "Madorami", videoId: "yP8Wn3rqYck" };
-      setPendingSong(dummy);
+      setPendingSong(song);
       setClearQModal(true);
     }
   };
@@ -172,7 +180,13 @@ const Music = () => {
   };
 
   const handleNotClearQPLay = () => {
-    handleAddToQueue();
+    setCurrentSong([pendingSong]);
+
+    const newPlayedList = [...playedList, ...currentSong];
+    setPlayedList(newPlayedList);
+
+    setOrderedQueue([...orderedQueue, pendingSong]);
+
     setClearQModal(false);
   };
 
@@ -180,12 +194,28 @@ const Music = () => {
     setClearQModal(false);
   };
 
+  const handleOnSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleSubmitSearch = (e) => {
+    e.preventDefault();
+    onSearch(search);
+  };
+
   const isEnd = loop ? false : pool.length === 0;
   const isStart = loop ? false : playedList.length === 0;
 
   return (
     <>
-      <Box paddingLeft={8} paddingRight={8}>
+      <Container>
+        <Box padding={1} sx={{ display: "flex", justifyContent: "flex-end" }}>
+          {localStorage.getItem("authToken") && (
+            <Button variant="outlined" href="/music/edit">
+              EDIT MUSIC RECORD
+            </Button>
+          )}
+        </Box>
         <Grid container>
           <Grid item xs={9}>
             <ResponsiveIframe
@@ -215,16 +245,28 @@ const Music = () => {
           </Grid>
         </Grid>
         <Box padding={1}>
-          <Button variant="outlined" onClick={handleAddToQueue}>
-            Add to queue
-          </Button>
+          <form onSubmit={handleSubmitSearch}>
+            <TextField
+              sx={{ width: "100%" }}
+              placeholder="Search with Song name or Artist name (EN/JP) or videoId"
+              onChange={handleOnSearchChange}
+              value={search}
+            />
+          </form>
         </Box>
         <Box padding={1}>
-          <Button variant="outlined" onClick={handlePlay}>
-            Play
-          </Button>
+          <Records
+            musicRecords={musicRecords}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            recordCount={recordCount}
+            onPlay={handlePlay}
+            onAddToQueue={handleAddToQueue}
+            onPageChange={onPageChange}
+            onRowsPerPageChange={onRowsPerPageChange}
+          />
         </Box>
-      </Box>
+      </Container>
       <Dialog open={clearQModal} onClose={handleCloseQModal}>
         <DialogContent dividers>
           <Typography>Do you wish to clear the queue?</Typography>
@@ -248,6 +290,40 @@ const Music = () => {
       </Dialog>
     </>
   );
+};
+
+Music.propTypes = {
+  musicRecords: PropTypes.arrayOf(
+    PropTypes.shape({
+      songStart: PropTypes.number,
+      songEnd: PropTypes.number,
+      songData: PropTypes.shape({
+        songNameEN: PropTypes.string,
+        artists: PropTypes.array,
+      }),
+      streamData: PropTypes.shape({
+        publishedAt: PropTypes.string,
+        videoId: PropTypes.string,
+        proxyVideoId: PropTypes.string,
+      }),
+    })
+  ),
+  rowsPerPage: PropTypes.number,
+  page: PropTypes.number,
+  recordCount: PropTypes.number,
+  onPageChange: PropTypes.func,
+  onRowsPerPageChange: PropTypes.func,
+  onSearch: PropTypes.func,
+};
+
+Music.defaultProps = {
+  musicRecords: [],
+  rowsPerPage: 10,
+  page: 0,
+  recordCount: 0,
+  onPageChange: () => {},
+  onRowsPerPageChange: () => {},
+  onSearch: () => {},
 };
 
 export default Music;

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const songSchema = mongoose.Schema(
   {
@@ -6,6 +7,9 @@ const songSchema = mongoose.Schema(
       type: String,
     },
     songNameEN: {
+      type: String,
+    },
+    subSongNameEN: {
       type: String,
     },
     songNameJP: {
@@ -64,6 +68,8 @@ const musicRecordSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+musicRecordSchema.plugin(mongoosePaginate);
 
 const MusicRecord = mongoose.model("MusicRecord", musicRecordSchema);
 

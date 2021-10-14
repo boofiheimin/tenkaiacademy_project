@@ -3,9 +3,33 @@ import Song from "../models/song.js";
 import Stream from "../models/stream.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
-export const getMusicRecords = async (req, res, next) => {
+export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
   try {
-    const songs = await MusicRecord.find({});
+    const { textSearch, page, limit } = reqQuery;
+
+    const paginateOptions = {
+      ...(page && { page }),
+      ...(limit && { limit }),
+      sort: {
+        "streamData.publishedAt": -1,
+        songIndex: 1,
+      },
+    };
+
+    const srchQuery = {
+      ...(textSearch && {
+        $or: [
+          { "songData.songNameEN": new RegExp(textSearch, "i") },
+          { "songData.songNameJP": new RegExp(textSearch, "i") },
+          { "songData.subSongNameEN": new RegExp(textSearch, "i") },
+          { "songData.artists.artistNameEN": new RegExp(textSearch, "i") },
+          { "songData.artists.artistNameJP": new RegExp(textSearch, "i") },
+          { "streamData.videoId": new RegExp(textSearch, "i") },
+        ],
+      }),
+    };
+
+    const songs = await MusicRecord.paginate(srchQuery, paginateOptions);
     res.status(200).json(songs);
   } catch (error) {
     return next(error);
@@ -35,14 +59,19 @@ export const createMusicRecord = async (req, res, next) => {
       return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
-    const { songNameEN, songNameJP, artists } = song;
+    const { songNameEN, songNameJP, subSongNameEN, artists, duration } = song;
     const { publishedAt } = stream;
+
+    const calcSongEnd = songStart
+      ? songEnd || parseInt(songStart, 10) + parseInt(duration, 10)
+      : undefined;
 
     const newMusicRecordParams = {
       songData: {
         songId,
         songNameEN,
         songNameJP,
+        subSongNameEN,
         artists,
       },
       streamData: {
@@ -51,7 +80,7 @@ export const createMusicRecord = async (req, res, next) => {
         publishedAt,
       },
       songStart,
-      songEnd,
+      songEnd: calcSongEnd,
       isScuffed,
       songIndex,
     };
@@ -88,7 +117,7 @@ export const editMusicRecord = async (req, res, next) => {
       return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
-    const { songNameEN, songNameJP, artists } = song;
+    const { songNameEN, songNameJP, artists, subSongNameEN } = song;
     const { publishedAt } = stream;
 
     const newMusicRecord = await MusicRecord.findByIdAndUpdate(
@@ -98,6 +127,7 @@ export const editMusicRecord = async (req, res, next) => {
           songId,
           songNameEN,
           songNameJP,
+          subSongNameEN,
           artists,
         },
         streamData: {

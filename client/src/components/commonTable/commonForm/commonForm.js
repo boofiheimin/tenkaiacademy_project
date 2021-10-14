@@ -92,6 +92,7 @@ const CommonForm = ({
               key={`${data._id}_${data[key].name}`}
               error={requiredErrors[key] || typeCheckErrors[key]}
               helperText={helperText}
+              placeholder={data[key].placeholder}
             />
           </Box>
         );

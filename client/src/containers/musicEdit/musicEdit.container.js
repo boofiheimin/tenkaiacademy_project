@@ -14,7 +14,7 @@ import { getSongs } from "../../actions/songs.actions";
 
 const MusicEditContainer = () => {
   const dispatch = useDispatch();
-  const musicRecords = useSelector((state) => state.musicRecords);
+  const { data: musicRecords } = useSelector((state) => state.musicRecords);
   const songs = useSelector((state) => state.songs);
 
   useEffect(() => {
@@ -113,6 +113,7 @@ const MusicEditContainer = () => {
         },
         {
           name: "End",
+          placeholder: "End - leave blank to use song duration + start",
           width: "5%",
           value: "songEnd",
           input: "text",

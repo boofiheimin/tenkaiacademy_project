@@ -5,24 +5,35 @@ import {
   EDIT_MUSICRECORD_SUCCESS,
 } from "../constants/actionTypes";
 
-const reducer = (records = [], action) => {
+const reducer = (records = { data: [], total: 0 }, action) => {
   switch (action.type) {
     case FETCH_MUSICRECORDS_SUCCESS:
-      return action.data;
+      return { ...records, data: action.data, total: action.total };
     case CREATE_MUSICRECORD_SUCCESS:
-      return [...records, action.data];
+      return {
+        ...records,
+        data: [...records.data, action.data],
+        total: action.total + 1,
+      };
     case EDIT_MUSICRECORD_SUCCESS:
-      return records.map((record) => {
-        if (record._id !== action.data._id) {
-          return record;
-        }
-        return {
-          ...record,
-          ...action.data,
-        };
-      });
+      return {
+        ...records,
+        data: records.data.map((record) => {
+          if (record._id !== action.data._id) {
+            return record;
+          }
+          return {
+            ...record,
+            ...action.data,
+          };
+        }),
+      };
     case DELETE_MUSICRECORD_SUCCESS:
-      return records.filter((record) => record._id !== action.data._id);
+      return {
+        ...records,
+        data: records.data.filter((record) => record._id !== action.data._id),
+        total: action.total - 1,
+      };
     default:
       return records;
   }
