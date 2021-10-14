@@ -1,126 +1,178 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { shuffle as _shuffle } from "lodash";
 import {
   Box,
-  Container,
   Grid,
-  Paper,
-  Typography,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  Typography,
 } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
-import _ from "lodash";
 
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import LoopIcon from "@mui/icons-material/Loop";
-import ShuffleIcon from "@mui/icons-material/Shuffle";
+import ResponsiveIframe from "../responsiveYoutube/responsiveYoutube";
 
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import ResponsiveYoutube from "../responsiveYoutube/responsiveYoutube";
-import useStyles from "./styles";
-import Song from "./song/song";
+import QueueManager from "./queueManager/queueManager";
 
-import DragAndDrop from "../dragAndDrop/dragAndDrop";
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-  },
-}))(TableCell);
-
-const mockSongs = [
-  {
-    id: uuidv4(),
-    name: "秒針を噛む",
-    artist: "ずっと真夜中でいいのに。",
-    videoId: "_kT4a8IzM70",
-    date: new Date(),
-  },
-  {
-    id: uuidv4(),
-    name: "ヒバナ",
-    artist: "DECO*27",
-    videoId: "USrIMGRBA78",
-    date: new Date(),
-  },
-  {
-    id: uuidv4(),
-    name: "Kaibutsu",
-    artist: "YOASOBI",
-    videoId: "o5NMoZGWkDY",
-    start: 1199,
-    // end: 1408,
-    end: 1200,
-    date: new Date(),
-  },
-];
-
-const totalPages = 15;
-const page = 1;
-
-const Music = ({ musicRecords }) => {
-  const classes = useStyles();
+const Music = () => {
   const youtubeRef = useRef();
-  const [queue, setQueue] = useState([]);
-  const [playIndex, setPlayIndex] = useState(-1);
-  const [shuffledList, setShuffledList] = useState([]);
-  const [currentSong, setCurrentSong] = useState(null);
-  const [shufflePool, setShufflePool] = useState([]);
+  const [currentSong, setCurrentSong] = useState([]);
   const [loop, setLoop] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const [orderedQueue, setOrderedQueue] = useState([]);
+  const [pool, setPool] = useState([]);
+  const [playedList, setPlayedList] = useState([]);
   const [clearQModal, setClearQModal] = useState(false);
 
+  const [pendingSong, setPendingSong] = useState(null);
+
   useEffect(() => {
-    if (currentSong) {
-      const { videoId, start, end } = currentSong;
+    if (currentSong[0]) {
+      const { videoId, start, end } = currentSong[0];
       youtubeRef.current.loadVideo(videoId, start, end);
+    } else {
+      youtubeRef.current.stopVideo();
     }
   }, [currentSong]);
 
-  const handlePlay = (id, name, start, end) => {
-    const newItem = {
-      id: uuidv4(),
-      text: name,
-      videoId: id,
-      start,
-      end,
-    };
-    setCurrentSong(newItem);
-    if (queue.length === 0) {
-      setPlayIndex(0);
-      setQueue([newItem]);
+  const handleAddToQueue = () => {
+    const dummy = { id: uuidv4(), text: "Madorami", videoId: "yP8Wn3rqYck" };
+
+    if (currentSong.length === 0) {
+      setCurrentSong([dummy]);
     } else {
+      let newPool = [...pool, dummy];
+      if (shuffle) {
+        newPool = _shuffle(newPool);
+      }
+      setPool(newPool);
+    }
+
+    setOrderedQueue([...orderedQueue, dummy]);
+  };
+
+  const handleNext = () => {
+    let newPlayedList = [];
+    let newPool = [];
+    let nextSong = [];
+    if (loop && pool.length === 0) {
+      newPool = [...playedList, ...currentSong];
+    } else {
+      newPlayedList = [...playedList, ...currentSong];
+      newPool = [...pool];
+    }
+    nextSong = newPool.shift();
+    setCurrentSong(nextSong ? [nextSong] : []);
+    setPool(newPool);
+    setPlayedList(newPlayedList);
+  };
+
+  const handlePrev = () => {
+    let newPlayedList = [];
+    let newPool = [];
+    let nextSong = [];
+    if (loop && playedList.length === 0) {
+      newPlayedList = [...currentSong, ...pool];
+    } else {
+      newPool = [...currentSong, ...pool];
+      newPlayedList = [...playedList];
+    }
+    nextSong = newPlayedList.pop();
+    setCurrentSong(nextSong ? [nextSong] : []);
+    setPool(newPool);
+    setPlayedList(newPlayedList);
+  };
+
+  const handleLoopToggle = () => {
+    setLoop(!loop);
+  };
+
+  const currentIndex = orderedQueue.findIndex(
+    ({ id }) => id === currentSong[0]?.id
+  );
+
+  const handleShuffleToggle = () => {
+    if (!shuffle) {
+      const newPool = [...playedList, ...pool];
+      const newPlayedList = [];
+      setPool(_shuffle(newPool));
+      setPlayedList(newPlayedList);
+    } else {
+      const newPlayedList = orderedQueue.slice(0, currentIndex);
+      const newPool = orderedQueue.slice(currentIndex + 1);
+
+      setPool(newPool);
+      setPlayedList(newPlayedList);
+    }
+    setShuffle(!shuffle);
+  };
+
+  const handleClearQueue = () => {
+    setPool([]);
+    setPlayedList([]);
+    setOrderedQueue([]);
+    setCurrentSong([]);
+  };
+
+  const handleQueueClick = (index) => {
+    const nextSong = orderedQueue[index];
+    let newPlayedList = [];
+    let newPool = [];
+
+    if (!shuffle) {
+      newPlayedList = orderedQueue.slice(0, index);
+      newPool = orderedQueue.slice(index + 1);
+    } else {
+      newPlayedList = [
+        ...playedList.filter(({ id }) => id !== nextSong.id),
+        ...currentSong,
+      ];
+      newPool = pool.filter(({ id }) => id !== nextSong.id);
+    }
+    setCurrentSong([nextSong]);
+    setPlayedList(newPlayedList);
+    setPool(newPool);
+  };
+
+  const handleRemoveQueue = (_id) => {
+    setPlayedList(playedList.filter(({ id }) => id !== _id));
+    setPool(pool.filter(({ id }) => id !== _id));
+    setOrderedQueue(orderedQueue.filter(({ id }) => id !== _id));
+  };
+
+  const handleReorder = (reoderedItem) => {
+    const playIndex = reoderedItem.findIndex(
+      ({ id }) => id === currentSong[0]?.id
+    );
+    if (!shuffle) {
+      setPlayedList(reoderedItem.slice(0, playIndex));
+      setPool(reoderedItem.slice(playIndex + 1));
+    }
+
+    setOrderedQueue(reoderedItem);
+  };
+
+  const handlePlay = () => {
+    if (orderedQueue.length === 0) {
+      handleAddToQueue();
+    } else {
+      const dummy = { id: uuidv4(), text: "Madorami", videoId: "yP8Wn3rqYck" };
+      setPendingSong(dummy);
       setClearQModal(true);
     }
   };
 
   const handleClearQPlay = () => {
-    setPlayIndex(0);
-    setQueue([currentSong]);
+    setPool([]);
+    setPlayedList([]);
+    setOrderedQueue([pendingSong]);
+    setCurrentSong([pendingSong]);
     setClearQModal(false);
   };
 
   const handleNotClearQPLay = () => {
-    setPlayIndex(queue.length);
-    setQueue([...queue, currentSong]);
+    handleAddToQueue();
     setClearQModal(false);
   };
 
@@ -128,293 +180,51 @@ const Music = ({ musicRecords }) => {
     setClearQModal(false);
   };
 
-  const handleAddToQueue = (id, name, start, end) => {
-    const newItem = {
-      id: uuidv4(),
-      text: name,
-      videoId: id,
-      start,
-      end,
-    };
-
-    if (!currentSong) {
-      setCurrentSong(newItem);
-      setPlayIndex(queue.length);
-    } else if (currentSong && shuffle) {
-      setShufflePool(_.shuffle([...shufflePool, newItem.id]));
-    }
-    const newQueue = [...queue, newItem];
-    setQueue(newQueue);
-  };
-
-  const handleRemove = (id) => {
-    const removedIndex = queue.findIndex((item) => item.id === id);
-    if (removedIndex < playIndex) {
-      setPlayIndex(playIndex - 1);
-    }
-    setQueue(queue.filter((item) => item.id !== id));
-    setShuffledList(shuffledList.filter((item) => item !== id));
-    setShufflePool(shufflePool.filter((item) => item !== id));
-  };
-
-  const handleReorder = (reoderedItem) => {
-    const currrentIndex = reoderedItem.findIndex(
-      (e) => e.id === currentSong?.id
-    );
-    setQueue(reoderedItem);
-    setPlayIndex(currrentIndex);
-  };
-
-  const handleSkipNext = () => {
-    if (shuffle) {
-      const newShuffledList = [...shuffledList, currentSong.id];
-      if (newShuffledList.length === queue.length) {
-        if (loop) {
-          const nextSongId = newShuffledList.shift();
-          const nextSongIndex = queue.findIndex(
-            (item) => item.id === nextSongId
-          );
-          setCurrentSong(queue[nextSongIndex]);
-          setPlayIndex(nextSongIndex);
-          setShuffledList([]);
-          setShufflePool(newShuffledList);
-        } else {
-          setCurrentSong(null);
-          setPlayIndex(queue.length);
-          setShuffledList(newShuffledList);
-        }
-      } else {
-        const newShuffledPool = [...shufflePool];
-        const nextSongId = newShuffledPool.shift();
-        const nextSongIndex = queue.findIndex((item) => item.id === nextSongId);
-        setCurrentSong(queue[nextSongIndex]);
-        setShufflePool(newShuffledPool);
-        setPlayIndex(nextSongIndex);
-        setShuffledList(newShuffledList);
-      }
-    } else {
-      let nextIndex = playIndex + 1;
-      if (nextIndex >= queue.length) {
-        if (loop) {
-          nextIndex = 0;
-          const nextSong = queue[nextIndex];
-          setCurrentSong(nextSong);
-        } else setCurrentSong(null);
-      } else {
-        const nextSong = queue[nextIndex];
-        setCurrentSong(nextSong);
-      }
-      setPlayIndex(nextIndex);
-    }
-  };
-
-  const handleSkipPrev = () => {
-    if (shuffle) {
-      if (shuffledList.length === 0) {
-        if (loop) {
-          let newShuffledList = _.reverse(shufflePool);
-          const prevSongId = newShuffledList.shift();
-          const prevSongIndex = queue.findIndex(
-            (item) => item.id === prevSongId
-          );
-          if (currentSong) {
-            newShuffledList = [currentSong.id, ...newShuffledList];
-          }
-
-          setCurrentSong(queue[prevSongIndex]);
-          setPlayIndex(prevSongIndex);
-          setShuffledList(newShuffledList);
-          setShufflePool([]);
-        } else youtubeRef.current.seekTime(currentSong?.start || 0);
-      } else {
-        const newShuffledList = [...shuffledList];
-        const prevSongId = newShuffledList.pop();
-        const prevSongIndex = queue.findIndex((item) => item.id === prevSongId);
-        setCurrentSong(queue[prevSongIndex]);
-        setShuffledList(newShuffledList);
-        setPlayIndex(prevSongIndex);
-        if (currentSong) {
-          setShufflePool([currentSong.id, ...shufflePool]);
-        }
-      }
-    } else {
-      let prevIndex = playIndex - 1;
-      if (prevIndex < 0) {
-        if (loop) {
-          prevIndex = queue.length - 1;
-          const prevSong = queue[prevIndex];
-          setCurrentSong(prevSong);
-          setPlayIndex(prevIndex);
-        } else youtubeRef.current.seekTime(currentSong?.start || 0);
-      } else {
-        const prevSong = queue[prevIndex];
-        setCurrentSong(prevSong);
-        setPlayIndex(prevIndex);
-      }
-    }
-  };
-
-  const onQueueClick = (index) => {
-    const nextSong = queue[index];
-    if (shuffle) {
-      setCurrentSong(nextSong);
-      const newShuffledList = [...shuffledList, currentSong.id];
-      setShuffledList(newShuffledList.filter((id) => id !== nextSong.id));
-      setShufflePool(shufflePool.filter((id) => id !== nextSong.id));
-    } else {
-      setCurrentSong(nextSong);
-      setPlayIndex(index);
-    }
-  };
-
-  const toggleLoop = () => {
-    setLoop(!loop);
-  };
-
-  const toggleShuffle = () => {
-    setShuffle(!shuffle);
-    setShuffledList([]);
-    if (!shuffle) {
-      const pool = queue
-        .filter((item) => item.id !== currentSong?.id)
-        .map((item) => item.id);
-      setShufflePool(_.shuffle(pool));
-    }
-  };
+  const isEnd = loop ? false : pool.length === 0;
+  const isStart = loop ? false : playedList.length === 0;
 
   return (
-    <Container className={classes.root}>
-      {localStorage.getItem("authToken") && (
-        <Box display="flex" padding={3} justifyContent="flex-end" width="100%">
-          <Button variant="outlined" href="/music/edit">
-            Manage Songs
-          </Button>
-        </Box>
-      )}
-      <Box width="100%">
+    <>
+      <Box paddingLeft={8} paddingRight={8}>
         <Grid container>
           <Grid item xs={9}>
-            <ResponsiveYoutube
+            <ResponsiveIframe
               ref={youtubeRef}
-              onNext={handleSkipNext}
-              showPlaceholder={
-                queue.length === 0 || playIndex > queue.length - 1
-              }
+              onNext={handleNext}
+              showPlaceholder={!currentSong[0]}
             />
           </Grid>
           <Grid item xs={3}>
-            <Paper>
-              <div className={classes.sectionHeader}>
-                <Typography variant="h6">
-                  Queue
-                  {!(queue.length === 0 || playIndex >= queue.length) &&
-                    `: ${shuffle ? shuffledList.length + 1 : playIndex + 1}/${
-                      queue.length
-                    }`}
-                </Typography>
-                <div>
-                  <Button
-                    className={classes.actionButton}
-                    disabled={queue.length === 0}
-                    onClick={handleSkipPrev}
-                  >
-                    <SkipPreviousIcon />
-                  </Button>
-                  <Button
-                    className={classes.actionButton}
-                    disabled={queue.length === 0 || playIndex >= queue.length}
-                    onClick={handleSkipNext}
-                  >
-                    <SkipNextIcon />
-                  </Button>
-                  <Button className={classes.actionButton} onClick={toggleLoop}>
-                    <LoopIcon style={loop ? { color: "#4caf50" } : undefined} />
-                  </Button>
-                  <Button
-                    className={classes.actionButton}
-                    onClick={toggleShuffle}
-                  >
-                    <ShuffleIcon
-                      style={shuffle ? { color: "#4caf50" } : undefined}
-                    />
-                  </Button>
-                </div>
-              </div>
-            </Paper>
-            <div className={classes.timestampContainer}>
-              <div className={classes.timestampScroller}>
-                <DragAndDrop
-                  items={queue}
-                  onReorderItem={handleReorder}
-                  onRemoveItem={handleRemove}
-                  activeIndex={playIndex}
-                  onItemClick={onQueueClick}
-                />
-              </div>
-            </div>
+            <QueueManager
+              queue={orderedQueue}
+              onClear={handleClearQueue}
+              onNext={handleNext}
+              onPrev={handlePrev}
+              onLoop={handleLoopToggle}
+              onShuffle={handleShuffleToggle}
+              onQueueClick={handleQueueClick}
+              onRemoveQueue={handleRemoveQueue}
+              onReorderQueue={handleReorder}
+              currentIndex={currentIndex}
+              queuePos={playedList.length + 1}
+              isEnd={isEnd}
+              isStart={isStart}
+              loop={loop}
+              shuffle={shuffle}
+            />
           </Grid>
         </Grid>
+        <Box padding={1}>
+          <Button variant="outlined" onClick={handleAddToQueue}>
+            Add to queue
+          </Button>
+        </Box>
+        <Box padding={1}>
+          <Button variant="outlined" onClick={handlePlay}>
+            Play
+          </Button>
+        </Box>
       </Box>
-      <TextField
-        variant="outlined"
-        label="Search"
-        className={classes.searchBox}
-      />
-      <TableContainer component={Paper}>
-        <Table
-          className={classes.table}
-          size="small"
-          aria-label="a dense table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell style={{ width: "40%" }}>
-                <Typography>Name</Typography>
-              </StyledTableCell>
-              <StyledTableCell style={{ width: "35%" }}>
-                <Typography>Artist</Typography>
-              </StyledTableCell>
-              <StyledTableCell style={{ width: "5%" }}>
-                <Typography>Date</Typography>
-              </StyledTableCell>
-              <StyledTableCell style={{ width: "20%" }} align="right">
-                Action
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {musicRecords.map((record) => (
-              <Song
-                record={record}
-                onPlay={handlePlay}
-                onAddQueue={handleAddToQueue}
-                key={record._id}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <div className={classes.tablePagination}>
-          <Typography>{`Page ${page} of ${totalPages}`}</Typography>
-          <Button className={classes.actionButton} disabled={page === 1}>
-            <FirstPageIcon />
-          </Button>
-          <Button className={classes.actionButton} disabled={page === 1}>
-            <KeyboardArrowLeft />
-          </Button>
-          <Button
-            className={classes.actionButton}
-            disabled={page === totalPages}
-          >
-            <KeyboardArrowRight />
-          </Button>
-          <Button
-            className={classes.actionButton}
-            disabled={page === totalPages}
-          >
-            <LastPageIcon />
-          </Button>
-        </div>
-      </TableContainer>
       <Dialog open={clearQModal} onClose={handleCloseQModal}>
         <DialogContent dividers>
           <Typography>Do you wish to clear the queue?</Typography>
@@ -436,10 +246,8 @@ const Music = ({ musicRecords }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </>
   );
 };
-
-Music.propTypes = {};
 
 export default Music;

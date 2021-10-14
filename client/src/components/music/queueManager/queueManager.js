@@ -12,38 +12,41 @@ import DragAndDrop from "../../dragAndDrop/dragAndDrop";
 
 import useStyles from "./styles";
 
-const statusReducer = (queue, isEnd) => {
+const statusReducer = (queue, queuePos) => {
   let status = "";
   if (queue.length === 0) {
     status = "Empty Queue";
-  } else if (isEnd) {
-    status = "Queue ended : x/x";
+  } else if (queuePos > queue.length) {
+    status = `Queue ended`;
   } else {
-    status = "Now playing : x/x";
+    status = `Now playing : ${queuePos}/${queue.length}`;
   }
   return status;
 };
 
 const QueueManager = ({
   queue = [],
-  currentIndex,
   isStart,
   isEnd,
+  loop,
+  shuffle,
+  currentIndex,
+  queuePos,
   onClear,
   onNext,
   onPrev,
-  loop,
-  shuffle,
   onLoop,
   onShuffle,
   onQueueClick,
+  onRemoveQueue,
+  onReorderQueue,
 }) => {
   const classes = useStyles();
   return (
     <Paper elevation={1} className={classes.root}>
       <Paper elevation={4} className={classes.controller}>
         <Box padding={1}>
-          <Typography variant="h6">{statusReducer(queue, isEnd)}</Typography>
+          <Typography variant="h6">{statusReducer(queue, queuePos)}</Typography>
         </Box>
         <Box padding={1} display="flex" alignItems="center">
           <Box flexGrow={1}>
@@ -85,6 +88,8 @@ const QueueManager = ({
             items={queue}
             activeIndex={currentIndex}
             onItemClick={onQueueClick}
+            onRemoveItem={onRemoveQueue}
+            onReorderItem={onReorderQueue}
           />
         </SimpleBar>
       </SimpleBar>
@@ -94,10 +99,38 @@ const QueueManager = ({
 
 QueueManager.propTypes = {
   queue: PropTypes.array,
+  isStart: PropTypes.bool,
+  isEnd: PropTypes.bool,
+  loop: PropTypes.bool,
+  shuffle: PropTypes.bool,
+  currentIndex: PropTypes.number,
+  queuePos: PropTypes.number,
+  onClear: PropTypes.func,
+  onNext: PropTypes.func,
+  onPrev: PropTypes.func,
+  onLoop: PropTypes.func,
+  onShuffle: PropTypes.func,
+  onQueueClick: PropTypes.func,
+  onRemoveQueue: PropTypes.func,
+  onReorderQueue: PropTypes.func,
 };
 
 QueueManager.defaultProps = {
   queue: [],
+  isStart: false,
+  isEnd: false,
+  loop: false,
+  shuffle: false,
+  currentIndex: -1,
+  queuePos: -1,
+  onClear: () => {},
+  onNext: () => {},
+  onPrev: () => {},
+  onLoop: () => {},
+  onShuffle: () => {},
+  onQueueClick: () => {},
+  onRemoveQueue: () => {},
+  onReorderQueue: () => {},
 };
 
 export default QueueManager;

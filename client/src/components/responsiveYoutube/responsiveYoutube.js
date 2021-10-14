@@ -43,6 +43,11 @@ const ResponsiveIframe = forwardRef(
           }
         }
       },
+      stopVideo() {
+        if (player) {
+          player.stopVideo();
+        }
+      },
     }));
 
     const renderCase = () => {

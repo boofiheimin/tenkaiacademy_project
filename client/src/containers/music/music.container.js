@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Music from "../../components/music/music";
 
-import Discography from "../../components/discography/discography";
+import Music from "../../components/music/music";
 
 import { getMusicRecords } from "../../actions/musicRecords.actions";
 
@@ -14,7 +13,7 @@ const MusicContainer = () => {
     dispatch(getMusicRecords());
   }, [dispatch]);
 
-  return <Discography musicRecords={musicRecords} />;
+  return <Music musicRecords={musicRecords} />;
 };
 
 export default MusicContainer;
