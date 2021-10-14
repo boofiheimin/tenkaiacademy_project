@@ -162,6 +162,7 @@ const VideoEdit = (props) => {
                   <div className={classes.infoInputContainer}>
                     <Typography>title:&nbsp;</Typography>
                     <TextField
+                      variant="standard"
                       value={title}
                       className={classes.infoInput}
                       onChange={onTitleChange}
@@ -171,6 +172,7 @@ const VideoEdit = (props) => {
                   <div className={classes.infoInputContainer}>
                     <Typography>thumbnail:&nbsp;</Typography>
                     <TextField
+                      variant="standard"
                       value={thumbnail}
                       className={classes.infoInput}
                       onChange={onThumbnailChange}
@@ -180,6 +182,7 @@ const VideoEdit = (props) => {
                   <div className={classes.infoInputContainer}>
                     <Typography>duration:&nbsp;</Typography>
                     <TextField
+                      variant="standard"
                       value={duration}
                       onChange={onDurationChange}
                       disabled={disableVideoInfo}
@@ -188,6 +191,7 @@ const VideoEdit = (props) => {
                   <div className={classes.infoInputContainer}>
                     <Typography>uploader:&nbsp;</Typography>
                     <TextField
+                      variant="standard"
                       className={classes.infoInput}
                       value={uploader}
                       onChange={onUploaderChange}
@@ -204,6 +208,9 @@ const VideoEdit = (props) => {
                         value={publishedAt}
                         onChange={onPublishedChange}
                         disabled={disableVideoInfo}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" />
+                        )}
                       />
                     </LocalizationProvider>
                   </div>
@@ -211,6 +218,7 @@ const VideoEdit = (props) => {
                     <div className={classes.infoInputContainer}>
                       <Typography>mirror:&nbsp;</Typography>
                       <TextField
+                        variant="standard"
                         value={mirror}
                         onChange={onMirrorChange}
                         disabled={disableVideoInfo}

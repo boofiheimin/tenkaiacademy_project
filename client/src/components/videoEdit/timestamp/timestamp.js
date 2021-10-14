@@ -72,6 +72,7 @@ const Timestamp = ({
               value={timestamp}
               error={errorValidate}
               helperText={errorValidate ? "Invalid Format" : null}
+              variant="standard"
             />
           </Grid>
           <Grid container item xs={7} alignItems="center">

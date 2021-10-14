@@ -193,10 +193,15 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
               inputVariant="outlined"
               value={formData.from}
               onChange={handleFromChange}
-              format="dd/MM/yyyy "
-              onKeyPress={handleKeypress}
+              inputFormat="dd/MM/yyyy"
               className={classes.moreField}
-              renderInput={() => <TextField label="From" />}
+              renderInput={(params) => (
+                <TextField
+                  label="From"
+                  {...params}
+                  onKeyPress={handleKeypress}
+                />
+              )}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -205,10 +210,12 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
               inputVariant="outlined"
               value={formData.to}
               onChange={handleToChange}
-              format="dd/MM/yyyy  "
+              inputFormat="dd/MM/yyyy"
               onKeyPress={handleKeypress}
               className={classes.moreField}
-              renderInput={() => <TextField label="To" />}
+              renderInput={(params) => (
+                <TextField label="To" {...params} onKeyPress={handleKeypress} />
+              )}
             />
           </LocalizationProvider>
           <Select
