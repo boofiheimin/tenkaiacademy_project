@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import { v4 as uuidv4 } from "uuid";
+
 import { useState, useEffect, useRef } from "react";
 import { shuffle as _shuffle } from "lodash";
-import moment from "moment";
 
 import {
   Container,
@@ -18,28 +17,7 @@ import Records from "./records/records";
 import CustomPlayer from "./customPlayer/customPlayer";
 import Loading from "../loading/loading";
 
-const formatRecordToSong = (record) => {
-  const {
-    songStart,
-    songEnd,
-    songData: { songNameEN, artists },
-    streamData: { publishedAt, videoId, proxyVideoId },
-    isScuffed,
-  } = record;
-
-  const artistsLabel = artists
-    .map(({ artistNameEN }) => artistNameEN)
-    .join(", ");
-  return {
-    id: uuidv4(),
-    start: songStart,
-    end: songEnd,
-    videoId: proxyVideoId || videoId,
-    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
-    artistsLabel,
-    date: moment(publishedAt).format("DD/MM/yyyy"),
-  };
-};
+import { formatRecordToSong } from "./musicUtil";
 
 const Music = ({
   loading,
@@ -66,12 +44,14 @@ const Music = ({
 
   useEffect(() => {
     if (currentSong[0]) {
-      const { videoId, start, end, text, artistsLabel, date } = currentSong[0];
+      const { videoId, start, end, text, jptext, artistsLabel, date } =
+        currentSong[0];
       youtubeRef.current.loadVideo({
-        id: videoId,
+        videoId,
         start,
         end,
-        name: text,
+        text,
+        jptext,
         artistsLabel,
         date,
       });

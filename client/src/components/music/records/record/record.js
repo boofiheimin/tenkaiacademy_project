@@ -1,34 +1,22 @@
 import PropTypes from "prop-types";
-import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 
 import { TableRow, TableCell, IconButton } from "@mui/material";
-
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
+import { formatRecordToSong } from "../../musicUtil";
+
 const Record = ({ record, onPlay, onAddToQueue }) => {
   const {
-    songStart,
-    songEnd,
     songData: { songNameEN, artists },
-    streamData: { publishedAt, videoId, proxyVideoId },
+    streamData: { publishedAt },
     isScuffed,
   } = record;
-
   const artistsLabel = artists
     .map(({ artistNameEN }) => artistNameEN)
     .join(", ");
-
-  const song = {
-    id: uuidv4(),
-    start: songStart,
-    end: songEnd,
-    videoId: proxyVideoId || videoId,
-    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
-    artistsLabel,
-    date: moment(publishedAt).format("DD/MM/yyyy"),
-  };
+  const song = formatRecordToSong(record);
 
   const handlePlay = () => {
     onPlay(song);

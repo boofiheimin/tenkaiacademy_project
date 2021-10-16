@@ -131,24 +131,27 @@ const CustomPlayer = forwardRef(
       seekTime(time) {
         player.seekTo(time);
       },
-      loadVideo({ id, start, end, name, date, artistsLabel }) {
+      loadVideo({ videoId, start, end, text, jptext, artistsLabel, date }) {
         if (player) {
+          if (!play) {
+            setPlay(true);
+          }
           setCurrentSong({
             duration: end - start,
-            name,
+            text,
+            jptext,
             date,
             artistsLabel,
             start,
           });
-
           if (start && end) {
             player.loadVideoById({
-              videoId: id,
+              videoId,
               startSeconds: start,
               endSeconds: end,
             });
           } else {
-            player.loadVideoById(id);
+            player.loadVideoById(videoId);
           }
         }
       },
@@ -186,7 +189,10 @@ const CustomPlayer = forwardRef(
                 />
                 <Box sx={{ p: 2 }}>
                   <Typography variant="h5" noWrap>
-                    {currentSong?.name}
+                    {currentSong?.text}
+                  </Typography>
+                  <Typography color="text.secondary" noWrap>
+                    {currentSong?.jptext}
                   </Typography>
                   <Box sx={{ display: "flex" }}>
                     <Typography variant="caption" color="text.secondary" noWrap>
