@@ -171,6 +171,7 @@ const CustomPlayer = forwardRef(
               startSeconds: start,
               endSeconds: end,
             });
+            player.playVideo();
           } else {
             player.loadVideoById(videoId);
           }
