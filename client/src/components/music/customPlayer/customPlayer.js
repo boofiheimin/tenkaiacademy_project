@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useImperativeHandle, forwardRef, useEffect } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 
 import Youtube from "react-youtube";
 
@@ -11,6 +11,7 @@ import {
   Slider,
   IconButton,
   Button,
+  Dialog,
 } from "@mui/material";
 import PauseRounded from "@mui/icons-material/PauseRounded";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
@@ -134,8 +135,12 @@ const CustomPlayer = forwardRef(
       }
     };
 
-    const handleToggleQueue = () => {
-      setOpenQueue(!openQueue);
+    const handleOpenQueue = () => {
+      setOpenQueue(true);
+    };
+
+    const handleCloseQueue = () => {
+      setOpenQueue(false);
     };
 
     const renderVolume = () => {
@@ -389,7 +394,7 @@ const CustomPlayer = forwardRef(
                           }
                     }
                   >
-                    <IconButton onClick={handleToggleQueue}>
+                    <IconButton onClick={handleOpenQueue}>
                       <QueueMusicIcon />
                     </IconButton>
                   </Box>
@@ -405,7 +410,7 @@ const CustomPlayer = forwardRef(
                 >
                   <Button
                     variant="outlined"
-                    onClick={handleToggleQueue}
+                    onClick={handleOpenQueue}
                     startIcon={<QueueMusicIcon />}
                   >
                     Queue
@@ -414,32 +419,28 @@ const CustomPlayer = forwardRef(
               )}
             </Box>
           </Paper>
-          <Box
-            sx={{
-              display: openQueue ? "block" : "none",
-              overflow: "hidden",
-              position: "absolute",
-              right: 0,
-              width: "100%",
-              maxWidth: 450,
-              zIndex: 999,
-            }}
-          >
-            <QueueManager
-              queue={queue}
-              onClear={onClear}
-              onLoop={onLoop}
-              onShuffle={onShuffle}
-              onQueueClick={onQueueClick}
-              onRemoveQueue={onRemoveQueue}
-              onReorderQueue={onReorderQueue}
-              currentIndex={currentIndex}
-              queuePos={queuePos}
-              loop={loop}
-              shuffle={shuffle}
-            />
-          </Box>
         </Box>
+        <Dialog
+          open={openQueue}
+          onClose={handleCloseQueue}
+          fullWidth
+          maxWidth="xs"
+        >
+          <QueueManager
+            queue={queue}
+            onClear={onClear}
+            onLoop={onLoop}
+            onShuffle={onShuffle}
+            onQueueClick={onQueueClick}
+            onRemoveQueue={onRemoveQueue}
+            onReorderQueue={onReorderQueue}
+            currentIndex={currentIndex}
+            queuePos={queuePos}
+            loop={loop}
+            shuffle={shuffle}
+            onClose={handleCloseQueue}
+          />
+        </Dialog>
       </div>
     );
   }

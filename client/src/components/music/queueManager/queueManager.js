@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import SimpleBar from "simplebar-react";
 import { useTheme } from "@mui/material/styles";
-import { Box, Paper, Typography, Button } from "@mui/material";
+import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
 
 import LoopIcon from "@mui/icons-material/Loop";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import DragAndDrop from "../../dragAndDrop/dragAndDrop";
 
@@ -32,14 +33,25 @@ const QueueManager = ({
   onQueueClick,
   onRemoveQueue,
   onReorderQueue,
+  onClose,
 }) => {
   const theme = useTheme();
 
   return (
-    <Paper elevation={1} sx={{ height: "100%" }}>
+    <Paper elevation={1} sx={{ height: "100%", overflow: "hidden" }}>
       <Paper elevation={4} sx={{ height: 100 }}>
-        <Box padding={1}>
+        <Box
+          sx={{
+            p: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Typography variant="h6">{statusReducer(queue, queuePos)}</Typography>
+          <IconButton onClick={onClose}>
+            <ClearIcon />
+          </IconButton>
         </Box>
         <Box padding={1} display="flex" alignItems="center">
           <Box flexGrow={1}>
@@ -113,6 +125,7 @@ QueueManager.propTypes = {
   onQueueClick: PropTypes.func,
   onRemoveQueue: PropTypes.func,
   onReorderQueue: PropTypes.func,
+  onClose: PropTypes.func,
 };
 
 QueueManager.defaultProps = {
@@ -127,6 +140,7 @@ QueueManager.defaultProps = {
   onQueueClick: () => {},
   onRemoveQueue: () => {},
   onReorderQueue: () => {},
+  onClose: () => {},
 };
 
 export default QueueManager;
