@@ -8,7 +8,7 @@ import ErrorResponse from "../utils/errorResponse.js";
 
 export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
   try {
-    const { textSearch, page, limit } = reqQuery;
+    const { textSearch, page, limit, noScuff } = reqQuery;
 
     const paginateOptions = {
       ...(page && { page: parseInt(page, 10) + 1 }),
@@ -30,16 +30,16 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
           { "streamData.videoId": new RegExp(textSearch, "i") },
         ],
       }),
+      ...(noScuff === "true" && { isScuffed: false }),
     };
 
     let songs;
 
     if ((!limit, !page)) {
-      const data = await MusicRecord.find(srchQuery);
-      songs = {
-        totalDocs: data.length,
-        docs: data,
-      };
+      songs = await MusicRecord.find(srchQuery).sort({
+        "streamData.publishedAt": -1,
+        songIndex: 1,
+      });
     } else {
       songs = await MusicRecord.paginate(srchQuery, paginateOptions);
     }

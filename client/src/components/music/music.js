@@ -1,11 +1,45 @@
 import PropTypes from "prop-types";
+import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, useRef } from "react";
 import { shuffle as _shuffle } from "lodash";
-import { Container, Box, Button, TextField } from "@mui/material";
+import moment from "moment";
 
+import {
+  Container,
+  Box,
+  Button,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
+
+import QueueIcon from "@mui/icons-material/Queue";
 import Records from "./records/records";
 import CustomPlayer from "./customPlayer/customPlayer";
 import Loading from "../loading/loading";
+
+const formatRecordToSong = (record) => {
+  const {
+    songStart,
+    songEnd,
+    songData: { songNameEN, artists },
+    streamData: { publishedAt, videoId, proxyVideoId },
+    isScuffed,
+  } = record;
+
+  const artistsLabel = artists
+    .map(({ artistNameEN }) => artistNameEN)
+    .join(", ");
+  return {
+    id: uuidv4(),
+    start: songStart,
+    end: songEnd,
+    videoId: proxyVideoId || videoId,
+    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
+    artistsLabel,
+    date: moment(publishedAt).format("DD/MM/yyyy"),
+  };
+};
 
 const Music = ({
   loading,
@@ -16,6 +50,8 @@ const Music = ({
   onPageChange,
   onRowsPerPageChange,
   onSearch,
+  onAddAllToQueue,
+  queueList,
 }) => {
   const youtubeRef = useRef();
   const [currentSong, setCurrentSong] = useState([]);
@@ -26,6 +62,7 @@ const Music = ({
   const [playedList, setPlayedList] = useState([]);
   const [search, setSearch] = useState("");
   const [playerReady, setPlayerReady] = useState(false);
+  const [noScuff, setNoScuff] = useState(false);
 
   useEffect(() => {
     if (currentSong[0]) {
@@ -42,6 +79,24 @@ const Music = ({
       youtubeRef.current?.stopVideo();
     }
   }, [currentSong]);
+
+  useEffect(() => {
+    if (queueList.length > 0) {
+      const formattedQueue = queueList.map((record) =>
+        formatRecordToSong(record)
+      );
+      setOrderedQueue([...orderedQueue, ...formattedQueue]);
+      if (currentSong.length === 0) {
+        setCurrentSong([formattedQueue[0]]);
+        formattedQueue.shift();
+      }
+      let newPool = [...pool, ...formattedQueue];
+      if (shuffle) {
+        newPool = _shuffle(newPool);
+      }
+      setPool(newPool);
+    }
+  }, [queueList]);
 
   const handleAddToQueue = (song) => {
     if (currentSong.length === 0) {
@@ -173,13 +228,22 @@ const Music = ({
     setSearch(event.target.value);
   };
 
-  const handleSubmitSearch = (e) => {
-    e.preventDefault();
-    onSearch(search);
+  const handleKeypress = (e) => {
+    if (e.key === "Enter") {
+      onSearch(search, noScuff);
+    }
   };
 
   const handlePlayerReady = () => {
     setPlayerReady(true);
+  };
+
+  const handleNoScuffCheck = (event) => {
+    setNoScuff(event.target.checked);
+  };
+
+  const handleAddAllToQueue = () => {
+    onAddAllToQueue(search, noScuff);
   };
 
   const isEnd = loop ? false : pool.length === 0;
@@ -189,11 +253,8 @@ const Music = ({
 
   return (
     <>
-      <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
-        <Loading />
-      </Box>
-      <Box sx={{ display: show ? "block" : "none" }}>
-        <Container>
+      <Container>
+        <Box>
           <Box padding={1} sx={{ display: "flex", justifyContent: "flex-end" }}>
             {localStorage.getItem("authToken") && (
               <Button variant="outlined" href="/music/edit">
@@ -203,6 +264,7 @@ const Music = ({
           </Box>
           <CustomPlayer
             ref={youtubeRef}
+            playerReady={playerReady}
             onReady={handlePlayerReady}
             queue={orderedQueue}
             onClear={handleClearQueue}
@@ -222,16 +284,40 @@ const Music = ({
           />
 
           <Box padding={1}>
-            <form onSubmit={handleSubmitSearch}>
-              <TextField
-                sx={{ width: "100%" }}
-                placeholder="Search with Song name or Artist name (EN/JP) or videoId"
-                onChange={handleOnSearchChange}
-                value={search}
+            <TextField
+              sx={{ width: "100%" }}
+              placeholder="Search with Song name or Artist name (EN/JP) or videoId"
+              onChange={handleOnSearchChange}
+              value={search}
+              onKeyPress={handleKeypress}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                py: 1,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox checked={noScuff} onChange={handleNoScuffCheck} />
+                }
+                label="Exclude scuffed?"
               />
-            </form>
+              <Button
+                variant="outlined"
+                startIcon={<QueueIcon />}
+                onClick={handleAddAllToQueue}
+              >
+                Add all to queue
+              </Button>
+            </Box>
           </Box>
-          <Box padding={1}>
+          <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
+            <Loading />
+          </Box>
+          <Box sx={{ display: show ? "block" : "none", p: 1 }}>
             <Records
               musicRecords={musicRecords}
               rowsPerPage={rowsPerPage}
@@ -243,8 +329,8 @@ const Music = ({
               onRowsPerPageChange={onRowsPerPageChange}
             />
           </Box>
-        </Container>
-      </Box>
+        </Box>
+      </Container>
     </>
   );
 };
@@ -272,6 +358,8 @@ Music.propTypes = {
   onRowsPerPageChange: PropTypes.func,
   onSearch: PropTypes.func,
   loading: PropTypes.bool,
+  onAddAllToQueue: PropTypes.func,
+  queueList: PropTypes.array,
 };
 
 Music.defaultProps = {
@@ -283,6 +371,8 @@ Music.defaultProps = {
   onPageChange: () => {},
   onRowsPerPageChange: () => {},
   onSearch: () => {},
+  onAddAllToQueue: () => {},
+  queueList: [],
 };
 
 export default Music;

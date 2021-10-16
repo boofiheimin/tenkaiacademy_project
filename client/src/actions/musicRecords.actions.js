@@ -1,5 +1,6 @@
 import * as api from "../api";
 import {
+  FETCH_PAGINATED_MUSICRECORDS_SUCCESS,
   FETCH_MUSICRECORDS_SUCCESS,
   CREATE_MUSICRECORD_SUCCESS,
   EDIT_MUSICRECORD_SUCCESS,
@@ -7,15 +8,20 @@ import {
   ERROR_NOTIFICATION,
 } from "../constants/actionTypes";
 
-export const getMusicRecords =
-  (textSearch, limit, page) => async (dispatch) => {
+export const getPaginatedMusicRecords =
+  (textSearch, noScuff, limit, page) => async (dispatch) => {
     try {
-      const { data } = await api.fetchMusicRecords(textSearch, limit, page);
+      const { data } = await api.fetchMusicRecords(
+        textSearch,
+        noScuff,
+        limit,
+        page
+      );
 
       const { docs, totalDocs } = data;
 
       dispatch({
-        type: FETCH_MUSICRECORDS_SUCCESS,
+        type: FETCH_PAGINATED_MUSICRECORDS_SUCCESS,
         data: docs,
         total: totalDocs,
       });
@@ -26,6 +32,21 @@ export const getMusicRecords =
       });
     }
   };
+export const getMusicRecords = (textSearch, noScuff) => async (dispatch) => {
+  try {
+    const { data } = await api.fetchMusicRecords(textSearch, noScuff);
+
+    dispatch({
+      type: FETCH_MUSICRECORDS_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_NOTIFICATION,
+      message: error.response.data.error,
+    });
+  }
+};
 
 export const createMusicRecord = (recordData) => async (dispatch) => {
   try {

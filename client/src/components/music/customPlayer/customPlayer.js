@@ -50,6 +50,7 @@ const CustomPlayer = forwardRef(
       onRemoveQueue,
       onReorderQueue,
       onReady,
+      playerReady,
     },
     ref
   ) => {
@@ -256,12 +257,18 @@ const CustomPlayer = forwardRef(
               sx={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: playerReady ? "space-between" : "flex-end",
                 alignItems: "center",
                 px: 2,
               }}
             >
-              <Box sx={{ display: "flex", width: 100, alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: playerReady ? "flex" : "none",
+                  width: 100,
+                  alignItems: "center",
+                }}
+              >
                 <IconButton onClick={handleMute}>{renderVolume()}</IconButton>
                 <Slider
                   size="small"
@@ -370,6 +377,7 @@ CustomPlayer.propTypes = {
   isEnd: PropTypes.bool,
   currentIndex: PropTypes.number,
   queuePos: PropTypes.number,
+  playerReady: PropTypes.bool,
   onClear: PropTypes.func,
   onLoop: PropTypes.func,
   onShuffle: PropTypes.func,
@@ -389,6 +397,7 @@ CustomPlayer.defaultProps = {
   queuePos: -1,
   isStart: false,
   isEnd: false,
+  playerReady: false,
   onClear: () => {},
   onLoop: () => {},
   onShuffle: () => {},

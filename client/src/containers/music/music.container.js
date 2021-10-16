@@ -3,22 +3,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Music from "../../components/music/music";
 
-import { getMusicRecords } from "../../actions/musicRecords.actions";
+import {
+  getMusicRecords,
+  getPaginatedMusicRecords,
+} from "../../actions/musicRecords.actions";
 
 const MusicContainer = () => {
   const dispatch = useDispatch();
-  const { data: musicRecords, total } = useSelector(
-    (state) => state.musicRecords
-  );
+  const {
+    paginatedData: musicRecords,
+    total,
+    data,
+  } = useSelector((state) => state.musicRecords);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [noScuff, setNoScuff] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getMusicRecords(search, limit, page));
-  }, [search, page, limit]);
+    dispatch(getPaginatedMusicRecords(search, noScuff, limit, page));
+  }, [search, page, limit, noScuff]);
 
   useEffect(() => {
     if (musicRecords) {
@@ -35,9 +41,14 @@ const MusicContainer = () => {
     setPage(0);
   };
 
-  const handleSearchChange = (text) => {
+  const handleSearchChange = (text, noScuffInput) => {
     setSearch(text);
+    setNoScuff(noScuffInput);
     setPage(0);
+  };
+
+  const handleAddAllToQueue = (text, noScuffInput) => {
+    dispatch(getMusicRecords(text, noScuffInput));
   };
 
   return (
@@ -47,9 +58,11 @@ const MusicContainer = () => {
       rowsPerPage={limit}
       page={page}
       recordCount={total}
+      queueList={data}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onSearch={handleSearchChange}
+      onAddAllToQueue={handleAddAllToQueue}
     />
   );
 };

@@ -3,12 +3,18 @@ import {
   CREATE_MUSICRECORD_SUCCESS,
   DELETE_MUSICRECORD_SUCCESS,
   EDIT_MUSICRECORD_SUCCESS,
+  FETCH_PAGINATED_MUSICRECORDS_SUCCESS,
 } from "../constants/actionTypes";
 
-const reducer = (records = { data: [], total: 0 }, action) => {
+const reducer = (
+  records = { paginatedData: [], total: 0, data: [] },
+  action
+) => {
   switch (action.type) {
+    case FETCH_PAGINATED_MUSICRECORDS_SUCCESS:
+      return { ...records, paginatedData: action.data, total: action.total };
     case FETCH_MUSICRECORDS_SUCCESS:
-      return { ...records, data: action.data, total: action.total };
+      return { ...records, data: action.data };
     case CREATE_MUSICRECORD_SUCCESS:
       return {
         ...records,
