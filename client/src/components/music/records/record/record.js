@@ -1,22 +1,11 @@
 import PropTypes from "prop-types";
-import moment from "moment";
 
 import { TableRow, TableCell, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
-import { formatRecordToSong } from "../../musicUtil";
-
-const Record = ({ record, onPlay, onAddToQueue }) => {
-  const {
-    songData: { songNameEN, artists },
-    streamData: { publishedAt },
-    isScuffed,
-  } = record;
-  const artistsLabel = artists
-    .map(({ artistNameEN }) => artistNameEN)
-    .join(", ");
-  const song = formatRecordToSong(record);
+const Record = ({ song, onPlay, onAddToQueue }) => {
+  const { text, artistsLabel, date } = song;
 
   const handlePlay = () => {
     onPlay(song);
@@ -28,9 +17,9 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
 
   return (
     <TableRow>
-      <TableCell>{`${songNameEN}${isScuffed ? " (Scuffed)" : ""}`}</TableCell>
+      <TableCell>{text}</TableCell>
       <TableCell>{artistsLabel}</TableCell>
-      <TableCell>{moment(publishedAt).format("DD/MM/yyyy")}</TableCell>
+      <TableCell>{date}</TableCell>
       <TableCell>
         <IconButton onClick={handlePlay}>
           <PlayArrowIcon />
@@ -44,19 +33,10 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
 };
 
 Record.propTypes = {
-  record: PropTypes.shape({
-    songStart: PropTypes.number,
-    songEnd: PropTypes.number,
-    songData: PropTypes.shape({
-      songNameEN: PropTypes.string,
-      artists: PropTypes.array,
-    }),
-    streamData: PropTypes.shape({
-      publishedAt: PropTypes.string,
-      videoId: PropTypes.string,
-      proxyVideoId: PropTypes.string,
-    }),
-    isScuffed: PropTypes.bool,
+  song: PropTypes.shape({
+    text: PropTypes.string,
+    date: PropTypes.string,
+    artistsLabel: PropTypes.string,
   }).isRequired,
   onPlay: PropTypes.func,
   onAddToQueue: PropTypes.func,

@@ -15,6 +15,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 import Record from "./record/record";
+import MobileRecord from "./mobileRecord/mobileRecord";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -24,7 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const Records = ({
-  musicRecords,
+  songs,
   rowsPerPage,
   page,
   recordCount,
@@ -32,29 +33,30 @@ const Records = ({
   onAddToQueue,
   onPageChange,
   onRowsPerPageChange,
+  mobile,
 }) => (
   <Box>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell style={{ width: "40%" }}>Song</StyledTableCell>
-            <StyledTableCell style={{ width: "30%" }}>Artist</StyledTableCell>
-            <StyledTableCell style={{ width: "20%" }}>Date</StyledTableCell>
-            <StyledTableCell style={{ width: "10%" }} />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {musicRecords.map((record) => (
-            <Record
-              record={record}
-              onPlay={onPlay}
-              onAddToQueue={onAddToQueue}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    {mobile ? (
+      <MobileRecord songs={songs} onPlay={onPlay} onAddToQueue={onAddToQueue} />
+    ) : (
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell style={{ width: "40%" }}>Song</StyledTableCell>
+              <StyledTableCell style={{ width: "30%" }}>Artist</StyledTableCell>
+              <StyledTableCell style={{ width: "20%" }}>Date</StyledTableCell>
+              <StyledTableCell style={{ width: "10%" }} />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {songs.map((song) => (
+              <Record song={song} onPlay={onPlay} onAddToQueue={onAddToQueue} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    )}
     <div>
       <TablePagination
         component="div"
@@ -69,19 +71,11 @@ const Records = ({
 );
 
 Records.propTypes = {
-  musicRecords: PropTypes.arrayOf(
+  songs: PropTypes.arrayOf(
     PropTypes.shape({
-      songStart: PropTypes.number,
-      songEnd: PropTypes.number,
-      songData: PropTypes.shape({
-        songNameEN: PropTypes.string,
-        artists: PropTypes.array,
-      }),
-      streamData: PropTypes.shape({
-        publishedAt: PropTypes.string,
-        videoId: PropTypes.string,
-        proxyVideoId: PropTypes.string,
-      }),
+      text: PropTypes.string,
+      date: PropTypes.string,
+      artistsLabel: PropTypes.string,
     })
   ),
   rowsPerPage: PropTypes.number,
@@ -91,10 +85,11 @@ Records.propTypes = {
   onAddToQueue: PropTypes.func,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
+  mobile: PropTypes.bool,
 };
 
 Records.defaultProps = {
-  musicRecords: [],
+  songs: [],
   rowsPerPage: 10,
   page: 0,
   recordCount: 0,
@@ -102,6 +97,7 @@ Records.defaultProps = {
   onAddToQueue: () => {},
   onPageChange: () => {},
   onRowsPerPageChange: () => {},
+  mobile: false,
 };
 
 export default Records;

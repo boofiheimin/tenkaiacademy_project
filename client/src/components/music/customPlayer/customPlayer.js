@@ -25,6 +25,26 @@ import QueueManager from "../queueManager/queueManager";
 
 import { useInterval } from "../../../utils";
 
+const YoutubeWrapper = styled("div")(({ mobile }) => ({
+  ...(mobile && {
+    position: "relative",
+    height: 0,
+    overflow: "hidden",
+    paddingTop: "56.25%",
+    "& iframe": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      width: "100%",
+      height: "100%",
+      border: "none",
+      display: "block",
+    },
+  }),
+}));
+
 const TinyText = styled(Typography)({
   fontSize: "0.75rem",
   opacity: 0.38,
@@ -51,6 +71,7 @@ const CustomPlayer = forwardRef(
       onReorderQueue,
       onReady,
       playerReady,
+      mobile,
     },
     ref
   ) => {
@@ -172,22 +193,40 @@ const CustomPlayer = forwardRef(
       setPlayerState(state);
     };
 
+    const controlBoxJustifyContent = () => {
+      if (mobile) return "center";
+      if (playerReady) return "space-between";
+      return "flex-end";
+    };
+
     return (
       <div>
         <Box sx={{ position: "relative" }}>
-          <Paper sx={{ p: 1 }}>
+          <Paper sx={{ p: mobile ? 0 : 1 }}>
             <Box sx={{ display: currentSong ? "block" : "none" }}>
-              <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
-                <Youtube
-                  onReady={handleReady}
-                  opts={{
-                    width: "250",
-                    height: "150",
-                    playerVars: { autoplay: 1, controls: 0 },
-                  }}
-                  onStateChange={handleStateChange}
-                />
-                <Box sx={{ p: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: mobile ? "stretch" : "center",
+                  p: mobile ? 0 : 1,
+                  flexDirection: mobile ? "column" : "row",
+                }}
+              >
+                <Box sx={{ ...(mobile && { width: "100%" }) }}>
+                  <YoutubeWrapper mobile={mobile}>
+                    <Youtube
+                      onReady={handleReady}
+                      opts={{
+                        width: "250",
+                        height: "150",
+                        playerVars: { autoplay: 1, controls: 0 },
+                      }}
+                      onStateChange={handleStateChange}
+                    />
+                  </YoutubeWrapper>
+                </Box>
+
+                <Box sx={{ p: mobile ? 1 : 2 }}>
                   <Typography variant="h5" noWrap>
                     {currentSong?.text}
                   </Typography>
@@ -263,42 +302,44 @@ const CustomPlayer = forwardRef(
               sx={{
                 width: "100%",
                 display: "flex",
-                justifyContent: playerReady ? "space-between" : "flex-end",
+                justifyContent: controlBoxJustifyContent(),
                 alignItems: "center",
                 px: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: playerReady ? "flex" : "none",
-                  width: 100,
-                  alignItems: "center",
-                }}
-              >
-                <IconButton onClick={handleMute}>{renderVolume()}</IconButton>
-                <Slider
-                  size="small"
-                  min={0}
-                  step={1}
-                  max={100}
-                  value={volume}
-                  onChange={(_, value) => handleChangeVolume(value)}
+              {!mobile && (
+                <Box
                   sx={{
-                    color:
-                      theme.palette.mode === "dark"
-                        ? "#fff"
-                        : "rgba(0,0,0,0.87)",
-                    height: 4,
-                    "& .MuiSlider-thumb": {
-                      width: 8,
-                      height: 8,
-                    },
-                    "& .MuiSlider-rail": {
-                      opacity: 0.28,
-                    },
+                    display: playerReady ? "flex" : "none",
+                    width: 100,
+                    alignItems: "center",
                   }}
-                />
-              </Box>
+                >
+                  <IconButton onClick={handleMute}>{renderVolume()}</IconButton>
+                  <Slider
+                    size="small"
+                    min={0}
+                    step={1}
+                    max={100}
+                    value={volume}
+                    onChange={(_, value) => handleChangeVolume(value)}
+                    sx={{
+                      color:
+                        theme.palette.mode === "dark"
+                          ? "#fff"
+                          : "rgba(0,0,0,0.87)",
+                      height: 4,
+                      "& .MuiSlider-thumb": {
+                        width: 8,
+                        height: 8,
+                      },
+                      "& .MuiSlider-rail": {
+                        opacity: 0.28,
+                      },
+                    }}
+                  />
+                </Box>
+              )}
               <Box
                 sx={{
                   display: currentSong ? "flex" : "none",
@@ -326,22 +367,46 @@ const CustomPlayer = forwardRef(
                   <SkipNextIcon sx={{ fontSize: "2rem" }} />
                 </IconButton>
               </Box>
-              <Box
-                sx={{
-                  width: 100,
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  onClick={handleToggleQueue}
-                  startIcon={<QueueMusicIcon />}
+              {mobile ? (
+                <>
+                  <Box
+                    sx={
+                      currentSong
+                        ? {
+                            position: "absolute",
+                            right: 8,
+                          }
+                        : {
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                            width: "100%",
+                          }
+                    }
+                  >
+                    <IconButton onClick={handleToggleQueue}>
+                      <QueueMusicIcon />
+                    </IconButton>
+                  </Box>
+                </>
+              ) : (
+                <Box
+                  sx={{
+                    width: 100,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                  }}
                 >
-                  Queue
-                </Button>
-              </Box>
+                  <Button
+                    variant="outlined"
+                    onClick={handleToggleQueue}
+                    startIcon={<QueueMusicIcon />}
+                  >
+                    Queue
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Paper>
           <Box
@@ -393,6 +458,7 @@ CustomPlayer.propTypes = {
   onNext: PropTypes.func,
   onPrev: PropTypes.func,
   onReady: PropTypes.func,
+  mobile: PropTypes.bool,
 };
 
 CustomPlayer.defaultProps = {
@@ -413,6 +479,7 @@ CustomPlayer.defaultProps = {
   onNext: () => {},
   onPrev: () => {},
   onReady: () => {},
+  mobile: false,
 };
 
 export default CustomPlayer;

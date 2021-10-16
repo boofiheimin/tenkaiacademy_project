@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { shuffle as _shuffle } from "lodash";
 
@@ -10,14 +11,41 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  useMediaQuery,
+  Typography,
 } from "@mui/material";
-
+import { useTheme } from "@mui/styles";
 import QueueIcon from "@mui/icons-material/Queue";
+import json2mq from "json2mq";
+
 import Records from "./records/records";
 import CustomPlayer from "./customPlayer/customPlayer";
 import Loading from "../loading/loading";
 
-import { formatRecordToSong } from "./musicUtil";
+const formatRecordToSong = (record) => {
+  const {
+    songStart,
+    songEnd,
+    songData: { songNameEN, artists, songNameJP },
+    streamData: { publishedAt, videoId, proxyVideoId },
+    isScuffed,
+  } = record;
+
+  const artistsLabel = artists
+    .map(({ artistNameEN }) => artistNameEN)
+    .join(", ");
+
+  return {
+    id: uuidv4(),
+    start: songStart,
+    end: songEnd,
+    videoId: proxyVideoId || videoId,
+    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
+    jptext: songNameJP,
+    artistsLabel,
+    date: moment(publishedAt).format("DD/MM/yyyy"),
+  };
+};
 
 const Music = ({
   loading,
@@ -31,6 +59,7 @@ const Music = ({
   onAddAllToQueue,
   queueList,
 }) => {
+  const theme = useTheme();
   const youtubeRef = useRef();
   const [currentSong, setCurrentSong] = useState([]);
   const [loop, setLoop] = useState(false);
@@ -41,6 +70,10 @@ const Music = ({
   const [search, setSearch] = useState("");
   const [playerReady, setPlayerReady] = useState(false);
   const [noScuff, setNoScuff] = useState(false);
+  const matchSize = useMediaQuery(theme.breakpoints.down("md"));
+  const matchOrientation = useMediaQuery(json2mq({ orientation: "portrait" }));
+
+  const mobile = matchSize && matchOrientation;
 
   useEffect(() => {
     if (currentSong[0]) {
@@ -231,9 +264,12 @@ const Music = ({
 
   const show = !loading && playerReady;
 
+  const formattedRecords = musicRecords.map((record) =>
+    formatRecordToSong(record)
+  );
   return (
     <>
-      <Container>
+      <Container sx={{ maxWidth: "100vw", ...(mobile && { p: 0 }) }}>
         <Box>
           <Box padding={1} sx={{ display: "flex", justifyContent: "flex-end" }}>
             {localStorage.getItem("authToken") && (
@@ -261,12 +297,14 @@ const Music = ({
             isStart={isStart}
             loop={loop}
             shuffle={shuffle}
+            mobile={mobile}
           />
 
-          <Box padding={1}>
+          <Box sx={{ p: 1 }}>
             <TextField
               sx={{ width: "100%" }}
-              placeholder="Search with Song name or Artist name (EN/JP) or videoId"
+              placeholder="Search..."
+              helperText="✧ Search with Song name, Artist name (EN/JP/Romanji) or videoId"
               onChange={handleOnSearchChange}
               value={search}
               onKeyPress={handleKeypress}
@@ -274,7 +312,7 @@ const Music = ({
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: mobile ? "space-between" : "flex-end",
                 alignItems: "center",
                 py: 1,
               }}
@@ -283,12 +321,17 @@ const Music = ({
                 control={
                   <Checkbox checked={noScuff} onChange={handleNoScuffCheck} />
                 }
-                label="Exclude scuffed?"
+                label={
+                  <Typography sx={{ fontSize: mobile ? "0.75rem" : "auto" }}>
+                    Exclude scuffed?
+                  </Typography>
+                }
               />
               <Button
                 variant="outlined"
                 startIcon={<QueueIcon />}
                 onClick={handleAddAllToQueue}
+                sx={{ fontSize: mobile ? "0.75rem" : "auto" }}
               >
                 Add all to queue
               </Button>
@@ -299,7 +342,8 @@ const Music = ({
           </Box>
           <Box sx={{ display: show ? "block" : "none", p: 1 }}>
             <Records
-              musicRecords={musicRecords}
+              mobile={mobile}
+              songs={formattedRecords}
               rowsPerPage={rowsPerPage}
               page={page}
               recordCount={recordCount}

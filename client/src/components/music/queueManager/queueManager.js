@@ -72,7 +72,7 @@ const QueueManager = ({
         </Box>
       </Paper>
       <Box>
-        <Paper>
+        <Paper elevation={5}>
           <SimpleBar
             style={{
               maxHeight: 600,
