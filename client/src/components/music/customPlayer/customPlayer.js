@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useImperativeHandle, forwardRef } from "react";
+import { useState, useImperativeHandle, forwardRef, useEffect } from "react";
 
 import Youtube from "react-youtube";
 
@@ -190,6 +190,9 @@ const CustomPlayer = forwardRef(
       if (playerState === 1 && state === 0) {
         // Player will only trigger onNext when the state change from playing to end
         onNext();
+      }
+      if (play && state !== 1) {
+        player.playVideo();
       }
       setPlayerState(state);
     };

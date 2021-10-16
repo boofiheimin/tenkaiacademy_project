@@ -16,9 +16,9 @@ const useStyles = makeStyles(() => ({
   spinner: {
     animation: "$loading 1s ease infinite",
     width: 64,
+    height: 64,
     margin: 0,
     padding: 0,
-    height: "auto",
   },
 }));
 
