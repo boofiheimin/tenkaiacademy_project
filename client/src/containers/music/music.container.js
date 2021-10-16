@@ -13,10 +13,18 @@ const MusicContainer = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     dispatch(getMusicRecords(search, limit, page));
   }, [search, page, limit]);
+
+  useEffect(() => {
+    if (musicRecords) {
+      setLoading(false);
+    }
+  }, [musicRecords]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -34,6 +42,7 @@ const MusicContainer = () => {
 
   return (
     <Music
+      loading={loading}
       musicRecords={musicRecords}
       rowsPerPage={limit}
       page={page}

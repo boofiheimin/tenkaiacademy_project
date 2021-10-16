@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -13,10 +13,17 @@ import CommonTable from "../../components/commonTable/commonTable";
 const ArtistsContainer = () => {
   const dispatch = useDispatch();
   const artists = useSelector((state) => state.artists);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(getArtists());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (artists) {
+      setLoading(false);
+    }
+  }, [artists]);
 
   const onAddArtist = (artist) => {
     dispatch(createArtist(artist));
@@ -28,6 +35,8 @@ const ArtistsContainer = () => {
   const onArtistSave = (id, artist) => {
     dispatch(editArtist(id, artist));
   };
+
+  console.log(loading);
 
   return (
     <CommonTable
@@ -59,6 +68,7 @@ const ArtistsContainer = () => {
       onRowSave={onArtistSave}
       onRowRemove={onRemoveArtist}
       onRowAdd={onAddArtist}
+      loading={loading}
     />
   );
 };

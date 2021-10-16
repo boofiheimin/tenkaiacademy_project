@@ -1,22 +1,14 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import { shuffle as _shuffle } from "lodash";
-import {
-  Container,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Typography,
-  TextField,
-} from "@mui/material";
+import { Container, Box, Button, TextField } from "@mui/material";
 
 import Records from "./records/records";
-
 import CustomPlayer from "./customPlayer/customPlayer";
+import Loading from "../loading/loading";
 
 const Music = ({
+  loading,
   musicRecords,
   rowsPerPage,
   page,
@@ -32,9 +24,8 @@ const Music = ({
   const [orderedQueue, setOrderedQueue] = useState([]);
   const [pool, setPool] = useState([]);
   const [playedList, setPlayedList] = useState([]);
-  const [clearQModal, setClearQModal] = useState(false);
-  const [pendingSong, setPendingSong] = useState(null);
   const [search, setSearch] = useState("");
+  const [playerReady, setPlayerReady] = useState(false);
 
   useEffect(() => {
     if (currentSong[0]) {
@@ -171,32 +162,11 @@ const Music = ({
     if (orderedQueue.length === 0) {
       handleAddToQueue(song);
     } else {
-      setPendingSong(song);
-      setClearQModal(true);
+      setCurrentSong([song]);
+      const newPlayedList = [...playedList, ...currentSong];
+      setPlayedList(newPlayedList);
+      setOrderedQueue([...orderedQueue, song]);
     }
-  };
-
-  const handleClearQPlay = () => {
-    setPool([]);
-    setPlayedList([]);
-    setOrderedQueue([pendingSong]);
-    setCurrentSong([pendingSong]);
-    setClearQModal(false);
-  };
-
-  const handleNotClearQPLay = () => {
-    setCurrentSong([pendingSong]);
-
-    const newPlayedList = [...playedList, ...currentSong];
-    setPlayedList(newPlayedList);
-
-    setOrderedQueue([...orderedQueue, pendingSong]);
-
-    setClearQModal(false);
-  };
-
-  const handleCloseQModal = () => {
-    setClearQModal(false);
   };
 
   const handleOnSearchChange = (event) => {
@@ -208,82 +178,73 @@ const Music = ({
     onSearch(search);
   };
 
+  const handlePlayerReady = () => {
+    setPlayerReady(true);
+  };
+
   const isEnd = loop ? false : pool.length === 0;
   const isStart = loop ? false : playedList.length === 0;
 
+  const show = !loading && playerReady;
+
   return (
     <>
-      <Container>
-        <Box padding={1} sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {localStorage.getItem("authToken") && (
-            <Button variant="outlined" href="/music/edit">
-              EDIT MUSIC RECORD
-            </Button>
-          )}
-        </Box>
-        <CustomPlayer
-          ref={youtubeRef}
-          queue={orderedQueue}
-          onClear={handleClearQueue}
-          onNext={handleNext}
-          onPrev={handlePrev}
-          onLoop={handleLoopToggle}
-          onShuffle={handleShuffleToggle}
-          onQueueClick={handleQueueClick}
-          onRemoveQueue={handleRemoveQueue}
-          onReorderQueue={handleReorder}
-          currentIndex={currentIndex}
-          queuePos={playedList.length + 1}
-          isEnd={isEnd}
-          isStart={isStart}
-          loop={loop}
-          shuffle={shuffle}
-        />
-
-        <Box padding={1}>
-          <form onSubmit={handleSubmitSearch}>
-            <TextField
-              sx={{ width: "100%" }}
-              placeholder="Search with Song name or Artist name (EN/JP) or videoId"
-              onChange={handleOnSearchChange}
-              value={search}
-            />
-          </form>
-        </Box>
-        <Box padding={1}>
-          <Records
-            musicRecords={musicRecords}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            recordCount={recordCount}
-            onPlay={handlePlay}
-            onAddToQueue={handleAddToQueue}
-            onPageChange={onPageChange}
-            onRowsPerPageChange={onRowsPerPageChange}
+      <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
+        <Loading />
+      </Box>
+      <Box sx={{ display: show ? "block" : "none" }}>
+        <Container>
+          <Box padding={1} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            {localStorage.getItem("authToken") && (
+              <Button variant="outlined" href="/music/edit">
+                EDIT MUSIC RECORD
+              </Button>
+            )}
+          </Box>
+          <CustomPlayer
+            ref={youtubeRef}
+            onReady={handlePlayerReady}
+            queue={orderedQueue}
+            onClear={handleClearQueue}
+            onNext={handleNext}
+            onPrev={handlePrev}
+            onLoop={handleLoopToggle}
+            onShuffle={handleShuffleToggle}
+            onQueueClick={handleQueueClick}
+            onRemoveQueue={handleRemoveQueue}
+            onReorderQueue={handleReorder}
+            currentIndex={currentIndex}
+            queuePos={playedList.length + 1}
+            isEnd={isEnd}
+            isStart={isStart}
+            loop={loop}
+            shuffle={shuffle}
           />
-        </Box>
-      </Container>
-      <Dialog open={clearQModal} onClose={handleCloseQModal}>
-        <DialogContent dividers>
-          <Typography>Do you wish to clear the queue?</Typography>
-        </DialogContent>
-        <DialogActions dividers>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleClearQPlay}
-          >
-            Yes
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleNotClearQPLay}
-          >
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+          <Box padding={1}>
+            <form onSubmit={handleSubmitSearch}>
+              <TextField
+                sx={{ width: "100%" }}
+                placeholder="Search with Song name or Artist name (EN/JP) or videoId"
+                onChange={handleOnSearchChange}
+                value={search}
+              />
+            </form>
+          </Box>
+          <Box padding={1}>
+            <Records
+              musicRecords={musicRecords}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              recordCount={recordCount}
+              onPlay={handlePlay}
+              onAddToQueue={handleAddToQueue}
+              onPageChange={onPageChange}
+              onRowsPerPageChange={onRowsPerPageChange}
+            />
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 };
@@ -310,6 +271,7 @@ Music.propTypes = {
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   onSearch: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 Music.defaultProps = {
@@ -317,6 +279,7 @@ Music.defaultProps = {
   rowsPerPage: 10,
   page: 0,
   recordCount: 0,
+  loading: true,
   onPageChange: () => {},
   onRowsPerPageChange: () => {},
   onSearch: () => {},

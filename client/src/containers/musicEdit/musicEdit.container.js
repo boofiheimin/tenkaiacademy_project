@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
@@ -16,11 +16,18 @@ const MusicEditContainer = () => {
   const dispatch = useDispatch();
   const { data: musicRecords } = useSelector((state) => state.musicRecords);
   const songs = useSelector((state) => state.songs);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(getMusicRecords());
     dispatch(getSongs());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (musicRecords && songs) {
+      setLoading(false);
+    }
+  }, [songs, musicRecords]);
 
   const mappedInputToParameters = (input) => ({
     ...input,
@@ -132,6 +139,7 @@ const MusicEditContainer = () => {
       onRowSave={handleMusicRecordSave}
       onRowRemove={handleRemoveMusicRecord}
       onRowAdd={handleAddMusicRecord}
+      loading={loading}
     />
   );
 };

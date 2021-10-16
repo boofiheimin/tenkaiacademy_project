@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { isArray, isEmpty, isNaN, omit, toNumber } from "lodash";
 import {
   Container,
   Table,
@@ -18,9 +19,9 @@ import {
   TablePagination,
 } from "@mui/material";
 
-import { isArray, isEmpty, isNaN, omit, toNumber } from "lodash";
-
 import useStyles from "./styles";
+
+import Loading from "../loading/loading";
 
 import CommonRow from "./commonRow/commonRow";
 import CommonForm from "./commonForm/commonForm";
@@ -34,6 +35,7 @@ const CommonTable = ({
   onRowRemove,
   onRowAdd,
   defaultRowsPerPage,
+  loading,
 }) => {
   const classes = useStyles();
   const [data, setData] = useState(propData);
@@ -301,81 +303,92 @@ const CommonTable = ({
             </Box>
           </Paper>
         </Box>
-
-        <TableContainer component={Paper}>
-          <Table className={classes.table} size="small">
-            <TableHead>
-              <TableRow>
-                {columnOptions
-                  .filter(({ hidden }) => !hidden)
-                  .map(
-                    ({ name, width, filter, value, displayValue }, index) => (
-                      <TableCell
-                        style={{ width: width }}
-                        align={
-                          index === columnOptions.length - 1 ? "right" : "left"
-                        }
-                      >
-                        <Typography>{name}</Typography>
-                        {filter && (
-                          <input
-                            type="text"
-                            onChange={(event) =>
-                              handleFilterChange(displayValue || value, event)
-                            }
-                            placeholder={`search by ${name}`}
-                          />
-                        )}
-                      </TableCell>
-                    )
-                  )}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedRows.map((row) => (
-                <CommonRow
-                  columnOptions={columnOptions}
-                  row={row}
-                  onEdit={handleRowEdit}
-                  onRemove={onRowRemove}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div className={classes.tablePagination}>
-          <TablePagination
-            component="div"
-            count={filteredRows.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </div>
-        <Dialog open={openEditModal} onClose={handleCloseEditModal}>
-          <DialogContent dividers>
-            <CommonForm
-              requiredErrors={requiredErrors.edit}
-              typeCheckErrors={typeCheckErrors.edit}
-              onFormChange={handleOnEditFormChange}
-              data={editData}
-            />
-          </DialogContent>
-          <DialogActions dividers>
-            <Button variant="contained" color="primary" onClick={handleRowSave}>
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleCloseEditModal}
-            >
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} size="small">
+              <TableHead>
+                <TableRow>
+                  {columnOptions
+                    .filter(({ hidden }) => !hidden)
+                    .map(
+                      ({ name, width, filter, value, displayValue }, index) => (
+                        <TableCell
+                          style={{ width: width }}
+                          align={
+                            index === columnOptions.length - 1
+                              ? "right"
+                              : "left"
+                          }
+                        >
+                          <Typography>{name}</Typography>
+                          {filter && (
+                            <input
+                              type="text"
+                              onChange={(event) =>
+                                handleFilterChange(displayValue || value, event)
+                              }
+                              placeholder={`search by ${name}`}
+                            />
+                          )}
+                        </TableCell>
+                      )
+                    )}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedRows.map((row) => (
+                  <CommonRow
+                    columnOptions={columnOptions}
+                    row={row}
+                    onEdit={handleRowEdit}
+                    onRemove={onRowRemove}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div className={classes.tablePagination}>
+            <TablePagination
+              component="div"
+              count={filteredRows.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </div>
+          <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+            <DialogContent dividers>
+              <CommonForm
+                requiredErrors={requiredErrors.edit}
+                typeCheckErrors={typeCheckErrors.edit}
+                onFormChange={handleOnEditFormChange}
+                data={editData}
+              />
+            </DialogContent>
+            <DialogActions dividers>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleRowSave}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleCloseEditModal}
+              >
+                No
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </Container>
   );
 };
@@ -387,6 +400,7 @@ CommonTable.propTypes = {
   onRowAdd: PropTypes.func,
   onRowRemove: PropTypes.func,
   defaultRowsPerPage: PropTypes.number,
+  loading: PropTypes.bool,
 };
 
 CommonTable.defaultProps = {
@@ -395,6 +409,7 @@ CommonTable.defaultProps = {
   onRowAdd: () => {},
   onRowRemove: () => {},
   defaultRowsPerPage: 10,
+  loading: true,
 };
 
 export default CommonTable;

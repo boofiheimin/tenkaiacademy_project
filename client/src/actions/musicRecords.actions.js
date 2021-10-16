@@ -4,6 +4,7 @@ import {
   CREATE_MUSICRECORD_SUCCESS,
   EDIT_MUSICRECORD_SUCCESS,
   DELETE_MUSICRECORD_SUCCESS,
+  ERROR_NOTIFICATION,
 } from "../constants/actionTypes";
 
 export const getMusicRecords =
@@ -19,7 +20,10 @@ export const getMusicRecords =
         total: totalDocs,
       });
     } catch (error) {
-      console.log(error.message);
+      dispatch({
+        type: ERROR_NOTIFICATION,
+        message: error.response.data.error,
+      });
     }
   };
 
@@ -28,7 +32,10 @@ export const createMusicRecord = (recordData) => async (dispatch) => {
     const { data } = await api.createMusicRecord(recordData);
     dispatch({ type: CREATE_MUSICRECORD_SUCCESS, data });
   } catch (error) {
-    console.log(error.message);
+    dispatch({
+      type: ERROR_NOTIFICATION,
+      message: error.response.data.error,
+    });
   }
 };
 export const editMusicRecord = (id, recordData) => async (dispatch) => {
@@ -36,7 +43,10 @@ export const editMusicRecord = (id, recordData) => async (dispatch) => {
     const { data } = await api.editMusicRecord(id, recordData);
     dispatch({ type: EDIT_MUSICRECORD_SUCCESS, data });
   } catch (error) {
-    console.log(error.message);
+    dispatch({
+      type: ERROR_NOTIFICATION,
+      message: error.response.data.error,
+    });
   }
 };
 
@@ -45,6 +55,9 @@ export const deleteMusicRecord = (id) => async (dispatch) => {
     const { data } = await api.deleteMusicRecord(id);
     dispatch({ type: DELETE_MUSICRECORD_SUCCESS, data });
   } catch (error) {
-    console.log(error.message);
+    dispatch({
+      type: ERROR_NOTIFICATION,
+      message: error.response.data.error,
+    });
   }
 };

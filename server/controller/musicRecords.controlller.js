@@ -11,7 +11,7 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
     const { textSearch, page, limit } = reqQuery;
 
     const paginateOptions = {
-      ...(page && { page: page + 1 }),
+      ...(page && { page: parseInt(page, 10) + 1 }),
       ...(limit && { limit }),
       sort: {
         "streamData.publishedAt": -1,
@@ -31,6 +31,8 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
         ],
       }),
     };
+
+    console.log(paginateOptions);
 
     let songs;
 
@@ -196,7 +198,7 @@ export const editMusicRecord = async (req, res, next) => {
       }
     }
 
-    const { songNameEN, songNameJP, artists, subSongNameEN } = song;
+    const { songNameEN, songNameJP, artists, subSongNameEN, duration } = song;
     const { publishedAt } = stream;
 
     if (paramSongStart && !paramSongEnd) {

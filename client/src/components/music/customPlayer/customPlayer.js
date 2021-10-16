@@ -49,6 +49,7 @@ const CustomPlayer = forwardRef(
       onQueueClick,
       onRemoveQueue,
       onReorderQueue,
+      onReady,
     },
     ref
   ) => {
@@ -71,6 +72,7 @@ const CustomPlayer = forwardRef(
 
     const handleReady = async (e) => {
       setPlayer(e.target);
+      onReady();
     };
 
     const formatDuration = (value) => {
@@ -385,6 +387,7 @@ CustomPlayer.propTypes = {
   onReorderQueue: PropTypes.func,
   onNext: PropTypes.func,
   onPrev: PropTypes.func,
+  onReady: PropTypes.func,
 };
 
 CustomPlayer.defaultProps = {
@@ -403,6 +406,7 @@ CustomPlayer.defaultProps = {
   onReorderQueue: () => {},
   onNext: () => {},
   onPrev: () => {},
+  onReady: () => {},
 };
 
 export default CustomPlayer;

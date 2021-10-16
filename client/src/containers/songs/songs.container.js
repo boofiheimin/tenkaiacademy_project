@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getArtists } from "../../actions/artists.actions";
@@ -16,11 +16,18 @@ const SongsContainer = () => {
   const dispatch = useDispatch();
   const artists = useSelector((state) => state.artists);
   const songs = useSelector((state) => state.songs);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(getArtists());
     dispatch(getSongs());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (artists && songs) {
+      setLoading(false);
+    }
+  }, [artists, songs]);
 
   const mappedInputToParameters = (input) => ({
     ...input,
@@ -94,6 +101,7 @@ const SongsContainer = () => {
       onRowSave={onSongSave}
       onRowRemove={onRemoveSong}
       onRowAdd={onAddSong}
+      loading={loading}
     />
   );
 };
