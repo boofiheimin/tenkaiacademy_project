@@ -154,6 +154,8 @@ const CommonTable = ({
       }
     );
     setEditData({ _id: data[index]._id, ...newEditData });
+    setRequiredErrors({ ...requiredErrors, edit: {} });
+    setTypeCheckError({ ...typeCheckErrors, edit: {} });
     setOpenEditModal(true);
   };
 
@@ -179,13 +181,19 @@ const CommonTable = ({
     let tErrors = {};
     Object.keys(omit(editData, "_id")).forEach((key) => {
       if (editData[key].required) {
-        if (!editData[key].value || editData[key].value.length === 0) {
+        if (
+          editData[key].value === undefined ||
+          editData[key].value.length === 0
+        ) {
           rErrors = { ...rErrors, [key]: true };
         }
       }
       if (editData[key].inputValidation) {
         if (editData[key].inputValidation === "number") {
-          if (isNaN(toNumber(editData[key].value))) {
+          if (
+            editData[key].value !== undefined &&
+            isNaN(toNumber(editData[key].value))
+          ) {
             tErrors = { ...tErrors, [key]: true };
           }
         }

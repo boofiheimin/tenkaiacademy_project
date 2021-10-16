@@ -9,7 +9,7 @@ import {
 export const getMusicRecords =
   (textSearch, limit, page) => async (dispatch) => {
     try {
-      const { data } = await api.fetchMusicRecords(textSearch, limit, page + 1);
+      const { data } = await api.fetchMusicRecords(textSearch, limit, page);
 
       const { docs, totalDocs } = data;
 

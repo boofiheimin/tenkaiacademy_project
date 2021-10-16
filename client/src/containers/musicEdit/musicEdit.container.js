@@ -87,6 +87,7 @@ const MusicEditContainer = () => {
         {
           name: "proxy videoId",
           value: "proxyVideoId",
+          displayValue: "streamData.proxyVideoId",
           input: "text",
           hidden: true,
         },

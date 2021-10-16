@@ -1,3 +1,6 @@
+import Youtube from "youtube-api";
+import moment from "moment";
+
 import MusicRecord from "../models/musicRecord.js";
 import Song from "../models/song.js";
 import Stream from "../models/stream.js";
@@ -8,7 +11,7 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
     const { textSearch, page, limit } = reqQuery;
 
     const paginateOptions = {
-      ...(page && { page }),
+      ...(page && { page: page + 1 }),
       ...(limit && { limit }),
       sort: {
         "streamData.publishedAt": -1,
@@ -29,7 +32,18 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
       }),
     };
 
-    const songs = await MusicRecord.paginate(srchQuery, paginateOptions);
+    let songs;
+
+    if ((!limit, !page)) {
+      const data = await MusicRecord.find(srchQuery);
+      songs = {
+        totalDocs: data.length,
+        docs: data,
+      };
+    } else {
+      songs = await MusicRecord.paginate(srchQuery, paginateOptions);
+    }
+
     res.status(200).json(songs);
   } catch (error) {
     return next(error);
@@ -51,6 +65,15 @@ export const createMusicRecord = async (req, res, next) => {
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
 
+    let paramSongStart = parseInt(songStart, 10);
+    let paramSongEnd = parseInt(songEnd, 10);
+
+    if (paramSongStart && paramSongEnd) {
+      if (paramSongStart >= paramSongEnd) {
+        return next(new ErrorResponse(`BadRequest: Invalid Song Range`, 400));
+      }
+    }
+
     if (!song) {
       return next(new ErrorResponse(`Song Not Found`, 404));
     }
@@ -59,12 +82,38 @@ export const createMusicRecord = async (req, res, next) => {
       return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
+    let proxyVideoDuration;
+    if (proxyVideoId) {
+      Youtube.authenticate({
+        type: "key",
+        key: process.env.YOUTUBE_API_KEY || null,
+      });
+      const results = await Youtube.videos.list({
+        maxResults: 1,
+        id: proxyVideoId,
+        part: "snippet, contentDetails",
+      });
+      const video = results?.data?.items[0];
+      if (!video) {
+        return next(new ErrorResponse(`Invalid Proxy VideoId`, 400));
+      } else {
+        proxyVideoDuration = moment
+          .duration(video?.contentDetails?.duration)
+          .asSeconds();
+      }
+    }
+
     const { songNameEN, songNameJP, subSongNameEN, artists, duration } = song;
     const { publishedAt } = stream;
 
-    const calcSongEnd = songStart
-      ? songEnd || parseInt(songStart, 10) + parseInt(duration, 10)
-      : undefined;
+    if (paramSongStart && !paramSongEnd) {
+      paramSongEnd = paramSongStart + parseInt(duration, 10);
+    }
+
+    if (!paramSongStart && !paramSongEnd) {
+      paramSongStart = 0;
+      paramSongEnd = proxyVideoId ? proxyVideoDuration : stream.duration;
+    }
 
     const newMusicRecordParams = {
       songData: {
@@ -79,8 +128,8 @@ export const createMusicRecord = async (req, res, next) => {
         proxyVideoId,
         publishedAt,
       },
-      songStart,
-      songEnd: calcSongEnd,
+      songStart: paramSongStart,
+      songEnd: paramSongEnd,
       isScuffed,
       songIndex,
     };
@@ -106,6 +155,15 @@ export const editMusicRecord = async (req, res, next) => {
       songIndex,
     } = req.body;
 
+    let paramSongStart = parseInt(songStart, 10);
+    let paramSongEnd = parseInt(songEnd, 10);
+
+    if (paramSongStart && paramSongEnd) {
+      if (paramSongStart >= paramSongEnd) {
+        return next(new ErrorResponse(`BadRequest: Invalid Song Range`, 400));
+      }
+    }
+
     const song = await Song.findOne({ songId });
     const stream = await Stream.findOne({ videoId });
 
@@ -117,8 +175,38 @@ export const editMusicRecord = async (req, res, next) => {
       return next(new ErrorResponse(`Stream Not Found`, 404));
     }
 
+    let proxyVideoDuration;
+    if (proxyVideoId) {
+      Youtube.authenticate({
+        type: "key",
+        key: process.env.YOUTUBE_API_KEY || null,
+      });
+      const results = await Youtube.videos.list({
+        maxResults: 1,
+        id: proxyVideoId,
+        part: "snippet, contentDetails",
+      });
+      const video = results?.data?.items[0];
+      if (!video) {
+        return next(new ErrorResponse(`Invalid Proxy VideoId`, 400));
+      } else {
+        proxyVideoDuration = moment
+          .duration(video?.contentDetails?.duration)
+          .asSeconds();
+      }
+    }
+
     const { songNameEN, songNameJP, artists, subSongNameEN } = song;
     const { publishedAt } = stream;
+
+    if (paramSongStart && !paramSongEnd) {
+      paramSongEnd = paramSongStart + parseInt(duration, 10);
+    }
+
+    if (!paramSongStart && !paramSongEnd) {
+      paramSongStart = 0;
+      paramSongEnd = proxyVideoId ? proxyVideoDuration : stream.duration;
+    }
 
     const newMusicRecord = await MusicRecord.findByIdAndUpdate(
       req.params.id,
@@ -135,8 +223,8 @@ export const editMusicRecord = async (req, res, next) => {
           proxyVideoId,
           publishedAt,
         },
-        songStart,
-        songEnd,
+        songStart: paramSongStart,
+        songEnd: paramSongEnd,
         isScuffed,
         songIndex,
       },
