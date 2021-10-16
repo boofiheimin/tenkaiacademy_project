@@ -191,9 +191,6 @@ const CustomPlayer = forwardRef(
         // Player will only trigger onNext when the state change from playing to end
         onNext();
       }
-      if (play && state !== 1) {
-        player.playVideo();
-      }
       setPlayerState(state);
     };
 
@@ -223,7 +220,11 @@ const CustomPlayer = forwardRef(
                       opts={{
                         width: "250",
                         height: "150",
-                        playerVars: { autoplay: 1, controls: 0 },
+                        playerVars: {
+                          autoplay: 1,
+                          controls: 0,
+                          playsinline: 1,
+                        },
                       }}
                       onStateChange={handleStateChange}
                     />
