@@ -112,7 +112,6 @@ const SearchForm = ({ onSubmit, tags = [], searchFilter }) => {
   const toggleOption = () => {
     setMoreOption(!moreOption);
     const currPanel = accPanel.current;
-
     if (currPanel.style.maxHeight) {
       currPanel.style.maxHeight = null;
     } else {

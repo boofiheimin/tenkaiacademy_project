@@ -15,12 +15,18 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
     streamData: { publishedAt, videoId, proxyVideoId },
   } = record;
 
+  const artistsLabel = artists
+    .map(({ artistNameEN }) => artistNameEN)
+    .join(", ");
+
   const song = {
     id: uuidv4(),
     start: songStart,
     end: songEnd,
     videoId: proxyVideoId || videoId,
     text: songNameEN,
+    artistsLabel,
+    date: moment(publishedAt).format("DD/MM/yyyy"),
   };
 
   const handlePlay = () => {
@@ -34,9 +40,7 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
   return (
     <TableRow>
       <TableCell>{songNameEN}</TableCell>
-      <TableCell>
-        {artists.map(({ artistNameEN }) => artistNameEN).join(", ")}
-      </TableCell>
+      <TableCell>{artistsLabel}</TableCell>
       <TableCell>{moment(publishedAt).format("DD/MM/yyyy")}</TableCell>
       <TableCell>
         <IconButton onClick={handlePlay}>

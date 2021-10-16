@@ -4,7 +4,6 @@ import { shuffle as _shuffle } from "lodash";
 import {
   Container,
   Box,
-  Grid,
   Button,
   Dialog,
   DialogActions,
@@ -13,10 +12,9 @@ import {
   TextField,
 } from "@mui/material";
 
-import ResponsiveIframe from "../responsiveYoutube/responsiveYoutube";
-
-import QueueManager from "./queueManager/queueManager";
 import Records from "./records/records";
+
+import CustomPlayer from "./customPlayer/customPlayer";
 
 const Music = ({
   musicRecords,
@@ -40,10 +38,17 @@ const Music = ({
 
   useEffect(() => {
     if (currentSong[0]) {
-      const { videoId, start, end } = currentSong[0];
-      youtubeRef.current.loadVideo(videoId, start, end);
+      const { videoId, start, end, text, artistsLabel, date } = currentSong[0];
+      youtubeRef.current.loadVideo({
+        id: videoId,
+        start,
+        end,
+        name: text,
+        artistsLabel,
+        date,
+      });
     } else {
-      youtubeRef.current.stopVideo();
+      youtubeRef.current?.stopVideo();
     }
   }, [currentSong]);
 
@@ -216,34 +221,25 @@ const Music = ({
             </Button>
           )}
         </Box>
-        <Grid container>
-          <Grid item xs={9}>
-            <ResponsiveIframe
-              ref={youtubeRef}
-              onNext={handleNext}
-              showPlaceholder={!currentSong[0]}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <QueueManager
-              queue={orderedQueue}
-              onClear={handleClearQueue}
-              onNext={handleNext}
-              onPrev={handlePrev}
-              onLoop={handleLoopToggle}
-              onShuffle={handleShuffleToggle}
-              onQueueClick={handleQueueClick}
-              onRemoveQueue={handleRemoveQueue}
-              onReorderQueue={handleReorder}
-              currentIndex={currentIndex}
-              queuePos={playedList.length + 1}
-              isEnd={isEnd}
-              isStart={isStart}
-              loop={loop}
-              shuffle={shuffle}
-            />
-          </Grid>
-        </Grid>
+        <CustomPlayer
+          ref={youtubeRef}
+          queue={orderedQueue}
+          onClear={handleClearQueue}
+          onNext={handleNext}
+          onPrev={handlePrev}
+          onLoop={handleLoopToggle}
+          onShuffle={handleShuffleToggle}
+          onQueueClick={handleQueueClick}
+          onRemoveQueue={handleRemoveQueue}
+          onReorderQueue={handleReorder}
+          currentIndex={currentIndex}
+          queuePos={playedList.length + 1}
+          isEnd={isEnd}
+          isStart={isStart}
+          loop={loop}
+          shuffle={shuffle}
+        />
+
         <Box padding={1}>
           <form onSubmit={handleSubmitSearch}>
             <TextField
