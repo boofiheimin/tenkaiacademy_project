@@ -13,6 +13,7 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
     songEnd,
     songData: { songNameEN, artists },
     streamData: { publishedAt, videoId, proxyVideoId },
+    isScuffed,
   } = record;
 
   const artistsLabel = artists
@@ -24,7 +25,7 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
     start: songStart,
     end: songEnd,
     videoId: proxyVideoId || videoId,
-    text: songNameEN,
+    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
     artistsLabel,
     date: moment(publishedAt).format("DD/MM/yyyy"),
   };
@@ -39,7 +40,7 @@ const Record = ({ record, onPlay, onAddToQueue }) => {
 
   return (
     <TableRow>
-      <TableCell>{songNameEN}</TableCell>
+      <TableCell>{`${songNameEN}${isScuffed ? " (Scuffed)" : ""}`}</TableCell>
       <TableCell>{artistsLabel}</TableCell>
       <TableCell>{moment(publishedAt).format("DD/MM/yyyy")}</TableCell>
       <TableCell>
@@ -67,6 +68,7 @@ Record.propTypes = {
       videoId: PropTypes.string,
       proxyVideoId: PropTypes.string,
     }),
+    isScuffed: PropTypes.bool,
   }).isRequired,
   onPlay: PropTypes.func,
   onAddToQueue: PropTypes.func,

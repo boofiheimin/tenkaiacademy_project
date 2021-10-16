@@ -71,11 +71,11 @@ const QueueManager = ({
           </Button>
         </Box>
       </Paper>
-      <Box sx={{ maxHeight: 600 }}>
+      <Box>
         <Paper>
           <SimpleBar
             style={{
-              maxHeight: 500,
+              maxHeight: 600,
             }}
             autoHide={false}
           >

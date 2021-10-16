@@ -36,8 +36,6 @@ const ArtistsContainer = () => {
     dispatch(editArtist(id, artist));
   };
 
-  console.log(loading);
-
   return (
     <CommonTable
       columnOptions={[

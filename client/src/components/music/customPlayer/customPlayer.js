@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useRef, useImperativeHandle, forwardRef } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 
 import Youtube from "react-youtube";
 
@@ -62,7 +62,6 @@ const CustomPlayer = forwardRef(
     const [openQueue, setOpenQueue] = useState(false);
     const [currentSong, setCurrentSong] = useState(null);
     const [playerState, setPlayerState] = useState(-1);
-    const queueRef = useRef(null);
 
     useInterval(() => {
       if (player) {
@@ -115,12 +114,6 @@ const CustomPlayer = forwardRef(
 
     const handleToggleQueue = () => {
       setOpenQueue(!openQueue);
-      const currPanel = queueRef.current;
-      if (currPanel.style.maxHeight) {
-        currPanel.style.maxHeight = null;
-      } else {
-        currPanel.style.maxHeight = `${currPanel.scrollHeight}px`;
-      }
     };
 
     const renderVolume = () => {
@@ -339,11 +332,9 @@ const CustomPlayer = forwardRef(
             </Box>
           </Paper>
           <Box
-            ref={queueRef}
             sx={{
-              maxHeight: 0,
+              display: openQueue ? "block" : "none",
               overflow: "hidden",
-              transition: "max-height 0.1s ease-out",
               position: "absolute",
               right: 0,
               width: "100%",

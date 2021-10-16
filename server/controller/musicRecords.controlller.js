@@ -32,8 +32,6 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
       }),
     };
 
-    console.log(paginateOptions);
-
     let songs;
 
     if ((!limit, !page)) {
