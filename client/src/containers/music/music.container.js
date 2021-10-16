@@ -7,6 +7,7 @@ import {
   getMusicRecords,
   getPaginatedMusicRecords,
 } from "../../actions/musicRecords.actions";
+import { setVideoMode } from "../../actions/global.actions";
 
 const MusicContainer = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,13 @@ const MusicContainer = () => {
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
   const [noScuff, setNoScuff] = useState(false);
+
+  useEffect(() => {
+    dispatch(setVideoMode(true));
+    return () => {
+      dispatch(setVideoMode(false));
+    };
+  }, []);
 
   useEffect(() => {
     setLoading(true);

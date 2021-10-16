@@ -332,6 +332,7 @@ const Music = ({
                 startIcon={<QueueIcon />}
                 onClick={handleAddAllToQueue}
                 sx={{ fontSize: mobile ? "0.75rem" : "auto" }}
+                disabled={!playerReady}
               >
                 Add all to queue
               </Button>
