@@ -12,6 +12,8 @@ import {
 
 import CommonTable from "../../components/commonTable/commonTable";
 
+import { hhmmssToSeconds } from "../../helper";
+
 const SongsContainer = () => {
   const dispatch = useDispatch();
   const artists = useSelector((state) => state.artists);
@@ -94,6 +96,7 @@ const SongsContainer = () => {
           input: true,
           inputValidation: "number",
           required: true,
+          inputTransform: hhmmssToSeconds,
         },
         { name: "Action", width: "25%" },
       ]}

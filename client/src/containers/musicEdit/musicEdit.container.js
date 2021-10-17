@@ -12,6 +12,8 @@ import {
 } from "../../actions/musicRecords.actions";
 import { getSongs } from "../../actions/songs.actions";
 
+import { hhmmssToSeconds } from "../../helper";
+
 const MusicEditContainer = () => {
   const dispatch = useDispatch();
   const { data: musicRecords } = useSelector((state) => state.musicRecords);
@@ -118,6 +120,7 @@ const MusicEditContainer = () => {
           value: "songStart",
           input: "text",
           inputValidation: "number",
+          inputTransform: hhmmssToSeconds,
         },
         {
           name: "End",
@@ -126,6 +129,7 @@ const MusicEditContainer = () => {
           value: "songEnd",
           input: "text",
           inputValidation: "number",
+          inputTransform: hhmmssToSeconds,
         },
         {
           name: "isScuffed",

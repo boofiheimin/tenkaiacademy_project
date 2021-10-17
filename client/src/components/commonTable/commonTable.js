@@ -66,6 +66,7 @@ const CommonTable = ({
         required,
         inputValidation,
         placeholder,
+        inputTransform,
       }) => {
         if (input) {
           initData = {
@@ -87,6 +88,7 @@ const CommonTable = ({
                 inputValidation,
               }),
               placeholder,
+              inputTransform,
             },
           };
         }
@@ -131,6 +133,7 @@ const CommonTable = ({
         displayValue,
         inputValidation,
         placeholder,
+        inputTransform,
       }) => {
         newEditData = {
           ...newEditData,
@@ -151,6 +154,7 @@ const CommonTable = ({
               inputValidation,
             }),
             placeholder,
+            inputTransform,
           },
         };
       }
@@ -190,17 +194,20 @@ const CommonTable = ({
           rErrors = { ...rErrors, [key]: true };
         }
       }
+      let { value } = editData[key];
+      if (editData[key].inputTransform) {
+        if (value) {
+          value = editData[key].inputTransform(value);
+        }
+      }
       if (editData[key].inputValidation) {
         if (editData[key].inputValidation === "number") {
-          if (
-            editData[key].value !== undefined &&
-            isNaN(toNumber(editData[key].value))
-          ) {
+          if (value !== undefined && isNaN(toNumber(value))) {
             tErrors = { ...tErrors, [key]: true };
           }
         }
       }
-      saveData = { ...saveData, [key]: editData[key].value };
+      saveData = { ...saveData, [key]: value };
     });
     if (!isEmpty(rErrors) || !isEmpty(tErrors)) {
       if (!isEmpty(rErrors))
@@ -227,14 +234,20 @@ const CommonTable = ({
           rErrors = { ...rErrors, [key]: true };
         }
       }
+      let { value } = createData[key];
+      if (createData[key].inputTransform) {
+        if (value) {
+          value = createData[key].inputTransform(value);
+        }
+      }
       if (createData[key].inputValidation) {
         if (createData[key].inputValidation === "number") {
-          if (isNaN(toNumber(createData[key].value))) {
+          if (isNaN(toNumber(value))) {
             tErrors = { ...tErrors, [key]: true };
           }
         }
       }
-      addData = { ...addData, [key]: createData[key].value };
+      addData = { ...addData, [key]: value };
     });
     if (!isEmpty(rErrors) || !isEmpty(tErrors)) {
       if (!isEmpty(rErrors))

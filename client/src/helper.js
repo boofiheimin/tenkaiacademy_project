@@ -24,3 +24,17 @@ export const extractValueFromPath = (value, path = "") => {
   }
   return extractValueFromPath(value[curPath], paths.join("."));
 };
+
+export const hhmmssToSeconds = (input = "") => {
+  const nums = input.split(":").map((num) => parseInt(num, 10));
+  if (nums.length > 3) {
+    throw new Error("comon man");
+  }
+  if (nums.length === 1) {
+    return nums[0];
+  }
+
+  return nums
+    .map((num, index) => num * 60 ** (nums.length - 1 - index))
+    .reduce((prev, curr) => prev + curr);
+};
