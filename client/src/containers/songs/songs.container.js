@@ -97,6 +97,7 @@ const SongsContainer = () => {
           inputValidation: "number",
           required: true,
           inputTransform: hhmmssToSeconds,
+          placeholder: "In minutes:seconds or seconds format",
         },
         { name: "Action", width: "25%" },
       ]}

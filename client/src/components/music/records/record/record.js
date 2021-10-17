@@ -1,11 +1,17 @@
 import PropTypes from "prop-types";
 
-import { TableRow, TableCell, IconButton } from "@mui/material";
+import {
+  TableRow,
+  TableCell,
+  IconButton,
+  Typography,
+  Box,
+} from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
 const Record = ({ song, onPlay, onAddToQueue }) => {
-  const { text, artistsLabel, date } = song;
+  const { text, artistsLabel, date, featuring } = song;
 
   const handlePlay = () => {
     onPlay(song);
@@ -17,7 +23,19 @@ const Record = ({ song, onPlay, onAddToQueue }) => {
 
   return (
     <TableRow>
-      <TableCell>{text}</TableCell>
+      <TableCell>
+        <Box sx={{ display: "flex", alignItems: "baseline" }}>
+          <Typography>{text}</Typography>
+          {featuring && (
+            <Typography
+              sx={{ ml: 1, fontStyle: "italic" }}
+              color="text.secondary"
+            >
+              {`ft. ${featuring}`}
+            </Typography>
+          )}
+        </Box>
+      </TableCell>
       <TableCell>{artistsLabel}</TableCell>
       <TableCell>{date}</TableCell>
       <TableCell>
@@ -37,6 +55,7 @@ Record.propTypes = {
     text: PropTypes.string,
     date: PropTypes.string,
     artistsLabel: PropTypes.string,
+    featuring: PropTypes.string,
   }).isRequired,
   onPlay: PropTypes.func,
   onAddToQueue: PropTypes.func,

@@ -29,6 +29,7 @@ const formatRecordToSong = (record) => {
     songData: { songNameEN, artists, songNameJP },
     streamData: { publishedAt, videoId, proxyVideoId },
     isScuffed,
+    featuring,
   } = record;
 
   const artistsLabel = artists
@@ -42,6 +43,7 @@ const formatRecordToSong = (record) => {
     videoId: proxyVideoId || videoId,
     text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
     jptext: songNameJP,
+    featuring,
     artistsLabel,
     date: moment(publishedAt).format("DD/MM/yyyy"),
   };
@@ -77,8 +79,16 @@ const Music = ({
 
   useEffect(() => {
     if (currentSong[0]) {
-      const { videoId, start, end, text, jptext, artistsLabel, date } =
-        currentSong[0];
+      const {
+        videoId,
+        start,
+        end,
+        text,
+        jptext,
+        artistsLabel,
+        date,
+        featuring,
+      } = currentSong[0];
       youtubeRef.current.loadVideo({
         videoId,
         start,
@@ -87,6 +97,7 @@ const Music = ({
         jptext,
         artistsLabel,
         date,
+        featuring,
       });
     } else {
       youtubeRef.current?.stopVideo();
@@ -312,11 +323,20 @@ const Music = ({
             <Box
               sx={{
                 display: "flex",
-                justifyContent: mobile ? "space-between" : "flex-end",
+                justifyContent: mobile ? "space-between" : "flex-start",
                 alignItems: "center",
                 py: 1,
               }}
             >
+              <Button
+                variant="outlined"
+                startIcon={<QueueIcon />}
+                onClick={handleAddAllToQueue}
+                sx={{ fontSize: mobile ? "0.75rem" : "auto", mr: 1 }}
+                disabled={!playerReady}
+              >
+                Add all to queue
+              </Button>
               <FormControlLabel
                 control={
                   <Checkbox checked={noScuff} onChange={handleNoScuffCheck} />
@@ -327,15 +347,6 @@ const Music = ({
                   </Typography>
                 }
               />
-              <Button
-                variant="outlined"
-                startIcon={<QueueIcon />}
-                onClick={handleAddAllToQueue}
-                sx={{ fontSize: mobile ? "0.75rem" : "auto" }}
-                disabled={!playerReady}
-              >
-                Add all to queue
-              </Button>
             </Box>
           </Box>
           <Box sx={{ display: show ? "none" : "block", height: "100%" }}>

@@ -110,6 +110,7 @@ const CommonTable = ({
       ...filters,
       [key]: event.target.value,
     };
+    setPage(0);
     setFilters(newFilters);
   };
 
@@ -197,6 +198,7 @@ const CommonTable = ({
       let { value } = editData[key];
       if (editData[key].inputTransform) {
         if (value) {
+          console.log(value);
           value = editData[key].inputTransform(value);
         }
       }

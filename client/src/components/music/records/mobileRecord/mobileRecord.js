@@ -57,9 +57,20 @@ const MobileRecord = ({ songs = [], onPlay, onAddToQueue }) => {
           }}
         >
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-            <Typography sx={{ fontSize: "1rem" }} noWrap>
-              {song?.text}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "baseline" }}>
+              <Typography sx={{ fontSize: "1rem" }} noWrap>
+                {song?.text}
+              </Typography>
+              {song?.featuring && (
+                <Typography
+                  sx={{ fontSize: "0.75rem", ml: 1, fontStyle: "italic" }}
+                  color="text.secondary"
+                  noWrap
+                >
+                  {` ft. ${song?.featuring}`}
+                </Typography>
+              )}
+            </Box>
             <Typography
               sx={{ fontSize: "0.75rem" }}
               color="text.secondary"

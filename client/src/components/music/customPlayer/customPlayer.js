@@ -157,11 +157,21 @@ const CustomPlayer = forwardRef(
       seekTime(time) {
         player.seekTo(time);
       },
-      loadVideo({ videoId, start, end, text, jptext, artistsLabel, date }) {
+      loadVideo({
+        videoId,
+        start,
+        end,
+        text,
+        jptext,
+        artistsLabel,
+        featuring,
+        date,
+      }) {
         if (player) {
           if (!play) {
             setPlay(true);
           }
+          console.log(featuring);
           setCurrentSong({
             duration: end - start,
             text,
@@ -169,6 +179,7 @@ const CustomPlayer = forwardRef(
             date,
             artistsLabel,
             start,
+            featuring,
           });
           if (start && end) {
             player.loadVideoById({
@@ -237,9 +248,20 @@ const CustomPlayer = forwardRef(
                 </Box>
 
                 <Box sx={{ p: mobile ? 1 : 2 }}>
-                  <Typography variant="h5" noWrap>
-                    {currentSong?.text}
-                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h5" noWrap>
+                      {currentSong?.text}
+                    </Typography>
+                    {currentSong?.featuring && (
+                      <Typography
+                        sx={{ ml: 1, fontStyle: "italic" }}
+                        color="text.secondary"
+                      >
+                        {`ft. ${currentSong?.featuring}`}
+                      </Typography>
+                    )}
+                  </Box>
+
                   <Typography color="text.secondary" noWrap>
                     {currentSong?.jptext}
                   </Typography>

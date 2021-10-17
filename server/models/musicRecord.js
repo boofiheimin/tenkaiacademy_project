@@ -59,6 +59,9 @@ const musicRecordSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    featuring: {
+      type: String
+    },
     songIndex: {
       type: Number,
       required: [true, "Please provide song index"],

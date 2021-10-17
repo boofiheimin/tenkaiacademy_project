@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
 
 import CommonTable from "../../components/commonTable/commonTable";
 
@@ -61,7 +60,6 @@ const MusicEditContainer = () => {
     artistsLabel: musicRecord.songData.artists.map(
       ({ artistNameEN }) => artistNameEN
     ),
-    dateLabel: moment(musicRecord.streamData.publishedAt).format("DD/MM/yyyy"),
   }));
 
   return (
@@ -101,10 +99,11 @@ const MusicEditContainer = () => {
           hidden: true,
         },
         {
-          name: "Date",
+          name: "Ft.",
           width: "10%",
-          value: "streamData.publishedAt",
-          displayValue: "dateLabel",
+          value: "featuring",
+          displayValue: "featuring",
+          input: "text",
         },
         {
           name: "Song Index",
@@ -121,10 +120,11 @@ const MusicEditContainer = () => {
           input: "text",
           inputValidation: "number",
           inputTransform: hhmmssToSeconds,
+          placeholder: "In minutes:seconds or seconds format",
         },
         {
           name: "End",
-          placeholder: "End - leave blank to use song duration + start",
+          placeholder: "m:s or s or leave blank to use song duration + start",
           width: "5%",
           value: "songEnd",
           input: "text",

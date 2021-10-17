@@ -26,7 +26,7 @@ export const extractValueFromPath = (value, path = "") => {
 };
 
 export const hhmmssToSeconds = (input = "") => {
-  const nums = input.split(":").map((num) => parseInt(num, 10));
+  const nums = `${input}`.split(":").map((num) => parseInt(num, 10));
   if (nums.length > 3) {
     throw new Error("comon man");
   }
