@@ -113,16 +113,20 @@ const CustomPlayer = forwardRef(
     };
 
     const handleSeek = (value) => {
-      player.seekTo(value + currentSong.start);
-      setPosition(value);
+      if (player) {
+        player.seekTo(value + currentSong.start);
+        setPosition(value);
+      }
     };
 
     const handleChangeVolume = (value) => {
-      if (preMuteVolume > 0) {
-        setPreMuteVolume(0);
+      if (player) {
+        if (preMuteVolume > 0) {
+          setPreMuteVolume(0);
+        }
+        setVolume(value);
+        player.setVolume(value);
       }
-      setVolume(value);
-      player.setVolume(value);
     };
 
     const handleMute = () => {

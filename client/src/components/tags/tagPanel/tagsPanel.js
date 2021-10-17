@@ -4,7 +4,7 @@ import { tagSortHelper } from "../../../helper";
 
 import CommonTable from "../../commonTable/commonTable";
 
-const Tags = ({ tags, onTagSave, onRemoveTag, onAddTag, isClip }) => {
+const Tags = ({ tags, onTagSave, onRemoveTag, onAddTag, isClip, loading }) => {
   tagSortHelper(tags);
   return (
     <CommonTable
@@ -44,6 +44,7 @@ const Tags = ({ tags, onTagSave, onRemoveTag, onAddTag, isClip }) => {
       onRowRemove={onRemoveTag}
       onRowAdd={(tag) => onAddTag({ ...tag, isClip })}
       defaultRowsPerPage={50}
+      loading={loading}
     />
   );
 };
@@ -62,6 +63,7 @@ Tags.propTypes = {
   onRemoveTag: PropTypes.func,
   onAddTag: PropTypes.func,
   isClip: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 Tags.defaultProps = {
   tags: [],
@@ -69,6 +71,7 @@ Tags.defaultProps = {
   onRemoveTag: () => {},
   onAddTag: () => {},
   isClip: false,
+  loading: true,
 };
 
 export default Tags;
