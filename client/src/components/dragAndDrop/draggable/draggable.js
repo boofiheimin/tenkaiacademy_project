@@ -15,6 +15,7 @@ const CustomDraggable = ({
   onRemove,
   active,
   onItemClick,
+  disableRemovePopup,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleRemoveClick = (e) => {
@@ -30,6 +31,11 @@ const CustomDraggable = ({
   const handleOnClick = () => {
     onItemClick(index);
   };
+
+  const handleByPassRemoveClick = () => {
+    onRemove(id);
+  };
+
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, { isDragging, draggableStyle }) => {
@@ -52,7 +58,11 @@ const CustomDraggable = ({
               {!active && (
                 <Button
                   className={classes.actionButton}
-                  onClick={handleRemoveClick}
+                  onClick={
+                    disableRemovePopup
+                      ? handleByPassRemoveClick
+                      : handleRemoveClick
+                  }
                 >
                   <FontAwesomeIcon icon={faTimes} />
                 </Button>
@@ -81,6 +91,7 @@ CustomDraggable.propTypes = {
   onRemove: PropTypes.func,
   active: PropTypes.bool,
   onItemClick: PropTypes.func,
+  disableRemovePopup: PropTypes.bool,
 };
 
 CustomDraggable.defaultProps = {
@@ -92,6 +103,7 @@ CustomDraggable.defaultProps = {
   onRemove: () => {},
   active: false,
   onItemClick: () => {},
+  disableRemovePopup: false,
 };
 
 export default CustomDraggable;

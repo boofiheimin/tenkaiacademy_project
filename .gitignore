@@ -7,3 +7,4 @@ client/build
 
 server/.env
 client/.env
+server/script/input

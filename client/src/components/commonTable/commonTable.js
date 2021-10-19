@@ -198,7 +198,6 @@ const CommonTable = ({
       let { value } = editData[key];
       if (editData[key].inputTransform) {
         if (value) {
-          console.log(value);
           value = editData[key].inputTransform(value);
         }
       }

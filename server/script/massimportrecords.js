@@ -11,7 +11,7 @@ import Song from "../models/song.js";
 import Stream from "../models/stream.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
 const CONNECTION_URL = process.env.CONNECTION_URL;
 
@@ -38,6 +38,7 @@ const createMusicRecord = async ({
   isScuffed,
   songIndex,
   featuring,
+  identifier,
 }) => {
   try {
     const song = await Song.findOne({ songId });
@@ -111,6 +112,7 @@ const createMusicRecord = async ({
       isScuffed,
       songIndex,
       featuring,
+      identifier,
     };
 
     const newMusicRecord = new MusicRecord(newMusicRecordParams);
@@ -124,7 +126,7 @@ const createMusicRecord = async ({
 };
 
 const main = () => {
-  const input = fs.createReadStream("./input/input.csv");
+  const input = fs.createReadStream("./script/input/input.csv");
   Papa.parse(input, {
     header: true,
     worker: true,
@@ -132,7 +134,7 @@ const main = () => {
       const { data } = results;
       const records = data.map(({ isScuffed, songIndex, ...rest }) => ({
         ...rest,
-        isScuffed: parseInt(isScuffed, 10),
+        isScuffed: isScuffed ? parseInt(isScuffed, 10) : 0,
         songIndex: parseInt(songIndex, 10),
       }));
 

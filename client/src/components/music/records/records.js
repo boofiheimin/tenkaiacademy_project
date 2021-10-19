@@ -108,6 +108,7 @@ const Records = ({
               <TableBody>
                 {songs.map((song) => (
                   <Record
+                    key={song.id}
                     song={song}
                     onPlay={onPlay}
                     onAddToQueue={onAddToQueue}

@@ -56,8 +56,8 @@ const MusicContainer = () => {
     setPage(0);
   };
 
-  const handleAddAllToQueue = (text, noScuffInput) => {
-    dispatch(getMusicRecords(text, noScuffInput, dateSort));
+  const handleAddAllToQueue = () => {
+    dispatch(getMusicRecords(search, noScuff, dateSort));
   };
 
   const handleSortChange = (sort) => {

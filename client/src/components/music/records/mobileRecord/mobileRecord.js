@@ -50,6 +50,7 @@ const MobileRecord = ({ songs = [], onPlay, onAddToQueue }) => {
     >
       {songs.map((song) => (
         <Paper
+          key={song.id}
           elevation={1}
           sx={{
             p: 2,

@@ -20,6 +20,7 @@ const DragAndDrop = ({
   addForm,
   onItemClick,
   activeIndex,
+  disableRemovePopup,
 }) => {
   const [items, setItems] = useState(propItems);
   const classes = useStyles({ itemsLength: items.length });
@@ -75,6 +76,7 @@ const DragAndDrop = ({
                   onRemove={onRemoveItem}
                   onItemClick={onItemClick}
                   active={activeIndex === index}
+                  disableRemovePopup={disableRemovePopup}
                 />
               ))}
               {provided.placeholder}
@@ -99,6 +101,7 @@ DragAndDrop.propTypes = {
   addForm: PropTypes.bool,
   onItemClick: PropTypes.func,
   activeIndex: PropTypes.number,
+  disableRemovePopup: PropTypes.bool,
 };
 
 DragAndDrop.defaultProps = {
@@ -114,6 +117,7 @@ DragAndDrop.defaultProps = {
   addForm: false,
   onItemClick: () => {},
   activeIndex: -1,
+  disableRemovePopup: false,
 };
 
 export default DragAndDrop;

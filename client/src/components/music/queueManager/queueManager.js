@@ -130,6 +130,7 @@ const QueueManager = ({
                 onItemClick={onQueueClick}
                 onRemoveItem={onRemoveQueue}
                 onReorderItem={onReorderQueue}
+                disableRemovePopup
               />
             </Box>
           </SimpleBar>

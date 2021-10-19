@@ -274,12 +274,11 @@ const Music = ({
   };
 
   const handleAddAllToQueue = () => {
-    // onAddAllToQueue(search, noScuff);
     setAddAllToQueueDialog(true);
   };
 
   const handleAddAllToQueueConfirm = () => {
-    onAddAllToQueue(search, noScuff);
+    onAddAllToQueue();
     setAddAllToQueueDialog(false);
   };
 

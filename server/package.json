@@ -10,7 +10,8 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "massImportRecords": "node script/massimportrecords.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

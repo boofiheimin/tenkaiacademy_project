@@ -26,8 +26,10 @@ import QueueManager from "../queueManager/queueManager";
 
 import { useInterval } from "../../../utils";
 
-const YoutubeWrapper = styled("div")(({ mobile }) => ({
-  ...(mobile && {
+const YoutubeWrapper = styled("div", {
+  shouldForwardProp: (prop) => prop[0] !== "$",
+})(({ $mobile }) => ({
+  ...($mobile && {
     position: "relative",
     height: 0,
     overflow: "hidden",
@@ -89,7 +91,9 @@ const CustomPlayer = forwardRef(
 
     useInterval(() => {
       if (player) {
-        setPosition(Math.floor(player.getCurrentTime()) - currentSong?.start);
+        setPosition(
+          Math.floor(player.getCurrentTime() || 0) - (currentSong?.start || 0)
+        );
       }
     }, 500);
 
@@ -101,7 +105,7 @@ const CustomPlayer = forwardRef(
     const formatDuration = (value) => {
       const minute = Math.floor(value / 60);
       const secondLeft = value - minute * 60;
-      return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+      return `${minute}:${secondLeft <= 9 ? `0${secondLeft}` : secondLeft}`;
     };
 
     const handlePlayToggle = () => {
@@ -176,7 +180,6 @@ const CustomPlayer = forwardRef(
           if (!play) {
             setPlay(true);
           }
-          console.log(featuring);
           setCurrentSong({
             duration: end - start,
             text,
@@ -235,7 +238,7 @@ const CustomPlayer = forwardRef(
                 }}
               >
                 <Box sx={{ ...(mobile && { width: "100%" }) }}>
-                  <YoutubeWrapper mobile={mobile}>
+                  <YoutubeWrapper $mobile={mobile}>
                     <Youtube
                       onReady={handleReady}
                       opts={{
