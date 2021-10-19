@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-
+import { useTheme, styled } from "@mui/styles";
 import {
   TableRow,
   TableCell,
@@ -10,7 +10,15 @@ import {
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
+const FixedCell = styled(TableCell)(() => ({
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  maxWidth: 0,
+}));
+
 const Record = ({ song, onPlay, onAddToQueue }) => {
+  const theme = useTheme();
   const { text, artistsLabel, date, featuring } = song;
 
   const handlePlay = () => {
@@ -23,29 +31,30 @@ const Record = ({ song, onPlay, onAddToQueue }) => {
 
   return (
     <TableRow>
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "baseline" }}>
-          <Typography>{text}</Typography>
+      <FixedCell>
+        <Typography noWrap>
+          <span> {text}</span>
           {featuring && (
-            <Typography
-              sx={{ ml: 1, fontStyle: "italic" }}
-              color="text.secondary"
-            >
-              {`ft. ${featuring}`}
-            </Typography>
+            <span
+              style={{
+                marginLeft: theme.spacing(1),
+                fontStyle: "italic",
+                color: theme.palette.text.secondary,
+              }}
+            >{` ft. ${featuring}`}</span>
           )}
-        </Box>
-      </TableCell>
-      <TableCell>{artistsLabel}</TableCell>
-      <TableCell>{date}</TableCell>
-      <TableCell>
+        </Typography>
+      </FixedCell>
+      <FixedCell>{artistsLabel}</FixedCell>
+      <FixedCell>{date}</FixedCell>
+      <FixedCell>
         <IconButton onClick={handlePlay}>
           <PlayArrowIcon />
         </IconButton>
         <IconButton onClick={handleAddToQueue}>
           <PlaylistAddIcon />
         </IconButton>
-      </TableCell>
+      </FixedCell>
     </TableRow>
   );
 };

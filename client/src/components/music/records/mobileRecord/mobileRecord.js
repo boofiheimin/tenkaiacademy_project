@@ -1,5 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTheme } from "@mui/styles";
+
 import {
   Box,
   Paper,
@@ -17,6 +19,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
 const MobileRecord = ({ songs = [], onPlay, onAddToQueue }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
 
@@ -59,17 +62,18 @@ const MobileRecord = ({ songs = [], onPlay, onAddToQueue }) => {
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Box sx={{ display: "flex", alignItems: "baseline" }}>
               <Typography sx={{ fontSize: "1rem" }} noWrap>
-                {song?.text}
+                <span> {`${song?.text}`}</span>
+                {song?.featuring && (
+                  <span
+                    style={{
+                      fontSize: "0.75rem",
+                      marginLeft: theme.spacing(1),
+                      fontStyle: "italic",
+                      color: theme.palette.text.secondary,
+                    }}
+                  >{` ft. ${song?.featuring}`}</span>
+                )}
               </Typography>
-              {song?.featuring && (
-                <Typography
-                  sx={{ fontSize: "0.75rem", ml: 1, fontStyle: "italic" }}
-                  color="text.secondary"
-                  noWrap
-                >
-                  {` ft. ${song?.featuring}`}
-                </Typography>
-              )}
             </Box>
             <Typography
               sx={{ fontSize: "0.75rem" }}

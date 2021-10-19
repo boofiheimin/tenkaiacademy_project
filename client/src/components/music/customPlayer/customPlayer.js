@@ -253,17 +253,20 @@ const CustomPlayer = forwardRef(
 
                 <Box sx={{ p: mobile ? 1 : 2 }}>
                   <Box sx={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h5" noWrap>
-                      {currentSong?.text}
+                    <Typography noWrap>
+                      <span style={{ fontSize: "1.25rem" }}>
+                        {currentSong?.text}
+                      </span>
+                      {currentSong?.featuring && (
+                        <span
+                          style={{
+                            marginLeft: theme.spacing(1),
+                            fontStyle: "italic",
+                            color: theme.palette.text.secondary,
+                          }}
+                        >{` ft. ${currentSong?.featuring}`}</span>
+                      )}
                     </Typography>
-                    {currentSong?.featuring && (
-                      <Typography
-                        sx={{ ml: 1, fontStyle: "italic" }}
-                        color="text.secondary"
-                      >
-                        {`ft. ${currentSong?.featuring}`}
-                      </Typography>
-                    )}
                   </Box>
 
                   <Typography color="text.secondary" noWrap>
@@ -451,6 +454,7 @@ const CustomPlayer = forwardRef(
           onClose={handleCloseQueue}
           fullWidth
           maxWidth="xs"
+          disableEnforceFocus
         >
           <QueueManager
             queue={queue}
