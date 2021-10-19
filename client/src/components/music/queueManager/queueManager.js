@@ -1,11 +1,20 @@
 import PropTypes from "prop-types";
 import SimpleBar from "simplebar-react";
 import { useTheme } from "@mui/material/styles";
-import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 
 import LoopIcon from "@mui/icons-material/Loop";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import ClearIcon from "@mui/icons-material/Clear";
+
+import ImportExportIcon from "@mui/icons-material/ImportExport";
 
 import DragAndDrop from "../../dragAndDrop/dragAndDrop";
 
@@ -34,6 +43,7 @@ const QueueManager = ({
   onRemoveQueue,
   onReorderQueue,
   onClose,
+  onReverse,
 }) => {
   const theme = useTheme();
 
@@ -55,28 +65,44 @@ const QueueManager = ({
         </Box>
         <Box padding={1} display="flex" alignItems="center">
           <Box flexGrow={1}>
-            <Button
-              sx={{
-                minWidth: "1em",
-                padding: 1,
-                marginRight: theme.spacing(1),
-                ...(loop && { color: "#4caf50" }),
-              }}
-              onClick={onLoop}
-            >
-              <LoopIcon />
-            </Button>
-            <Button
-              sx={{
-                minWidth: "1em",
-                padding: 1,
-                marginRight: theme.spacing(1),
-                ...(shuffle && { color: "#4caf50" }),
-              }}
-              onClick={onShuffle}
-            >
-              <ShuffleIcon />
-            </Button>
+            <Tooltip title="Loop" placement="bottom-end">
+              <Button
+                sx={{
+                  minWidth: "1em",
+                  padding: 1,
+                  marginRight: theme.spacing(1),
+                  ...(loop && { color: "#4caf50" }),
+                }}
+                onClick={onLoop}
+              >
+                <LoopIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Shuffle" placement="bottom-end">
+              <Button
+                sx={{
+                  minWidth: "1em",
+                  padding: 1,
+                  marginRight: theme.spacing(1),
+                  ...(shuffle && { color: "#4caf50" }),
+                }}
+                onClick={onShuffle}
+              >
+                <ShuffleIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Reverse Playlist" placement="bottom-end">
+              <Button
+                sx={{
+                  minWidth: "1em",
+                  padding: 1,
+                  marginRight: theme.spacing(1),
+                }}
+                onClick={onReverse}
+              >
+                <ImportExportIcon />
+              </Button>
+            </Tooltip>
           </Box>
           <Button variant="outlined" color="secondary" onClick={onClear}>
             CLEAR
@@ -126,6 +152,7 @@ QueueManager.propTypes = {
   onRemoveQueue: PropTypes.func,
   onReorderQueue: PropTypes.func,
   onClose: PropTypes.func,
+  onReverse: PropTypes.func,
 };
 
 QueueManager.defaultProps = {
@@ -141,6 +168,7 @@ QueueManager.defaultProps = {
   onRemoveQueue: () => {},
   onReorderQueue: () => {},
   onClose: () => {},
+  onReverse: () => {},
 };
 
 export default QueueManager;

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { useState, useEffect, useRef } from "react";
-import { shuffle as _shuffle } from "lodash";
+import { shuffle as _shuffle, reverse } from "lodash";
 
 import {
   Container,
@@ -273,6 +273,12 @@ const Music = ({
     onAddAllToQueue(search, noScuff);
   };
 
+  const handleReverse = () => {
+    setOrderedQueue(reverse(orderedQueue));
+    setPlayedList(reverse(pool));
+    setPool(reverse(playedList));
+  };
+
   const isEnd = loop ? false : pool.length === 0;
   const isStart = loop ? false : playedList.length === 0;
 
@@ -302,6 +308,7 @@ const Music = ({
             onPrev={handlePrev}
             onLoop={handleLoopToggle}
             onShuffle={handleShuffleToggle}
+            onReverse={handleReverse}
             onQueueClick={handleQueueClick}
             onRemoveQueue={handleRemoveQueue}
             onReorderQueue={handleReorder}
@@ -352,9 +359,6 @@ const Music = ({
               />
             </Box>
           </Box>
-          {/* <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
-            <Loading />
-          </Box> */}
           <Box sx={{ p: 1 }}>
             <Records
               show={show}

@@ -67,6 +67,7 @@ const CustomPlayer = forwardRef(
       onPrev,
       onLoop,
       onShuffle,
+      onReverse,
       onQueueClick,
       onRemoveQueue,
       onReorderQueue,
@@ -464,6 +465,7 @@ const CustomPlayer = forwardRef(
             onQueueClick={onQueueClick}
             onRemoveQueue={onRemoveQueue}
             onReorderQueue={onReorderQueue}
+            onReverse={onReverse}
             currentIndex={currentIndex}
             queuePos={queuePos}
             loop={loop}
@@ -495,6 +497,7 @@ CustomPlayer.propTypes = {
   onPrev: PropTypes.func,
   onReady: PropTypes.func,
   mobile: PropTypes.bool,
+  onReverse: PropTypes.func,
 };
 
 CustomPlayer.defaultProps = {
@@ -516,6 +519,7 @@ CustomPlayer.defaultProps = {
   onPrev: () => {},
   onReady: () => {},
   mobile: false,
+  onReverse: () => {},
 };
 
 export default CustomPlayer;
