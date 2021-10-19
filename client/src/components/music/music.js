@@ -13,6 +13,9 @@ import {
   FormControlLabel,
   useMediaQuery,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import QueueIcon from "@mui/icons-material/Queue";
@@ -75,6 +78,7 @@ const Music = ({
   const [search, setSearch] = useState("");
   const [playerReady, setPlayerReady] = useState(false);
   const [noScuff, setNoScuff] = useState(false);
+  const [addAllToQueueDialog, setAddAllToQueueDialog] = useState(false);
   const matchSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchOrientation = useMediaQuery(json2mq({ orientation: "portrait" }));
 
@@ -270,7 +274,17 @@ const Music = ({
   };
 
   const handleAddAllToQueue = () => {
+    // onAddAllToQueue(search, noScuff);
+    setAddAllToQueueDialog(true);
+  };
+
+  const handleAddAllToQueueConfirm = () => {
     onAddAllToQueue(search, noScuff);
+    setAddAllToQueueDialog(false);
+  };
+
+  const handleCloseAddAllToQueue = () => {
+    setAddAllToQueueDialog(false);
   };
 
   const handleReverse = () => {
@@ -376,6 +390,25 @@ const Music = ({
           </Box>
         </Box>
       </Container>
+      <Dialog open={addAllToQueueDialog} onClose={handleCloseAddAllToQueue}>
+        <DialogContent>
+          <Box>
+            <Typography>{`Add ${recordCount} songs to playlist? `}</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleAddAllToQueueConfirm}>
+            Yes
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleCloseAddAllToQueue}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
