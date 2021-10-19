@@ -60,6 +60,7 @@ const Music = ({
   onSearch,
   onAddAllToQueue,
   queueList,
+  onSortChange,
 }) => {
   const theme = useTheme();
   const youtubeRef = useRef();
@@ -349,11 +350,12 @@ const Music = ({
               />
             </Box>
           </Box>
-          <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
+          {/* <Box sx={{ display: show ? "none" : "block", height: "100%" }}>
             <Loading />
-          </Box>
-          <Box sx={{ display: show ? "block" : "none", p: 1 }}>
+          </Box> */}
+          <Box sx={{ p: 1 }}>
             <Records
+              show={show}
               mobile={mobile}
               songs={formattedRecords}
               rowsPerPage={rowsPerPage}
@@ -363,6 +365,7 @@ const Music = ({
               onAddToQueue={handleAddToQueue}
               onPageChange={onPageChange}
               onRowsPerPageChange={onRowsPerPageChange}
+              onSortChange={onSortChange}
             />
           </Box>
         </Box>

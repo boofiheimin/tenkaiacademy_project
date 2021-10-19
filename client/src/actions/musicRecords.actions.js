@@ -9,14 +9,15 @@ import {
 } from "../constants/actionTypes";
 
 export const getPaginatedMusicRecords =
-  (textSearch, noScuff, limit, page) => async (dispatch) => {
+  (textSearch, noScuff, limit, page, dateSort) => async (dispatch) => {
     try {
-      const { data } = await api.fetchMusicRecords(
+      const { data } = await api.fetchMusicRecords({
         textSearch,
         noScuff,
+        dateSort,
         limit,
-        page
-      );
+        page,
+      });
 
       const { docs, totalDocs } = data;
 
@@ -32,21 +33,26 @@ export const getPaginatedMusicRecords =
       });
     }
   };
-export const getMusicRecords = (textSearch, noScuff) => async (dispatch) => {
-  try {
-    const { data } = await api.fetchMusicRecords(textSearch, noScuff);
+export const getMusicRecords =
+  (textSearch, noScuff, dateSort) => async (dispatch) => {
+    try {
+      const { data } = await api.fetchMusicRecords({
+        textSearch,
+        noScuff,
+        dateSort,
+      });
 
-    dispatch({
-      type: FETCH_MUSICRECORDS_SUCCESS,
-      data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ERROR_NOTIFICATION,
-      message: error.response.data.error,
-    });
-  }
-};
+      dispatch({
+        type: FETCH_MUSICRECORDS_SUCCESS,
+        data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ERROR_NOTIFICATION,
+        message: error.response.data.error,
+      });
+    }
+  };
 
 export const createMusicRecord = (recordData) => async (dispatch) => {
   try {

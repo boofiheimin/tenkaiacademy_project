@@ -21,6 +21,7 @@ const MusicContainer = () => {
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
   const [noScuff, setNoScuff] = useState(false);
+  const [dateSort, setDateSort] = useState(-1);
 
   useEffect(() => {
     dispatch(setVideoMode(true));
@@ -31,8 +32,8 @@ const MusicContainer = () => {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getPaginatedMusicRecords(search, noScuff, limit, page));
-  }, [search, page, limit, noScuff]);
+    dispatch(getPaginatedMusicRecords(search, noScuff, limit, page, dateSort));
+  }, [search, page, limit, noScuff, dateSort]);
 
   useEffect(() => {
     if (musicRecords) {
@@ -56,7 +57,11 @@ const MusicContainer = () => {
   };
 
   const handleAddAllToQueue = (text, noScuffInput) => {
-    dispatch(getMusicRecords(text, noScuffInput));
+    dispatch(getMusicRecords(text, noScuffInput, dateSort));
+  };
+
+  const handleSortChange = (sort) => {
+    setDateSort(sort);
   };
 
   return (
@@ -71,6 +76,7 @@ const MusicContainer = () => {
       onRowsPerPageChange={handleRowsPerPageChange}
       onSearch={handleSearchChange}
       onAddAllToQueue={handleAddAllToQueue}
+      onSortChange={handleSortChange}
     />
   );
 };

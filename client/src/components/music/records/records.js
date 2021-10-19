@@ -1,3 +1,4 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -10,17 +11,33 @@ import {
   TableBody,
   TablePagination,
   tableCellClasses,
+  Typography,
 } from "@mui/material";
 
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { styled } from "@mui/material/styles";
 
 import Record from "./record/record";
 import MobileRecord from "./mobileRecord/mobileRecord";
 
+import Loading from "../../loading/loading";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+  },
+}));
+
+const ClickableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: theme.palette.grey[800],
+    },
   },
 }));
 
@@ -34,41 +51,98 @@ const Records = ({
   onPageChange,
   onRowsPerPageChange,
   mobile,
-}) => (
-  <Box>
-    {mobile ? (
-      <MobileRecord songs={songs} onPlay={onPlay} onAddToQueue={onAddToQueue} />
-    ) : (
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell style={{ width: "40%" }}>Song</StyledTableCell>
-              <StyledTableCell style={{ width: "30%" }}>Artist</StyledTableCell>
-              <StyledTableCell style={{ width: "20%" }}>Date</StyledTableCell>
-              <StyledTableCell style={{ width: "10%" }} />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {songs.map((song) => (
-              <Record song={song} onPlay={onPlay} onAddToQueue={onAddToQueue} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )}
-    <div>
-      <TablePagination
-        component="div"
-        page={page}
-        count={recordCount}
-        rowsPerPage={rowsPerPage}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
-    </div>
-  </Box>
-);
+  onSortChange,
+  show,
+}) => {
+  const [dateSort, setDateSort] = useState(true);
+
+  const handleSortToggle = () => {
+    onSortChange(!dateSort ? -1 : 1);
+    setDateSort(!dateSort);
+  };
+
+  return (
+    <Box>
+      {mobile ? (
+        <>
+          <MobileRecord
+            songs={songs}
+            onPlay={onPlay}
+            onAddToQueue={onAddToQueue}
+          />
+          {!show && (
+            <Box
+              sx={{
+                p: 2,
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <Loading />
+            </Box>
+          )}
+        </>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell style={{ width: "40%" }}>Song</StyledTableCell>
+                <StyledTableCell style={{ width: "30%" }}>
+                  Artist
+                </StyledTableCell>
+                <ClickableCell
+                  style={{ width: "20%" }}
+                  onClick={handleSortToggle}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography>Date</Typography>
+                    {dateSort ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+                  </Box>
+                </ClickableCell>
+                <StyledTableCell style={{ width: "10%" }} />
+              </TableRow>
+            </TableHead>
+            {show && (
+              <TableBody>
+                {songs.map((song) => (
+                  <Record
+                    song={song}
+                    onPlay={onPlay}
+                    onAddToQueue={onAddToQueue}
+                  />
+                ))}
+              </TableBody>
+            )}
+          </Table>
+          {!show && (
+            <Box
+              sx={{
+                p: 2,
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <Loading />
+            </Box>
+          )}
+        </TableContainer>
+      )}
+      <div>
+        <TablePagination
+          component="div"
+          page={page}
+          count={recordCount}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      </div>
+    </Box>
+  );
+};
 
 Records.propTypes = {
   songs: PropTypes.arrayOf(
@@ -86,6 +160,7 @@ Records.propTypes = {
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   mobile: PropTypes.bool,
+  onSortChange: PropTypes.func,
 };
 
 Records.defaultProps = {
@@ -98,6 +173,7 @@ Records.defaultProps = {
   onPageChange: () => {},
   onRowsPerPageChange: () => {},
   mobile: false,
+  onSortChange: () => {},
 };
 
 export default Records;

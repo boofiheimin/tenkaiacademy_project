@@ -8,13 +8,13 @@ import ErrorResponse from "../utils/errorResponse.js";
 
 export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
   try {
-    const { textSearch, page, limit, noScuff } = reqQuery;
+    const { textSearch, page, limit, noScuff, dateSort } = reqQuery;
 
     const paginateOptions = {
       ...(page && { page: parseInt(page, 10) + 1 }),
       ...(limit && { limit }),
       sort: {
-        "streamData.publishedAt": -1,
+        "streamData.publishedAt": dateSort ? parseInt(dateSort, 10) : -1,
         songIndex: 1,
       },
     };
@@ -38,7 +38,7 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
 
     if ((!limit, !page)) {
       songs = await MusicRecord.find(srchQuery).sort({
-        "streamData.publishedAt": -1,
+        "streamData.publishedAt": dateSort ? parseInt(dateSort, 10) : -1,
         songIndex: 1,
       });
     } else {

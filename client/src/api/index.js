@@ -53,8 +53,16 @@ export const editSong = async (id, songData) =>
   API.patch(`/songs/${id}`, songData);
 export const deleteSong = async (id) => API.delete(`/songs/${id}`);
 
-export const fetchMusicRecords = async (textSearch, noScuff, limit, page) =>
-  API.get("/musicRecords", { params: { textSearch, page, limit, noScuff } });
+export const fetchMusicRecords = async ({
+  textSearch,
+  noScuff,
+  limit,
+  page,
+  dateSort,
+}) =>
+  API.get("/musicRecords", {
+    params: { textSearch, page, limit, noScuff, dateSort },
+  });
 export const createMusicRecord = async (recordData) =>
   API.post("/musicRecords", recordData);
 export const editMusicRecord = async (id, data) =>
