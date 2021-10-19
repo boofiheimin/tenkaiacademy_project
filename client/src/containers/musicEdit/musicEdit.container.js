@@ -67,19 +67,13 @@ const MusicEditContainer = () => {
       columnOptions={[
         {
           name: "Song",
-          width: "30%",
+          width: "35%",
           value: "songData",
           displayValue: "songData.songNameEN",
           input: "text",
           required: true,
           optionLabel: "songNameEN",
           options: songs,
-          filter: true,
-        },
-        {
-          name: "Artist",
-          width: "25%",
-          value: "artistsLabel",
           filter: true,
         },
         {
@@ -100,9 +94,15 @@ const MusicEditContainer = () => {
         },
         {
           name: "Ft.",
-          width: "10%",
+          width: "15%",
           value: "featuring",
           displayValue: "featuring",
+          input: "text",
+        },
+        {
+          name: "Identifier",
+          width: "10%",
+          value: "identifier",
           input: "text",
         },
         {
@@ -137,7 +137,7 @@ const MusicEditContainer = () => {
           value: "isScuffed",
           input: "boolean",
         },
-        { name: "Action", width: "10%" },
+        { name: "Action", width: "20%" },
       ]}
       data={mappedMusicRecords}
       onRowSave={handleMusicRecordSave}

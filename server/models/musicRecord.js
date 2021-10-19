@@ -60,7 +60,10 @@ const musicRecordSchema = mongoose.Schema(
       default: false,
     },
     featuring: {
-      type: String
+      type: String,
+    },
+    identifier: {
+      type: String,
     },
     songIndex: {
       type: Number,

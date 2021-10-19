@@ -161,6 +161,7 @@ Records.propTypes = {
   onRowsPerPageChange: PropTypes.func,
   mobile: PropTypes.bool,
   onSortChange: PropTypes.func,
+  show: PropTypes.bool,
 };
 
 Records.defaultProps = {
@@ -174,6 +175,7 @@ Records.defaultProps = {
   onRowsPerPageChange: () => {},
   mobile: false,
   onSortChange: () => {},
+  show: false,
 };
 
 export default Records;

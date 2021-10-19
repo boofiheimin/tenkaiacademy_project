@@ -28,6 +28,7 @@ export const getMusicRecords = async ({ query: reqQuery = {} }, res, next) => {
           { "songData.artists.artistNameEN": new RegExp(textSearch, "i") },
           { "songData.artists.artistNameJP": new RegExp(textSearch, "i") },
           { "streamData.videoId": new RegExp(textSearch, "i") },
+          { identifier: new RegExp(textSearch, "i") },
           { featuring: new RegExp(textSearch, "i") },
         ],
       }),
@@ -62,6 +63,7 @@ export const createMusicRecord = async (req, res, next) => {
       isScuffed,
       songIndex,
       featuring,
+      identifier,
     } = req.body;
 
     const song = await Song.findOne({ songId });
@@ -135,6 +137,7 @@ export const createMusicRecord = async (req, res, next) => {
       isScuffed,
       songIndex,
       featuring,
+      identifier,
     };
 
     const newMusicRecord = new MusicRecord(newMusicRecordParams);
@@ -157,6 +160,7 @@ export const editMusicRecord = async (req, res, next) => {
       isScuffed,
       songIndex,
       featuring,
+      identifier,
     } = req.body;
 
     let paramSongStart = parseInt(songStart, 10);
@@ -232,6 +236,7 @@ export const editMusicRecord = async (req, res, next) => {
         isScuffed,
         songIndex,
         featuring,
+        identifier,
       },
       {
         new: true,

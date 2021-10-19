@@ -20,7 +20,6 @@ import json2mq from "json2mq";
 
 import Records from "./records/records";
 import CustomPlayer from "./customPlayer/customPlayer";
-import Loading from "../loading/loading";
 
 const formatRecordToSong = (record) => {
   const {
@@ -30,6 +29,7 @@ const formatRecordToSong = (record) => {
     streamData: { publishedAt, videoId, proxyVideoId },
     isScuffed,
     featuring,
+    identifier,
   } = record;
 
   const artistsLabel = artists
@@ -41,7 +41,9 @@ const formatRecordToSong = (record) => {
     start: songStart,
     end: songEnd,
     videoId: proxyVideoId || videoId,
-    text: `${songNameEN}${isScuffed ? " (Scuffed)" : ""}`,
+    text: `${songNameEN}${identifier ? `【 ${identifier} 】` : ""}${
+      isScuffed ? " (Scuffed)" : ""
+    }`,
     jptext: songNameJP,
     featuring,
     artistsLabel,
@@ -399,6 +401,7 @@ Music.propTypes = {
   loading: PropTypes.bool,
   onAddAllToQueue: PropTypes.func,
   queueList: PropTypes.array,
+  onSortChange: PropTypes.func,
 };
 
 Music.defaultProps = {
@@ -412,6 +415,7 @@ Music.defaultProps = {
   onSearch: () => {},
   onAddAllToQueue: () => {},
   queueList: [],
+  onSortChange: () => {},
 };
 
 export default Music;

@@ -1,12 +1,6 @@
 import PropTypes from "prop-types";
 import { useTheme, styled } from "@mui/styles";
-import {
-  TableRow,
-  TableCell,
-  IconButton,
-  Typography,
-  Box,
-} from "@mui/material";
+import { TableRow, TableCell, IconButton, Typography } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
