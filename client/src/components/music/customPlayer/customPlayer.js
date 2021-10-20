@@ -95,7 +95,7 @@ const CustomPlayer = forwardRef(
           Math.floor(player.getCurrentTime() || 0) - (currentSong?.start || 0)
         );
       }
-    }, 500);
+    }, 200);
 
     const handleReady = async (e) => {
       setPlayer(e.target);

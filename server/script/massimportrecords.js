@@ -143,7 +143,7 @@ const main = () => {
           await createMusicRecord(record);
         }
         console.log(`DONE`);
-        process.exit(1);
+        process.exit(0);
       } catch (err) {
         console.log(`Logged Error: ${err.message}`);
         process.exit(1);
