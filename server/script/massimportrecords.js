@@ -126,7 +126,10 @@ const createMusicRecord = async ({
 };
 
 const main = () => {
-  const input = fs.createReadStream("./script/input/input.csv");
+  const __dirname = "./script/input";
+  const files = fs.readdirSync(__dirname);
+  const input = fs.createReadStream(`${__dirname}/${files[0]}`);
+
   Papa.parse(input, {
     header: true,
     worker: true,

@@ -189,16 +189,12 @@ const CustomPlayer = forwardRef(
             start,
             featuring,
           });
-          if (start && end) {
-            player.loadVideoById({
-              videoId,
-              startSeconds: start,
-              endSeconds: end,
-            });
-            player.playVideo();
-          } else {
-            player.loadVideoById(videoId);
-          }
+          player.loadVideoById({
+            videoId,
+            startSeconds: start,
+            endSeconds: end,
+          });
+          player.playVideo();
         }
       },
       stopVideo() {
