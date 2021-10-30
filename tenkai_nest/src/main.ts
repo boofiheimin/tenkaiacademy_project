@@ -23,7 +23,7 @@ async function bootstrap() {
     const { httpAdapter } = app.get(HttpAdapterHost);
     app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
 
     await app.listen(app.get(ConfigService).get("port"));
 }

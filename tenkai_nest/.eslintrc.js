@@ -31,6 +31,7 @@ module.exports = {
     "no-await-in-loop": 0,
     "no-underscore-dangle": 0,
     "class-methods-use-this": 0,
-    "no-constant-condition": ["error", { "checkLoops": false }]
+    "no-constant-condition": ["error", { "checkLoops": false }],
+    "@typescript-eslint/no-unused-vars": ["error"]
   },
 };

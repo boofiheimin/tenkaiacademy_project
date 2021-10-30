@@ -2,6 +2,8 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import BaseService from "src/base/base.service";
+import { CreateTagParamsDto } from "./dto/create-tag.params.dto";
+import { UpdateTagParamsDto } from "./dto/update-tag.params.dto";
 import { Tag } from "./tag.schema";
 
 @Injectable()
@@ -21,7 +23,7 @@ export class TagsService extends BaseService<Tag> {
         return latestTag;
     }
 
-    public async createTag(data: Partial<Tag>): Promise<Tag> {
+    public async createTag(data: CreateTagParamsDto): Promise<Tag> {
         const latestTag = await this.findLatestTag();
         let index;
         if (!latestTag) {
@@ -32,9 +34,8 @@ export class TagsService extends BaseService<Tag> {
         return this.create({ ...data, tagId: index });
     }
 
-    public async updateTag(id: string, data: Partial<Tag>): Promise<Tag> {
+    public async updateTag(id: string, data: UpdateTagParamsDto): Promise<Tag> {
         const tag = await this.update(id, data);
-
         //TODO:: Add Video/Clip Cascade update
 
         return tag;

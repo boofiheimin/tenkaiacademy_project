@@ -27,8 +27,8 @@ export class AuthController {
     @Roles(UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post("register")
-    @ApiOperation({ summary: "Register User" })
     @ApiBearerAuth()
+    @ApiOperation({ summary: "Register User" })
     @ApiResponse({ description: "User has been successfully created", type: User })
     async register(@Body() registerParams: RegisterParamsDto): Promise<User> {
         return this.authService.register(registerParams);
