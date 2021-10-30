@@ -12,25 +12,20 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         const response = ctx.getResponse();
 
         if (exception instanceof Error.ValidationError) {
-            this.logger.error({
+            const errObj = {
                 statusCode: HttpStatus.BAD_REQUEST,
                 message: 'Invalid Fields',
                 errors: Object.values(exception.errors).map((val) => val.message),
-            });
-            response.status(HttpStatus.BAD_REQUEST).json({
-                statusCode: HttpStatus.BAD_REQUEST,
-                message: 'Invalid Fields',
-                errors: Object.values(exception.errors).map((val) => val.message),
-            });
+            };
+            this.logger.error(errObj);
+            response.status(HttpStatus.BAD_REQUEST).json(errObj);
         } else if (exception instanceof MongoError && exception.code === 11000) {
-            this.logger.error({
+            const errObj = {
                 statusCode: HttpStatus.BAD_REQUEST,
                 message: 'Duplicate field value',
-            });
-            response.status(HttpStatus.BAD_REQUEST).json({
-                statusCode: HttpStatus.BAD_REQUEST,
-                message: 'Duplicate field value',
-            });
+            };
+            this.logger.error(errObj);
+            response.status(HttpStatus.BAD_REQUEST).json(errObj);
         } else {
             if (exception instanceof HttpException) {
                 this.logger.error({
