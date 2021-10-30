@@ -19,7 +19,7 @@ export default class BaseService<T extends Document> {
     }
 
     public async find(queryFilter: BaseFindParamsDto): Promise<BaseFindResponseDto<T>> {
-        this.logger.log(`Finding ${this.collectionName}<filter:${queryFilter}>`);
+        this.logger.log(`Finding ${this.collectionName}<filter:${JSON.stringify(queryFilter)}>`);
         const { skip, limit, sort, ...filter } = queryFilter;
         const items = await this.model
             .find(filter as object, this.projection)
@@ -44,7 +44,7 @@ export default class BaseService<T extends Document> {
         this.logger.log(`Finding ${this.collectionName}:<filter:${JSON.stringify(filter)}>`);
         const item = await this.model.findOne(filter);
         if (!item) {
-            throw new NotFoundException(`${this.collectionName} with filter ${filter} not found`);
+            throw new NotFoundException(`${this.collectionName} with filter ${JSON.stringify(filter)} not found`);
         }
         return item;
     }
