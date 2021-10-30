@@ -20,7 +20,7 @@ export class User extends Document {
     password: string;
 
     @ApiProperty()
-    @Prop({ enum: [UserRole.ADMIN, UserRole.SUPERADMIN], required: [true, 'Please assign a correct role'] })
+    @Prop({ enum: Object.keys(UserRole), required: [true, 'Please assign a correct role'] })
     role: string;
 
     matchPassword: (password: string) => boolean;

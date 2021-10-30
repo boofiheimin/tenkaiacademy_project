@@ -2,7 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Schema()
+export interface IEmbedTags {
+    tagId: number;
+    tagNameEN: string;
+    tagNameJP: string;
+}
+
+@Schema({ timestamps: true })
 export class Tag extends Document {
     @ApiProperty({ description: "Tag's numbered id" })
     @Prop({ unique: true, required: [true, 'Please provide a tagId'] })
