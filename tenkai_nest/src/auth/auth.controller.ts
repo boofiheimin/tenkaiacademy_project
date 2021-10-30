@@ -1,12 +1,5 @@
 import { Body, Controller, Headers, Post, UseGuards, Req } from "@nestjs/common";
-import {
-    ApiBearerAuth,
-    ApiCreatedResponse,
-    ApiForbiddenResponse,
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { User, UserRole } from "src/users/user.schema";
 import { AuthService } from "./auth.service";
@@ -35,6 +28,7 @@ export class AuthController {
     }
 
     @Post("login")
+    @ApiOperation({ summary: "Login User" })
     @ApiResponse({ description: "User has been successfully login", type: LoginResponseDto })
     async login(@Body() loginParams: LoginParamsDto, @Req() req: Request): Promise<LoginResponseDto> {
         const bearerToken = req.headers.authorization;
@@ -48,6 +42,7 @@ export class AuthController {
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post("logout")
+    @ApiOperation({ summary: "Logout User" })
     @ApiBearerAuth()
     async logout(@Headers("authorization") bearerToken: string) {
         const [, token] = bearerToken.split(" ");
