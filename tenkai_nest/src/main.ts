@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 
+import Youtube from 'youtube-api';
 import path from 'path';
 import dotenv from 'dotenv';
 
@@ -24,6 +25,11 @@ async function bootstrap() {
     app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
     app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
+
+    Youtube.authenticate({
+        type: 'key',
+        key: app.get(ConfigService).get('youtube_api_key'),
+    });
 
     await app.listen(app.get(ConfigService).get('port'));
 }

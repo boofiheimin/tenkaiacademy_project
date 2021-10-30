@@ -1,16 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-
 import { UserRole } from 'src/users/user.schema';
+
 import { CreateTagParamsDto } from './dto/create-tag.params.dto';
 import { FindTagParamsDto } from './dto/find-tags.params.dto';
 import { FindTagsResponseDto } from './dto/find-tags.response.dto';
 import { UpdateTagParamsDto } from './dto/update-tag.params.dto';
-import { Tag } from './tag.schema';
 
+import { Tag } from './tag.schema';
 import { TagsService } from './tags.service';
 
 @ApiTags('Tags')

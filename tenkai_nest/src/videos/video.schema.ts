@@ -58,7 +58,7 @@ export class Video extends Document {
     @Prop({ default: '' })
     uploader: string;
 
-    @Prop({ enum: Object.keys(VideoSource) })
+    @Prop({ enum: Object.values(VideoSource) })
     source: VideoSource;
 
     @Prop()
