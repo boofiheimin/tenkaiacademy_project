@@ -5,10 +5,13 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class IEmbedTags {
     @IsNumber()
+    @ApiProperty()
     tagId: number;
     @IsString()
+    @ApiProperty()
     tagNameEN: string;
     @IsString()
+    @ApiProperty()
     tagNameJP: string;
 }
 
