@@ -1,10 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString } from 'class-validator';
 
-export interface IEmbedTags {
+export class IEmbedTags {
+    @IsNumber()
     tagId: number;
+    @IsString()
     tagNameEN: string;
+    @IsString()
     tagNameJP: string;
 }
 

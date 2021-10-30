@@ -1,5 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseFindParamsDto } from 'src/base/dto/base-find.params.dto';
 
 export class FindVideosParamsDto extends BaseFindParamsDto {
@@ -9,7 +9,7 @@ export class FindVideosParamsDto extends BaseFindParamsDto {
     @IsOptional()
     @Type(() => String)
     @Transform(({ value }) => JSON.parse(value))
-    @IsArray()
+    @IsNumber({}, { each: true })
     tags?: number[];
     @IsOptional()
     @Type(() => String)

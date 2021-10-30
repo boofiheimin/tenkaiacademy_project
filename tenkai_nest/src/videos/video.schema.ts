@@ -2,12 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { IEmbedTags } from 'src/tags/tag.schema';
 
-interface ITimestamp {
+export class ITimestamp {
     timestamp: number;
     description: string;
 }
 
-export interface IRelatedVideo {
+export class IRelatedVideo {
     videoId: string;
     existing: boolean;
     uploader: string;
