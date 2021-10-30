@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/auth/guards/roles.guard";
-import { BaseFindResponseDto } from "src/base/dto/base-find.response.dto";
 
 import { UserRole } from "src/users/user.schema";
 import { CreateTagParamsDto } from "./dto/create-tag.params.dto";
 import { FindTagParamsDto } from "./dto/find-tags.params.dto";
+import { FindTagsResponseDto } from "./dto/find-tags.response.dto";
 import { UpdateTagParamsDto } from "./dto/update-tag.params.dto";
 import { Tag } from "./tag.schema";
 
@@ -20,18 +20,26 @@ export class TagsController {
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post()
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Create Tag" })
+    @ApiResponse({ type: Tag })
     async createTag(@Body() createTagParamsDto: CreateTagParamsDto): Promise<Tag> {
         return this.tagService.createTag(createTagParamsDto);
     }
 
     @Get()
-    async findTags(@Query() filter: FindTagParamsDto): Promise<BaseFindResponseDto<Tag>> {
+    @ApiOperation({ summary: "Find Tags" })
+    @ApiResponse({ type: FindTagsResponseDto })
+    async findTags(@Query() filter: FindTagParamsDto): Promise<FindTagsResponseDto> {
         return this.tagService.find(filter);
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Patch(":id")
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Update Tag" })
+    @ApiResponse({ type: Tag })
     async updateTag(@Param("id") id: string, @Body() updateTagParamsDto: UpdateTagParamsDto): Promise<Tag> {
         return this.tagService.updateTag(id, updateTagParamsDto);
     }
@@ -39,6 +47,9 @@ export class TagsController {
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Delete(":id")
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Delete Tag" })
+    @ApiResponse({ type: Tag })
     async deleteTag(@Param("id") id: string): Promise<Tag> {
         return this.tagService.deleteTag(id);
     }
