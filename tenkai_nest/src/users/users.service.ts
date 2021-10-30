@@ -6,7 +6,7 @@ import { User } from "./user.schema";
 
 @Injectable()
 export class UsersService extends BaseService<User> {
-    constructor(@InjectModel("User") private userModel: Model<User>) {
+    constructor(@InjectModel(User.name) private userModel: Model<User>) {
         super(userModel, new Logger(UsersService.name));
     }
 

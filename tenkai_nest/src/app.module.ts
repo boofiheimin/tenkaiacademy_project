@@ -9,6 +9,7 @@ import { BlacklistTokensModule } from "./blacklist-tokens/blacklist-tokens.modul
 
 import config from "./config/config";
 import { LoggerMiddleWare } from "./utils/logger.middleware";
+import { TagsModule } from "./tags/tags.module";
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { LoggerMiddleWare } from "./utils/logger.middleware";
             load: [config],
         }),
         BlacklistTokensModule,
+        TagsModule,
     ],
     controllers: [AppController],
     providers: [AppService, ConfigService],
