@@ -8,3 +8,10 @@ client/build
 server/.env
 client/.env
 server/script/input
+
+
+server2
+
+tenkai_nest/node_modules
+tenkai_nest/dist
+tenkai_nest/.env
