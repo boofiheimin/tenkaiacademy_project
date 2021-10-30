@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class BaseFindResponseDto<T> {
     @ApiProperty() // * Override this in Response Dto for accurate Swagger

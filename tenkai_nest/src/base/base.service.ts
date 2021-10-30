@@ -1,7 +1,7 @@
-import { Logger, NotFoundException } from "@nestjs/common";
-import { Document, Model } from "mongoose";
-import { BaseFindParamsDto } from "./dto/base-find.params.dto";
-import { BaseFindResponseDto } from "./dto/base-find.response.dto";
+import { Logger, NotFoundException } from '@nestjs/common';
+import { Document, Model } from 'mongoose';
+import { BaseFindParamsDto } from './dto/base-find.params.dto';
+import { BaseFindResponseDto } from './dto/base-find.response.dto';
 
 export default class BaseService<T extends Document> {
     constructor(

@@ -1,18 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { BlacklistToken } from "./blacklist-token.schema";
+import { BlacklistToken } from './blacklist-token.schema';
 
 @Injectable()
 export class BlacklistTokensService {
-    constructor(@InjectModel("BlacklistToken") private readonly blacklistTokenModel: Model<BlacklistToken>) {}
+    constructor(@InjectModel('BlacklistToken') private readonly blacklistTokenModel: Model<BlacklistToken>) {}
 
     async validateToken(token: string): Promise<void> {
         const blacklistToken = await this.blacklistTokenModel.findOne({ token });
         if (blacklistToken) {
-            throw new HttpException("Unauthorized: Token Blacklisted", HttpStatus.UNAUTHORIZED);
+            throw new HttpException('Unauthorized: Token Blacklisted', HttpStatus.UNAUTHORIZED);
         }
     }
 

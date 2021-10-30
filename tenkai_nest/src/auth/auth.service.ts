@@ -1,13 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { BlacklistToken } from "src/blacklist-tokens/blacklist-token.schema";
-import { BlacklistTokensService } from "src/blacklist-tokens/blacklist-tokens.service";
-import { User } from "src/users/user.schema";
-import { UsersService } from "src/users/users.service";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { BlacklistToken } from 'src/blacklist-tokens/blacklist-token.schema';
+import { BlacklistTokensService } from 'src/blacklist-tokens/blacklist-tokens.service';
+import { User } from 'src/users/user.schema';
+import { UsersService } from 'src/users/users.service';
 
-import { LoginParamsDto } from "./dto/login.params.dto";
-import { LoginResponseDto } from "./dto/login.response.dto";
-import { RegisterParamsDto } from "./dto/register.params.dto";
+import { LoginParamsDto } from './dto/login.params.dto';
+import { LoginResponseDto } from './dto/login.response.dto';
+import { RegisterParamsDto } from './dto/register.params.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,12 +25,12 @@ export class AuthService {
         const user = await this.usersService.findByUsername(username, true);
 
         if (!user) {
-            throw new HttpException("Invalid Username", HttpStatus.UNAUTHORIZED);
+            throw new HttpException('Invalid Username', HttpStatus.UNAUTHORIZED);
         }
 
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
-            throw new HttpException("Invalid Password", HttpStatus.UNAUTHORIZED);
+            throw new HttpException('Invalid Password', HttpStatus.UNAUTHORIZED);
         }
 
         return user;

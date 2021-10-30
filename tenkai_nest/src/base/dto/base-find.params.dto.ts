@@ -1,5 +1,5 @@
-import { Transform, Type } from "class-transformer";
-import { IsNumber, IsObject, IsOptional } from "class-validator";
+import { Transform, Type } from 'class-transformer';
+import { IsNumber, IsObject, IsOptional } from 'class-validator';
 
 export class BaseFindParamsDto {
     @IsOptional()
