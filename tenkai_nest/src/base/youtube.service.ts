@@ -5,7 +5,7 @@ import Youtube from 'youtube-api';
 import { get } from 'lodash';
 import moment from 'moment';
 
-interface YoutubeVideo {
+export interface YoutubeVideo {
     videoId: string;
     title: string;
     thumbnail: string;
@@ -61,10 +61,7 @@ export class YoutubeService {
 
         let pageToken: string = firstSet.data.nextPageToken;
 
-        let fetchRound = 1;
-
         while (true) {
-            console.log(`${fetchRound} round of fetch`, pageToken);
             const { data } = await Youtube.playlistItems.list({
                 maxResults: 50,
                 playlistId: uploadPlaylistID,
@@ -72,8 +69,6 @@ export class YoutubeService {
                 order: 'date',
                 pageToken,
             });
-
-            fetchRound += 1;
 
             const nextIds = data.items.map((item: any) => {
                 return item.contentDetails.videoId;
