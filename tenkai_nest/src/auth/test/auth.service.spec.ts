@@ -122,7 +122,7 @@ describe('AuthService', () => {
         });
         describe('with token', () => {
             describe('valid token', () => {
-                const token = 'randomtoken';
+                const token = 'random token';
                 beforeEach(async () => {
                     await authService.login(
                         {

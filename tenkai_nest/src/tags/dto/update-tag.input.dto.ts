@@ -1,3 +1,23 @@
-import { CreateTagInputDto } from './create-tag.input.dto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UpdateTagInputDto extends CreateTagInputDto {}
+export class UpdateTagInputDto {
+    @IsString()
+    @ApiPropertyOptional()
+    tagNameEN?: string;
+
+    @IsOptional()
+    @IsString()
+    @ApiPropertyOptional()
+    tagNameJP?: string;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiProperty()
+    catId?: number;
+
+    @IsOptional()
+    @IsBoolean()
+    @ApiPropertyOptional({ default: false })
+    isClip?: boolean;
+}
