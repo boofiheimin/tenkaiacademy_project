@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { BlacklistToken } from 'src/blacklist-tokens/schemas/blacklist-token.schema';
 import { BlacklistTokensService } from 'src/blacklist-tokens/blacklist-tokens.service';
@@ -25,18 +25,18 @@ export class AuthService {
         const user = await this.usersService.findByUsername(username, true);
 
         if (!user) {
-            throw new HttpException('Invalid Username', HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException('Incorrect Username');
         }
 
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
-            throw new HttpException('Invalid Password', HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException('Incorrect Password');
         }
 
         return user;
     }
 
-    async login(token: string, loginParams: LoginParamsDto): Promise<LoginResponseDto> {
+    async login(loginParams: LoginParamsDto, token?: string): Promise<LoginResponseDto> {
         if (token) {
             await this.blacklistTokenService.validateToken(token);
             await this.blacklistTokenService.blacklistToken(token);

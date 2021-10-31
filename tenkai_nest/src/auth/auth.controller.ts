@@ -36,7 +36,7 @@ export class AuthController {
         if (bearerToken) {
             token = bearerToken.split(' ')[1];
         }
-        return this.authService.login(token, loginParams);
+        return this.authService.login(loginParams, token);
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

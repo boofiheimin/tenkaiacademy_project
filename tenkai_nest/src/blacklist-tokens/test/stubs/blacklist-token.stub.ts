@@ -2,7 +2,7 @@ import { BlacklistToken } from 'src/blacklist-tokens/schemas/blacklist-token.sch
 
 export const blacklistTokenStub = (): BlacklistToken => ({
     token: '12345678AB',
-    expireAt: new Date(),
+    expireAt: new Date(0),
 });
 
 export const dummyToken = (): string =>
