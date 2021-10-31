@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { omit } from 'lodash';
 import { User } from '../schemas/user.schema';
 import { UsersRepository } from '../users.repository';
 import { UsersService } from '../users.service';
@@ -26,13 +27,13 @@ describe('UsersService', () => {
     describe('createUser', () => {
         let user: User;
         beforeEach(async () => {
-            user = await usersService.createUser(userStub());
+            user = await usersService.createUser(omit(userStub(), 'matchPassword'));
         });
         it('should call UserRepository', async () => {
-            expect(usersRepository.create).toBeCalledWith(userStub());
+            expect(usersRepository.create).toBeCalledWith(omit(userStub(), 'matchPassword'));
         });
         it('should return with user', async () => {
-            expect(user).toEqual(userStub());
+            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });
 
@@ -45,7 +46,7 @@ describe('UsersService', () => {
             expect(usersRepository.findByUsername).toBeCalledWith(userStub().username, true);
         });
         it('should return with user', async () => {
-            expect(user).toEqual(userStub());
+            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });
 
@@ -58,7 +59,7 @@ describe('UsersService', () => {
             expect(usersRepository.findById).toBeCalledWith('user-id');
         });
         it('should return with user', async () => {
-            expect(user).toEqual(userStub());
+            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });
 });

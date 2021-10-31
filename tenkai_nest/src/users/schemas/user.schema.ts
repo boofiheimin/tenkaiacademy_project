@@ -23,9 +23,9 @@ export class User {
 
     @ApiProperty()
     @Prop({ enum: Object.keys(UserRole), required: [true, 'Please assign a correct role'] })
-    role: string;
+    role: UserRole;
 
-    matchPassword?: (password: string) => boolean;
+    matchPassword: (password: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
