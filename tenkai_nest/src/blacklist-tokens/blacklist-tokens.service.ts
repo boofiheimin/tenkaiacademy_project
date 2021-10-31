@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { BlacklistToken } from './schemas/blacklist-token.schema';
@@ -11,7 +11,7 @@ export class BlacklistTokensService {
     async validateToken(token: string): Promise<void> {
         const blacklistToken = await this.blacklistTokenRepository.findOne({ token });
         if (blacklistToken) {
-            throw new HttpException('Unauthorized: Token Blacklisted', HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException('Token Blacklisted');
         }
     }
 

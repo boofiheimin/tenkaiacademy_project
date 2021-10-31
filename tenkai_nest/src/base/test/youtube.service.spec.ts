@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import dotenv from 'dotenv';
 import path from 'path';
 import Youtube from 'youtube-api';
-import { YoutubeService, YoutubeVideo } from './youtube.service';
+import { YoutubeService, YoutubeVideo } from '../youtube.service';
 
 describe('YoutubeService', () => {
     let service: YoutubeService;
