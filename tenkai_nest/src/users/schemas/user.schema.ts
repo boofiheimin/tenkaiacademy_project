@@ -4,13 +4,15 @@ import { NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 
+export type UserDocument = User & Document;
+
 export enum UserRole {
     ADMIN = 'ADMIN',
     SUPERADMIN = 'SUPERADMIN',
 }
 
 @Schema()
-export class User extends Document {
+export class User {
     @ApiProperty()
     @Prop({ required: [true, 'Please provide a username'], unique: true })
     username: string;
@@ -33,12 +35,12 @@ UserSchema.pre('save', async function hash(next: NextFunction) {
         next();
     }
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    (this as UserDocument).password = await bcrypt.hash((this as UserDocument).password, salt);
     next();
 });
 
 UserSchema.method({
     async matchPassword(password) {
-        return bcrypt.compare(password, this.password);
+        return bcrypt.compare(password, (this as UserDocument).password);
     },
 });

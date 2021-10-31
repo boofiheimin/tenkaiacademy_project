@@ -1,7 +1,7 @@
 import { Body, Controller, Headers, Post, UseGuards, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { User, UserRole } from 'src/users/user.schema';
+import { User, UserRole } from 'src/users/schemas/user.schema';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';

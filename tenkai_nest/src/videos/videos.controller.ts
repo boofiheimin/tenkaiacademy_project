@@ -6,9 +6,9 @@ import { FindVideosResponseDto } from './dto/find-videos.response.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { UserRole } from 'src/users/user.schema';
+import { UserRole } from 'src/users/schemas/user.schema';
 
-import { Video } from './video.schema';
+import { Video } from './schemas/video.schema';
 import { VideosService } from './videos.service';
 import { UpdateVideoParamsDto } from './dto/update-video.params.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

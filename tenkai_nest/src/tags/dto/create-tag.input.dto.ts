@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateTagParamsDto {
+export class CreateTagInputDto {
     @IsString()
     @ApiProperty()
     tagNameEN: string;

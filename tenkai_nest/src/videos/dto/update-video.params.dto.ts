@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { IEmbedTags } from 'src/tags/tag.schema';
-import { IRelatedVideo, ITimestamp, VideoSource } from '../video.schema';
+import { IEmbedTags } from 'src/tags/schemas/tag.schema';
+import { IRelatedVideo, ITimestamp, VideoSource } from '../schemas/video.schema';
 
 export class UpdateVideoParamsDto {
     @IsOptional()

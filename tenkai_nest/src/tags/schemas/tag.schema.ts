@@ -15,8 +15,10 @@ export class IEmbedTags {
     tagNameJP: string;
 }
 
+export type TagDocument = Tag & Document;
+
 @Schema({ timestamps: true })
-export class Tag extends Document {
+export class Tag {
     @ApiProperty({ description: "Tag's numbered id" })
     @Prop({ unique: true, required: [true, 'Please provide a tagId'] })
     tagId: number;

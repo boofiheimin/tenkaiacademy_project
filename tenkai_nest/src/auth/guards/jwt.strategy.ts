@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(request: Request, payload: any) {
-        const user = await this.userService.findById(payload.id);
+        const user = await this.userService.findUserById(payload.id);
         const [, token] = request.headers.authorization.split(' ');
         await this.blacklistToken.validateToken(token);
         return user;

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { Document } from 'mongoose';
-import { IEmbedTags } from 'src/tags/tag.schema';
+import { IEmbedTags } from 'src/tags/schemas/tag.schema';
 
 export class ITimestamp {
     @IsNumber()
@@ -49,6 +49,8 @@ export enum VideoSource {
     MANUAL = 'manual',
     YOUTUBE = 'youtube',
 }
+
+export type VideoDocument = Video & Document;
 
 @Schema({ timestamps: true })
 export class Video extends Document {

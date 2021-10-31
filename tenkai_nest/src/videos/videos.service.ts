@@ -1,48 +1,31 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
-import BaseService from 'src/base/base.service';
 import { YoutubeService } from 'src/base/youtube.service';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
 import { FindVideosParamsDto } from './dto/find-videos.params.dto';
 import { FindVideosResponseDto } from './dto/find-videos.response.dto';
 import { UpdateVideoParamsDto } from './dto/update-video.params.dto';
-import { IRelatedVideo, Video, VideoSource } from './video.schema';
+import { IRelatedVideo, Video, VideoSource } from './schemas/video.schema';
+import { VideosRepository } from './videos.repository';
 interface TagIdFilter {
     'tags.tagId': number;
 }
 @Injectable()
-export class VideosService extends BaseService<Video> {
+export class VideosService {
     constructor(
-        @InjectModel(Video.name) private videoModel: Model<Video>,
+        private videosRepository: VideosRepository,
         private youtubeService: YoutubeService,
         private tagService: TagsService,
-    ) {
-        super(videoModel, new Logger(VideosService.name), {
-            _id: 1,
-            videoId: 1,
-            duration: 1,
-            publishedAt: 1,
-            relatedTweets: 1,
-            relatedVideos: 1,
-            source: 1,
-            tags: 1,
-            thumbnail: 1,
-            timestamps: 1,
-            title: 1,
-            uploader: 1,
-        });
-    }
-    public async createVideo(videoId: string) {
+    ) {}
+    async createVideo(videoId: string) {
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
 
         let videoParams: Partial<Video>;
         if (youtubeVideo) {
             videoParams = { ...youtubeVideo, source: VideoSource.YOUTUBE_MANUAL };
         } else {
-            const privateTag = await this.tagService.findOne({ tagNameEN: 'Private' });
+            const privateTag = await this.tagService.findPrivateTag();
             videoParams = {
                 videoId,
                 title: 'NEW VIDEO',
@@ -57,11 +40,11 @@ export class VideosService extends BaseService<Video> {
             };
         }
 
-        const video = await this.create(videoParams);
+        const video = await this.videosRepository.create(videoParams);
 
         // * If there were any previous instance of this videoId in other videos that got marked as existing = false
         // * It will update all instance of relatedVideo with videoId with complete value
-        const relatedVideos = await this.videoModel.find({ 'relatedVideos.videoId': videoId });
+        const { docs: relatedVideos } = await this.videosRepository.find({ 'relatedVideos.videoId': videoId });
         for (const relatedVideo of relatedVideos) {
             relatedVideo.relatedVideos = relatedVideo.relatedVideos.map((rVid) => {
                 if (rVid.videoId === videoId) {
@@ -87,7 +70,7 @@ export class VideosService extends BaseService<Video> {
         return video;
     }
 
-    public async findVideos(filter: FindVideosParamsDto): Promise<FindVideosResponseDto> {
+    async findVideos(filter: FindVideosParamsDto): Promise<FindVideosResponseDto> {
         const { title, from, to, uploader, tags, limit, skip, sortOrder } = filter;
 
         const tagsFilter: TagIdFilter[] = [];
@@ -105,7 +88,7 @@ export class VideosService extends BaseService<Video> {
             ...(tagsFilter.length > 0 && { $and: tagsFilter }),
         };
 
-        return this.find({
+        return this.videosRepository.find({
             ...searchQuery,
             limit,
             skip,
@@ -113,39 +96,14 @@ export class VideosService extends BaseService<Video> {
         });
     }
 
-    public async findVideoById(id: string): Promise<Video> {
-        const [video] = await this.videoModel
-            .aggregate()
-            .match({
-                _id: new Types.ObjectId(id),
-            })
-            .lookup({
-                from: 'clips',
-                let: { videoId: '$videoId' },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $in: ['$$videoId', '$srcVideos.videoId'],
-                            },
-                        },
-                    },
-                    { $sort: { publishedAt: -1 } },
-                ],
-                as: 'clips',
-            })
-            .project(this.projection);
-
-        if (!video) {
-            throw new NotFoundException(`Video<id:${id}> not found`);
-        }
-        return video;
+    async findVideoById(id: string): Promise<Video> {
+        return this.videosRepository.findByIdWithClip(id);
     }
 
-    public async updateVideo(id: string, data: UpdateVideoParamsDto): Promise<Video> {
+    async updateVideo(id: string, data: UpdateVideoParamsDto): Promise<Video> {
         const { relatedVideos = [] } = data;
 
-        const video = await this.findById(id);
+        const video = await this.videosRepository.findById(id);
 
         const { videoId } = video;
 
@@ -154,7 +112,7 @@ export class VideosService extends BaseService<Video> {
         const uniqRelatedVideos: IRelatedVideo[] = uniqByKey(relatedVideos, 'videoId');
 
         for (const relatedVideo of uniqRelatedVideos) {
-            const existingVideo = await this.videoModel.findOne({ videoId });
+            const existingVideo = await this.videosRepository.findOne({ videoId });
             if (existingVideo) {
                 //* replace input relatedVideo with current existing video from our record.
                 Object.assign(relatedVideo, {
@@ -193,11 +151,11 @@ export class VideosService extends BaseService<Video> {
             }
         }
 
-        return this.update(id, { ...data, relatedVideos: uniqRelatedVideos });
+        return this.videosRepository.update(id, { ...data, relatedVideos: uniqRelatedVideos });
     }
 
-    public async deleteVideo(id: string): Promise<Video> {
-        const relatedVideos = await this.videoModel.find({ 'relatedVideos.id': id });
+    async deleteVideo(id: string): Promise<Video> {
+        const { docs: relatedVideos } = await this.videosRepository.find({ 'relatedVideos.id': id });
         //* Remove video with videoId from all relatedVideos field
         for (const relatedVideo of relatedVideos) {
             relatedVideo.relatedVideos = relatedVideo.relatedVideos.filter(({ id: rvId }) => rvId !== id);
@@ -206,6 +164,6 @@ export class VideosService extends BaseService<Video> {
 
         //TODO:: Remove srcVideo with videoId from all clips
 
-        return this.delete(id);
+        return this.videosRepository.delete(id);
     }
 }

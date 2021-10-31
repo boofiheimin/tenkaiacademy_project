@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BlacklistToken } from 'src/blacklist-tokens/blacklist-token.schema';
+import { BlacklistToken } from 'src/blacklist-tokens/schemas/blacklist-token.schema';
 import { BlacklistTokensService } from 'src/blacklist-tokens/blacklist-tokens.service';
-import { User } from 'src/users/user.schema';
+import { User } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
 import { LoginParamsDto } from './dto/login.params.dto';
@@ -18,7 +18,7 @@ export class AuthService {
     ) {}
 
     async register(registerParams: RegisterParamsDto): Promise<User> {
-        return this.usersService.create(registerParams);
+        return this.usersService.createUser(registerParams);
     }
 
     private async validateUser(username: string, password: string): Promise<any> {

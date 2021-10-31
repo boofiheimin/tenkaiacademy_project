@@ -1,48 +1,43 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import BaseService from 'src/base/base.service';
-import { CreateTagParamsDto } from './dto/create-tag.params.dto';
-import { UpdateTagParamsDto } from './dto/update-tag.params.dto';
-import { Tag } from './tag.schema';
+import { Injectable } from '@nestjs/common';
+import { CreateTagInputDto } from './dto/create-tag.input.dto';
+import { FindTagsInputDto } from './dto/find-tags.input.dto';
+import { FindTagsResponseDto } from './dto/find-tags.response.dto';
+import { UpdateTagInputDto } from './dto/update-tag.input.dto';
+import { Tag } from './schemas/tag.schema';
+import { TagsRepository } from './tags.repository';
 
 @Injectable()
-export class TagsService extends BaseService<Tag> {
-    constructor(@InjectModel(Tag.name) private tagModel: Model<Tag>) {
-        super(tagModel, new Logger(TagsService.name), {
-            tagId: 1,
-            catId: 1,
-            tagNameEN: 1,
-            tagNameJP: 1,
-            isClip: 1,
-        });
-    }
+export class TagsService {
+    constructor(private readonly tagsRepository: TagsRepository) {}
 
-    private async findLatestTag(): Promise<Tag> {
-        const [latestTag] = await this.tagModel.find().sort({ tagId: -1 }).limit(1);
-        return latestTag;
-    }
-
-    public async createTag(data: CreateTagParamsDto): Promise<Tag> {
-        const latestTag = await this.findLatestTag();
+    async createTag(data: CreateTagInputDto): Promise<Tag> {
+        const latestTag = await this.tagsRepository.findLatestTag();
         let index;
         if (!latestTag) {
             index = 1;
         } else {
             index = latestTag.tagId + 1;
         }
-        return this.create({ ...data, tagId: index });
+        return this.tagsRepository.create({ ...data, tagId: index });
     }
 
-    public async updateTag(id: string, data: UpdateTagParamsDto): Promise<Tag> {
-        const tag = await this.update(id, data);
+    async findPrivateTag(): Promise<Tag> {
+        return this.tagsRepository.findOne({ tagNameEN: 'Private' });
+    }
+
+    async findTags(filter: FindTagsInputDto): Promise<FindTagsResponseDto> {
+        return this.tagsRepository.find(filter);
+    }
+
+    async updateTag(id: string, data: UpdateTagInputDto): Promise<Tag> {
+        const tag = await this.tagsRepository.update(id, data);
         //TODO:: Add Video/Clip Cascade update
 
         return tag;
     }
 
-    public async deleteTag(id: string): Promise<Tag> {
-        const tag = await this.delete(id);
+    async deleteTag(id: string): Promise<Tag> {
+        const tag = await this.tagsRepository.delete(id);
 
         //TODO:: Add Video/Clip Cascade update
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from 'src/users/user.schema';
+import { UserRole } from 'src/users/schemas/user.schema';
 
 class UserMetaData {
     @ApiProperty()

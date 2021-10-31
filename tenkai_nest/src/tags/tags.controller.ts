@@ -4,14 +4,14 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { UserRole } from 'src/users/user.schema';
+import { UserRole } from 'src/users/schemas/user.schema';
 
-import { CreateTagParamsDto } from './dto/create-tag.params.dto';
-import { FindTagParamsDto } from './dto/find-tags.params.dto';
+import { CreateTagInputDto } from './dto/create-tag.input.dto';
+import { FindTagsInputDto } from './dto/find-tags.input.dto';
 import { FindTagsResponseDto } from './dto/find-tags.response.dto';
-import { UpdateTagParamsDto } from './dto/update-tag.params.dto';
+import { UpdateTagInputDto } from './dto/update-tag.input.dto';
 
-import { Tag } from './tag.schema';
+import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
 
 @ApiTags('Tags')
@@ -24,15 +24,15 @@ export class TagsController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Create Tag' })
     @ApiResponse({ type: Tag })
-    async createTag(@Body() createTagParamsDto: CreateTagParamsDto): Promise<Tag> {
-        return this.tagService.createTag(createTagParamsDto);
+    async createTag(@Body() createTagInputDto: CreateTagInputDto): Promise<Tag> {
+        return this.tagService.createTag(createTagInputDto);
     }
 
     @Get()
     @ApiOperation({ summary: 'Find Tags' })
     @ApiResponse({ type: FindTagsResponseDto })
-    async findTags(@Query() filter: FindTagParamsDto): Promise<FindTagsResponseDto> {
-        return this.tagService.find(filter);
+    async findTags(@Query() findTagsInputDto: FindTagsInputDto): Promise<FindTagsResponseDto> {
+        return this.tagService.findTags(findTagsInputDto);
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
@@ -41,8 +41,8 @@ export class TagsController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Update Tag' })
     @ApiResponse({ type: Tag })
-    async updateTag(@Param('id') id: string, @Body() updateTagParamsDto: UpdateTagParamsDto): Promise<Tag> {
-        return this.tagService.updateTag(id, updateTagParamsDto);
+    async updateTag(@Param('id') id: string, @Body() updateTagInputDto: UpdateTagInputDto): Promise<Tag> {
+        return this.tagService.updateTag(id, updateTagInputDto);
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

@@ -3,8 +3,10 @@ import { Document } from 'mongoose';
 
 const now = new Date();
 
+export type BlacklistTokenDocument = BlacklistToken & Document;
+
 @Schema()
-export class BlacklistToken extends Document {
+export class BlacklistToken {
     @Prop({ required: [true, 'Please provide a token'], unique: true })
     token: string;
 

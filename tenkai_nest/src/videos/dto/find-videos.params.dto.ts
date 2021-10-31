@@ -1,9 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
-import { BaseFindParamsDto } from 'src/base/dto/base-find.params.dto';
+import { BaseFindInputDto } from 'src/base/dto/base-find.input.dto';
 
-export class FindVideosParamsDto extends BaseFindParamsDto {
+export class FindVideosParamsDto extends BaseFindInputDto {
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()

@@ -1,17 +1,21 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import BaseService from 'src/base/base.service';
-import { User } from './user.schema';
+import { Injectable } from '@nestjs/common';
+import { CreateUserInputDto } from './dto/create-user.input.dto';
+import { User } from './schemas/user.schema';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
-export class UsersService extends BaseService<User> {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {
-        super(userModel, new Logger(UsersService.name));
+export class UsersService {
+    constructor(private userRepository: UsersRepository) {}
+
+    async createUser(createUserInputDto: CreateUserInputDto): Promise<User> {
+        return this.userRepository.create(createUserInputDto);
     }
 
     async findByUsername(username: string, withPassword?: boolean): Promise<User> {
-        this.logger.log(`Finding user:<username:${username}>`);
-        return this.userModel.findOne({ username }).select(withPassword ? '+password' : undefined);
+        return this.userRepository.findByUsername(username, withPassword);
+    }
+
+    async findUserById(id: string) {
+        return this.userRepository.findById(id);
     }
 }

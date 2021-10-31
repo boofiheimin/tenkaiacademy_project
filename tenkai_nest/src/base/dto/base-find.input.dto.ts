@@ -1,7 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import { IsNumber, IsObject, IsOptional } from 'class-validator';
 
-export class BaseFindParamsDto {
+export class BaseFindInputDto {
     @IsOptional()
     @IsNumber()
     limit?: number;
