@@ -15,7 +15,7 @@ describe('YoutubeService', () => {
     };
 
     beforeAll(async () => {
-        dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
+        dotenv.config({ path: path.join(__dirname, '..', '..', '..', '.env') });
         Youtube.authenticate({
             type: 'key',
             key: process.env.YOUTUBE_API_KEY,
