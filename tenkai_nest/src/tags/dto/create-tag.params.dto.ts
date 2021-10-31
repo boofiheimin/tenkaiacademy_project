@@ -11,12 +11,13 @@ export class CreateTagParamsDto {
     @ApiPropertyOptional()
     tagNameJP?: string;
 
+    @IsOptional()
     @IsNumber()
     @ApiProperty()
-    catId: number;
+    catId?: number;
 
     @IsOptional()
     @IsBoolean()
     @ApiPropertyOptional({ default: false })
-    isClip: boolean;
+    isClip?: boolean;
 }
