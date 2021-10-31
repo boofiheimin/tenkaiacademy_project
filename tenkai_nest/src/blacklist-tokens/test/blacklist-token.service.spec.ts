@@ -19,12 +19,6 @@ describe('BlacklistTokenService', () => {
         blacklistTokenRepository = module.get<BlacklistTokensRepository>(BlacklistTokensRepository);
     });
 
-    describe('init', () => {
-        it('should be defined', async () => {
-            expect(blacklistTokenService).toBeDefined();
-        });
-    });
-
     describe('validateToken', () => {
         describe('valid token', () => {
             beforeEach(async () => {

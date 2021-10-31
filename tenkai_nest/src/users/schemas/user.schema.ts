@@ -25,7 +25,7 @@ export class User {
     @Prop({ enum: Object.keys(UserRole), required: [true, 'Please assign a correct role'] })
     role: string;
 
-    matchPassword: (password: string) => boolean;
+    matchPassword?: (password: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

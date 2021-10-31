@@ -34,12 +34,6 @@ describe('YoutubeService', () => {
         service = module.get<YoutubeService>(YoutubeService);
     });
 
-    describe('Init', () => {
-        it('should be something', () => {
-            expect(service).toBeDefined();
-        });
-    });
-
     describe('fetchVideo', () => {
         it('should return with correct value', async () => {
             const video = await service.fetchVideo('dQw4w9WgXcQ');
