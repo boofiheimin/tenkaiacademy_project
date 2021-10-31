@@ -34,6 +34,7 @@ describe('AuthService', () => {
         authService = module.get<AuthService>(AuthService);
         usersService = module.get<UsersService>(UsersService);
         blacklistTokenService = module.get<BlacklistTokensService>(BlacklistTokensService);
+        jest.clearAllMocks();
     });
 
     describe('register', () => {

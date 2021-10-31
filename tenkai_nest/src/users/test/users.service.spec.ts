@@ -17,6 +17,7 @@ describe('UsersService', () => {
 
         usersService = module.get<UsersService>(UsersService);
         usersRepository = module.get<UsersRepository>(UsersRepository);
+        jest.clearAllMocks();
     });
 
     it('should be sth', () => {

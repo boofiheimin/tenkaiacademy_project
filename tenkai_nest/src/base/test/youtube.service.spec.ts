@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import Youtube from 'youtube-api';
 import { YoutubeService, YoutubeVideo } from '../youtube.service';
-
+dotenv.config({ path: path.join(__dirname, '..', '..', '..', '.env') });
 describe('YoutubeService', () => {
     let service: YoutubeService;
 
@@ -14,13 +14,14 @@ describe('YoutubeService', () => {
         get: mockGet,
     };
 
-    beforeAll(async () => {
-        dotenv.config({ path: path.join(__dirname, '..', '..', '..', '.env') });
+    beforeAll(() => {
         Youtube.authenticate({
             type: 'key',
             key: process.env.YOUTUBE_API_KEY,
         });
+    });
 
+    beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 YoutubeService,
@@ -32,6 +33,7 @@ describe('YoutubeService', () => {
         }).compile();
 
         service = module.get<YoutubeService>(YoutubeService);
+        jest.clearAllMocks();
     });
 
     describe('fetchVideo', () => {
