@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { isArray, omit } from 'lodash';
-
 import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTags } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
@@ -20,6 +19,9 @@ export class VideosService {
         private youtubeService: YoutubeService,
         private tagService: TagsService,
     ) {}
+
+    private logger = new Logger(VideosService.name);
+
     async createVideo(videoId: string) {
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
 
@@ -146,5 +148,40 @@ export class VideosService {
         //TODO:: Remove srcVideo with videoId from all clips
 
         return this.videosRepository.delete(id);
+    }
+
+    async refetchVideo(id: string): Promise<Video> {
+        const video = await this.videosRepository.findById(id);
+
+        const youtubeVideo = await this.youtubeService.fetchVideo(video.videoId);
+        if (!youtubeVideo) {
+            throw new NotFoundException(`Video:${video.videoId} not found`);
+        }
+
+        return this.videosRepository.update(id, youtubeVideo);
+    }
+
+    async refetchAll(): Promise<string> {
+        this.logger.log("Start fetching all videos' id...");
+        const videoIds = await this.youtubeService.fetchAllVideoIds();
+        this.logger.log(`Total videos :: ${videoIds.length}`);
+
+        this.logger.log('Video insertion process...');
+
+        await Promise.all(
+            videoIds.map(async (videoId) => {
+                const video = await this.youtubeService.fetchVideo(videoId);
+                if (video) {
+                    await this.videosRepository.findOneAndUpsert(
+                        { videoId },
+                        { ...video, source: VideoSource.YOUTUBE },
+                    );
+                }
+            }),
+        );
+
+        const message = `Successfully Add/Update: ${videoIds.length} videos`;
+        this.logger.log(message);
+        return message;
     }
 }

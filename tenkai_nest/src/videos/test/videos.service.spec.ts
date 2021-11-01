@@ -1,6 +1,7 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
-import { youtubeStub } from 'src/base/test/stub/youtube.stub';
+import { videoIdsStub, youtubeStub } from 'src/base/test/stub/youtube.stub';
 import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTags } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
@@ -220,6 +221,75 @@ describe('VideosService', () => {
 
         it('should return with the video', () => {
             expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
+        });
+    });
+
+    describe('refetchVideo', () => {
+        describe('with valid Video', () => {
+            let video;
+            beforeEach(async () => {
+                video = await videosService.refetchVideo(videoStub().id.toString());
+            });
+            it('shoud call VideosRepository', () => {
+                expect(videosRepository.findById).toBeCalledWith(videoStub().id.toString());
+                expect(videosRepository.update).toBeCalledWith(videoStub().id.toString(), youtubeStub());
+            });
+            it('should call YoutubeService', () => {
+                expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
+            });
+            it('should return with the video', () => {
+                expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
+            });
+        });
+
+        describe('with not valid Video', () => {
+            let error;
+            beforeEach(async () => {
+                jest.spyOn(youtubeService, 'fetchVideo').mockReturnValueOnce(null);
+                try {
+                    await videosService.refetchVideo(videoStub().id.toString());
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('shoud call VideosRepository', () => {
+                expect(videosRepository.findById).toBeCalledWith(videoStub().id.toString());
+            });
+            it('should call YoutubeService', () => {
+                expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
+            });
+            it('should throw NotFoundException', () => {
+                expect(error).toBeInstanceOf(NotFoundException);
+            });
+        });
+    });
+
+    describe('refetchAll', () => {
+        describe('when call', () => {
+            let message;
+            beforeEach(async () => {
+                message = await videosService.refetchAll();
+            });
+            it('should call YoutubeService', async () => {
+                expect(youtubeService.fetchAllVideoIds).toBeCalledTimes(1);
+                videoIdsStub().forEach((videoId, index) => {
+                    expect(youtubeService.fetchVideo).toHaveBeenNthCalledWith(index + 1, videoId);
+                });
+            });
+            it('should call VideoRepository', async () => {
+                videoIdsStub().forEach((videoId, index) => {
+                    expect(videosRepository.findOneAndUpsert).toHaveBeenNthCalledWith(
+                        index + 1,
+                        {
+                            videoId: videoIdsStub()[index],
+                        },
+                        { ...youtubeStub(), source: VideoSource.YOUTUBE },
+                    );
+                });
+            });
+            it('should return videoIds', async () => {
+                expect(message).toEqual(`Successfully Add/Update: ${videoIdsStub().length} videos`);
+            });
         });
     });
 });

@@ -23,8 +23,8 @@ export class VideosController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Create Video' })
     @ApiResponse({ type: Video })
-    async createVideo(@Body() CreateVideoInputDto: CreateVideoInputDto): Promise<Video> {
-        return this.videoService.createVideo(CreateVideoInputDto.videoId);
+    async createVideo(@Body() createVideoInputDto: CreateVideoInputDto): Promise<Video> {
+        return this.videoService.createVideo(createVideoInputDto.videoId);
     }
 
     @Get()
@@ -57,5 +57,25 @@ export class VideosController {
     @ApiResponse({ type: Video })
     async deleteVideo(@Param('id') id: string): Promise<Video> {
         return this.videoService.deleteVideo(id);
+    }
+
+    @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Patch('refetch/:id')
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Refetch Video' })
+    @ApiResponse({ type: Video })
+    async refetchVideo(@Param('id') id: string): Promise<Video> {
+        return this.videoService.refetchVideo(id);
+    }
+
+    @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Post('refetchAll')
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Refetch All Video' })
+    @ApiResponse({ type: Video })
+    async refetchAll(): Promise<string> {
+        return this.videoService.refetchAll();
     }
 }

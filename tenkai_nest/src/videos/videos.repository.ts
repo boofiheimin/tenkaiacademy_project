@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
 import { Video, VideoDocument } from './schemas/video.schema';
 
@@ -49,5 +49,9 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
             throw new NotFoundException(`Video<id:${id}> not found`);
         }
         return video;
+    }
+
+    async findOneAndUpsert(query: FilterQuery<VideoDocument>, data: Partial<Video>) {
+        return this.videoModel.findOneAndUpdate(query, data, { upsert: true, setDefaultsOnInsert: true });
     }
 }
