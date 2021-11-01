@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { IEmbedTags } from 'src/tags/schemas/tag.schema';
-import { IRelatedVideo, ITimestamp, VideoSource } from '../schemas/video.schema';
+import { EmbedTags } from 'src/tags/schemas/tag.schema';
+import { ITimestamp, VideoSource } from '../schemas/video.schema';
 
 export class UpdateVideoParamsDto {
     @IsOptional()
@@ -37,9 +37,9 @@ export class UpdateVideoParamsDto {
 
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => IEmbedTags)
-    @ApiPropertyOptional({ type: IEmbedTags, isArray: true })
-    tags?: IEmbedTags[];
+    @Type(() => EmbedTags)
+    @ApiPropertyOptional({ type: EmbedTags, isArray: true })
+    tags?: EmbedTags[];
 
     @IsOptional()
     @ValidateNested({ each: true })
@@ -49,14 +49,13 @@ export class UpdateVideoParamsDto {
 
     @IsOptional()
     @IsString({ each: true })
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ type: String, isArray: true })
     relatedTweets?: string[];
 
     @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => IRelatedVideo)
-    @ApiPropertyOptional({ type: IRelatedVideo, isArray: true })
-    relatedVideos?: IRelatedVideo[];
+    @IsString({ each: true })
+    @ApiPropertyOptional({ type: String, isArray: true })
+    relatedVideosId?: string[];
 
     @IsOptional()
     @IsString()

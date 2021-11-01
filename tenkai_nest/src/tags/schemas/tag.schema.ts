@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class IEmbedTags {
+export class EmbedTags {
     @IsNumber()
     @ApiProperty()
     tagId: number;
@@ -13,6 +13,11 @@ export class IEmbedTags {
     @IsString()
     @ApiProperty()
     tagNameJP: string;
+    constructor(tag: Tag) {
+        this.tagId = tag.tagId;
+        this.tagNameEN = tag.tagNameEN;
+        this.tagNameJP = tag.tagNameJP;
+    }
 }
 
 export type TagDocument = Tag & Document;

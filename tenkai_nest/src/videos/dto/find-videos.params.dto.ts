@@ -32,10 +32,10 @@ export class FindVideosParamsDto extends BaseFindInputDto {
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()
-    uploader: string;
+    uploader?: string;
 
     @IsOptional()
     @IsBoolean()
     @ApiPropertyOptional()
-    sortOrder: boolean;
+    sortOrder?: boolean;
 }

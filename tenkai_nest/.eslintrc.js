@@ -32,6 +32,7 @@ module.exports = {
     "no-underscore-dangle": 0,
     "class-methods-use-this": 0,
     "no-constant-condition": ["error", { "checkLoops": false }],
-    "@typescript-eslint/no-unused-vars": ["error"]
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-empty-function": 0
   },
 };
