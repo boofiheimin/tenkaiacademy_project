@@ -48,7 +48,7 @@ describe('BlacklistTokenService', () => {
     });
 
     describe('blacklistToken', () => {
-        describe('when called', () => {
+        describe('when call', () => {
             let blacklistToken;
             const { exp } = jwt.decode(dummyToken()) as JwtPayload;
             beforeEach(async () => {

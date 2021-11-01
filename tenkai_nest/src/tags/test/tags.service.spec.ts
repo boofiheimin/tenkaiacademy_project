@@ -18,11 +18,6 @@ describe('TagsService', () => {
         jest.clearAllMocks();
     });
 
-    it('should be defined', () => {
-        expect(tagsService).toBeDefined();
-        expect(tagsRepository).toBeDefined();
-    });
-
     describe('createTag', () => {
         describe('with no tags in db', () => {
             let tag;
@@ -37,7 +32,7 @@ describe('TagsService', () => {
                     tagId: 1,
                 });
             });
-            it('should return a tag', () => {
+            it('should return with the tag', () => {
                 expect(tag).toEqual({
                     ...tagStub(),
                     tagId: 1,
@@ -56,7 +51,7 @@ describe('TagsService', () => {
                     tagId: 2,
                 });
             });
-            it('should return a tag', () => {
+            it('should return with the tag', () => {
                 expect(tag).toEqual({
                     ...tagStub(),
                     tagId: 2,
@@ -76,7 +71,7 @@ describe('TagsService', () => {
                     tagNameEN: 'Private',
                 });
             });
-            it('should return with tag', () => {
+            it('should return with the tag', () => {
                 expect(tag).toEqual(tagStub());
             });
         });
@@ -91,7 +86,7 @@ describe('TagsService', () => {
             it('should call TagsRepository', () => {
                 expect(tagsRepository.find).toBeCalledWith({});
             });
-            it('should return tags', () => {
+            it('should return with tags', () => {
                 expect(tags).toEqual({
                     docs: [tagStub()],
                     totalCount: 1,
@@ -109,7 +104,7 @@ describe('TagsService', () => {
             it('should call TagsRepository', () => {
                 expect(tagsRepository.update).toBeCalledWith('id', { tagNameEN: 'hey' });
             });
-            it('should return tag', () => {
+            it('should return with the tag', () => {
                 expect(tag).toEqual(tagStub());
             });
         });
@@ -124,7 +119,7 @@ describe('TagsService', () => {
             it('should call TagsRepository', () => {
                 expect(tagsRepository.delete).toHaveBeenCalledWith('id');
             });
-            it('should return tag', () => {
+            it('should return with the tag', () => {
                 expect(tag).toEqual(tagStub());
             });
         });

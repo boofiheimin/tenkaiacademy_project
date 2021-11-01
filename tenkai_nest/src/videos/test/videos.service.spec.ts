@@ -5,7 +5,7 @@ import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTags } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { tagStub } from 'src/tags/test/stubs/tag.stub';
-import { FindVideosParamsDto } from '../dto/find-videos.params.dto';
+import { FindVideosInputDto } from '../dto/find-videos.input.dto';
 import { RelatedVideo, VideoSource } from '../schemas/video.schema';
 import { VideosRepository } from '../videos.repository';
 import { VideosService } from '../videos.service';
@@ -49,7 +49,7 @@ describe('VideosService', () => {
                     source: VideoSource.YOUTUBE_MANUAL,
                 });
             });
-            it('should return with video', () => {
+            it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -74,7 +74,7 @@ describe('VideosService', () => {
                     tags: [new EmbedTags(tagStub())],
                 });
             });
-            it('should return with video', () => {
+            it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -105,7 +105,7 @@ describe('VideosService', () => {
         });
         describe('with filter', () => {
             let videos;
-            const filter: FindVideosParamsDto = {
+            const filter: FindVideosInputDto = {
                 title: 'test',
                 from: new Date(0),
                 to: new Date(1),
@@ -156,7 +156,7 @@ describe('VideosService', () => {
             it('should call VideosRepository', () => {
                 expect(videosRepository.findByIdWithClip).toBeCalledWith(id);
             });
-            it('should return with video with clips field', () => {
+            it('should return with the video with clips field', () => {
                 expect(omitStubFn(video)).toEqual({ ...omitStubFn(videoStub()), clips: [] });
             });
         });
@@ -172,7 +172,7 @@ describe('VideosService', () => {
             it('should call VideosRepository', () => {
                 expect(videosRepository.update).toBeCalledWith(id, {});
             });
-            it('should return with video', () => {
+            it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -185,7 +185,7 @@ describe('VideosService', () => {
             it('should call VideosRepository', () => {
                 expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new RelatedVideo(videoStub())] });
             });
-            it('should return with video', () => {
+            it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -201,7 +201,7 @@ describe('VideosService', () => {
                     relatedVideos: [new RelatedVideo(youtubeStub())],
                 });
             });
-            it('should return with video', () => {
+            it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -218,7 +218,7 @@ describe('VideosService', () => {
             expect(videosRepository.delete).toBeCalledWith(id);
         });
 
-        it('should return with video', () => {
+        it('should return with the video', () => {
             expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
         });
     });

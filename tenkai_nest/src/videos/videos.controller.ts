@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { CreateVideoParamsDto } from './dto/create-video.params.dto';
-import { FindVideosParamsDto } from './dto/find-videos.params.dto';
+import { CreateVideoInputDto } from './dto/create-video.input.dto';
+import { FindVideosInputDto } from './dto/find-videos.input.dto';
 import { FindVideosResponseDto } from './dto/find-videos.response.dto';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
@@ -10,7 +10,7 @@ import { UserRole } from 'src/users/schemas/user.schema';
 
 import { Video } from './schemas/video.schema';
 import { VideosService } from './videos.service';
-import { UpdateVideoParamsDto } from './dto/update-video.params.dto';
+import { UpdateVideoInputDto } from './dto/update-video.input.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Videos')
@@ -23,14 +23,14 @@ export class VideosController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Create Video' })
     @ApiResponse({ type: Video })
-    async createVideo(@Body() createVideoParamsDto: CreateVideoParamsDto): Promise<Video> {
-        return this.videoService.createVideo(createVideoParamsDto.videoId);
+    async createVideo(@Body() CreateVideoInputDto: CreateVideoInputDto): Promise<Video> {
+        return this.videoService.createVideo(CreateVideoInputDto.videoId);
     }
 
     @Get()
     @ApiOperation({ summary: 'Find Videos' })
     @ApiResponse({ type: FindVideosResponseDto })
-    async findVideos(@Query() filter: FindVideosParamsDto): Promise<FindVideosResponseDto> {
+    async findVideos(@Query() filter: FindVideosInputDto): Promise<FindVideosResponseDto> {
         return this.videoService.findVideos(filter);
     }
 
@@ -46,8 +46,8 @@ export class VideosController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Update Video' })
     @ApiResponse({ type: Video })
-    async updateVideo(@Param('id') id: string, @Body() updateVideoParamsDto: UpdateVideoParamsDto): Promise<Video> {
-        return this.videoService.updateVideo(id, updateVideoParamsDto);
+    async updateVideo(@Param('id') id: string, @Body() updateVideoInputDto: UpdateVideoInputDto): Promise<Video> {
+        return this.videoService.updateVideo(id, updateVideoInputDto);
     }
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)

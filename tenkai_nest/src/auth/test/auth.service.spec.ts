@@ -46,7 +46,7 @@ describe('AuthService', () => {
             it('should call UsersService', () => {
                 expect(usersService.createUser).toBeCalledWith(omit(userStub(), 'matchPassword'));
             });
-            it('should return with user', () => {
+            it('should return with the user', () => {
                 expect(user).toEqual(omit(userStub(), 'matchPassword'));
             });
         });
@@ -62,10 +62,10 @@ describe('AuthService', () => {
                 });
             });
 
-            it('should call UsersService', async () => {
+            it('should call UsersService', () => {
                 expect(usersService.findByUsername).toBeCalledWith(userStub().username, true);
             });
-            it('should return with correct response', async () => {
+            it('should return with the correct response', () => {
                 expect(response).toEqual({
                     token: mockSignedToken,
                     user: {
@@ -156,7 +156,7 @@ describe('AuthService', () => {
                 it('should call BlacklistTokenService', () => {
                     expect(blacklistTokenService.validateToken).toBeCalledWith(blacklistTokenStub().token);
                 });
-                it('should throw UnauthorizedException', async () => {
+                it('should throw UnauthorizedException', () => {
                     expect(error).toBeInstanceOf(UnauthorizedException);
                 });
             });
@@ -172,7 +172,7 @@ describe('AuthService', () => {
             it('should call BlacklistTokenService', () => {
                 expect(blacklistTokenService.blacklistToken).toBeCalledWith(blacklistTokenStub().token);
             });
-            it('should return with blacklistToken', () => {
+            it('should return with the blacklistToken', () => {
                 expect(blacklistToken).toEqual(blacklistTokenStub());
             });
         });

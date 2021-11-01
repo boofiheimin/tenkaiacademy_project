@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreateVideoParamsDto {
-    @IsString()
+export class LoginInputDto {
     @ApiProperty()
-    videoId: string;
+    @IsString()
+    username: string;
+
+    @ApiProperty()
+    @IsString()
+    password: string;
 }

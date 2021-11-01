@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, MinLength } from 'class-validator';
 import { UserRole } from 'src/users/schemas/user.schema';
 
-export class RegisterParamsDto {
+export class RegisterInputDto {
     @ApiProperty()
     @IsString()
     username: string;

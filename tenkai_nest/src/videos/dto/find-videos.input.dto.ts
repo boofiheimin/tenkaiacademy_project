@@ -3,7 +3,7 @@ import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseFindInputDto } from 'src/base/dto/base-find.input.dto';
 
-export class FindVideosParamsDto extends BaseFindInputDto {
+export class FindVideosInputDto extends BaseFindInputDto {
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()
@@ -13,7 +13,7 @@ export class FindVideosParamsDto extends BaseFindInputDto {
     @Type(() => String)
     @Transform(({ value }) => JSON.parse(value))
     @IsNumber({}, { each: true })
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ type: String, description: 'Array of tagIds' })
     tags?: number[];
 
     @IsOptional()
@@ -26,6 +26,7 @@ export class FindVideosParamsDto extends BaseFindInputDto {
     @IsOptional()
     @Type(() => String)
     @Transform(({ value }) => new Date(value))
+    @IsDate()
     @ApiPropertyOptional()
     to?: Date;
 

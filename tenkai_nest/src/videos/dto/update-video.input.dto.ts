@@ -4,7 +4,7 @@ import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from '
 import { EmbedTags } from 'src/tags/schemas/tag.schema';
 import { ITimestamp, VideoSource } from '../schemas/video.schema';
 
-export class UpdateVideoParamsDto {
+export class UpdateVideoInputDto {
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()

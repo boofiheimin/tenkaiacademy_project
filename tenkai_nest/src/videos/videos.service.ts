@@ -5,9 +5,9 @@ import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTags } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
-import { FindVideosParamsDto } from './dto/find-videos.params.dto';
+import { FindVideosInputDto } from './dto/find-videos.input.dto';
 import { FindVideosResponseDto } from './dto/find-videos.response.dto';
-import { UpdateVideoParamsDto } from './dto/update-video.params.dto';
+import { UpdateVideoInputDto } from './dto/update-video.input.dto';
 import { RelatedVideo, Video, VideoSource } from './schemas/video.schema';
 import { VideosRepository } from './videos.repository';
 interface TagIdFilter {
@@ -23,12 +23,12 @@ export class VideosService {
     async createVideo(videoId: string) {
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
 
-        let videoParams: Partial<Video>;
+        let videoInput: Partial<Video>;
         if (youtubeVideo) {
-            videoParams = { ...youtubeVideo, source: VideoSource.YOUTUBE_MANUAL };
+            videoInput = { ...youtubeVideo, source: VideoSource.YOUTUBE_MANUAL };
         } else {
             const privateTag = await this.tagService.findPrivateTag();
-            videoParams = {
+            videoInput = {
                 videoId,
                 title: 'NEW VIDEO',
                 source: VideoSource.MANUAL,
@@ -36,7 +36,7 @@ export class VideosService {
             };
         }
 
-        const video = await this.videosRepository.create(videoParams);
+        const video = await this.videosRepository.create(videoInput);
 
         // * If there were any previous instance of this videoId in other videos that got marked as existing = false
         // * It will update all instance of relatedVideo with videoId with complete value
@@ -58,7 +58,7 @@ export class VideosService {
         return video;
     }
 
-    async findVideos(filter: FindVideosParamsDto): Promise<FindVideosResponseDto> {
+    async findVideos(filter: FindVideosInputDto): Promise<FindVideosResponseDto> {
         const { title, from, to, uploader, tags, limit, skip, sortOrder } = filter;
 
         const tagsFilter: TagIdFilter[] = [];
@@ -88,7 +88,7 @@ export class VideosService {
         return this.videosRepository.findByIdWithClip(id);
     }
 
-    async updateVideo(id: string, data: UpdateVideoParamsDto): Promise<Video> {
+    async updateVideo(id: string, data: UpdateVideoInputDto): Promise<Video> {
         const { relatedVideosId } = data;
 
         let updateParameter: Partial<Video> = omit(data, 'relatedVideosId');

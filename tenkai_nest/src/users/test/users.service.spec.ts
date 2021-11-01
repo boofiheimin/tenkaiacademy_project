@@ -20,11 +20,6 @@ describe('UsersService', () => {
         jest.clearAllMocks();
     });
 
-    it('should be sth', () => {
-        expect(usersService).toBeDefined();
-        expect(usersRepository).toBeDefined();
-    });
-
     describe('createUser', () => {
         let user: User;
         beforeEach(async () => {
@@ -33,7 +28,7 @@ describe('UsersService', () => {
         it('should call UserRepository', async () => {
             expect(usersRepository.create).toBeCalledWith(omit(userStub(), 'matchPassword'));
         });
-        it('should return with user', async () => {
+        it('should return with the user', async () => {
             expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });
@@ -46,7 +41,7 @@ describe('UsersService', () => {
         it('should call UserRepository', async () => {
             expect(usersRepository.findByUsername).toBeCalledWith(userStub().username, true);
         });
-        it('should return with user', async () => {
+        it('should return with the user', async () => {
             expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });
@@ -59,7 +54,7 @@ describe('UsersService', () => {
         it('should call UserRepository', async () => {
             expect(usersRepository.findById).toBeCalledWith('user-id');
         });
-        it('should return with user', async () => {
+        it('should return with the user', async () => {
             expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
         });
     });

@@ -5,9 +5,9 @@ import { BlacklistTokensService } from 'src/blacklist-tokens/blacklist-tokens.se
 import { User } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
-import { LoginParamsDto } from './dto/login.params.dto';
+import { LoginInputDto } from './dto/login.input.dto';
 import { LoginResponseDto } from './dto/login.response.dto';
-import { RegisterParamsDto } from './dto/register.params.dto';
+import { RegisterInputDto } from './dto/register.input.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,8 +17,8 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async register(registerParams: RegisterParamsDto): Promise<User> {
-        return this.usersService.createUser(registerParams);
+    async register(registerInput: RegisterInputDto): Promise<User> {
+        return this.usersService.createUser(registerInput);
     }
 
     private async validateUser(username: string, password: string): Promise<any> {
@@ -36,12 +36,12 @@ export class AuthService {
         return user;
     }
 
-    async login(loginParams: LoginParamsDto, token?: string): Promise<LoginResponseDto> {
+    async login(loginInput: LoginInputDto, token?: string): Promise<LoginResponseDto> {
         if (token) {
             await this.blacklistTokenService.validateToken(token);
             await this.blacklistTokenService.blacklistToken(token);
         }
-        const { username, password } = loginParams;
+        const { username, password } = loginInput;
         const user = await this.validateUser(username, password);
         const payload = { id: user._id, username: user.username };
         return {
