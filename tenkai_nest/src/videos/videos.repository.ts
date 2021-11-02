@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
+import { Tag } from 'src/tags/schemas/tag.schema';
 import { Video, VideoDocument } from './schemas/video.schema';
 
 export class VideosRepository extends BaseRepository<VideoDocument> {
@@ -22,7 +23,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
         });
     }
 
-    async findByIdWithClip(id: string) {
+    async findByIdWithClip(id: string): Promise<Video> {
         const [video] = await this.videoModel
             .aggregate()
             .match({
@@ -51,7 +52,38 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
         return video;
     }
 
-    async findOneAndUpsert(query: FilterQuery<VideoDocument>, data: Partial<Video>) {
+    async findOneAndUpsert(query: FilterQuery<VideoDocument>, data: Partial<Video>): Promise<Video> {
         return this.videoModel.findOneAndUpdate(query, data, { upsert: true, setDefaultsOnInsert: true });
+    }
+
+    async tagCascadeUpdate(tag: Tag): Promise<void> {
+        const { tagId, tagNameEN, tagNameJP } = tag;
+        await this.videoModel.updateMany(
+            { 'tags.tagId': tagId },
+            {
+                $set: {
+                    'tags.$.tagNameEN': tagNameEN,
+                    'tags.$.tagNameJP': tagNameJP,
+                },
+            },
+            {
+                new: true,
+            },
+        );
+    }
+
+    async tagCascadeDelete(tag: Tag): Promise<void> {
+        const { tagId } = tag;
+        await this.videoModel.updateMany(
+            { 'tags.tagId': tagId },
+            {
+                $pull: {
+                    tags: { tagId },
+                },
+            },
+            {
+                new: true,
+            },
+        );
     }
 }

@@ -292,4 +292,26 @@ describe('VideosService', () => {
             });
         });
     });
+
+    describe('tagCascadeUpdate', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await videosService.tagCascadeUpdate(tagStub());
+            });
+            it('should call VideosRepository', () => {
+                expect(videosRepository.tagCascadeUpdate).toBeCalledWith(tagStub());
+            });
+        });
+    });
+
+    describe('tagCascadeDelete', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await videosService.tagCascadeDelete(tagStub());
+            });
+            it('should call VideosRepository', () => {
+                expect(videosRepository.tagCascadeDelete).toBeCalledWith(tagStub());
+            });
+        });
+    });
 });

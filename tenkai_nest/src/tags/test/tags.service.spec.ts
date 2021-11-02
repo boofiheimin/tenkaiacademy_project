@@ -2,19 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TagsService } from '../tags.service';
 import { TagsRepository } from '../tags.repository';
 import { tagStub } from './stubs/tag.stub';
+import { VideosService } from 'src/videos/videos.service';
 
 jest.mock('../tags.repository');
+jest.mock('src/videos/videos.service');
 
 describe('TagsService', () => {
     let tagsService: TagsService;
     let tagsRepository: TagsRepository;
+    let videosService: VideosService;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [TagsService, TagsRepository],
+            providers: [TagsService, TagsRepository, VideosService],
         }).compile();
 
         tagsService = module.get<TagsService>(TagsService);
         tagsRepository = module.get<TagsRepository>(TagsRepository);
+        videosService = module.get<VideosService>(VideosService);
         jest.clearAllMocks();
     });
 
@@ -107,6 +111,9 @@ describe('TagsService', () => {
             it('should return with the tag', () => {
                 expect(tag).toEqual(tagStub());
             });
+            it('should call VideosService', () => {
+                expect(videosService.tagCascadeUpdate).toBeCalledWith(tagStub());
+            });
         });
     });
 
@@ -121,6 +128,9 @@ describe('TagsService', () => {
             });
             it('should return with the tag', () => {
                 expect(tag).toEqual(tagStub());
+            });
+            it('should call VideosService', () => {
+                expect(videosService.tagCascadeDelete).toBeCalledWith(tagStub());
             });
         });
     });

@@ -1,7 +1,7 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { isArray, omit } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
-import { EmbedTags } from 'src/tags/schemas/tag.schema';
+import { EmbedTags, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
 import { FindVideosInputDto } from './dto/find-videos.input.dto';
@@ -15,9 +15,10 @@ interface TagIdFilter {
 @Injectable()
 export class VideosService {
     constructor(
-        private videosRepository: VideosRepository,
-        private youtubeService: YoutubeService,
-        private tagService: TagsService,
+        private readonly videosRepository: VideosRepository,
+        private readonly youtubeService: YoutubeService,
+        @Inject(forwardRef(() => TagsService))
+        private readonly tagService: TagsService,
     ) {}
 
     private logger = new Logger(VideosService.name);
@@ -183,5 +184,13 @@ export class VideosService {
         const message = `Successfully Add/Update: ${videoIds.length} videos`;
         this.logger.log(message);
         return message;
+    }
+
+    async tagCascadeUpdate(tag: Tag): Promise<void> {
+        return this.videosRepository.tagCascadeUpdate(tag);
+    }
+
+    async tagCascadeDelete(tag: Tag): Promise<void> {
+        return this.videosRepository.tagCascadeDelete(tag);
     }
 }

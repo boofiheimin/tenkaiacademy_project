@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { VideosService } from 'src/videos/videos.service';
 import { CreateTagInputDto } from './dto/create-tag.input.dto';
 import { FindTagsInputDto } from './dto/find-tags.input.dto';
 import { FindTagsResponseDto } from './dto/find-tags.response.dto';
@@ -8,7 +9,10 @@ import { TagsRepository } from './tags.repository';
 
 @Injectable()
 export class TagsService {
-    constructor(private readonly tagsRepository: TagsRepository) {}
+    constructor(
+        private readonly tagsRepository: TagsRepository,
+        @Inject(forwardRef(() => VideosService)) private readonly videosService: VideosService,
+    ) {}
 
     async createTag(data: CreateTagInputDto): Promise<Tag> {
         const latestTag = await this.tagsRepository.findLatestTag();
@@ -31,7 +35,9 @@ export class TagsService {
 
     async updateTag(id: string, data: UpdateTagInputDto): Promise<Tag> {
         const tag = await this.tagsRepository.update(id, data);
-        //TODO:: Add Video/Clip Cascade update
+
+        await this.videosService.tagCascadeUpdate(tag);
+        //TODO:: Add Clip Cascade update
 
         return tag;
     }
@@ -39,7 +45,8 @@ export class TagsService {
     async deleteTag(id: string): Promise<Tag> {
         const tag = await this.tagsRepository.delete(id);
 
-        //TODO:: Add Video/Clip Cascade update
+        await this.videosService.tagCascadeDelete(tag);
+        //TODO:: Add Clip Cascade update
 
         return tag;
     }

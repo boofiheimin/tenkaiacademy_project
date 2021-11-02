@@ -12,5 +12,6 @@ import { VideosService } from './videos.service';
     imports: [MongooseModule.forFeature([{ name: Video.name, schema: VideoSchema }]), ConfigModule, TagsModule],
     controllers: [VideosController],
     providers: [VideosService, YoutubeService, VideosRepository],
+    exports: [VideosService],
 })
 export class VideosModule {}
