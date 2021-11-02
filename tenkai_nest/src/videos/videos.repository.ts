@@ -1,10 +1,11 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
 import { Tag } from 'src/tags/schemas/tag.schema';
 import { Video, VideoDocument } from './schemas/video.schema';
 
+@Injectable()
 export class VideosRepository extends BaseRepository<VideoDocument> {
     constructor(@InjectModel(Video.name) private videoModel: Model<VideoDocument>) {
         super(videoModel, VideosRepository.name, {

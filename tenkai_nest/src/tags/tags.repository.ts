@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
 import { Tag, TagDocument } from './schemas/tag.schema';
 
+@Injectable()
 export class TagsRepository extends BaseRepository<TagDocument> {
     constructor(@InjectModel(Tag.name) private tagModel: Model<TagDocument>) {
         super(tagModel, TagsRepository.name, {
