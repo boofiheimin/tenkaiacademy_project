@@ -1,15 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { EmbedTags } from 'src/tags/schemas/tag.schema';
+import { EmbedTag } from 'src/tags/schemas/tag.schema';
 import { ITimestamp, VideoSource } from '../schemas/video.schema';
 
 export class UpdateVideoInputDto {
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    videoId?: string;
-
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()
@@ -37,9 +32,9 @@ export class UpdateVideoInputDto {
 
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => EmbedTags)
-    @ApiPropertyOptional({ type: EmbedTags, isArray: true })
-    tags?: EmbedTags[];
+    @Type(() => EmbedTag)
+    @ApiPropertyOptional({ type: EmbedTag, isArray: true })
+    tags?: EmbedTag[];
 
     @IsOptional()
     @ValidateNested({ each: true })

@@ -3,11 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
 import { videoIdsStub, youtubeStub } from 'src/base/test/stub/youtube.stub';
 import { YoutubeService } from 'src/base/youtube.service';
-import { EmbedTags } from 'src/tags/schemas/tag.schema';
+import { EmbedTag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { tagStub } from 'src/tags/test/stubs/tag.stub';
 import { FindVideosInputDto } from '../dto/find-videos.input.dto';
-import { RelatedVideo, VideoSource } from '../schemas/video.schema';
+import { EmbedVideo, VideoSource } from '../schemas/video.schema';
 import { VideosRepository } from '../videos.repository';
 import { VideosService } from '../videos.service';
 import { videoStub } from './stub/video.stub';
@@ -72,7 +72,7 @@ describe('VideosService', () => {
                     videoId: randomVId,
                     title: 'NEW VIDEO',
                     source: VideoSource.MANUAL,
-                    tags: [new EmbedTags(tagStub())],
+                    tags: [new EmbedTag(tagStub())],
                 });
             });
             it('should return with the video', () => {
@@ -184,7 +184,7 @@ describe('VideosService', () => {
                 video = await videosService.updateVideo(id, { relatedVideosId: [videoStub().videoId] });
             });
             it('should call VideosRepository', () => {
-                expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new RelatedVideo(videoStub())] });
+                expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new EmbedVideo(videoStub())] });
             });
             it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
@@ -199,7 +199,7 @@ describe('VideosService', () => {
             });
             it('should call VideosRepository', () => {
                 expect(videosRepository.update).toBeCalledWith(id, {
-                    relatedVideos: [new RelatedVideo(youtubeStub())],
+                    relatedVideos: [new EmbedVideo(youtubeStub())],
                 });
             });
             it('should return with the video', () => {

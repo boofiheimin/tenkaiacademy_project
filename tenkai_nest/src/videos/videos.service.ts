@@ -1,13 +1,13 @@
-import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { isArray, omit } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
-import { EmbedTags, Tag } from 'src/tags/schemas/tag.schema';
+import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
 import { FindVideosInputDto } from './dto/find-videos.input.dto';
 import { FindVideosResponseDto } from './dto/find-videos.response.dto';
 import { UpdateVideoInputDto } from './dto/update-video.input.dto';
-import { RelatedVideo, Video, VideoSource } from './schemas/video.schema';
+import { EmbedVideo, Video, VideoSource } from './schemas/video.schema';
 import { VideosRepository } from './videos.repository';
 interface TagIdFilter {
     'tags.tagId': number;
@@ -17,7 +17,6 @@ export class VideosService {
     constructor(
         private readonly videosRepository: VideosRepository,
         private readonly youtubeService: YoutubeService,
-        @Inject(forwardRef(() => TagsService))
         private readonly tagService: TagsService,
     ) {}
 
@@ -35,7 +34,7 @@ export class VideosService {
                 videoId,
                 title: 'NEW VIDEO',
                 source: VideoSource.MANUAL,
-                tags: [new EmbedTags(privateTag)],
+                tags: [new EmbedTag(privateTag)],
             };
         }
 
@@ -47,7 +46,7 @@ export class VideosService {
         for (const relatedVideo of relatedVideos) {
             relatedVideo.relatedVideos = relatedVideo.relatedVideos.map((rVid) => {
                 if (rVid.videoId === videoId) {
-                    return new RelatedVideo(video);
+                    return new EmbedVideo(video);
                 }
                 return rVid;
             });
@@ -91,6 +90,10 @@ export class VideosService {
         return this.videosRepository.findByIdWithClip(id);
     }
 
+    async findVideoByVideoId(videoId: string): Promise<Video> {
+        return this.videosRepository.findByVideoId(videoId);
+    }
+
     async updateVideo(id: string, data: UpdateVideoInputDto): Promise<Video> {
         const { relatedVideosId } = data;
 
@@ -100,24 +103,24 @@ export class VideosService {
         if (relatedVideosId && isArray(relatedVideosId)) {
             //* Process input relatedVideo
             //* remove duplicate videoId
-            const uniqRelatedVideosId: string[] = [...new Set(relatedVideosId)];
-            const newRelatedVideos = [];
+            const uniqEmbedVideosId: string[] = [...new Set(relatedVideosId)];
+            const newEmbedVideos = [];
             //* We need to use for loop here to preserved sequence
-            for (const videoId of uniqRelatedVideosId) {
+            for (const videoId of uniqEmbedVideosId) {
                 const existingVideo = await this.videosRepository.findOne({ videoId });
                 if (existingVideo) {
                     //* replace input relatedVideo with current existing video from our record.
-                    newRelatedVideos.push(new RelatedVideo(existingVideo));
+                    newEmbedVideos.push(new EmbedVideo(existingVideo));
                     //* queue up existing video to be updated
                     toBeUpdated.push(existingVideo);
                 } else {
                     //* if relatedVideo doesn't exist in our record. fetch info from youtube instead
                     const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
-                    newRelatedVideos.push(new RelatedVideo(youtubeVideo));
+                    newEmbedVideos.push(new EmbedVideo(youtubeVideo));
                 }
             }
 
-            updateParameter = { ...updateParameter, relatedVideos: newRelatedVideos };
+            updateParameter = { ...updateParameter, relatedVideos: newEmbedVideos };
         }
 
         const video = await this.videosRepository.update(id, updateParameter);
@@ -127,7 +130,7 @@ export class VideosService {
             toBeUpdated.map(async (existingVideo) => {
                 existingVideo.relatedVideos = uniqByKey(
                     existingVideo.relatedVideos
-                        .concat(new RelatedVideo(video))
+                        .concat(new EmbedVideo(video))
                         .sort((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime()),
                     'videoId',
                 );
@@ -141,10 +144,13 @@ export class VideosService {
     async deleteVideo(id: string): Promise<Video> {
         const { docs: relatedVideos } = await this.videosRepository.find({ 'relatedVideos.id': id });
         //* Remove video with videoId from all relatedVideos field
-        for (const relatedVideo of relatedVideos) {
-            relatedVideo.relatedVideos = relatedVideo.relatedVideos.filter(({ id: rvId }) => rvId !== id);
-            await relatedVideo.save();
-        }
+
+        await Promise.all(
+            relatedVideos.map(async (relatedVideo) => {
+                relatedVideo.relatedVideos = relatedVideo.relatedVideos.filter(({ id: rvId }) => rvId !== id);
+                await relatedVideo.save();
+            }),
+        );
 
         //TODO:: Remove srcVideo with videoId from all clips
 

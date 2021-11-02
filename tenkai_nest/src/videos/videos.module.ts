@@ -15,7 +15,7 @@ import { VideosService } from './videos.service';
         forwardRef(() => TagsModule),
     ],
     controllers: [VideosController],
-    providers: [VideosService, YoutubeService, VideosRepository],
+    providers: [VideosRepository, VideosService, YoutubeService],
     exports: [VideosService],
 })
 export class VideosModule {}

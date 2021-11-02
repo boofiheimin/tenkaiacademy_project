@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import { YoutubeVideo } from 'src/base/youtube.service';
-import { EmbedTags } from 'src/tags/schemas/tag.schema';
+import { EmbedTag } from 'src/tags/schemas/tag.schema';
 
 export class ITimestamp {
     @IsNumber()
@@ -15,7 +15,7 @@ export class ITimestamp {
     description: string;
 }
 
-export class RelatedVideo {
+export class EmbedVideo {
     @IsString()
     @ApiProperty()
     videoId: string;
@@ -74,11 +74,11 @@ export class Video {
     @Prop({ required: [true, 'Please provide a title'] })
     title: string;
 
-    @Prop()
+    @Prop({ default: '' })
     @ApiProperty()
     description: string;
 
-    @Prop()
+    @Prop({ default: '' })
     @ApiProperty()
     thumbnail: string;
 
@@ -92,7 +92,7 @@ export class Video {
 
     @Prop({ default: [] })
     @ApiProperty({ description: 'Embed Tag Metadata' })
-    tags: EmbedTags[];
+    tags: EmbedTag[];
 
     @Prop({ default: [] })
     @ApiProperty()
@@ -104,7 +104,7 @@ export class Video {
 
     @Prop({ default: [] })
     @ApiProperty()
-    relatedVideos: RelatedVideo[];
+    relatedVideos: EmbedVideo[];
 
     @Prop({ default: '' })
     @ApiProperty()

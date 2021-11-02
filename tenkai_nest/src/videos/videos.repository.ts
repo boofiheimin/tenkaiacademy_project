@@ -11,16 +11,18 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
         super(videoModel, VideosRepository.name, {
             _id: 1,
             videoId: 1,
+            title: 1,
+            description: 1,
+            thumbnail: 1,
             duration: 1,
             publishedAt: 1,
+            tags: 1,
+            timestamps: 1,
             relatedTweets: 1,
             relatedVideos: 1,
-            source: 1,
-            tags: 1,
-            thumbnail: 1,
-            timestamps: 1,
-            title: 1,
             uploader: 1,
+            source: 1,
+            mirror: 1,
         });
     }
 
@@ -86,5 +88,9 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
                 new: true,
             },
         );
+    }
+
+    async findByVideoId(videoId: string): Promise<Video> {
+        return this.videoModel.findOne({ videoId });
     }
 }
