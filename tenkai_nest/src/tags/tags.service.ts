@@ -50,4 +50,8 @@ export class TagsService {
 
         return tag;
     }
+
+    async findTagByTagId(tagId: number): Promise<Tag> {
+        return this.tagsRepository.findOne({ tagId });
+    }
 }

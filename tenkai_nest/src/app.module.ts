@@ -11,6 +11,7 @@ import config from './config/config';
 import { LoggerMiddleWare } from './utils/logger.middleware';
 import { TagsModule } from './tags/tags.module';
 import { VideosModule } from './videos/videos.module';
+import { ClipsModule } from './clips/clips.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { VideosModule } from './videos/videos.module';
         BlacklistTokensModule,
         TagsModule,
         VideosModule,
+        ClipsModule,
     ],
     controllers: [AppController],
     providers: [AppService, ConfigService],
