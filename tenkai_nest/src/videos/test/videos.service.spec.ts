@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
 import { videoIdsStub, youtubeStub } from 'src/base/test/stub/youtube.stub';
 import { YoutubeService } from 'src/base/youtube.service';
+import { ClipsService } from 'src/clips/clips.service';
 import { EmbedTag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { tagStub } from 'src/tags/test/stubs/tag.stub';
@@ -15,6 +16,7 @@ import { videoStub } from './stub/video.stub';
 jest.mock('../videos.repository');
 jest.mock('src/base/youtube.service');
 jest.mock('src/tags/tags.service');
+jest.mock('src/clips/clips.service');
 
 const omitStubFn = (video) => omit(video, ['id', 'save']);
 
@@ -23,6 +25,7 @@ describe('VideosService', () => {
     let videosRepository: VideosRepository;
     let youtubeService: YoutubeService;
     let tagsService: TagsService;
+    let clipsService: ClipsService;
 
     let video;
     const randomVId = 'random';
@@ -32,13 +35,14 @@ describe('VideosService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [VideosService, VideosRepository, YoutubeService, TagsService],
+            providers: [VideosService, VideosRepository, YoutubeService, TagsService, ClipsService],
         }).compile();
 
         videosService = module.get<VideosService>(VideosService);
         videosRepository = module.get<VideosRepository>(VideosRepository);
         youtubeService = module.get<YoutubeService>(YoutubeService);
         tagsService = module.get<TagsService>(TagsService);
+        clipsService = module.get<ClipsService>(ClipsService);
         jest.clearAllMocks();
     });
 
@@ -57,11 +61,15 @@ describe('VideosService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
             });
             it('should call VideosRepository', () => {
+                expect(videosRepository.find).toBeCalledWith({ 'relatedVideos.videoId': videoStub().videoId });
                 expect(videosRepository.create).toBeCalledWith({
                     ...youtubeStub(),
                     source: VideoSource.YOUTUBE_MANUAL,
                     isPrivate: false,
                 });
+            });
+            it('should call ClipsRepository', () => {
+                expect(clipsService.findClips).toBeCalledWith({ 'srcVideos.videoId': videoStub().videoId });
             });
             it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
@@ -253,6 +261,10 @@ describe('VideosService', () => {
 
         it('should call VideoRepository', () => {
             expect(videosRepository.delete).toBeCalledWith(id);
+        });
+
+        it('should call ClipsService', () => {
+            expect(clipsService.findClips).toBeCalledWith({ 'srcVideos.videoId': videoStub().videoId });
         });
 
         it('should return with a video', () => {

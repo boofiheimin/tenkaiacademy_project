@@ -1,6 +1,8 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { omit } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
+import { ClipsService } from 'src/clips/clips.service';
+import { ClipDocument } from 'src/clips/schemas/clip.schema';
 import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
@@ -17,7 +19,8 @@ export class VideosService {
     constructor(
         private readonly videosRepository: VideosRepository,
         private readonly youtubeService: YoutubeService,
-        private readonly tagsService: TagsService,
+        @Inject(forwardRef(() => TagsService)) private readonly tagsService: TagsService,
+        @Inject(forwardRef(() => ClipsService)) private readonly clipsService: ClipsService,
     ) {}
 
     private logger = new Logger(VideosService.name);
@@ -48,9 +51,16 @@ export class VideosService {
         }
 
         //* Same thing but with Clips
-
-        //TODO: Cascade Clip here
-
+        const { docs: clips } = await this.clipsService.findClips({ 'srcVideos.videoId': videoId });
+        for (const clip of clips) {
+            clip.srcVideos = clip.srcVideos.map((sVid) => {
+                if (sVid.videoId === videoId) {
+                    return new EmbedVideo(video);
+                }
+                return sVid;
+            });
+            await (clip as ClipDocument).save();
+        }
         return video;
     }
 
@@ -162,9 +172,18 @@ export class VideosService {
             }),
         );
 
-        //TODO:: Remove srcVideo with videoId from all clips
+        const video = await this.videosRepository.delete(id);
 
-        return this.videosRepository.delete(id);
+        //* Remove video from all clips srcVideos
+        const { docs: clips } = await this.clipsService.findClips({ 'srcVideos.videoId': video.videoId });
+        await Promise.all(
+            clips.map(async (clip) => {
+                clip.srcVideos = clip.srcVideos.filter(({ videoId }) => videoId !== video.videoId);
+                await (clip as ClipDocument).save();
+            }),
+        );
+
+        return video;
     }
 
     async refetchVideo(id: string): Promise<Video> {

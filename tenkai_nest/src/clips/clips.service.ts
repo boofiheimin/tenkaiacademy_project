@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { omit, uniq } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTag } from 'src/tags/schemas/tag.schema';
@@ -26,9 +26,9 @@ interface ProcessedSrcVideo {
 export class ClipsService {
     constructor(
         private readonly clipsRepository: ClipsRepository,
-        private readonly videosService: VideosService,
         private readonly youtubeService: YoutubeService,
-        private readonly tagsService: TagsService,
+        @Inject(forwardRef(() => VideosService)) private readonly videosService: VideosService,
+        @Inject(forwardRef(() => TagsService)) private readonly tagsService: TagsService,
     ) {}
 
     private async processSrcVideoIds(srcVideoIds: string[]): Promise<ProcessedSrcVideo> {

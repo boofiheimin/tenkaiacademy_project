@@ -19,7 +19,7 @@ export class Clip {
     @Prop({ unique: true, required: [true, 'Please provide a videoIds'] })
     videoId: string;
 
-    @Prop({ validate: [(value) => value.length > 0, `Please provide srcVideo`] })
+    @Prop()
     srcVideos: EmbedVideo[];
 
     @Prop({

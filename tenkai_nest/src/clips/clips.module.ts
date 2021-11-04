@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ClipsService } from './clips.service';
 import { ClipsController } from './clips.controller';
 import { ClipsRepository } from './clips.repository';
@@ -12,11 +12,12 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Clip.name, schema: ClipSchema }]),
-        VideosModule,
-        TagsModule,
+        forwardRef(() => VideosModule),
+        forwardRef(() => TagsModule),
         ConfigModule,
     ],
     controllers: [ClipsController],
     providers: [ClipsService, ClipsRepository, YoutubeService],
+    exports: [ClipsService],
 })
 export class ClipsModule {}
