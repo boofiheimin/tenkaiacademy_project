@@ -9,4 +9,13 @@ export const youtubeStub = (): YoutubeVideo => ({
     publishedAt: new Date(0),
 });
 
+export const youtubeClipStub = (): YoutubeVideo => ({
+    videoId: 'test-video-clip-id',
+    title: 'test-title-clip',
+    thumbnail: 'test-thumbnail-clip',
+    uploader: 'test-uploader-clip',
+    duration: 2000,
+    publishedAt: new Date(1),
+});
+
 export const videoIdsStub = (): string[] => [youtubeStub().videoId, youtubeStub().videoId, youtubeStub().videoId];

@@ -10,5 +10,5 @@ export class UpdateClipInputDto {
     publishedAt?: Date;
     uploader?: string;
     tagIds?: number[];
-    relatedVideoIds?: string[];
+    relatedClipIds?: string[];
 }

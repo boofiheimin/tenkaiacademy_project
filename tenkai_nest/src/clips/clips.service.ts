@@ -11,7 +11,7 @@ import { CreateClipInputDto } from './dto/create-clip.input.dto';
 import { FindClipsInputDto } from './dto/find-clips.input.dto';
 import { FindClipsResponseDto } from './dto/find-clips.response.dto';
 import { UpdateClipInputDto } from './dto/update-clip.input.dto';
-import { Clip } from './schemas/clip.schema';
+import { Clip, EmbedClip } from './schemas/clip.schema';
 
 interface TagIdFilter {
     'tags.tagId': number;
@@ -61,9 +61,7 @@ export class ClipsService {
         const { videoId, srcVideoIds, langs } = createClipInputDto;
 
         const { srcTagsParam, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
-
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
-
         if (youtubeVideo) {
             return this.clipsRepository.create({
                 ...youtubeVideo,
@@ -107,7 +105,7 @@ export class ClipsService {
     }
 
     async updateClip(id: string, updateClipInputDto: UpdateClipInputDto): Promise<Clip> {
-        const { srcVideoIds, relatedVideoIds, tagIds } = updateClipInputDto;
+        const { srcVideoIds, relatedClipIds, tagIds } = updateClipInputDto;
         let srcVideos: EmbedVideo[];
         let srcTags: EmbedTag[];
         //* Process srcVideoIds
@@ -117,26 +115,26 @@ export class ClipsService {
             srcTags = srcTagsParam;
         }
 
-        let relatedVideos: EmbedVideo[] | undefined;
+        let relatedClips: EmbedClip[] | undefined;
         const toBeUpdated: Clip[] = [];
 
-        if (relatedVideoIds) {
-            relatedVideos = [];
-            //* Remove dupe relatedVideoIds and process
-            for (const relatedVideoId of uniq(relatedVideoIds)) {
-                const existingClip = await this.clipsRepository.findByVideoId(relatedVideoId);
+        if (relatedClipIds) {
+            relatedClips = [];
+            //* Remove dupe relatedClipIds and process
+            for (const relatedClipId of uniq(relatedClipIds)) {
+                const existingClip = await this.clipsRepository.findByVideoId(relatedClipId);
                 if (existingClip) {
                     //* embed existing clip
-                    relatedVideos.push(new EmbedVideo(existingClip));
+                    relatedClips.push(new EmbedClip(existingClip));
                     //* push existing clip to update stack
                     toBeUpdated.push(existingClip);
                 } else {
                     //* if clip didn't exist search from youtube
-                    const youtubeVideo = await this.youtubeService.fetchVideo(relatedVideoId);
+                    const youtubeVideo = await this.youtubeService.fetchVideo(relatedClipId);
                     if (youtubeVideo) {
-                        relatedVideos.push(new EmbedVideo(youtubeVideo));
+                        relatedClips.push(new EmbedClip(youtubeVideo));
                     } else {
-                        throw new BadRequestException(`Related Video :: ${relatedVideoId} does not exist`);
+                        throw new BadRequestException(`Related Video :: ${relatedClipId} does not exist`);
                     }
                 }
             }
@@ -160,19 +158,19 @@ export class ClipsService {
         }
 
         const clip = await this.clipsRepository.update(id, {
-            ...omit(updateClipInputDto, ['srcVideoIds', 'tagIds']),
+            ...omit(updateClipInputDto, ['srcVideoIds', 'tagIds', 'relatedClipIds']),
             tags,
             srcVideos,
-            relatedVideos,
+            relatedClips,
         });
 
         //* Update clips with related clip
 
         await Promise.all(
             toBeUpdated.map(async (existingClip) => {
-                existingClip.relatedVideos = uniqByKey(
-                    existingClip.relatedVideos
-                        .concat(new EmbedVideo(clip))
+                existingClip.relatedClips = uniqByKey(
+                    existingClip.relatedClips
+                        .concat(new EmbedClip(clip))
                         .sort((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime()),
                     'videoId',
                 );
@@ -183,13 +181,13 @@ export class ClipsService {
     }
 
     async deleteClip(id: string): Promise<Clip> {
-        const { docs: relatedVideos } = await this.clipsRepository.find({ 'relatedVideos.id': id });
+        const { docs: relatedClips } = await this.clipsRepository.find({ 'relatedClips.id': id });
 
-        //* Remove video with videoId from all relatedVideos field
+        //* Remove video with videoId from all relatedClips field
         await Promise.all(
-            relatedVideos.map(async (relatedVideo) => {
-                relatedVideo.relatedVideos = relatedVideo.relatedVideos.filter(({ id: rvId }) => rvId !== id);
-                await relatedVideo.save();
+            relatedClips.map(async (relatedClip) => {
+                relatedClip.relatedClips = relatedClip.relatedClips.filter(({ id: rvId }) => rvId !== id);
+                await relatedClip.save();
             }),
         );
 

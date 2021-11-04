@@ -1,3 +1,4 @@
+import { youtubeStub } from 'src/base/test/stub/youtube.stub';
 import { Video, VideoSource } from 'src/videos/schemas/video.schema';
 
 export interface StubVideo extends Video {
@@ -7,7 +8,7 @@ export interface StubVideo extends Video {
 
 export const videoStub = (): StubVideo => ({
     id: { toString: () => 'test-id' },
-    videoId: 'test-video-id',
+    videoId: youtubeStub().videoId,
     title: 'test-title',
     description: 'test-desc',
     thumbnail: 'test thumbnail',

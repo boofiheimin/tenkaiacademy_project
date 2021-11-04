@@ -8,4 +8,5 @@ export const VideosService = jest.fn().mockReturnValue({
     deleteVideo: jest.fn().mockReturnValue(videoStub()),
     tagCascadeUpdate: jest.fn(),
     tagCascadeDelete: jest.fn(),
+    findVideoByVideoId: jest.fn().mockReturnValue(videoStub()),
 });
