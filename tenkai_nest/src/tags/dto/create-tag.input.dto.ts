@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTagInputDto {
     @IsString()
@@ -15,9 +15,4 @@ export class CreateTagInputDto {
     @IsNumber()
     @ApiProperty()
     catId?: number;
-
-    @IsOptional()
-    @IsBoolean()
-    @ApiPropertyOptional({ default: false })
-    isClip?: boolean;
 }

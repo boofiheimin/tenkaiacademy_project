@@ -39,10 +39,6 @@ export class Tag {
     @ApiProperty({ description: 'tagId of parents Tag' })
     @Prop({ required: [true, 'Please provide a catId'], default: 0 })
     catId: number; //TODO: change this to categoryId
-
-    @ApiProperty({ description: 'Determine Clip-only Tag', default: false })
-    @Prop()
-    isClip: boolean;
 }
 
 export const TagSchema = SchemaFactory.createForClass(Tag);

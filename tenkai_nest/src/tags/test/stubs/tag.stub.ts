@@ -4,6 +4,5 @@ export const tagStub = (): Tag => ({
     tagId: 1,
     tagNameEN: 'testTag',
     tagNameJP: '',
-    isClip: false,
     catId: 0,
 });

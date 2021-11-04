@@ -25,10 +25,6 @@ export class TagsService {
         return this.tagsRepository.create({ ...data, tagId: index });
     }
 
-    async findPrivateTag(): Promise<Tag> {
-        return this.tagsRepository.findOne({ tagNameEN: 'Private' });
-    }
-
     async findTags(filter: FindTagsInputDto): Promise<FindTagsResponseDto> {
         return this.tagsRepository.find(filter);
     }

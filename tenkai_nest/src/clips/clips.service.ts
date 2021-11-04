@@ -18,7 +18,7 @@ interface TagIdFilter {
 }
 
 interface ProcessedSrcVideo {
-    srcTags: EmbedTag[];
+    srcTagsParam: EmbedTag[];
     srcVideosParam: EmbedVideo[];
 }
 
@@ -32,8 +32,8 @@ export class ClipsService {
     ) {}
 
     private async processSrcVideoIds(srcVideoIds: string[]): Promise<ProcessedSrcVideo> {
-        const srcVideosParam = [];
-        let srcTags = [];
+        const srcVideosParam: EmbedVideo[] = [];
+        let srcTags: EmbedTag[] = [];
         for (const srcVideoId of srcVideoIds) {
             const srcVideo = await this.videosService.findVideoByVideoId(srcVideoId);
             if (srcVideo) {
@@ -52,7 +52,7 @@ export class ClipsService {
         }
         const uniqSrcTags = uniqByKey(srcTags, 'tagId');
         return {
-            srcTags: uniqSrcTags,
+            srcTagsParam: uniqSrcTags,
             srcVideosParam,
         };
     }
@@ -60,7 +60,7 @@ export class ClipsService {
     async createClip(createClipInputDto: CreateClipInputDto): Promise<Clip> {
         const { videoId, srcVideoIds, langs } = createClipInputDto;
 
-        const { srcTags, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
+        const { srcTagsParam, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
 
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
 
@@ -68,7 +68,7 @@ export class ClipsService {
             return this.clipsRepository.create({
                 ...youtubeVideo,
                 srcVideos: srcVideosParam,
-                tags: srcTags,
+                tags: srcTagsParam,
                 langs,
             });
         }
@@ -107,45 +107,62 @@ export class ClipsService {
     }
 
     async updateClip(id: string, updateClipInputDto: UpdateClipInputDto): Promise<Clip> {
-        const { srcVideoIds = [], relatedVideoIds = [], tagIds = [] } = updateClipInputDto;
-
+        const { srcVideoIds, relatedVideoIds, tagIds } = updateClipInputDto;
+        let srcVideos: EmbedVideo[];
+        let srcTags: EmbedTag[];
         //* Process srcVideoIds
-        const { srcTags, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
+        if (srcVideoIds) {
+            const { srcTagsParam, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
+            srcVideos = srcVideosParam;
+            srcTags = srcTagsParam;
+        }
 
-        const relatedVideos: EmbedVideo[] = [];
+        let relatedVideos: EmbedVideo[] | undefined;
         const toBeUpdated: Clip[] = [];
 
-        //* Remove dupe relatedVideoIds and process
-        for (const relatedVideoId of uniq(relatedVideoIds)) {
-            const existingClip = await this.clipsRepository.findByVideoId(relatedVideoId);
-            if (existingClip) {
-                //* embed existing clip
-                relatedVideos.push(new EmbedVideo(existingClip));
-                //* push existing clip to update stack
-                toBeUpdated.push(existingClip);
-            } else {
-                //* if clip didn't exist search from youtube
-                const youtubeVideo = await this.youtubeService.fetchVideo(relatedVideoId);
-                if (youtubeVideo) {
-                    relatedVideos.push(new EmbedVideo(youtubeVideo));
+        if (relatedVideoIds) {
+            relatedVideos = [];
+            //* Remove dupe relatedVideoIds and process
+            for (const relatedVideoId of uniq(relatedVideoIds)) {
+                const existingClip = await this.clipsRepository.findByVideoId(relatedVideoId);
+                if (existingClip) {
+                    //* embed existing clip
+                    relatedVideos.push(new EmbedVideo(existingClip));
+                    //* push existing clip to update stack
+                    toBeUpdated.push(existingClip);
                 } else {
-                    throw new BadRequestException(`Related Video :: ${relatedVideoId} does not exist`);
+                    //* if clip didn't exist search from youtube
+                    const youtubeVideo = await this.youtubeService.fetchVideo(relatedVideoId);
+                    if (youtubeVideo) {
+                        relatedVideos.push(new EmbedVideo(youtubeVideo));
+                    } else {
+                        throw new BadRequestException(`Related Video :: ${relatedVideoId} does not exist`);
+                    }
                 }
             }
         }
 
-        const tags: EmbedTag[] = [];
+        let tags: EmbedTag[] | undefined;
 
-        //* Process tagIds
-        for (const tagId of uniq(tagIds)) {
-            const tag = await this.tagsService.findTagByTagId(tagId);
-            tags.push(new EmbedTag(tag));
+        if (tagIds) {
+            //* Process tagIds
+            tags = [];
+            for (const tagId of uniq(tagIds)) {
+                const tag = await this.tagsService.findTagByTagId(tagId);
+                tags.push(new EmbedTag(tag));
+            }
+            if (srcTags) {
+                tags = uniqByKey(tags.concat(srcTags), 'tagId');
+            }
+        } else if (!tagIds && srcTags) {
+            const currentClip = await this.clipsRepository.findById(id);
+            tags = uniqByKey(currentClip.tags.concat(srcTags), 'tagId'); // combine tags and srcTags then remove dupe
         }
 
         const clip = await this.clipsRepository.update(id, {
             ...omit(updateClipInputDto, ['srcVideoIds', 'tagIds']),
-            tags: uniqByKey(tags.concat(srcTags), 'tagId'), // combine tags and srcTags then remove dupe
-            srcVideos: srcVideosParam,
+            tags,
+            srcVideos,
             relatedVideos,
         });
 

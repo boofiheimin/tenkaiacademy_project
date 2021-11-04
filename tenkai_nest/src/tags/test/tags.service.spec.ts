@@ -64,23 +64,6 @@ describe('TagsService', () => {
         });
     });
 
-    describe('findPrivateTag', () => {
-        describe('when call', () => {
-            let tag;
-            beforeEach(async () => {
-                tag = await tagsService.findPrivateTag();
-            });
-            it('should call TagRepository', () => {
-                expect(tagsRepository.findOne).toBeCalledWith({
-                    tagNameEN: 'Private',
-                });
-            });
-            it('should return with the tag', () => {
-                expect(tag).toEqual(tagStub());
-            });
-        });
-    });
-
     describe('findTags', () => {
         describe('when call', () => {
             let tags;
