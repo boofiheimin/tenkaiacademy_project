@@ -76,6 +76,7 @@ describe('ClipsService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
             });
             it('should call ClipsRepository', () => {
+                expect(clipsRepository.find).toBeCalledWith({ 'relatedClips.videoId': clipStub().videoId });
                 expect(clipsRepository.create).toBeCalledWith({
                     ...youtubeClipStub(),
                     srcVideos: [new EmbedVideo(videoStub())],

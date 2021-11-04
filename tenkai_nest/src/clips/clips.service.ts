@@ -62,15 +62,32 @@ export class ClipsService {
 
         const { srcTagsParam, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
-        if (youtubeVideo) {
-            return this.clipsRepository.create({
-                ...youtubeVideo,
-                srcVideos: srcVideosParam,
-                tags: srcTagsParam,
-                langs,
-            });
+
+        if (!youtubeVideo) {
+            throw new BadRequestException(`Youtube video ${videoId} Not Found`);
         }
-        throw new BadRequestException(`Youtube video ${videoId} Not Found`);
+
+        const { docs: relatedClips } = await this.clipsRepository.find({ 'relatedClips.videoId': videoId });
+
+        //* Update all previous instance of clips that contain this clip as relatedClip
+        const clip = await this.clipsRepository.create({
+            ...youtubeVideo,
+            srcVideos: srcVideosParam,
+            tags: srcTagsParam,
+            langs,
+        });
+
+        for (const relatedClip of relatedClips) {
+            relatedClip.relatedClips = relatedClip.relatedClips.map((rClip) => {
+                if (rClip.videoId === videoId) {
+                    return new EmbedClip(clip);
+                }
+                return rClip;
+            });
+            await relatedClip.save();
+        }
+
+        return clip;
     }
 
     async findClips(filter: FindClipsInputDto): Promise<FindClipsResponseDto> {
