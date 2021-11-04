@@ -20,5 +20,6 @@ export const videoStub = (): StubVideo => ({
     relatedVideos: [],
     source: VideoSource.YOUTUBE_MANUAL,
     mirror: '',
+    isPrivate: false,
     save: () => {},
 });

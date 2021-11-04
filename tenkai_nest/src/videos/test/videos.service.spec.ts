@@ -48,6 +48,7 @@ describe('VideosService', () => {
                 expect(videosRepository.create).toBeCalledWith({
                     ...youtubeStub(),
                     source: VideoSource.YOUTUBE_MANUAL,
+                    isPrivate: false,
                 });
             });
             it('should return with the video', () => {
@@ -64,15 +65,12 @@ describe('VideosService', () => {
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(randomVId);
             });
-            it('should call TagService', () => {
-                expect(tagsService.findPrivateTag).toBeCalled();
-            });
             it('should call VideosRepository', () => {
                 expect(videosRepository.create).toBeCalledWith({
                     videoId: randomVId,
-                    title: 'NEW VIDEO',
+                    title: '',
                     source: VideoSource.MANUAL,
-                    tags: [new EmbedTag(tagStub())],
+                    isPrivate: true,
                 });
             });
             it('should return with the video', () => {
@@ -164,9 +162,9 @@ describe('VideosService', () => {
     });
 
     describe('updateVideo', () => {
-        describe('no relatedVideosId', () => {
+        const id = 'id';
+        describe('no relatedVideoIds', () => {
             let video;
-            const id = 'id';
             beforeEach(async () => {
                 video = await videosService.updateVideo(id, {});
             });
@@ -177,30 +175,48 @@ describe('VideosService', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
-        describe('with existing relatedVideosId', () => {
+        describe('with existing relatedVideoIds', () => {
             let video;
-            const id = 'id';
             beforeEach(async () => {
-                video = await videosService.updateVideo(id, { relatedVideosId: [videoStub().videoId] });
+                video = await videosService.updateVideo(id, { relatedVideoIds: [videoStub().videoId] });
             });
             it('should call VideosRepository', () => {
+                expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
                 expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new EmbedVideo(videoStub())] });
             });
             it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
-        describe('with not existing relatedVideosId', () => {
+        describe('with not existing relatedVideoIds', () => {
             let video;
-            const id = 'id';
             beforeEach(async () => {
-                jest.spyOn(videosRepository, 'findOne').mockReturnValueOnce(null);
-                video = await videosService.updateVideo(id, { relatedVideosId: [videoStub().videoId] });
+                jest.spyOn(videosRepository, 'findByVideoId').mockReturnValueOnce(null);
+                video = await videosService.updateVideo(id, { relatedVideoIds: [videoStub().videoId] });
             });
             it('should call VideosRepository', () => {
+                expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
                 expect(videosRepository.update).toBeCalledWith(id, {
                     relatedVideos: [new EmbedVideo(youtubeStub())],
                 });
+            });
+            it('should call YoutubeService', () => {
+                expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
+            });
+            it('should return with the video', () => {
+                expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
+            });
+        });
+        describe('with tags', () => {
+            let video;
+            beforeEach(async () => {
+                video = await videosService.updateVideo(id, { tagIds: [tagStub().tagId] });
+            });
+            it('should call VideosRepository', () => {
+                expect(videosRepository.update).toBeCalledWith(id, { tags: [new EmbedTag(tagStub())] });
+            });
+            it('should call TagsService', () => {
+                expect(tagsService.findTagByTagId).toBeCalledWith(tagStub().tagId);
             });
             it('should return with the video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
@@ -230,7 +246,7 @@ describe('VideosService', () => {
             beforeEach(async () => {
                 video = await videosService.refetchVideo(videoStub().id.toString());
             });
-            it('shoud call VideosRepository', () => {
+            it('should call VideosRepository', () => {
                 expect(videosRepository.findById).toBeCalledWith(videoStub().id.toString());
                 expect(videosRepository.update).toBeCalledWith(videoStub().id.toString(), youtubeStub());
             });
@@ -252,7 +268,7 @@ describe('VideosService', () => {
                     error = e;
                 }
             });
-            it('shoud call VideosRepository', () => {
+            it('should call VideosRepository', () => {
                 expect(videosRepository.findById).toBeCalledWith(videoStub().id.toString());
             });
             it('should call YoutubeService', () => {

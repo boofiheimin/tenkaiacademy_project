@@ -71,7 +71,7 @@ export class Video {
     @ApiProperty({ description: "Youtube's videoId" })
     videoId: string;
 
-    @Prop({ required: [true, 'Please provide a title'] })
+    @Prop({ default: '' })
     title: string;
 
     @Prop({ default: '' })
@@ -115,9 +115,29 @@ export class Video {
     source: VideoSource;
 
     @Prop({ default: '' })
-    @ApiProperty()
     @ApiProperty({ description: 'Mirror Link incase original video got private' })
     mirror: string;
+
+    @Prop({ required: true })
+    @ApiProperty()
+    isPrivate: boolean;
+
+    constructor(videoId: string, source: VideoSource, youtubeVideo?: YoutubeVideo) {
+        this.videoId = videoId;
+        this.source = source;
+        if (youtubeVideo) {
+            const { title, thumbnail, uploader, duration, publishedAt } = youtubeVideo;
+            this.title = title;
+            this.thumbnail = thumbnail;
+            this.uploader = uploader;
+            this.duration = duration;
+            this.publishedAt = publishedAt;
+            this.isPrivate = false;
+        } else {
+            this.title = '';
+            this.isPrivate = true;
+        }
+    }
 }
 
 export const VideoSchema = SchemaFactory.createForClass(Video);

@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { isArray, omit } from 'lodash';
+import { omit } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
@@ -17,7 +17,7 @@ export class VideosService {
     constructor(
         private readonly videosRepository: VideosRepository,
         private readonly youtubeService: YoutubeService,
-        private readonly tagService: TagsService,
+        private readonly tagsService: TagsService,
     ) {}
 
     private logger = new Logger(VideosService.name);
@@ -27,15 +27,9 @@ export class VideosService {
 
         let videoInput: Partial<Video>;
         if (youtubeVideo) {
-            videoInput = { ...youtubeVideo, source: VideoSource.YOUTUBE_MANUAL };
+            videoInput = new Video(videoId, VideoSource.YOUTUBE_MANUAL, youtubeVideo);
         } else {
-            const privateTag = await this.tagService.findPrivateTag();
-            videoInput = {
-                videoId,
-                title: 'NEW VIDEO',
-                source: VideoSource.MANUAL,
-                tags: [new EmbedTag(privateTag)],
-            };
+            videoInput = new Video(videoId, VideoSource.MANUAL);
         }
 
         const video = await this.videosRepository.create(videoInput);
@@ -95,35 +89,45 @@ export class VideosService {
     }
 
     async updateVideo(id: string, data: UpdateVideoInputDto): Promise<Video> {
-        const { relatedVideosId } = data;
-
-        let updateParameter: Partial<Video> = omit(data, 'relatedVideosId');
+        const { relatedVideoIds, tagIds } = data;
         const toBeUpdated = [];
-
-        if (relatedVideosId && isArray(relatedVideosId)) {
-            //* Process input relatedVideo
+        let relatedVideos: EmbedVideo[] | undefined;
+        //* Process input relatedVideo
+        if (relatedVideoIds) {
             //* remove duplicate videoId
-            const uniqEmbedVideosId: string[] = [...new Set(relatedVideosId)];
-            const newEmbedVideos = [];
+            const uniqEmbedVideosId: string[] = [...new Set(relatedVideoIds)];
+            relatedVideos = [];
             //* We need to use for loop here to preserved sequence
             for (const videoId of uniqEmbedVideosId) {
-                const existingVideo = await this.videosRepository.findOne({ videoId });
+                const existingVideo = await this.videosRepository.findByVideoId(videoId);
                 if (existingVideo) {
                     //* replace input relatedVideo with current existing video from our record.
-                    newEmbedVideos.push(new EmbedVideo(existingVideo));
+                    relatedVideos.push(new EmbedVideo(existingVideo));
                     //* queue up existing video to be updated
                     toBeUpdated.push(existingVideo);
                 } else {
                     //* if relatedVideo doesn't exist in our record. fetch info from youtube instead
                     const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
-                    newEmbedVideos.push(new EmbedVideo(youtubeVideo));
+                    relatedVideos.push(new EmbedVideo(youtubeVideo));
                 }
             }
-
-            updateParameter = { ...updateParameter, relatedVideos: newEmbedVideos };
         }
 
-        const video = await this.videosRepository.update(id, updateParameter);
+        let tags: EmbedTag[] | undefined;
+        //* Process input tagId
+        if (tagIds) {
+            tags = [];
+            for (const tagId of tagIds) {
+                const tag = await this.tagsService.findTagByTagId(tagId);
+                tags.push(new EmbedTag(tag));
+            }
+        }
+
+        const video = await this.videosRepository.update(id, {
+            ...omit(data, ['relatedVideoIds', 'tagIds']),
+            relatedVideos,
+            tags,
+        });
 
         //* update that existing video's relatedVideos embed sorted and remove duplicate
         await Promise.all(
