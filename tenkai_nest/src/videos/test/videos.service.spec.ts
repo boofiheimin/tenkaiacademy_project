@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
 import { videoIdsStub, youtubeStub } from 'src/base/test/stub/youtube.stub';
@@ -23,6 +23,13 @@ describe('VideosService', () => {
     let videosRepository: VideosRepository;
     let youtubeService: YoutubeService;
     let tagsService: TagsService;
+
+    let video;
+    const randomVId = 'random';
+    let error;
+    let videos;
+    let spy;
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [VideosService, VideosRepository, YoutubeService, TagsService],
@@ -35,9 +42,14 @@ describe('VideosService', () => {
         jest.clearAllMocks();
     });
 
+    afterEach(() => {
+        if (spy) {
+            spy.mockClear();
+        }
+    });
+
     describe('createVideo', () => {
         describe('youtube video exist', () => {
-            let video;
             beforeEach(async () => {
                 video = await videosService.createVideo(videoStub().videoId);
             });
@@ -51,14 +63,12 @@ describe('VideosService', () => {
                     isPrivate: false,
                 });
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
 
         describe('youtube video does not exist', () => {
-            let video;
-            const randomVId = 'random';
             beforeEach(async () => {
                 video = await videosService.createVideo(randomVId);
             });
@@ -73,7 +83,7 @@ describe('VideosService', () => {
                     isPrivate: true,
                 });
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
@@ -81,7 +91,6 @@ describe('VideosService', () => {
 
     describe('findVideos', () => {
         describe('empty filter', () => {
-            let videos;
             beforeEach(async () => {
                 videos = await videosService.findVideos({});
             });
@@ -103,7 +112,6 @@ describe('VideosService', () => {
             });
         });
         describe('with filter', () => {
-            let videos;
             const filter: FindVideosInputDto = {
                 title: 'test',
                 from: new Date(0),
@@ -147,7 +155,6 @@ describe('VideosService', () => {
 
     describe('findVideoById', () => {
         describe('when call', () => {
-            let video;
             const id = 'id';
             beforeEach(async () => {
                 video = await videosService.findVideoById(id);
@@ -155,7 +162,7 @@ describe('VideosService', () => {
             it('should call VideosRepository', () => {
                 expect(videosRepository.findByIdWithClip).toBeCalledWith(id);
             });
-            it('should return with the video with clips field', () => {
+            it('should return with a video with clips field', () => {
                 expect(omitStubFn(video)).toEqual({ ...omitStubFn(videoStub()), clips: [] });
             });
         });
@@ -164,19 +171,17 @@ describe('VideosService', () => {
     describe('updateVideo', () => {
         const id = 'id';
         describe('no relatedVideoIds', () => {
-            let video;
             beforeEach(async () => {
                 video = await videosService.updateVideo(id, {});
             });
             it('should call VideosRepository', () => {
                 expect(videosRepository.update).toBeCalledWith(id, {});
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
         describe('with existing relatedVideoIds', () => {
-            let video;
             beforeEach(async () => {
                 video = await videosService.updateVideo(id, { relatedVideoIds: [videoStub().videoId] });
             });
@@ -184,31 +189,47 @@ describe('VideosService', () => {
                 expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
                 expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new EmbedVideo(videoStub())] });
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
         describe('with not existing relatedVideoIds', () => {
-            let video;
-            beforeEach(async () => {
-                jest.spyOn(videosRepository, 'findByVideoId').mockReturnValueOnce(null);
-                video = await videosService.updateVideo(id, { relatedVideoIds: [videoStub().videoId] });
-            });
-            it('should call VideosRepository', () => {
-                expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
-                expect(videosRepository.update).toBeCalledWith(id, {
-                    relatedVideos: [new EmbedVideo(youtubeStub())],
+            describe('existing youtube video', () => {
+                beforeEach(async () => {
+                    spy = jest.spyOn(videosRepository, 'findByVideoId').mockReturnValueOnce(null);
+                    video = await videosService.updateVideo(id, { relatedVideoIds: [videoStub().videoId] });
+                });
+                it('should call VideosRepository', () => {
+                    expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
+                    expect(videosRepository.update).toBeCalledWith(id, {
+                        relatedVideos: [new EmbedVideo(youtubeStub())],
+                    });
+                });
+                it('should call YoutubeService', () => {
+                    expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
+                });
+                it('should return with a video', () => {
+                    expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
                 });
             });
-            it('should call YoutubeService', () => {
-                expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
-            });
-            it('should return with the video', () => {
-                expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
+            describe('with non-existing youtube video', () => {
+                beforeEach(async () => {
+                    spy = jest.spyOn(videosRepository, 'findByVideoId').mockReturnValueOnce(null);
+                    try {
+                        await videosService.updateVideo(id, { relatedVideoIds: [randomVId] });
+                    } catch (e) {
+                        error = e;
+                    }
+                });
+                it('should call VideosRepository', () => {
+                    expect(videosRepository.findByVideoId).toBeCalledWith(randomVId);
+                });
+                it('should throw BadRequestError', () => {
+                    expect(error).toBeInstanceOf(BadRequestException);
+                });
             });
         });
         describe('with tags', () => {
-            let video;
             beforeEach(async () => {
                 video = await videosService.updateVideo(id, { tagIds: [tagStub().tagId] });
             });
@@ -218,14 +239,13 @@ describe('VideosService', () => {
             it('should call TagsService', () => {
                 expect(tagsService.findTagByTagId).toBeCalledWith(tagStub().tagId);
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
     });
 
     describe('deleteVideo', () => {
-        let video;
         const id = 'id';
         beforeEach(async () => {
             video = await videosService.deleteVideo(id);
@@ -235,14 +255,13 @@ describe('VideosService', () => {
             expect(videosRepository.delete).toBeCalledWith(id);
         });
 
-        it('should return with the video', () => {
+        it('should return with a video', () => {
             expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
         });
     });
 
     describe('refetchVideo', () => {
         describe('with valid Video', () => {
-            let video;
             beforeEach(async () => {
                 video = await videosService.refetchVideo(videoStub().id.toString());
             });
@@ -253,15 +272,14 @@ describe('VideosService', () => {
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
             });
-            it('should return with the video', () => {
+            it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));
             });
         });
 
         describe('with not valid Video', () => {
-            let error;
             beforeEach(async () => {
-                jest.spyOn(youtubeService, 'fetchVideo').mockReturnValueOnce(null);
+                spy = jest.spyOn(youtubeService, 'fetchVideo').mockReturnValueOnce(null);
                 try {
                     await videosService.refetchVideo(videoStub().id.toString());
                 } catch (e) {

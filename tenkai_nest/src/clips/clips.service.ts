@@ -45,7 +45,7 @@ export class ClipsService {
                     srcVideosParam.push(new EmbedVideo(srcYoutubeVideo));
                 } else {
                     throw new BadRequestException(
-                        `Source video's id ${srcVideoId} :: If the source is private please add it in video first`,
+                        `Source video's id ${srcVideoId} does not exist :: If the source is private please add it in video first`,
                     );
                 }
             }

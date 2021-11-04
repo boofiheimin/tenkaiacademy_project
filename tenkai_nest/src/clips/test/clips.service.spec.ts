@@ -11,6 +11,7 @@ import { videoStub } from 'src/videos/test/stub/video.stub';
 import { VideosService } from 'src/videos/videos.service';
 import { ClipsRepository } from '../clips.repository';
 import { ClipsService } from '../clips.service';
+import { FindClipsInputDto } from '../dto/find-clips.input.dto';
 import { ClipLang, EmbedClip } from '../schemas/clip.schema';
 import { clipStub } from './stub/clip.stub';
 
@@ -28,10 +29,11 @@ describe('ClipsService', () => {
     let clipsRepository: ClipsRepository;
 
     const testId = 'test-id';
+    const randomVId = 'randomVId';
 
-    let spy;
-    let spy2;
     let clip;
+    let clips;
+    let spy;
     let error;
 
     beforeEach(async () => {
@@ -49,9 +51,6 @@ describe('ClipsService', () => {
     afterEach(() => {
         if (spy) {
             spy.mockClear();
-        }
-        if (spy2) {
-            spy2.mockClear();
         }
     });
 
@@ -140,11 +139,31 @@ describe('ClipsService', () => {
                 });
             });
         });
+        describe('non-existing videoId', () => {
+            beforeEach(async () => {
+                try {
+                    clip = await clipsService.createClip({
+                        videoId: randomVId,
+                        srcVideoIds: [videoStub().videoId],
+                        langs: [ClipLang.EN],
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+
+            it('should call ClipsService', () => {
+                expect(youtubeService.fetchVideo).toBeCalledWith(randomVId);
+            });
+
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
     });
 
     describe('findClips', () => {
-        describe('when call', () => {
-            let clips;
+        describe('empty filter', () => {
             beforeEach(async () => {
                 clips = await clipsService.findClips({});
             });
@@ -156,6 +175,46 @@ describe('ClipsService', () => {
                 });
             });
             it('should return with clips', () => {
+                expect({
+                    docs: clips.docs.map((clip) => omitStubFn(clip)),
+                    totalCount: clips.totalCount,
+                }).toEqual({
+                    docs: [omitStubFn(clipStub())],
+                    totalCount: 1,
+                });
+            });
+        });
+        describe('with filter', () => {
+            const filter: FindClipsInputDto = {
+                title: 'test',
+                from: new Date(0),
+                to: new Date(1),
+                uploader: 'test-u',
+                tags: [1, 2],
+                limit: 10,
+                skip: 1,
+                sortOrder: true,
+            };
+            beforeEach(async () => {
+                clips = await clipsService.findClips(filter);
+            });
+            it('should call VideosRepository', () => {
+                expect(clipsRepository.find).toBeCalledWith({
+                    title: new RegExp(filter.title, 'i'),
+                    uploader: new RegExp(filter.uploader, 'i'),
+                    publishedAt: {
+                        $gte: filter.from,
+                        $lte: filter.to,
+                    },
+                    $and: filter.tags.map((tag) => ({ 'tags.tagId': tag })),
+                    limit: filter.limit,
+                    skip: filter.skip,
+                    sort: {
+                        publishedAt: 1,
+                    },
+                });
+            });
+            it('should return with videos', () => {
                 expect({
                     docs: clips.docs.map((clip) => omitStubFn(clip)),
                     totalCount: clips.totalCount,
@@ -236,18 +295,17 @@ describe('ClipsService', () => {
             describe('source video does not exist on youtube', () => {
                 beforeEach(async () => {
                     spy = jest.spyOn(videosService, 'findVideoByVideoId').mockReturnValueOnce(null);
-                    spy2 = jest.spyOn(youtubeService, 'fetchVideo').mockReturnValueOnce(null);
                     try {
-                        clip = await clipsService.updateClip(testId, { srcVideoIds: [videoStub().videoId] });
+                        clip = await clipsService.updateClip(testId, { srcVideoIds: [randomVId] });
                     } catch (e) {
                         error = e;
                     }
                 });
                 it('should call VideoService', () => {
-                    expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
+                    expect(videosService.findVideoByVideoId).toBeCalledWith(randomVId);
                 });
                 it('should call YoutubeService', () => {
-                    expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
+                    expect(youtubeService.fetchVideo).toBeCalledWith(randomVId);
                 });
                 it('should throw BadRequestError', () => {
                     expect(error).toBeInstanceOf(BadRequestException);
@@ -292,18 +350,17 @@ describe('ClipsService', () => {
             describe('relatedClip does not exist on youtube', () => {
                 beforeEach(async () => {
                     spy = jest.spyOn(clipsRepository, 'findByVideoId').mockReturnValueOnce(null);
-                    spy2 = jest.spyOn(youtubeService, 'fetchVideo').mockReturnValueOnce(null);
                     try {
-                        await clipsService.updateClip(testId, { relatedClipIds: [clipStub().videoId] });
+                        await clipsService.updateClip(testId, { relatedClipIds: [randomVId] });
                     } catch (e) {
                         error = e;
                     }
                 });
                 it('should call ClipRepository', () => {
-                    expect(clipsRepository.findByVideoId).toBeCalledWith(clipStub().videoId);
+                    expect(clipsRepository.findByVideoId).toBeCalledWith(randomVId);
                 });
                 it('should call YoutubeService', () => {
-                    expect(youtubeService.fetchVideo).toBeCalledWith(clipStub().videoId);
+                    expect(youtubeService.fetchVideo).toBeCalledWith(randomVId);
                 });
                 it('should return a clip', () => {
                     expect(omitStubFn(clip)).toEqual(omitStubFn(clipStub()));

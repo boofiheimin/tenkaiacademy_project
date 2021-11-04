@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { omit } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
 import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
@@ -108,7 +108,13 @@ export class VideosService {
                 } else {
                     //* if relatedVideo doesn't exist in our record. fetch info from youtube instead
                     const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
-                    relatedVideos.push(new EmbedVideo(youtubeVideo));
+                    if (youtubeVideo) {
+                        relatedVideos.push(new EmbedVideo(youtubeVideo));
+                    } else {
+                        throw new BadRequestException(
+                            `Related Video ${videoId} does not exist :: If the source is private please add it in video first`,
+                        );
+                    }
                 }
             }
         }
