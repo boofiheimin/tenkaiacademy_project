@@ -12,7 +12,6 @@ export class TagsRepository extends BaseRepository<TagDocument> {
             catId: 1,
             tagNameEN: 1,
             tagNameJP: 1,
-            isClip: 1,
         });
     }
 
