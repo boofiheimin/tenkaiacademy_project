@@ -6,4 +6,6 @@ export const ClipsService = jest.fn().mockReturnValue({
     findClipById: jest.fn().mockReturnValue(clipStub()),
     updateClip: jest.fn().mockReturnValue(clipStub()),
     deleteClip: jest.fn().mockReturnValue(clipStub()),
+    tagCascadeUpdate: jest.fn(),
+    tagCascadeDelete: jest.fn(),
 });

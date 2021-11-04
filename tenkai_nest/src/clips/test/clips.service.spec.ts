@@ -396,4 +396,26 @@ describe('ClipsService', () => {
             });
         });
     });
+
+    describe('tagCascadeUpdate', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await clipsService.tagCascadeUpdate(tagStub());
+            });
+            it('should call ClipsRepository', () => {
+                expect(clipsRepository.tagCascadeUpdate).toBeCalledWith(tagStub());
+            });
+        });
+    });
+
+    describe('tagCascadeDelete', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await clipsService.tagCascadeDelete(tagStub());
+            });
+            it('should call ClipsRepository', () => {
+                expect(clipsRepository.tagCascadeDelete).toBeCalledWith(tagStub());
+            });
+        });
+    });
 });

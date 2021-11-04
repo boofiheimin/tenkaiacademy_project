@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
+import { Tag } from 'src/tags/schemas/tag.schema';
 import { Clip, ClipDocument } from './schemas/clip.schema';
 
 @Injectable()
@@ -25,5 +26,36 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
 
     async findByVideoId(videoId: string) {
         return this.clipModel.findOne({ videoId });
+    }
+
+    async tagCascadeUpdate(tag: Tag): Promise<void> {
+        const { tagId, tagNameEN, tagNameJP } = tag;
+        await this.clipModel.updateMany(
+            { 'tags.tagId': tagId },
+            {
+                $set: {
+                    'tags.$.tagNameEN': tagNameEN,
+                    'tags.$.tagNameJP': tagNameJP,
+                },
+            },
+            {
+                new: true,
+            },
+        );
+    }
+
+    async tagCascadeDelete(tag: Tag): Promise<void> {
+        const { tagId } = tag;
+        await this.clipModel.updateMany(
+            { 'tags.tagId': tagId },
+            {
+                $pull: {
+                    tags: { tagId },
+                },
+            },
+            {
+                new: true,
+            },
+        );
     }
 }

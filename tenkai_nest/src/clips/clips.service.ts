@@ -1,7 +1,7 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { omit, uniq } from 'lodash';
 import { YoutubeService } from 'src/base/youtube.service';
-import { EmbedTag } from 'src/tags/schemas/tag.schema';
+import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
 import { EmbedVideo } from 'src/videos/schemas/video.schema';
@@ -209,5 +209,13 @@ export class ClipsService {
         );
 
         return this.clipsRepository.delete(id);
+    }
+
+    async tagCascadeUpdate(tag: Tag): Promise<void> {
+        return this.clipsRepository.tagCascadeUpdate(tag);
+    }
+
+    async tagCascadeDelete(tag: Tag): Promise<void> {
+        return this.clipsRepository.tagCascadeDelete(tag);
     }
 }

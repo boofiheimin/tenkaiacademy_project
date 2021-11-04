@@ -8,4 +8,6 @@ export const ClipsRepository = jest.fn().mockReturnValue({
     update: jest.fn().mockReturnValue(clipStub()),
     delete: jest.fn().mockReturnValue(clipStub()),
     findByVideoId: jest.fn().mockReturnValue(clipStub()),
+    tagCascadeUpdate: jest.fn(),
+    tagCascadeDelete: jest.fn(),
 });
