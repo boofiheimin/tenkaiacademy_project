@@ -6,12 +6,6 @@ import { YoutubeVideo } from 'src/base/youtube.service';
 import { EmbedTag } from 'src/tags/schemas/tag.schema';
 import { EmbedVideo } from 'src/videos/schemas/video.schema';
 
-export enum ClipLang {
-    EN = 'en',
-    JP = 'jp',
-    CN = 'cn',
-}
-
 export class EmbedClip {
     @IsString()
     @ApiProperty()
@@ -115,12 +109,12 @@ export class Clip {
     })
     relatedClips: EmbedClip[];
 
-    @ApiProperty({ enum: ClipLang, enumName: 'ClipLang', isArray: true })
+    @ApiProperty({ type: [String] })
     @Prop({
         required: true,
-        validate: [(value) => value.length > 0, `Please provide language ${Object.values(ClipLang).join(' | ')}`],
+        validate: [(value) => value.length > 0, 'Please provide language'],
     })
-    langs: ClipLang[];
+    langs: string[];
 }
 
 export const ClipSchema = SchemaFactory.createForClass(Clip);

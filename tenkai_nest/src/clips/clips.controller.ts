@@ -44,7 +44,7 @@ export class ClipsController {
     @ApiOperation({ summary: 'Update Clip Language' })
     @ApiResponse({ type: ClipLang })
     updateClipLang(@Param('id') id: string, @Body() updateClipLangInputDto: UpdateClipLangInputDto): Promise<ClipLang> {
-        return this.clipsService.updateClipLang(id, updateClipLangInputDto);
+        return this.clipsService.updateClipLang(id, new UpdateClipLangInputDto(updateClipLangInputDto));
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

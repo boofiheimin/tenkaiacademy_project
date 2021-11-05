@@ -12,4 +12,8 @@ export class ClipLangsRepository extends BaseRepository<ClipLangDocument> {
             fullName: 1,
         });
     }
+
+    async findClipLangByCode(code: string): Promise<ClipLang> {
+        return this.clipLangModel.findOne({ code });
+    }
 }

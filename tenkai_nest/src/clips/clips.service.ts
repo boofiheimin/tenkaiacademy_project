@@ -65,7 +65,9 @@ export class ClipsService {
     }
 
     async createClip(createClipInputDto: CreateClipInputDto): Promise<Clip> {
-        const { videoId, srcVideoIds, langs } = createClipInputDto;
+        const { videoId, srcVideoIds, langs: inputLangs } = createClipInputDto;
+
+        const langs = uniq(inputLangs);
 
         const { srcTagsParam, srcVideosParam } = await this.processSrcVideoIds(srcVideoIds);
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
@@ -75,6 +77,17 @@ export class ClipsService {
         }
 
         const { docs: relatedClips } = await this.clipsRepository.find({ 'relatedClips.videoId': videoId });
+
+        //* Validate langCodes
+
+        await Promise.all(
+            langs.map(async (code) => {
+                const clipLang = await this.clipLangsRepository.findClipLangByCode(code);
+                if (!clipLang) {
+                    throw new BadRequestException(`Language with code ${code} does not exist`);
+                }
+            }),
+        );
 
         //* Update all previous instance of clips that contain this clip as relatedClip
         const clip = await this.clipsRepository.create({
@@ -129,7 +142,21 @@ export class ClipsService {
     }
 
     async updateClip(id: string, updateClipInputDto: UpdateClipInputDto): Promise<Clip> {
-        const { srcVideoIds, relatedClipIds, tagIds } = updateClipInputDto;
+        const { srcVideoIds, relatedClipIds, tagIds, langs: inputLangs } = updateClipInputDto;
+        let langs;
+        //* validate langs
+        if (inputLangs) {
+            langs = uniq(inputLangs);
+            await Promise.all(
+                langs.map(async (code) => {
+                    const clipLang = await this.clipLangsRepository.findClipLangByCode(code);
+                    if (!clipLang) {
+                        throw new BadRequestException(`Language with code ${code} does not exist`);
+                    }
+                }),
+            );
+        }
+
         let srcVideos: EmbedVideo[];
         let srcTags: EmbedTag[];
         //* Process srcVideoIds
@@ -182,10 +209,11 @@ export class ClipsService {
         }
 
         const clip = await this.clipsRepository.update(id, {
-            ...omit(updateClipInputDto, ['srcVideoIds', 'tagIds', 'relatedClipIds']),
+            ...omit(updateClipInputDto, ['srcVideoIds', 'tagIds', 'relatedClipIds', 'langs']),
             tags,
             srcVideos,
             relatedClips,
+            langs,
         });
 
         //* Update clips with related clip
@@ -236,6 +264,8 @@ export class ClipsService {
         return this.clipLangsRepository.find(findClipLangsInputDto);
     }
     async deleteClipLang(id: string): Promise<ClipLang> {
-        return this.clipLangsRepository.delete(id);
+        const clipLang = await this.clipLangsRepository.delete(id);
+        await this.clipsRepository.langCascadeDelete(clipLang);
+        return clipLang;
     }
 }

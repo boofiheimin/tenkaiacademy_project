@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { ClipLang } from '../schemas/clip.schema';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateClipInputDto {
     @ApiProperty({ type: [String] })
@@ -8,10 +7,10 @@ export class UpdateClipInputDto {
     @IsOptional()
     srcVideoIds?: string[];
 
-    @ApiProperty({ enum: ClipLang, enumName: 'ClipLang', isArray: true })
-    @IsEnum(ClipLang, { each: true })
+    @ApiProperty({ type: [String] })
+    @IsString({ each: true })
     @IsOptional()
-    langs?: ClipLang[];
+    langs?: string[];
 
     @ApiProperty()
     @IsString()

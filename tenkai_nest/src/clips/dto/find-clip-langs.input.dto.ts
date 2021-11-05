@@ -1,6 +1,6 @@
 import { IsOptional, IsString, MaxLength } from 'class-validator';
 import { BaseFindInputDto } from 'src/base/dto/base-find.input.dto';
-import { filterClassConstructor } from 'src/utils/utilities';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class FindClipLangsInputDto extends BaseFindInputDto {
     @IsString()
@@ -12,6 +12,6 @@ export class FindClipLangsInputDto extends BaseFindInputDto {
     fullName?: string;
     constructor(filter: any) {
         super();
-        filterClassConstructor(this, filter, ['code', 'fullName', 'sort', 'limit', 'skip']);
+        objectClassConstructor(this, filter, ['code', 'fullName', 'sort', 'limit', 'skip']);
     }
 }

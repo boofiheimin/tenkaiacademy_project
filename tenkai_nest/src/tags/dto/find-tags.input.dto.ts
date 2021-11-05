@@ -1,7 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { BaseFindInputDto } from 'src/base/dto/base-find.input.dto';
-import { filterClassConstructor } from 'src/utils/utilities';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class FindTagsInputDto extends BaseFindInputDto {
     @Type(() => String)
@@ -22,7 +22,7 @@ export class FindTagsInputDto extends BaseFindInputDto {
     categoryId?: number | object;
     constructor(filter: any = {}) {
         super();
-        filterClassConstructor(this, filter, [
+        objectClassConstructor(this, filter, [
             'tagNameEN',
             'tagNameJP',
             'tagId',

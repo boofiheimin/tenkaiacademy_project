@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseFindInputDto } from 'src/base/dto/base-find.input.dto';
-import { filterClassConstructor } from 'src/utils/utilities';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class FindClipsInputDto extends BaseFindInputDto {
     @IsOptional()
@@ -43,7 +43,7 @@ export class FindClipsInputDto extends BaseFindInputDto {
 
     constructor(filter: any) {
         super();
-        filterClassConstructor(this, filter, [
+        objectClassConstructor(this, filter, [
             'title',
             'tagIds',
             'from',

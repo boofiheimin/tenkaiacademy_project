@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
 import { Tag } from 'src/tags/schemas/tag.schema';
+import { ClipLang } from './schemas/clip-lang.schema';
 import { Clip, ClipDocument } from './schemas/clip.schema';
 
 @Injectable()
@@ -51,6 +52,21 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
             {
                 $pull: {
                     tags: { tagId },
+                },
+            },
+            {
+                new: true,
+            },
+        );
+    }
+
+    async langCascadeDelete(clipLang: ClipLang): Promise<void> {
+        const { code } = clipLang;
+        await this.clipModel.updateMany(
+            { langs: code },
+            {
+                $pull: {
+                    langs: code,
                 },
             },
             {
