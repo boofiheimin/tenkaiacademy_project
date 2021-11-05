@@ -31,7 +31,7 @@ export class VideosController {
     @ApiOperation({ summary: 'Find Videos' })
     @ApiResponse({ type: FindVideosResponseDto })
     async findVideos(@Query() filter: FindVideosInputDto): Promise<FindVideosResponseDto> {
-        return this.videoService.findVideos(filter);
+        return this.videoService.findVideos(new FindVideosInputDto(filter));
     }
 
     @Get(':id')

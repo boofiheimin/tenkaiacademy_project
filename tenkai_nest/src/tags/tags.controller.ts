@@ -32,7 +32,7 @@ export class TagsController {
     @ApiOperation({ summary: 'Find Tags' })
     @ApiResponse({ type: FindTagsResponseDto })
     async findTags(@Query() findTagsInputDto: FindTagsInputDto): Promise<FindTagsResponseDto> {
-        return this.tagService.findTags(findTagsInputDto);
+        return this.tagService.findTags(new FindTagsInputDto(findTagsInputDto));
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

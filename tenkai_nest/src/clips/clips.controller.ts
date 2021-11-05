@@ -17,7 +17,7 @@ export class ClipsController {
 
     @Get()
     findClips(@Query() filter: FindClipsInputDto): Promise<FindClipsResponseDto> {
-        return this.clipsService.findClips(filter);
+        return this.clipsService.findClips(new FindClipsInputDto(filter));
     }
 
     @Get(':id')

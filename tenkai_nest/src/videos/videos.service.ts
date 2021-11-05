@@ -65,12 +65,12 @@ export class VideosService {
     }
 
     async findVideos(filter: FindVideosInputDto): Promise<FindVideosResponseDto> {
-        const { title, from, to, uploader, tags, limit, skip, sortOrder } = filter;
+        const { title, from, to, uploader, tagIds, limit, skip, sortOrder } = filter;
 
         const tagsFilter: TagIdFilter[] = [];
 
-        (tags || []).forEach((tag: number) => {
-            tagsFilter.push({ 'tags.tagId': tag });
+        (tagIds || []).forEach((tagId: number) => {
+            tagsFilter.push({ 'tags.tagId': tagId });
         });
 
         const searchQuery = {

@@ -125,7 +125,7 @@ describe('VideosService', () => {
                 from: new Date(0),
                 to: new Date(1),
                 uploader: 'test-u',
-                tags: [1, 2],
+                tagIds: [1, 2],
                 limit: 10,
                 skip: 1,
                 sortOrder: true,
