@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { ITimestamp, VideoSource } from '../schemas/video.schema';
+import { Timestamp, VideoSource } from '../schemas/video.schema';
 
 export class UpdateVideoInputDto {
     @IsOptional()
@@ -35,9 +35,9 @@ export class UpdateVideoInputDto {
 
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => ITimestamp)
-    @ApiPropertyOptional({ type: ITimestamp, isArray: true })
-    timestamps?: ITimestamp[];
+    @Type(() => Timestamp)
+    @ApiPropertyOptional({ type: Timestamp, isArray: true })
+    timestamps?: Timestamp[];
 
     @IsOptional()
     @IsString({ each: true })

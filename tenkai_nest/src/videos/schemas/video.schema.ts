@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 import { YoutubeVideo } from 'src/base/youtube.service';
 import { EmbedTag } from 'src/tags/schemas/tag.schema';
 
-export class ITimestamp {
+export class Timestamp {
     @IsNumber()
     @ApiProperty()
     timestamp: number;
@@ -91,19 +91,19 @@ export class Video {
     publishedAt: Date;
 
     @Prop({ default: [] })
-    @ApiProperty({ description: 'Embed Tag Metadata' })
+    @ApiProperty({ description: 'Embed Tag Metadata', type: [EmbedTag] })
     tags: EmbedTag[];
 
     @Prop({ default: [] })
-    @ApiProperty()
-    timestamps: ITimestamp[];
+    @ApiProperty({ type: [Timestamp] })
+    timestamps: Timestamp[];
 
     @Prop({ default: [] })
-    @ApiProperty()
+    @ApiProperty({ description: "Tweets' ID" })
     relatedTweets: string[];
 
     @Prop({ default: [] })
-    @ApiProperty()
+    @ApiProperty({ description: 'Embed Video Metadata', type: [EmbedVideo] })
     relatedVideos: EmbedVideo[];
 
     @Prop({ default: '' })
@@ -111,7 +111,7 @@ export class Video {
     uploader: string;
 
     @Prop({ enum: Object.values(VideoSource) })
-    @ApiProperty()
+    @ApiProperty({ enum: VideoSource })
     source: VideoSource;
 
     @Prop({ default: '' })

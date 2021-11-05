@@ -21,7 +21,7 @@ export class User {
     @Prop({ required: [true, 'Please add a password'], minlength: 8, select: false })
     password: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: UserRole })
     @Prop({ enum: Object.keys(UserRole), required: [true, 'Please assign a correct role'] })
     role: UserRole;
 
