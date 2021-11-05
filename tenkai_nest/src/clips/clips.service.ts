@@ -6,11 +6,17 @@ import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
 import { EmbedVideo } from 'src/videos/schemas/video.schema';
 import { VideosService } from 'src/videos/videos.service';
+import { ClipLangsRepository } from './clip-langs.repository';
 import { ClipsRepository } from './clips.repository';
+import { CreateClipLangInputDto } from './dto/create-clip-lang.input.dto';
 import { CreateClipInputDto } from './dto/create-clip.input.dto';
+import { FindClipLangsInputDto } from './dto/find-clip-langs.input.dto';
+import { FindClipLangsResponseDto } from './dto/find-clip-langs.response';
 import { FindClipsInputDto } from './dto/find-clips.input.dto';
 import { FindClipsResponseDto } from './dto/find-clips.response.dto';
+import { UpdateClipLangInputDto } from './dto/update-clip-lang.input.dto';
 import { UpdateClipInputDto } from './dto/update-clip.input.dto';
+import { ClipLang } from './schemas/clip-lang.schema';
 import { Clip, EmbedClip } from './schemas/clip.schema';
 
 interface TagIdFilter {
@@ -26,6 +32,7 @@ interface ProcessedSrcVideo {
 export class ClipsService {
     constructor(
         private readonly clipsRepository: ClipsRepository,
+        private readonly clipLangsRepository: ClipLangsRepository,
         private readonly youtubeService: YoutubeService,
         @Inject(forwardRef(() => VideosService)) private readonly videosService: VideosService,
         @Inject(forwardRef(() => TagsService)) private readonly tagsService: TagsService,
@@ -106,7 +113,7 @@ export class ClipsService {
                 publishedAt: { ...(from && { $gte: from }), ...(to && { $lte: to }) },
             }),
             ...(tagsFilter.length > 0 && { $and: tagsFilter }),
-            langs,
+            ...(langs && { langs }),
         };
 
         return this.clipsRepository.find({
@@ -217,5 +224,18 @@ export class ClipsService {
 
     async tagCascadeDelete(tag: Tag): Promise<void> {
         return this.clipsRepository.tagCascadeDelete(tag);
+    }
+
+    async createClipLang(createClipLangInputDto: CreateClipLangInputDto): Promise<ClipLang> {
+        return this.clipLangsRepository.create(createClipLangInputDto);
+    }
+    async updateClipLang(id: string, updateClipLangInputDto: UpdateClipLangInputDto): Promise<ClipLang> {
+        return this.clipLangsRepository.update(id, updateClipLangInputDto);
+    }
+    async findClipLangs(findClipLangsInputDto: FindClipLangsInputDto): Promise<FindClipLangsResponseDto> {
+        return this.clipLangsRepository.find(findClipLangsInputDto);
+    }
+    async deleteClipLang(id: string): Promise<ClipLang> {
+        return this.clipLangsRepository.delete(id);
     }
 }
