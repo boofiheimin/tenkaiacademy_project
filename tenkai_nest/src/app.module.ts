@@ -12,6 +12,7 @@ import { LoggerMiddleWare } from './utils/logger.middleware';
 import { TagsModule } from './tags/tags.module';
 import { VideosModule } from './videos/videos.module';
 import { ClipsModule } from './clips/clips.module';
+import { ArtistsModule } from './artists/artists.module';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { ClipsModule } from './clips/clips.module';
         TagsModule,
         VideosModule,
         ClipsModule,
+        ArtistsModule,
     ],
     controllers: [AppController],
     providers: [AppService, ConfigService],
