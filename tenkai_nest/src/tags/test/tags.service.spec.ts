@@ -40,7 +40,7 @@ describe('TagsService', () => {
     describe('createTag', () => {
         describe('with no tags in db', () => {
             beforeEach(async () => {
-                jest.spyOn(tagsRepository, 'findLatestTag').mockReturnValueOnce(null);
+                spy = jest.spyOn(tagsRepository, 'findLatestTag').mockReturnValueOnce(null);
                 tag = await tagsService.createTag(tagStub());
             });
             it('should call UserRepository', () => {
@@ -50,7 +50,7 @@ describe('TagsService', () => {
                     tagId: 1,
                 });
             });
-            it('should return with the tag', () => {
+            it('should return with a tag', () => {
                 expect(tag).toEqual({
                     ...tagStub(),
                     tagId: 1,
@@ -68,7 +68,7 @@ describe('TagsService', () => {
                     tagId: 2,
                 });
             });
-            it('should return with the tag', () => {
+            it('should return with a tag', () => {
                 expect(tag).toEqual({
                     ...tagStub(),
                     tagId: 2,
@@ -102,7 +102,7 @@ describe('TagsService', () => {
             it('should call TagsRepository', () => {
                 expect(tagsRepository.update).toBeCalledWith('id', { tagNameEN: 'hey' });
             });
-            it('should return with the tag', () => {
+            it('should return with a tag', () => {
                 expect(tag).toEqual(tagStub());
             });
             it('should call VideosService', () => {
@@ -122,7 +122,7 @@ describe('TagsService', () => {
             it('should call TagsRepository', () => {
                 expect(tagsRepository.delete).toHaveBeenCalledWith('id');
             });
-            it('should return with the tag', () => {
+            it('should return with a tag', () => {
                 expect(tag).toEqual(tagStub());
             });
             it('should call VideosService', () => {
