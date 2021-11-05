@@ -141,7 +141,7 @@ describe('VideosService', () => {
                         $gte: filter.from,
                         $lte: filter.to,
                     },
-                    $and: filter.tags.map((tag) => ({ 'tags.tagId': tag })),
+                    $and: filter.tagIds.map((tagId) => ({ 'tags.tagId': tagId })),
                     limit: filter.limit,
                     skip: filter.skip,
                     sort: {

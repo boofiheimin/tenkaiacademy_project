@@ -91,12 +91,12 @@ export class ClipsService {
     }
 
     async findClips(filter: FindClipsInputDto): Promise<FindClipsResponseDto> {
-        const { title, from, to, uploader, tags, langs, limit, skip, sortOrder } = filter;
+        const { title, from, to, uploader, tagIds, langs, limit, skip, sortOrder } = filter;
 
         const tagsFilter: TagIdFilter[] = [];
 
-        (tags || []).forEach((tag: number) => {
-            tagsFilter.push({ 'tags.tagId': tag });
+        (tagIds || []).forEach((tagId: number) => {
+            tagsFilter.push({ 'tags.tagId': tagId });
         });
 
         const searchQuery = {

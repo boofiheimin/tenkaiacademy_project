@@ -190,7 +190,7 @@ describe('ClipsService', () => {
                 from: new Date(0),
                 to: new Date(1),
                 uploader: 'test-u',
-                tags: [1, 2],
+                tagIds: [1, 2],
                 limit: 10,
                 skip: 1,
                 sortOrder: true,
@@ -206,7 +206,7 @@ describe('ClipsService', () => {
                         $gte: filter.from,
                         $lte: filter.to,
                     },
-                    $and: filter.tags.map((tag) => ({ 'tags.tagId': tag })),
+                    $and: filter.tagIds.map((tagId) => ({ 'tags.tagId': tagId })),
                     limit: filter.limit,
                     skip: filter.skip,
                     sort: {
