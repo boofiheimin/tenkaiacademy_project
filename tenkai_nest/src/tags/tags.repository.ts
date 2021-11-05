@@ -9,7 +9,7 @@ export class TagsRepository extends BaseRepository<TagDocument> {
     constructor(@InjectModel(Tag.name) private tagModel: Model<TagDocument>) {
         super(tagModel, TagsRepository.name, {
             tagId: 1,
-            catId: 1,
+            categoryId: 1,
             tagNameEN: 1,
             tagNameJP: 1,
         });

@@ -14,5 +14,5 @@ export class UpdateTagInputDto {
     @IsOptional()
     @IsNumber()
     @ApiProperty()
-    catId?: number;
+    categoryId?: number;
 }

@@ -18,5 +18,5 @@ export class FindTagsInputDto extends BaseFindInputDto {
     @Type(() => String)
     @Transform(({ value }) => JSON.parse(value))
     @IsOptional()
-    catId?: number | object;
+    categoryId?: number | object;
 }

@@ -37,8 +37,8 @@ export class Tag {
     tagNameJP: string;
 
     @ApiProperty({ description: 'tagId of parents Tag' })
-    @Prop({ required: [true, 'Please provide a catId'], default: 0 })
-    catId: number; //TODO: change this to categoryId
+    @Prop({ required: [true, 'Please provide a categoryId'], default: 0 })
+    categoryId: number;
 }
 
 export const TagSchema = SchemaFactory.createForClass(Tag);
