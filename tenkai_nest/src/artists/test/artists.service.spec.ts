@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistsRepository } from '../artists.repository';
 import { ArtistsService } from '../artists.service';
+import { FindArtistsResponseDto } from '../dto/find-artists.response.dto';
 import { Artist } from '../schemas/artist.schema';
 import { artistStub } from './stubs/artist.stub';
 
@@ -13,7 +14,7 @@ describe('ArtistsService', () => {
     const testId = 'testId';
 
     let artist: Artist;
-    let artists: Artist[];
+    let artists: FindArtistsResponseDto;
     let spy: jest.SpyInstance;
 
     beforeEach(async () => {
