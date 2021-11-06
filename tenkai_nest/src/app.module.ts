@@ -13,6 +13,7 @@ import { TagsModule } from './tags/tags.module';
 import { VideosModule } from './videos/videos.module';
 import { ClipsModule } from './clips/clips.module';
 import { ArtistsModule } from './artists/artists.module';
+import { SongsModule } from './songs/songs.module';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { ArtistsModule } from './artists/artists.module';
         VideosModule,
         ClipsModule,
         ArtistsModule,
+        SongsModule,
     ],
     controllers: [AppController],
     providers: [AppService, ConfigService],
