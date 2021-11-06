@@ -9,13 +9,16 @@ import { tagStub } from 'src/tags/test/stubs/tag.stub';
 import { EmbedVideo } from 'src/videos/schemas/video.schema';
 import { videoStub } from 'src/videos/test/stub/video.stub';
 import { VideosService } from 'src/videos/videos.service';
+import { ClipLangsRepository } from '../clip-langs.repository';
 import { ClipsRepository } from '../clips.repository';
 import { ClipsService } from '../clips.service';
 import { FindClipsInputDto } from '../dto/find-clips.input.dto';
-import { ClipLang, EmbedClip } from '../schemas/clip.schema';
+import { EmbedClip } from '../schemas/clip.schema';
+import { clipLangStub } from './stub/clip-lang.stub';
 import { clipStub } from './stub/clip.stub';
 
 jest.mock('../clips.repository');
+jest.mock('../clip-langs.repository');
 jest.mock('src/videos/videos.service');
 jest.mock('src/base/youtube.service');
 jest.mock('src/tags/tags.service');
@@ -27,9 +30,12 @@ describe('ClipsService', () => {
     let youtubeService: YoutubeService;
     let videosService: VideosService;
     let clipsRepository: ClipsRepository;
+    let clipLangsRepository: ClipLangsRepository;
+    let tagsService: TagsService;
 
     const testId = 'test-id';
     const randomVId = 'randomVId';
+    const randomTagId = 999;
 
     let clip;
     let clips;
@@ -38,13 +44,15 @@ describe('ClipsService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ClipsService, ClipsRepository, VideosService, YoutubeService, TagsService],
+            providers: [ClipsService, ClipsRepository, VideosService, YoutubeService, TagsService, ClipLangsRepository],
         }).compile();
 
         clipsService = module.get<ClipsService>(ClipsService);
         youtubeService = module.get<YoutubeService>(YoutubeService);
         videosService = module.get<VideosService>(VideosService);
         clipsRepository = module.get<ClipsRepository>(ClipsRepository);
+        clipLangsRepository = module.get<ClipLangsRepository>(ClipLangsRepository);
+        tagsService = module.get<TagsService>(TagsService);
         jest.clearAllMocks();
     });
 
@@ -56,35 +64,70 @@ describe('ClipsService', () => {
 
     describe('createClip', () => {
         describe('existing srcVideos', () => {
-            beforeEach(async () => {
-                spy = jest.spyOn(videosService, 'findVideoByVideoId').mockReturnValueOnce({
-                    ...videoStub(),
-                    tags: [new EmbedTag(tagStub())],
-                } as any);
-                clip = await clipsService.createClip({
-                    videoId: clipStub().videoId,
-                    srcVideoIds: [videoStub().videoId],
-                    langs: [ClipLang.EN],
+            describe('w/ valid clip lang', () => {
+                beforeEach(async () => {
+                    spy = jest.spyOn(videosService, 'findVideoByVideoId').mockReturnValueOnce({
+                        ...videoStub(),
+                        tags: [new EmbedTag(tagStub())],
+                    } as any);
+                    clip = await clipsService.createClip({
+                        videoId: clipStub().videoId,
+                        srcVideoIds: [videoStub().videoId],
+                        langs: [clipLangStub().code, clipLangStub().code],
+                    });
                 });
-            });
 
-            it('should call YoutubeService', () => {
-                expect(youtubeService.fetchVideo).toBeCalledWith(clipStub().videoId);
-            });
-            it('should call VideosService', () => {
-                expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
-            });
-            it('should call ClipsRepository', () => {
-                expect(clipsRepository.find).toBeCalledWith({ 'relatedClips.videoId': clipStub().videoId });
-                expect(clipsRepository.create).toBeCalledWith({
-                    ...youtubeClipStub(),
-                    srcVideos: [new EmbedVideo(videoStub())],
-                    langs: [ClipLang.EN],
-                    tags: [new EmbedTag(tagStub())],
+                it('should call YoutubeService', () => {
+                    expect(youtubeService.fetchVideo).toBeCalledWith(clipStub().videoId);
+                });
+                it('should call VideosService', () => {
+                    expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
+                });
+                it('should call ClipsRepository', () => {
+                    expect(clipsRepository.find).toBeCalledWith({ 'relatedClips.videoId': clipStub().videoId });
+                    expect(clipsRepository.create).toBeCalledWith({
+                        ...youtubeClipStub(),
+                        srcVideos: [new EmbedVideo(videoStub())],
+                        langs: [clipLangStub().code],
+                        tags: [new EmbedTag(tagStub())],
+                    });
+                });
+                it('should call ClipLangsRepository w/ no dupe lang code', () => {
+                    expect(clipLangsRepository.findClipLangByCode).toBeCalledWith(clipLangStub().code);
+                });
+                it('should return with a clip', () => {
+                    expect(omitStubFn(clip)).toEqual(omitStubFn(clipStub()));
                 });
             });
-            it('should return with a clip', () => {
-                expect(omitStubFn(clip)).toEqual(omitStubFn(clipStub()));
+            describe('w/ invalid clip lang', () => {
+                beforeEach(async () => {
+                    spy = jest.spyOn(videosService, 'findVideoByVideoId').mockReturnValueOnce({
+                        ...videoStub(),
+                        tags: [new EmbedTag(tagStub())],
+                    } as any);
+                    try {
+                        clip = await clipsService.createClip({
+                            videoId: clipStub().videoId,
+                            srcVideoIds: [videoStub().videoId],
+                            langs: [randomVId],
+                        });
+                    } catch (e) {
+                        error = e;
+                    }
+                });
+
+                it('should call YoutubeService', () => {
+                    expect(youtubeService.fetchVideo).toBeCalledWith(clipStub().videoId);
+                });
+                it('should call VideosService', () => {
+                    expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
+                });
+                it('should call ClipLangRepository', () => {
+                    expect(clipLangsRepository.findClipLangByCode).toBeCalledWith(randomVId);
+                });
+                it('should throw BadRequestException', () => {
+                    expect(error).toBeInstanceOf(BadRequestException);
+                });
             });
         });
         describe('non-existing srcVideos', () => {
@@ -94,7 +137,7 @@ describe('ClipsService', () => {
                     clip = await clipsService.createClip({
                         videoId: clipStub().videoId,
                         srcVideoIds: [videoStub().videoId],
-                        langs: [ClipLang.EN],
+                        langs: [clipLangStub().code],
                     });
                 });
 
@@ -105,11 +148,14 @@ describe('ClipsService', () => {
                 it('should call VideosService', () => {
                     expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
                 });
+                it('should call ClipLangsRepository', () => {
+                    expect(clipLangsRepository.findClipLangByCode).toBeCalledWith(clipLangStub().code);
+                });
                 it('should call ClipsRepository', () => {
                     expect(clipsRepository.create).toBeCalledWith({
                         ...youtubeClipStub(),
                         srcVideos: [new EmbedVideo(youtubeStub())],
-                        langs: [ClipLang.EN],
+                        langs: [clipLangStub().code],
                         tags: [],
                     });
                 });
@@ -124,7 +170,7 @@ describe('ClipsService', () => {
                         clip = await clipsService.createClip({
                             videoId: clipStub().videoId,
                             srcVideoIds: ['fake'],
-                            langs: [ClipLang.EN],
+                            langs: [clipLangStub().code],
                         });
                     } catch (e) {
                         error = e;
@@ -145,7 +191,7 @@ describe('ClipsService', () => {
                     clip = await clipsService.createClip({
                         videoId: randomVId,
                         srcVideoIds: [videoStub().videoId],
-                        langs: [ClipLang.EN],
+                        langs: [clipLangStub().code],
                     });
                 } catch (e) {
                     error = e;
@@ -241,7 +287,7 @@ describe('ClipsService', () => {
     });
 
     describe('updateClip', () => {
-        describe('no srcVideoIds, no relatedClipIds, no tagIds', () => {
+        describe('no srcVideoIds, no relatedClipIds, no tagIds, no langs', () => {
             beforeEach(async () => {
                 clip = await clipsService.updateClip(testId, {});
             });
@@ -371,6 +417,9 @@ describe('ClipsService', () => {
             beforeEach(async () => {
                 clip = await clipsService.updateClip(testId, { tagIds: [tagStub().tagId] });
             });
+            it('should call TagsService', () => {
+                expect(tagsService.findTagByTagId).toBeCalledWith(tagStub().tagId);
+            });
             it('should call ClipsRepository', () => {
                 expect(clipsRepository.update).toBeCalledWith(testId, {
                     tags: [new EmbedTag(tagStub())],
@@ -378,6 +427,52 @@ describe('ClipsService', () => {
             });
             it('should return a clip', () => {
                 expect(omitStubFn(clip)).toEqual(omitStubFn(clipStub()));
+            });
+        });
+        describe('w/ non-existing-tagIds', () => {
+            beforeEach(async () => {
+                try {
+                    await clipsService.updateClip(testId, { tagIds: [randomTagId] });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call TagsService', () => {
+                expect(tagsService.findTagByTagId).toBeCalledWith(randomTagId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+        describe('w/ langs', () => {
+            beforeEach(async () => {
+                clip = await clipsService.updateClip(testId, { langs: [clipLangStub().code] });
+            });
+            it('should call ClipLangsRepository', () => {
+                expect(clipLangsRepository.findClipLangByCode).toBeCalledWith(clipLangStub().code);
+            });
+            it('should call ClipsRepository', () => {
+                expect(clipsRepository.update).toBeCalledWith(testId, {
+                    langs: [clipLangStub().code],
+                });
+            });
+            it('should return a clip', () => {
+                expect(omitStubFn(clip)).toEqual(omitStubFn(clipStub()));
+            });
+        });
+        describe('w/ non-existing langs', () => {
+            beforeEach(async () => {
+                try {
+                    clip = await clipsService.updateClip(testId, { langs: [randomVId] });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call ClipLangsRepository', () => {
+                expect(clipLangsRepository.findClipLangByCode).toBeCalledWith(randomVId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
             });
         });
     });

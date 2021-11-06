@@ -76,8 +76,6 @@ export class ClipsService {
             throw new BadRequestException(`Youtube video ${videoId} Not Found`);
         }
 
-        const { docs: relatedClips } = await this.clipsRepository.find({ 'relatedClips.videoId': videoId });
-
         //* Validate langCodes
 
         await Promise.all(
@@ -88,6 +86,8 @@ export class ClipsService {
                 }
             }),
         );
+
+        const { docs: relatedClips } = await this.clipsRepository.find({ 'relatedClips.videoId': videoId });
 
         //* Update all previous instance of clips that contain this clip as relatedClip
         const clip = await this.clipsRepository.create({

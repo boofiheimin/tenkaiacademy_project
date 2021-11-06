@@ -1,7 +1,8 @@
 import { youtubeClipStub } from 'src/base/test/stub/youtube.stub';
-import { Clip, ClipLang } from 'src/clips/schemas/clip.schema';
+import { Clip } from 'src/clips/schemas/clip.schema';
 import { EmbedVideo } from 'src/videos/schemas/video.schema';
 import { videoStub } from 'src/videos/test/stub/video.stub';
+import { clipLangStub } from './clip-lang.stub';
 
 class ClipStub extends Clip {
     save: () => void;
@@ -18,6 +19,6 @@ export const clipStub = (): ClipStub => ({
     tags: [],
     uploader: 'test-uploader',
     relatedClips: [],
-    langs: [ClipLang.EN],
+    langs: [clipLangStub().code],
     save: () => {},
 });

@@ -55,7 +55,7 @@ describe('VideosService', () => {
     describe('createVideo', () => {
         describe('youtube video exist', () => {
             beforeEach(async () => {
-                video = await videosService.createVideo(videoStub().videoId);
+                video = await videosService.createVideo({ videoId: videoStub().videoId });
             });
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(videoStub().videoId);
@@ -78,7 +78,7 @@ describe('VideosService', () => {
 
         describe('youtube video does not exist', () => {
             beforeEach(async () => {
-                video = await videosService.createVideo(randomVId);
+                video = await videosService.createVideo({ videoId: randomVId });
             });
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(randomVId);
