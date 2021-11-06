@@ -209,4 +209,47 @@ describe('SongsService', () => {
             });
         });
     });
+    describe('deleteSong', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                song = await songsService.deleteSong(id);
+            });
+            it('should call SongsRepository', () => {
+                expect(songsRepository.delete).toBeCalledWith(id);
+            });
+            it('should return with a song', () => {
+                expect(song).toEqual(songStub());
+            });
+        });
+    });
+    describe('artistCascadeUpdate', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songsService.artistCascadeUpdate(artistStub());
+            });
+            it('should call SongsRepository', () => {
+                expect(songsRepository.artistCascadeUpdate).toBeCalledWith(artistStub());
+            });
+        });
+    });
+    describe('artistCascadeDelete', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songsService.artistCascadeDelete(artistStub());
+            });
+            it('should call SongsRepository', () => {
+                expect(songsRepository.artistCascadeDelete).toBeCalledWith(artistStub());
+            });
+        });
+    });
+    describe('findSongBySongId', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                song = await songsService.findSongBySongId(songStub().songId);
+            });
+            it('should call SongsRepository', () => {
+                expect(songsRepository.findBySongId).toBeCalledWith(songStub().songId);
+            });
+        });
+    });
 });

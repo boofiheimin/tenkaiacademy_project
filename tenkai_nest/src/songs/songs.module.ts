@@ -7,5 +7,6 @@ import { SongsService } from './songs.service';
     imports: [ArtistsModule],
     controllers: [SongsController],
     providers: [SongsService],
+    exports: [SongsService],
 })
 export class SongsModule {}

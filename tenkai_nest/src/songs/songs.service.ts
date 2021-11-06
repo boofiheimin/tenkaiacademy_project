@@ -6,7 +6,7 @@ import { FindSongsResponseDto } from './dto/find-songs.response.dto';
 import { UpdateSongInputDto } from './dto/update-song.input.dto';
 import { Song } from './schemas/song.schema';
 import { ArtistsService } from 'src/artists/artists.service';
-import { EmbedArtist } from 'src/artists/schemas/artist.schema';
+import { Artist, EmbedArtist } from 'src/artists/schemas/artist.schema';
 import { isUndefined } from 'lodash';
 
 @Injectable()
@@ -78,13 +78,26 @@ export class SongsService {
             ...(!isUndefined(artists) && { artists }),
         });
 
-        //TODO Cascade update all songs/songRecords.
+        //TODO Cascade update all songRecords.
 
         return song;
     }
 
     async deleteSong(id: string): Promise<Song> {
-        //TODO Cascade update all songs/songRecords
-        return this.songsRepository.delete(id);
+        const song = this.songsRepository.delete(id);
+        //TODO Cascade update all songRecords
+        return song;
+    }
+
+    async artistCascadeUpdate(artist: Artist): Promise<void> {
+        return this.songsRepository.artistCascadeUpdate(artist);
+    }
+
+    async artistCascadeDelete(artist: Artist): Promise<void> {
+        return this.songsRepository.artistCascadeDelete(artist);
+    }
+
+    async findSongBySongId(songId: number): Promise<Song> {
+        return this.songsRepository.findBySongId(songId);
     }
 }

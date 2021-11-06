@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Artist } from 'src/artists/schemas/artist.schema';
 import { BaseRepository } from 'src/base/base.repository';
 import { Song, SongDocument } from './schemas/song.schema';
 
@@ -24,5 +25,43 @@ export class SongsRepository extends BaseRepository<SongDocument> {
         this.logger.log(`Finding latest ${this.collectionName}`);
         const [latestTag] = await this.songModel.find().sort({ songId: -1 }).limit(1);
         return latestTag;
+    }
+
+    async artistCascadeUpdate(artist: Artist): Promise<void> {
+        const { artistId, artistNameEN, artistNameJP } = artist;
+        this.logger.log(
+            `Updating artists for ${this.collectionName}<artistId:${artistId}> with ${JSON.stringify({
+                artistNameEN,
+                artistNameJP,
+            })}`,
+        );
+        await this.songModel.updateMany(
+            { 'artists.artistId': artistId },
+            {
+                $set: {
+                    'tags.$.tagNameEN': artistNameEN,
+                    'tags.$.tagNameJP': artistNameJP,
+                },
+            },
+            {
+                new: true,
+            },
+        );
+    }
+
+    async artistCascadeDelete(artist: Artist): Promise<void> {
+        const { artistId } = artist;
+        this.logger.log(`Removing artists for ${this.collectionName}<artistId:${artistId}>`);
+        await this.songModel.updateMany(
+            { 'artists.artistId': artistId },
+            {
+                $pull: {
+                    artists: { artistId },
+                },
+            },
+            {
+                new: true,
+            },
+        );
     }
 }
