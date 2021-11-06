@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { objectClassConstructor } from 'src/utils/utilities';
 
 export class CreateSongInputDto {
@@ -13,7 +13,7 @@ export class CreateSongInputDto {
     songNameJP?: string;
 
     @ApiProperty()
-    @IsString({ each: true })
+    @IsNumber({}, { each: true })
     artistIds: number[];
 
     constructor(data: object) {
