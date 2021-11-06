@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { SongsRepository } from './songs.repository';
 import { CreateSongInputDto } from './dto/create-song.input.dto';
 import { FindSongsInputDto } from './dto/find-songs.input.dto';
@@ -11,7 +11,10 @@ import { isUndefined } from 'lodash';
 
 @Injectable()
 export class SongsService {
-    constructor(private readonly songsRepository: SongsRepository, private readonly artistsService: ArtistsService) {}
+    constructor(
+        private readonly songsRepository: SongsRepository,
+        @Inject(forwardRef(() => ArtistsService)) private readonly artistsService: ArtistsService,
+    ) {}
 
     async createSong(createSongInputDto: CreateSongInputDto): Promise<Song> {
         const { songNameEN, songNameJP, artistIds } = createSongInputDto;

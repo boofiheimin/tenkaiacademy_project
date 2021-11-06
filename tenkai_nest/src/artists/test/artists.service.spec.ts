@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { SongsService } from 'src/songs/songs.service';
 import { ArtistsRepository } from '../artists.repository';
 import { ArtistsService } from '../artists.service';
 import { FindArtistsResponseDto } from '../dto/find-artists.response.dto';
@@ -6,10 +7,12 @@ import { Artist } from '../schemas/artist.schema';
 import { artistStub } from './stubs/artist.stub';
 
 jest.mock('../artists.repository');
+jest.mock('src/songs/songs.service');
 
 describe('ArtistsService', () => {
     let artistsService: ArtistsService;
     let artistsRepository: ArtistsRepository;
+    let songsService: SongsService;
 
     const testId = 'testId';
 
@@ -19,11 +22,12 @@ describe('ArtistsService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ArtistsService, ArtistsRepository],
+            providers: [ArtistsService, ArtistsRepository, SongsService],
         }).compile();
 
         artistsService = module.get<ArtistsService>(ArtistsService);
         artistsRepository = module.get<ArtistsRepository>(ArtistsRepository);
+        songsService = module.get<SongsService>(SongsService);
     });
 
     afterEach(() => {
@@ -43,7 +47,7 @@ describe('ArtistsService', () => {
                 expect(artistsRepository.findLatestArtist).toBeCalled();
                 expect(artistsRepository.create).toBeCalledWith({ ...artistStub(), artistId: 1 });
             });
-            it('should return with a user', async () => {
+            it('should return with a artist', async () => {
                 expect(artist).toEqual(artistStub());
             });
         });
@@ -55,7 +59,7 @@ describe('ArtistsService', () => {
                 expect(artistsRepository.findLatestArtist).toBeCalled();
                 expect(artistsRepository.create).toBeCalledWith({ ...artistStub(), artistId: 2 });
             });
-            it('should return with a user', async () => {
+            it('should return with a artist', async () => {
                 expect(artist).toEqual({ ...artistStub(), artistId: 2 });
             });
         });
@@ -85,6 +89,9 @@ describe('ArtistsService', () => {
                     artistNameEN: 'test',
                 });
             });
+            it('should call SongsService', () => {
+                expect(songsService.artistCascadeUpdate).toBeCalledWith(artistStub());
+            });
             it('should call ArtistsRepository', () => {
                 expect(artistsRepository.update).toBeCalledWith(testId, { artistNameEN: 'test' });
             });
@@ -97,6 +104,9 @@ describe('ArtistsService', () => {
         describe('when call', () => {
             beforeEach(async () => {
                 artist = await artistsService.deleteArtist(testId);
+            });
+            it('should call SongsService', () => {
+                expect(songsService.artistCascadeDelete).toBeCalledWith(artistStub());
             });
             it('should call ArtistsRepository', () => {
                 expect(artistsRepository.delete).toBeCalledWith(testId);

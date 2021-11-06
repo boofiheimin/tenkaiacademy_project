@@ -39,8 +39,8 @@ export class SongsRepository extends BaseRepository<SongDocument> {
             { 'artists.artistId': artistId },
             {
                 $set: {
-                    'tags.$.tagNameEN': artistNameEN,
-                    'tags.$.tagNameJP': artistNameJP,
+                    'artists.$.artistNameEN': artistNameEN,
+                    'artists.$.artistNameJP': artistNameJP,
                 },
             },
             {
