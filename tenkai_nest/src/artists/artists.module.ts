@@ -9,5 +9,6 @@ import { Artist, ArtistSchema } from './schemas/artist.schema';
     imports: [MongooseModule.forFeature([{ name: Artist.name, schema: ArtistSchema }])],
     controllers: [ArtistsController],
     providers: [ArtistsService, ArtistsRepository],
+    exports: [ArtistsService],
 })
 export class ArtistsModule {}

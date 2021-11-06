@@ -1,4 +1,4 @@
-import { artistStub } from '../test/stub/artist.stub';
+import { artistStub } from '../test/stubs/artist.stub';
 
 export const ArtistsRepository = jest.fn().mockReturnValue({
     create: jest.fn().mockImplementation((dto) => dto),

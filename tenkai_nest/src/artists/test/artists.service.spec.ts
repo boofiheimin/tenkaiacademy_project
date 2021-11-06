@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistsRepository } from '../artists.repository';
 import { ArtistsService } from '../artists.service';
-import { artistStub } from './stub/artist.stub';
+import { Artist } from '../schemas/artist.schema';
+import { artistStub } from './stubs/artist.stub';
 
 jest.mock('../artists.repository');
 
@@ -11,9 +12,9 @@ describe('ArtistsService', () => {
 
     const testId = 'testId';
 
-    let artist;
-    let artists;
-    let spy;
+    let artist: Artist;
+    let artists: Artist[];
+    let spy: jest.SpyInstance;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +39,7 @@ describe('ArtistsService', () => {
                 artist = await artistsService.createArtist(artistStub());
             });
             it('should call ArtistsRepository', async () => {
+                expect(artistsRepository.findLatestArtist).toBeCalled();
                 expect(artistsRepository.create).toBeCalledWith({ ...artistStub(), artistId: 1 });
             });
             it('should return with a user', async () => {
@@ -49,6 +51,7 @@ describe('ArtistsService', () => {
                 artist = await artistsService.createArtist(artistStub());
             });
             it('should call ArtistsRepository', async () => {
+                expect(artistsRepository.findLatestArtist).toBeCalled();
                 expect(artistsRepository.create).toBeCalledWith({ ...artistStub(), artistId: 2 });
             });
             it('should return with a user', async () => {

@@ -31,4 +31,8 @@ export class ArtistsService {
         //TODO Cascade update all songs/songRecords
         return this.artistsRepository.delete(id);
     }
+
+    async findArtistByArtistId(artistId: number): Promise<Artist> {
+        return this.artistsRepository.findByArtistId(artistId);
+    }
 }
