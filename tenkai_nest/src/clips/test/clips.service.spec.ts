@@ -358,7 +358,6 @@ describe('ClipsService', () => {
                 });
             });
         });
-
         describe('w/ existing-relatedClipIds', () => {
             beforeEach(async () => {
                 clip = await clipsService.updateClip(testId, { relatedClipIds: [clipStub().videoId] });

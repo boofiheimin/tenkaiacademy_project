@@ -7,7 +7,7 @@ export type ArtistDocument = Artist & Document;
 export class Artist {
     @Prop({ unique: true, required: true })
     artistId: number;
-    @Prop({ required: true })
+    @Prop({ unique: true, required: true })
     artistNameEN: string;
     @Prop()
     artistNameJP: string;

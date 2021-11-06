@@ -28,10 +28,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
             response.status(HttpStatus.BAD_REQUEST).json(errObj);
         } else {
             if (exception instanceof HttpException) {
-                this.logger.error({
-                    statusCode: exception.getStatus(),
-                    message: exception.getResponse(),
-                });
+                this.logger.error(exception.getResponse());
             }
 
             super.catch(exception, host);

@@ -13,4 +13,15 @@ export class ArtistsRepository extends BaseRepository<ArtistDocument> {
             artistNameJP: 1,
         });
     }
+
+    async findByArtistId(artistId: number): Promise<Artist> {
+        this.logger.log(`Finding ${this.collectionName}<artistId:${artistId}>`);
+        return this.artistModel.findOne({ artistId });
+    }
+
+    async findLatestArtist(): Promise<Artist> {
+        this.logger.log(`Finding latest ${this.collectionName}`);
+        const [latestTag] = await this.artistModel.find().sort({ artistId: -1 }).limit(1);
+        return latestTag;
+    }
 }

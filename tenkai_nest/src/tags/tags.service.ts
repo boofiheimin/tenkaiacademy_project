@@ -18,13 +18,7 @@ export class TagsService {
 
     async createTag(data: CreateTagInputDto): Promise<Tag> {
         const latestTag = await this.tagsRepository.findLatestTag();
-        let index;
-        if (!latestTag) {
-            index = 1;
-        } else {
-            index = latestTag.tagId + 1;
-        }
-        return this.tagsRepository.create({ ...data, tagId: index });
+        return this.tagsRepository.create({ ...data, tagId: latestTag ? latestTag.tagId + 1 : 1 });
     }
 
     async findTags(filter: FindTagsInputDto): Promise<FindTagsResponseDto> {
