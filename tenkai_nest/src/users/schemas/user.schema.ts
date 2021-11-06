@@ -17,7 +17,6 @@ export class User {
     @Prop({ required: [true, 'Please provide a username'], unique: true })
     username: string;
 
-    @ApiProperty()
     @Prop({ required: [true, 'Please add a password'], minlength: 8, select: false })
     password: string;
 
