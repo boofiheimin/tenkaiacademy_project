@@ -25,7 +25,7 @@ export class TagsController {
     @ApiOperation({ summary: 'Create Tag' })
     @ApiResponse({ type: Tag })
     async createTag(@Body() createTagInputDto: CreateTagInputDto): Promise<Tag> {
-        return this.tagService.createTag(createTagInputDto);
+        return this.tagService.createTag(new CreateTagInputDto(createTagInputDto));
     }
 
     @Get()
@@ -42,7 +42,7 @@ export class TagsController {
     @ApiOperation({ summary: 'Update Tag' })
     @ApiResponse({ type: Tag })
     async updateTag(@Param('id') id: string, @Body() updateTagInputDto: UpdateTagInputDto): Promise<Tag> {
-        return this.tagService.updateTag(id, updateTagInputDto);
+        return this.tagService.updateTag(id, new UpdateTagInputDto(updateTagInputDto));
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

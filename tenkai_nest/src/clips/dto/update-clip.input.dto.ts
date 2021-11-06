@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class UpdateClipInputDto {
     @ApiProperty({ type: [String] })
@@ -51,4 +52,18 @@ export class UpdateClipInputDto {
     @IsString({ each: true })
     @IsOptional()
     relatedClipIds?: string[];
+    constructor(data: object) {
+        objectClassConstructor(this, data, [
+            'srcVideoIds',
+            'langs',
+            'title',
+            'description',
+            'thumbnail',
+            'duration',
+            'publishedAt',
+            'uploader',
+            'tagIds',
+            'relatedClipIds',
+        ]);
+    }
 }

@@ -27,7 +27,7 @@ export class ClipsController {
     @ApiOperation({ summary: 'Create Clip Language' })
     @ApiResponse({ type: ClipLang })
     createClipLang(@Body() createClipLangInputDto: CreateClipLangInputDto): Promise<ClipLang> {
-        return this.clipsService.createClipLang(createClipLangInputDto);
+        return this.clipsService.createClipLang(new CreateClipLangInputDto(createClipLangInputDto));
     }
 
     @Get('clipLangs')
@@ -64,7 +64,7 @@ export class ClipsController {
     @ApiOperation({ summary: 'Create Clip' })
     @ApiResponse({ type: Clip })
     createClip(@Body() createClipInputDto: CreateClipInputDto): Promise<Clip> {
-        return this.clipsService.createClip(createClipInputDto);
+        return this.clipsService.createClip(new CreateClipInputDto(createClipInputDto));
     }
 
     @Get()
@@ -88,7 +88,7 @@ export class ClipsController {
     @ApiOperation({ summary: 'Update Clip' })
     @ApiResponse({ type: Clip })
     updateClip(@Param('id') id: string, @Body() updateClipInputDto: UpdateClipInputDto): Promise<Clip> {
-        return this.clipsService.updateClip(id, updateClipInputDto);
+        return this.clipsService.updateClip(id, new UpdateClipInputDto(updateClipInputDto));
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

@@ -24,7 +24,7 @@ export class VideosController {
     @ApiOperation({ summary: 'Create Video' })
     @ApiResponse({ type: Video })
     async createVideo(@Body() createVideoInputDto: CreateVideoInputDto): Promise<Video> {
-        return this.videoService.createVideo(createVideoInputDto.videoId);
+        return this.videoService.createVideo(new CreateVideoInputDto(createVideoInputDto));
     }
 
     @Get()
@@ -47,7 +47,7 @@ export class VideosController {
     @ApiOperation({ summary: 'Update Video' })
     @ApiResponse({ type: Video })
     async updateVideo(@Param('id') id: string, @Body() updateVideoInputDto: UpdateVideoInputDto): Promise<Video> {
-        return this.videoService.updateVideo(id, updateVideoInputDto);
+        return this.videoService.updateVideo(id, new UpdateVideoInputDto(updateVideoInputDto));
     }
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)

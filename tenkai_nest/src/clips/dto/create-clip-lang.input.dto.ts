@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength } from 'class-validator';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class CreateClipLangInputDto {
     @MaxLength(2)
@@ -9,4 +10,7 @@ export class CreateClipLangInputDto {
     @IsString()
     @ApiProperty()
     fullName: string;
+    constructor(data: object) {
+        objectClassConstructor(this, data, ['code', 'fullName']);
+    }
 }

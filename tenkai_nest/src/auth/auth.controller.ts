@@ -25,7 +25,7 @@ export class AuthController {
     @ApiOperation({ summary: 'Register User' })
     @ApiResponse({ description: 'User has been successfully created', type: User })
     async register(@Body() registerInput: RegisterInputDto): Promise<User> {
-        return this.authService.register(registerInput);
+        return this.authService.register(new RegisterInputDto(registerInput));
     }
 
     @Post('login')
@@ -37,7 +37,7 @@ export class AuthController {
         if (bearerToken) {
             token = bearerToken.split(' ')[1];
         }
-        return this.authService.login(loginInput, token);
+        return this.authService.login(new LoginInputDto(loginInput), token);
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, MinLength } from 'class-validator';
 import { UserRole } from 'src/users/schemas/user.schema';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export class RegisterInputDto {
     @ApiProperty()
@@ -17,4 +18,7 @@ export class RegisterInputDto {
     @ApiProperty({ enum: Object.values(UserRole) })
     @IsEnum(UserRole)
     role: UserRole;
+    constructor(data: object) {
+        objectClassConstructor(this, data, ['username', 'password', 'role']);
+    }
 }

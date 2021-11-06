@@ -6,6 +6,7 @@ import { ClipDocument } from 'src/clips/schemas/clip.schema';
 import { EmbedTag, Tag } from 'src/tags/schemas/tag.schema';
 import { TagsService } from 'src/tags/tags.service';
 import { uniqByKey } from 'src/utils/utilities';
+import { CreateVideoInputDto } from './dto/create-video.input.dto';
 import { FindVideosInputDto } from './dto/find-videos.input.dto';
 import { FindVideosResponseDto } from './dto/find-videos.response.dto';
 import { UpdateVideoInputDto } from './dto/update-video.input.dto';
@@ -25,7 +26,8 @@ export class VideosService {
 
     private logger = new Logger(VideosService.name);
 
-    async createVideo(videoId: string) {
+    async createVideo(createVideoInputDto: CreateVideoInputDto): Promise<Video> {
+        const { videoId } = createVideoInputDto;
         const youtubeVideo = await this.youtubeService.fetchVideo(videoId);
 
         let videoInput: Partial<Video>;
