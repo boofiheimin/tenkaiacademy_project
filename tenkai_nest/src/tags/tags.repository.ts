@@ -16,6 +16,7 @@ export class TagsRepository extends BaseRepository<TagDocument> {
     }
 
     async findLatestTag(): Promise<Tag> {
+        this.logger.log(`Finding latest ${this.collectionName}`);
         const [latestTag] = await this.tagModel.find().sort({ tagId: -1 }).limit(1);
         return latestTag;
     }

@@ -27,6 +27,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
     }
 
     async findByIdWithClip(id: string): Promise<Video> {
+        this.logger.log(`Finding ${this.collectionName}<id:${id}> with its clips`);
         const [video] = await this.videoModel
             .aggregate()
             .match({
@@ -55,12 +56,16 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
         return video;
     }
 
-    async findOneAndUpsert(query: FilterQuery<VideoDocument>, data: Partial<Video>): Promise<Video> {
-        return this.videoModel.findOneAndUpdate(query, data, { upsert: true, setDefaultsOnInsert: true });
+    async findOneAndUpsert(filter: FilterQuery<VideoDocument>, data: Partial<Video>): Promise<Video> {
+        this.logger.log(`Finding ${this.collectionName}<filter:${JSON.stringify(filter)}> and upsert`);
+        return this.videoModel.findOneAndUpdate(filter, data, { upsert: true, setDefaultsOnInsert: true });
     }
 
     async tagCascadeUpdate(tag: Tag): Promise<void> {
         const { tagId, tagNameEN, tagNameJP } = tag;
+        this.logger.log(
+            `Updating tags for ${this.collectionName}<tagId:${tagId}> with ${JSON.stringify({ tagNameEN, tagNameJP })}`,
+        );
         await this.videoModel.updateMany(
             { 'tags.tagId': tagId },
             {
@@ -77,6 +82,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
 
     async tagCascadeDelete(tag: Tag): Promise<void> {
         const { tagId } = tag;
+        this.logger.log(`Removing tags for ${this.collectionName}<tagId:${tagId}>`);
         await this.videoModel.updateMany(
             { 'tags.tagId': tagId },
             {
@@ -91,6 +97,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
     }
 
     async findByVideoId(videoId: string): Promise<Video> {
+        this.logger.log(`Finding ${this.collectionName}<videoId:${videoId}>`);
         return this.videoModel.findOne({ videoId });
     }
 }

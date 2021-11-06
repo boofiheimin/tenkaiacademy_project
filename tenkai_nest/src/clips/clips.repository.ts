@@ -26,11 +26,13 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
     }
 
     async findByVideoId(videoId: string) {
+        this.logger.log(`Finding ${this.collectionName}<videoId:${videoId}>`);
         return this.clipModel.findOne({ videoId });
     }
 
     async tagCascadeUpdate(tag: Tag): Promise<void> {
         const { tagId, tagNameEN, tagNameJP } = tag;
+        this.logger.log(`Updating tags for ${this.collectionName}<tagId:${tagId}>`);
         await this.clipModel.updateMany(
             { 'tags.tagId': tagId },
             {
@@ -47,6 +49,7 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
 
     async tagCascadeDelete(tag: Tag): Promise<void> {
         const { tagId } = tag;
+        this.logger.log(`Removing tags for ${this.collectionName}<tagId:${tagId}>`);
         await this.clipModel.updateMany(
             { 'tags.tagId': tagId },
             {
@@ -62,6 +65,7 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
 
     async langCascadeDelete(clipLang: ClipLang): Promise<void> {
         const { code } = clipLang;
+        this.logger.log(`Removing clip-lang for ${this.collectionName}<langs:${clipLang}>`);
         await this.clipModel.updateMany(
             { langs: code },
             {

@@ -12,7 +12,7 @@ export abstract class BaseRepository<T extends Document> {
 
     protected logger = new Logger(this.loggerName);
 
-    private collectionName = this.model.collection.collectionName;
+    protected collectionName = this.model.collection.collectionName;
 
     async create(data: Partial<T>): Promise<T> {
         this.logger.log(`Creating ${this.collectionName} with ${JSON.stringify(data)}`);
