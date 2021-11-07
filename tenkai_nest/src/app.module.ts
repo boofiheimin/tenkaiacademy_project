@@ -14,6 +14,7 @@ import { VideosModule } from './videos/videos.module';
 import { ClipsModule } from './clips/clips.module';
 import { ArtistsModule } from './artists/artists.module';
 import { SongsModule } from './songs/songs.module';
+import { SongRecordsModule } from './song-records/song-records.module';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { SongsModule } from './songs/songs.module';
         ClipsModule,
         ArtistsModule,
         SongsModule,
+        SongRecordsModule,
     ],
     controllers: [AppController],
     providers: [AppService, ConfigService],

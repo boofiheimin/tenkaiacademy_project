@@ -2,9 +2,27 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 import { EmbedArtist } from 'src/artists/schemas/artist.schema';
+import { objectClassConstructor } from 'src/utils/utilities';
 
 export type SongDocument = Song & Document;
 
+export class EmbedSong {
+    @ApiProperty()
+    songId: number;
+
+    @ApiProperty()
+    songNameEN: string;
+
+    @ApiProperty()
+    songNameJP: string;
+
+    @ApiProperty({ type: [EmbedArtist] })
+    artists: EmbedArtist[];
+
+    constructor(song: Song) {
+        objectClassConstructor(this, song, ['songId', 'songNameEN', 'songNameJP', 'artists']);
+    }
+}
 @Schema({ timestamps: true })
 export class Song {
     @ApiProperty()
