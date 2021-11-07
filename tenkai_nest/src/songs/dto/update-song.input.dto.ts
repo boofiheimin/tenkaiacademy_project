@@ -18,7 +18,11 @@ export class UpdateSongInputDto {
     @ApiPropertyOptional()
     artistIds?: number[];
 
+    @ApiPropertyOptional()
+    @IsNumber()
+    duration?: number;
+
     constructor(data: object) {
-        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'artistIds']);
+        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'artistIds', 'duration']);
     }
 }

@@ -7,4 +7,5 @@ export const songStub = (): Song => ({
     songNameEN: 'test-song-name-en',
     songNameJP: 'test-song-name-jp',
     artists: [new EmbedArtist(artistStub())],
+    duration: 200,
 });

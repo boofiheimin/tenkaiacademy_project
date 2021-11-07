@@ -40,6 +40,10 @@ export class Song {
     @ApiProperty({ type: [EmbedArtist] })
     @Prop({ required: true })
     artists: EmbedArtist[];
+
+    @ApiProperty()
+    @Prop({ required: true })
+    duration: number;
 }
 
 export const SongSchema = SchemaFactory.createForClass(Song);

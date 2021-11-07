@@ -17,7 +17,7 @@ export class SongsService {
     ) {}
 
     async createSong(createSongInputDto: CreateSongInputDto): Promise<Song> {
-        const { songNameEN, songNameJP, artistIds } = createSongInputDto;
+        const { songNameEN, songNameJP, artistIds, duration } = createSongInputDto;
 
         //* Validate / process artistIds
         const artists = [];
@@ -37,6 +37,7 @@ export class SongsService {
             artists,
             ...(songNameJP && { songNameJP }),
             songId: latestSong ? latestSong.songId + 1 : 1,
+            duration,
         });
     }
 
@@ -60,7 +61,7 @@ export class SongsService {
     }
 
     async updateSong(id: string, updateSongInputDto: UpdateSongInputDto): Promise<Song> {
-        const { songNameEN, songNameJP, artistIds } = updateSongInputDto;
+        const { songNameEN, songNameJP, artistIds, duration } = updateSongInputDto;
 
         let artists: EmbedArtist[] | undefined;
         if (artistIds) {
@@ -79,6 +80,7 @@ export class SongsService {
             ...(!isUndefined(songNameEN) && { songNameEN }),
             ...(!isUndefined(songNameJP) && { songNameJP }),
             ...(!isUndefined(artists) && { artists }),
+            ...(!isUndefined(duration) && { duration }),
         });
 
         //TODO Cascade update all songRecords.

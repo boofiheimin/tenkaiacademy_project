@@ -16,7 +16,11 @@ export class CreateSongInputDto {
     @IsNumber({}, { each: true })
     artistIds: number[];
 
+    @ApiProperty()
+    @IsNumber()
+    duration: number;
+
     constructor(data: object) {
-        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'artistIds']);
+        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'artistIds', 'duration']);
     }
 }

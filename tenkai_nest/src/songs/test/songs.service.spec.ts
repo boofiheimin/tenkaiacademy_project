@@ -51,6 +51,7 @@ describe('SongsService', () => {
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
                     artistIds: [artistStub().artistId],
+                    duration: songStub().duration,
                 });
             });
             it('should call ArtistsService', () => {
@@ -63,6 +64,7 @@ describe('SongsService', () => {
                     songNameJP: songStub().songNameJP,
                     artists: [new EmbedArtist(artistStub())],
                     songId: 1,
+                    duration: songStub().duration,
                 });
             });
             it('should return with a song', () => {
@@ -75,6 +77,7 @@ describe('SongsService', () => {
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
                     artistIds: [artistStub().artistId],
+                    duration: songStub().duration,
                 });
             });
             it('should call ArtistsService', () => {
@@ -87,6 +90,7 @@ describe('SongsService', () => {
                     songNameJP: songStub().songNameJP,
                     artists: [new EmbedArtist(artistStub())],
                     songId: songStub().songId + 1,
+                    duration: songStub().duration,
                 });
             });
             it('should return with a song', () => {
@@ -100,6 +104,7 @@ describe('SongsService', () => {
                         songNameEN: songStub().songNameEN,
                         songNameJP: songStub().songNameJP,
                         artistIds: [randomId],
+                        duration: songStub().duration,
                     });
                 } catch (e) {
                     error = e;
@@ -172,6 +177,7 @@ describe('SongsService', () => {
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
                     artistIds: [artistStub().artistId],
+                    duration: songStub().duration,
                 });
             });
             it('should call ArtistsService', () => {
@@ -182,6 +188,7 @@ describe('SongsService', () => {
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
                     artists: [new EmbedArtist(artistStub())],
+                    duration: songStub().duration,
                 });
             });
             it('should return with a song', () => {
@@ -195,6 +202,7 @@ describe('SongsService', () => {
                         songNameEN: songStub().songNameEN,
                         songNameJP: songStub().songNameJP,
                         artistIds: [randomId],
+                        duration: songStub().duration,
                     });
                 } catch (e) {
                     error = e;
