@@ -1,30 +1,45 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { objectClassConstructor } from 'src/utils/utilities';
 import { SongRecordType } from '../schemas/song-record.schema';
 
 export class CreateSongRecordInputDto {
     @ApiProperty()
+    @IsString()
     videoId: string;
 
     @ApiPropertyOptional()
+    @IsString()
+    @IsOptional()
     proxyVideoId?: string;
 
     @ApiProperty()
+    @IsNumber()
     songId: number;
 
     @ApiProperty()
-    songStart: number;
+    @IsNumber()
+    @IsOptional()
+    songStart?: number;
 
     @ApiProperty()
-    songEnd: number;
+    @IsNumber()
+    @IsOptional()
+    songEnd?: number;
 
     @ApiProperty()
-    songIndex: number;
+    @IsNumber()
+    @IsOptional()
+    songIndex?: number;
 
     @ApiProperty()
+    @IsString()
+    @IsOptional()
     featuring?: string;
 
     @ApiProperty({ enum: SongRecordType, description: 'For special song type' })
+    @IsString()
+    @IsOptional()
     identifier?: SongRecordType;
 
     constructor(data: object) {

@@ -13,6 +13,7 @@ export class SongsRepository extends BaseRepository<SongDocument> {
             songNameEN: 1,
             songNameJP: 1,
             artists: 1,
+            duration: 1,
         });
     }
 

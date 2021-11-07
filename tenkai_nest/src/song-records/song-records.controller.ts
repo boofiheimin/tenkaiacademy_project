@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { CreateSongRecordInputDto } from './dto/create-song-record.input.dto';
 import { SongRecord } from './schemas/song-record.schema';
 import { SongRecordsService } from './song-records.service';
@@ -7,7 +7,7 @@ import { SongRecordsService } from './song-records.service';
 export class SongRecordsController {
     constructor(private readonly songRecordsService: SongRecordsService) {}
     @Post()
-    async createSongRecord(createSongRecordInputDto: CreateSongRecordInputDto): Promise<SongRecord> {
+    async createSongRecord(@Body() createSongRecordInputDto: CreateSongRecordInputDto): Promise<SongRecord> {
         return this.songRecordsService.createSongRecords(new CreateSongRecordInputDto(createSongRecordInputDto));
     }
 
