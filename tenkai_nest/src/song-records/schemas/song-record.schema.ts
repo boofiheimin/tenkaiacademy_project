@@ -47,6 +47,10 @@ export class SongRecord {
     @ApiPropertyOptional({ enum: SongRecordType, description: 'For special song type' })
     @Prop()
     identifier?: SongRecordType;
+
+    @ApiProperty()
+    @Prop({ default: false })
+    isScuffed: boolean;
 }
 
 export const SongRecordSchema = SchemaFactory.createForClass(SongRecord);

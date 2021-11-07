@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { objectClassConstructor } from 'src/utils/utilities';
 import { SongRecordType } from '../schemas/song-record.schema';
 
@@ -22,25 +22,29 @@ export class CreateSongRecordInputDto {
     @IsOptional()
     songStart?: number;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsNumber()
     @IsOptional()
     songEnd?: number;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsNumber()
     @IsOptional()
     songIndex?: number;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
     @IsOptional()
     featuring?: string;
 
-    @ApiProperty({ enum: SongRecordType, description: 'For special song type' })
+    @ApiPropertyOptional({ enum: SongRecordType, description: 'For special song type' })
     @IsString()
     @IsOptional()
     identifier?: SongRecordType;
+
+    @ApiProperty()
+    @IsBoolean()
+    isScuffed: boolean;
 
     constructor(data: object) {
         objectClassConstructor(this, data, [

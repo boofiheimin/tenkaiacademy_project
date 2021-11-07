@@ -60,7 +60,7 @@ export class SongRecordsService {
             publishedAt: video.publishedAt,
             song: new EmbedSong(song),
             songStart: isUndefined(songStart) ? 0 : songStart,
-            songEnd,
+            songEnd: isUndefined(songEnd) ? songStart + song.duration : songEnd,
             songIndex: isUndefined(songIndex) ? 0 : songIndex,
             ...(featuring && { featuring }),
             ...(identifier && { identifier }),
