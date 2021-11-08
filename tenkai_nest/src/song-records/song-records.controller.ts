@@ -1,5 +1,8 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateSongRecordInputDto } from './dto/create-song-record.input.dto';
+import { FindSongRecordsInputDto } from './dto/find-song-records.input.dto';
+import { FindSongRecordsResponseDto } from './dto/find-song-records.response.dto';
+import { UpdateSongRecordInputDto } from './dto/update-song-record.input.dto';
 import { SongRecord } from './schemas/song-record.schema';
 import { SongRecordsService } from './song-records.service';
 
@@ -12,11 +15,19 @@ export class SongRecordsController {
     }
 
     @Get()
-    async findSongRecords() {}
+    async findSongRecords(
+        @Query() findSongRecordsInputDto: FindSongRecordsInputDto,
+    ): Promise<FindSongRecordsResponseDto> {
+        return this.songRecordsService.findSongRecords(new FindSongRecordsInputDto(findSongRecordsInputDto));
+    }
 
     @Patch(':id')
-    async updateSongRecord() {}
+    async updateSongRecord(@Param('id') id: string, @Body() updateSongRecordInputDto: UpdateSongRecordInputDto) {
+        return this.songRecordsService.updateSongRecord(id, new UpdateSongRecordInputDto(updateSongRecordInputDto));
+    }
 
     @Delete(':id')
-    async deleteSongRecord() {}
+    async deleteSongRecord(@Param('id') id: string) {
+        return this.songRecordsService.deleteSongRecord(id);
+    }
 }
