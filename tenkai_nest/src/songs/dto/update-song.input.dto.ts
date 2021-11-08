@@ -13,6 +13,11 @@ export class UpdateSongInputDto {
     @ApiPropertyOptional()
     songNameJP?: string;
 
+    @IsString()
+    @IsOptional()
+    @ApiPropertyOptional()
+    songNameRM?: string;
+
     @IsNumber({}, { each: true })
     @IsOptional()
     @ApiPropertyOptional()
@@ -20,6 +25,7 @@ export class UpdateSongInputDto {
 
     @ApiPropertyOptional()
     @IsNumber()
+    @IsOptional()
     duration?: number;
 
     constructor(data: object) {

@@ -50,6 +50,7 @@ describe('SongsService', () => {
                 song = await songsService.createSong({
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
+                    songNameRM: songStub().songNameRM,
                     artistIds: [artistStub().artistId],
                     duration: songStub().duration,
                 });
@@ -62,6 +63,7 @@ describe('SongsService', () => {
                 expect(songsRepository.create).toBeCalledWith({
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
+                    songNameRM: songStub().songNameRM,
                     artists: [new EmbedArtist(artistStub())],
                     songId: 1,
                     duration: songStub().duration,
@@ -76,6 +78,7 @@ describe('SongsService', () => {
                 song = await songsService.createSong({
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
+                    songNameRM: songStub().songNameRM,
                     artistIds: [artistStub().artistId],
                     duration: songStub().duration,
                 });
@@ -88,6 +91,7 @@ describe('SongsService', () => {
                 expect(songsRepository.create).toBeCalledWith({
                     songNameEN: songStub().songNameEN,
                     songNameJP: songStub().songNameJP,
+                    songNameRM: songStub().songNameRM,
                     artists: [new EmbedArtist(artistStub())],
                     songId: songStub().songId + 1,
                     duration: songStub().duration,
@@ -141,6 +145,7 @@ describe('SongsService', () => {
                     songId: 1,
                     songNameEN: 'search-this',
                     songNameJP: 'search-that',
+                    songNameRM: 'search-dat',
                     artistId: 1,
                     artistNameEN: 'search-those',
                     artistNameJP: 'search-these',
@@ -154,6 +159,7 @@ describe('SongsService', () => {
                     songId: 1,
                     songNameEN: new RegExp('search-this', 'i'),
                     songNameJP: new RegExp('search-that', 'i'),
+                    songNameRM: new RegExp('search-dat', 'i'),
                     'artists.artistId': 1,
                     'artists.artistNameEN': new RegExp('search-those', 'i'),
                     'artists.artistNameJP': new RegExp('search-these', 'i'),
@@ -175,6 +181,7 @@ describe('SongsService', () => {
             beforeEach(async () => {
                 song = await songsService.updateSong(id, {
                     songNameEN: songStub().songNameEN,
+                    songNameRM: songStub().songNameRM,
                     songNameJP: songStub().songNameJP,
                     artistIds: [artistStub().artistId],
                     duration: songStub().duration,
@@ -186,6 +193,7 @@ describe('SongsService', () => {
             it('should call SongsRepository', () => {
                 expect(songsRepository.update).toBeCalledWith(id, {
                     songNameEN: songStub().songNameEN,
+                    songNameRM: songStub().songNameRM,
                     songNameJP: songStub().songNameJP,
                     artists: [new EmbedArtist(artistStub())],
                     duration: songStub().duration,
@@ -200,6 +208,7 @@ describe('SongsService', () => {
                 try {
                     await songsService.updateSong(id, {
                         songNameEN: songStub().songNameEN,
+                        songNameRM: songStub().songNameRM,
                         songNameJP: songStub().songNameJP,
                         artistIds: [randomId],
                         duration: songStub().duration,

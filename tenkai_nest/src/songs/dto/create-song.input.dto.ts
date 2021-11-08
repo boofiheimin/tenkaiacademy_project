@@ -3,11 +3,23 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { objectClassConstructor } from 'src/utils/utilities';
 
 export class CreateSongInputDto {
-    @ApiProperty()
+    @ApiPropertyOptional({
+        description: 'Song name in English',
+    })
     @IsString()
-    songNameEN: string;
+    @IsOptional()
+    songNameEN?: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({
+        description: 'Song name in Romanji',
+    })
+    @IsString()
+    @IsOptional()
+    songNameRM?: string;
+
+    @ApiPropertyOptional({
+        description: 'Song name in Japanese',
+    })
     @IsString()
     @IsOptional()
     songNameJP?: string;
@@ -21,6 +33,6 @@ export class CreateSongInputDto {
     duration: number;
 
     constructor(data: object) {
-        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'artistIds', 'duration']);
+        objectClassConstructor(this, data, ['songNameEN', 'songNameJP', 'songNameRM', 'artistIds', 'duration']);
     }
 }

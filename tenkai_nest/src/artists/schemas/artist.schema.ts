@@ -26,7 +26,7 @@ export class Artist {
     @Prop({ unique: true, required: true })
     artistNameEN: string;
     @ApiProperty()
-    @Prop()
+    @Prop({ default: '' })
     artistNameJP: string;
 }
 

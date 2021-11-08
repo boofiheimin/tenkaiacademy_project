@@ -17,7 +17,7 @@ export class SongsService {
     ) {}
 
     async createSong(createSongInputDto: CreateSongInputDto): Promise<Song> {
-        const { songNameEN, songNameJP, artistIds, duration } = createSongInputDto;
+        const { songNameEN, songNameJP, songNameRM, artistIds, duration } = createSongInputDto;
 
         //* Validate / process artistIds
         const artists = [];
@@ -34,6 +34,7 @@ export class SongsService {
         const latestSong = await this.songsRepository.findLatestSong();
         return this.songsRepository.create({
             songNameEN,
+            songNameRM,
             artists,
             ...(songNameJP && { songNameJP }),
             songId: latestSong ? latestSong.songId + 1 : 1,
@@ -42,13 +43,14 @@ export class SongsService {
     }
 
     async findSongs(findSongsInputDto: FindSongsInputDto): Promise<FindSongsResponseDto> {
-        const { songId, songNameEN, songNameJP, artistId, artistNameEN, artistNameJP, limit, sort, skip } =
+        const { songId, songNameEN, songNameJP, songNameRM, artistId, artistNameEN, artistNameJP, limit, sort, skip } =
             findSongsInputDto;
 
         const searchParams = {
             ...(!isUndefined(songId) && { songId }),
             ...(!isUndefined(songNameEN) && { songNameEN: new RegExp(songNameEN, 'i') }),
             ...(!isUndefined(songNameJP) && { songNameJP: new RegExp(songNameJP, 'i') }),
+            ...(!isUndefined(songNameRM) && { songNameRM: new RegExp(songNameRM, 'i') }),
             ...(!isUndefined(artistId) && { 'artists.artistId': artistId }),
             ...(!isUndefined(artistNameEN) && { 'artists.artistNameEN': new RegExp(artistNameEN, 'i') }),
             ...(!isUndefined(artistNameJP) && { 'artists.artistNameJP': new RegExp(artistNameJP, 'i') }),
@@ -61,7 +63,7 @@ export class SongsService {
     }
 
     async updateSong(id: string, updateSongInputDto: UpdateSongInputDto): Promise<Song> {
-        const { songNameEN, songNameJP, artistIds, duration } = updateSongInputDto;
+        const { songNameEN, songNameJP, songNameRM, artistIds, duration } = updateSongInputDto;
 
         let artists: EmbedArtist[] | undefined;
         if (artistIds) {
@@ -79,6 +81,7 @@ export class SongsService {
         const song = this.songsRepository.update(id, {
             ...(!isUndefined(songNameEN) && { songNameEN }),
             ...(!isUndefined(songNameJP) && { songNameJP }),
+            ...(!isUndefined(songNameRM) && { songNameRM }),
             ...(!isUndefined(artists) && { artists }),
             ...(!isUndefined(duration) && { duration }),
         });

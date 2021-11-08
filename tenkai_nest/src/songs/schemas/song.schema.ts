@@ -10,17 +10,20 @@ export class EmbedSong {
     @ApiProperty()
     songId: number;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Song name in English' })
     songNameEN: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Song name in Romanji' })
+    songNameRM: string;
+
+    @ApiProperty({ description: 'Song name in Japanese' })
     songNameJP: string;
 
     @ApiProperty({ type: [EmbedArtist] })
     artists: EmbedArtist[];
 
     constructor(song: Song) {
-        objectClassConstructor(this, song, ['songId', 'songNameEN', 'songNameJP', 'artists']);
+        objectClassConstructor(this, song, ['songId', 'songNameEN', 'songNameJP', 'songNameRM', 'artists']);
     }
 }
 @Schema({ timestamps: true })
@@ -29,12 +32,32 @@ export class Song {
     @Prop({ unique: true, required: true })
     songId: number;
 
-    @ApiProperty()
-    @Prop({ required: true })
+    @ApiProperty({ description: 'Song name in English' })
+    @Prop({
+        required: [
+            function () {
+                return !this.songNameEN;
+            },
+            'Need either Romanji or English name',
+        ],
+        default: '',
+    })
+    songNameRM: string;
+
+    @ApiProperty({ description: 'Song name in Romanji' })
+    @Prop({
+        required: [
+            function () {
+                return !this.songNameRM;
+            },
+            'Need either Romanji or English name',
+        ],
+        default: '',
+    })
     songNameEN: string;
 
-    @ApiProperty()
-    @Prop()
+    @ApiProperty({ description: 'Song name in Japanese' })
+    @Prop({ default: '' })
     songNameJP: string;
 
     @ApiProperty({ type: [EmbedArtist] })
