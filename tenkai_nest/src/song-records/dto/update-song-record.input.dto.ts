@@ -59,6 +59,7 @@ export class UpdateSongRecordInputDto {
             'songIndex',
             'featuring',
             'identifier',
+            'isScuffed',
         ]);
     }
 }
