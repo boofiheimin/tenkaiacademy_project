@@ -27,6 +27,7 @@ describe('SongRecordsService', () => {
 
     const randomId = 'random-id';
     const randomNumberId = 777;
+    const id = 'test-id';
 
     let songRecord: SongRecord;
     let songRecords: FindSongRecordsResponseDto;
@@ -71,19 +72,15 @@ describe('SongRecordsService', () => {
                     ]),
                 });
             });
-
             it('should call VideosService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(songRecordStub().videoId);
             });
-
             it('should call SongsService', () => {
                 expect(songsService.findSongBySongId).toBeCalledWith(songStub().songId);
             });
-
             it('should call SongRecordsRepository', () => {
                 expect(songRecordsRepository.create).toBeCalledWith(songRecordStub());
             });
-
             it('should return with a song record', () => {
                 expect(songRecord).toEqual(songRecordStub());
             });
@@ -107,22 +104,18 @@ describe('SongRecordsService', () => {
                     ]),
                 });
             });
-
             it('should call VideosService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(songRecordStub().videoId);
             });
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(youtubeStub().videoId);
             });
-
             it('should call SongsService', () => {
                 expect(songsService.findSongBySongId).toBeCalledWith(songStub().songId);
             });
-
             it('should call SongRecordsRepository', () => {
                 expect(songRecordsRepository.create).toBeCalledWith(songRecordStub());
             });
-
             it('should return with a song record', () => {
                 expect(songRecord).toEqual(songRecordStub());
             });
@@ -163,11 +156,9 @@ describe('SongRecordsService', () => {
                     error = e;
                 }
             });
-
             it('should call VideosService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(randomId);
             });
-
             it('should throw BadRequestException', () => {
                 expect(error).toBeInstanceOf(BadRequestException);
             });
@@ -194,11 +185,9 @@ describe('SongRecordsService', () => {
                     error = e;
                 }
             });
-
             it('should call VideosService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
             });
-
             it('should throw BadRequestException', () => {
                 expect(error).toBeInstanceOf(BadRequestException);
             });
@@ -226,15 +215,12 @@ describe('SongRecordsService', () => {
                     error = e;
                 }
             });
-
             it('should call VideosService', () => {
                 expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
             });
-
             it('should call YoutubeService', () => {
                 expect(youtubeService.fetchVideo).toBeCalledWith(randomId);
             });
-
             it('should throw BadRequestException', () => {
                 expect(error).toBeInstanceOf(BadRequestException);
             });
@@ -316,6 +302,175 @@ describe('SongRecordsService', () => {
                     docs: [songRecordStub()],
                     totalCount: 1,
                 });
+            });
+        });
+    });
+    describe('updateSongRecord', () => {
+        describe('blank update field', () => {
+            beforeEach(async () => {
+                songRecord = await songRecordsService.updateSongRecord(id, {});
+            });
+            it('should call SongsRepository', () => {
+                expect(songRecordsRepository.update).toBeCalledWith(id, {});
+            });
+            it('should return with a song record', () => {
+                expect(songRecord).toEqual(songRecordStub());
+            });
+        });
+        describe('correct update field', () => {
+            beforeEach(async () => {
+                songRecord = await songRecordsService.updateSongRecord(id, {
+                    songId: songStub().songId,
+                    ...pick(songRecordStub(), [
+                        'videoId',
+                        'songStart',
+                        'songEnd',
+                        'songIndex',
+                        'isScuffed',
+                        'featuring',
+                        'identifier',
+                    ]),
+                });
+            });
+            it('should call SongsRepository', () => {
+                expect(songRecordsRepository.update).toBeCalledWith(id, songRecordStub());
+            });
+            it('should return with a song record', () => {
+                expect(songRecord).toEqual(songRecordStub());
+            });
+        });
+        describe('invalid song range', () => {
+            beforeEach(async () => {
+                try {
+                    await songRecordsService.updateSongRecord(id, {
+                        songId: songStub().songId,
+                        songStart: 2,
+                        songEnd: 1,
+                        ...pick(songRecordStub(), ['videoId', 'songIndex', 'isScuffed', 'featuring', 'identifier']),
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+        describe('invalid video', () => {
+            beforeEach(async () => {
+                try {
+                    await songRecordsService.updateSongRecord(id, {
+                        songId: songStub().songId,
+                        videoId: randomId,
+                        ...pick(songRecordStub(), [
+                            'songStart',
+                            'songEnd',
+                            'songIndex',
+                            'isScuffed',
+                            'featuring',
+                            'identifier',
+                        ]),
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call VideosService', () => {
+                expect(videosService.findVideoByVideoId).toBeCalledWith(randomId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+        describe('private video but proxyVideoId is not provide', () => {
+            beforeEach(async () => {
+                try {
+                    spy = jest
+                        .spyOn(videosService, 'findVideoByVideoId')
+                        .mockReturnValueOnce({ ...videoStub(), isPrivate: true } as any);
+                    songRecord = await songRecordsService.updateSongRecord(id, {
+                        songId: songStub().songId,
+                        ...pick(songRecordStub(), [
+                            'videoId',
+                            'songStart',
+                            'songEnd',
+                            'songIndex',
+                            'isScuffed',
+                            'featuring',
+                            'identifier',
+                        ]),
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call VideosService', () => {
+                expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+        describe('private video but non-existing proxyVideoId is provide', () => {
+            beforeEach(async () => {
+                try {
+                    spy = jest
+                        .spyOn(videosService, 'findVideoByVideoId')
+                        .mockReturnValueOnce({ ...videoStub(), isPrivate: true } as any);
+                    songRecord = await songRecordsService.updateSongRecord(id, {
+                        songId: songStub().songId,
+                        proxyVideoId: randomId,
+                        ...pick(songRecordStub(), [
+                            'videoId',
+                            'songStart',
+                            'songEnd',
+                            'songIndex',
+                            'isScuffed',
+                            'featuring',
+                            'identifier',
+                        ]),
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call VideosService', () => {
+                expect(videosService.findVideoByVideoId).toBeCalledWith(videoStub().videoId);
+            });
+            it('should call YoutubeService', () => {
+                expect(youtubeService.fetchVideo).toBeCalledWith(randomId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+        describe('invalid song', () => {
+            beforeEach(async () => {
+                try {
+                    await songRecordsService.updateSongRecord(id, {
+                        songId: randomNumberId,
+                        ...pick(songRecordStub(), [
+                            'videoId',
+                            'songStart',
+                            'songEnd',
+                            'songIndex',
+                            'isScuffed',
+                            'featuring',
+                            'identifier',
+                        ]),
+                    });
+                } catch (e) {
+                    error = e;
+                }
+            });
+            it('should call VideosService', () => {
+                expect(videosService.findVideoByVideoId).toBeCalledWith(songRecordStub().videoId);
+            });
+            it('should call SongsService', () => {
+                expect(songsService.findSongBySongId).toBeCalledWith(randomNumberId);
+            });
+            it('should throw BadRequestException', () => {
+                expect(error).toBeInstanceOf(BadRequestException);
             });
         });
     });

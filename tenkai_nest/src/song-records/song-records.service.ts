@@ -1,12 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { isUndefined } from 'lodash';
-import { YoutubeService } from 'src/base/youtube.service';
-import { EmbedSong } from 'src/songs/schemas/song.schema';
+import { YoutubeService, YoutubeVideo } from 'src/base/youtube.service';
+import { EmbedSong, Song } from 'src/songs/schemas/song.schema';
 import { SongsService } from 'src/songs/songs.service';
 import { VideosService } from 'src/videos/videos.service';
 import { CreateSongRecordInputDto } from './dto/create-song-record.input.dto';
 import { FindSongRecordsInputDto } from './dto/find-song-records.input.dto';
 import { FindSongRecordsResponseDto } from './dto/find-song-records.response.dto';
+import { UpdateSongRecordInputDto } from './dto/update-song-record.input.dto';
 import { SongRecord } from './schemas/song-record.schema';
 import { SongRecordsRepository } from './song-records.repository';
 
@@ -19,44 +20,54 @@ export class SongRecordsService {
         private readonly youtubeService: YoutubeService,
     ) {}
 
-    async createSongRecords(createSongRecordInputDto: CreateSongRecordInputDto): Promise<SongRecord> {
-        const { videoId, proxyVideoId, songId, songStart, songEnd, songIndex, featuring, identifier, isScuffed } =
-            createSongRecordInputDto;
-
-        if (songStart > songEnd) {
+    private async inputFieldValidation(inputFields: CreateSongRecordInputDto | UpdateSongRecordInputDto): Promise<{
+        video: YoutubeVideo;
+        song: Song;
+    }> {
+        const { videoId, proxyVideoId, songId, songStart, songEnd } = inputFields;
+        if (!isUndefined(songStart) && !isUndefined(songEnd) && songStart > songEnd) {
             throw new BadRequestException('Invalid song range');
         }
+        let video = null;
+        let song = null;
 
-        let videoParams: Partial<SongRecord> = {};
-
-        let proxyVideo;
-
-        //* Validate videoId and proxyVideoId
-        const video = await this.videosService.findVideoByVideoId(videoId);
-        if (video) {
-            if (video.isPrivate) {
-                if (proxyVideoId) {
-                    proxyVideo = await this.youtubeService.fetchVideo(proxyVideoId);
-                    if (!proxyVideo) {
-                        throw new BadRequestException(`Proxy Youtube Video: ${proxyVideo} not found`);
+        if (videoId) {
+            //* Validate videoId and proxyVideoId
+            video = await this.videosService.findVideoByVideoId(videoId);
+            if (video) {
+                if (video.isPrivate) {
+                    if (proxyVideoId) {
+                        const proxyVideo = await this.youtubeService.fetchVideo(proxyVideoId);
+                        if (!proxyVideo) {
+                            throw new BadRequestException(`Proxy Youtube Video: ${proxyVideo} not found`);
+                        }
+                    } else {
+                        throw new BadRequestException(`Video: ${videoId} is private, please provide proxyVideoId `);
                     }
-                } else {
-                    throw new BadRequestException(`Video: ${videoId} is private, please provide proxyVideoId `);
                 }
+            } else {
+                throw new BadRequestException(`Video: ${videoId} not found in our system.`);
             }
-        } else {
-            throw new BadRequestException(`Video: ${videoId} not found in our system.`);
         }
 
-        //* Validate Song
-        const song = await this.songsService.findSongBySongId(songId);
-        if (!song) {
-            throw new BadRequestException(`Song: ${songId} does not exist`);
-        } else {
-            videoParams.song = new EmbedSong(song);
+        if (songId) {
+            //* Validate Song
+            song = await this.songsService.findSongBySongId(songId);
+            if (!song) {
+                throw new BadRequestException(`Song: ${songId} does not exist`);
+            }
         }
 
-        videoParams = {
+        return { video, song };
+    }
+
+    async createSongRecords(createSongRecordInputDto: CreateSongRecordInputDto): Promise<SongRecord> {
+        const { videoId, proxyVideoId, songStart, songEnd, songIndex, featuring, identifier, isScuffed } =
+            createSongRecordInputDto;
+
+        const { video, song } = await this.inputFieldValidation(createSongRecordInputDto);
+
+        const videoParams: Partial<SongRecord> = {
             videoId,
             ...(isUndefined(proxyVideoId) && { proxyVideoId }),
             publishedAt: video.publishedAt,
@@ -96,5 +107,28 @@ export class SongRecordsService {
             skip,
             sort: { publishedAt: !isUndefined(dateSort) ? dateSort : -1, songIndex: 1 },
         });
+    }
+
+    async updateSongRecord(id: string, updateSongRecordInputDto: UpdateSongRecordInputDto): Promise<SongRecord> {
+        const { videoId, proxyVideoId, songStart, songEnd, songIndex, featuring, identifier, isScuffed } =
+            updateSongRecordInputDto;
+        const { video, song } = await this.inputFieldValidation(updateSongRecordInputDto);
+
+        const videoParams: Partial<SongRecord> = {
+            ...(video && {
+                videoId,
+                publishedAt: video.publishedAt,
+            }),
+            ...(!isUndefined(proxyVideoId) && { proxyVideoId }),
+            ...(song && { song: new EmbedSong(song) }),
+            ...(!isUndefined(songStart) && { songStart }),
+            ...(!isUndefined(songEnd) && { songEnd }),
+            ...(!isUndefined(songIndex) && { songIndex }),
+            ...(!isUndefined(featuring) && { featuring }),
+            ...(!isUndefined(identifier) && { identifier }),
+            ...(!isUndefined(isScuffed) && { isScuffed }),
+        };
+
+        return this.songRecordsRepository.update(id, videoParams);
     }
 }
