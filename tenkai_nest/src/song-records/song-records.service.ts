@@ -91,12 +91,26 @@ export class SongRecordsService {
         if (!isUndefined(textSearch)) {
             const textRegExp = new RegExp(textSearch, 'i');
             textSearchParams = {
-                'song.songNameEN': textRegExp,
-                'song.songNameJP': textRegExp,
-                'song.artists.artistNameEN': textRegExp,
-                'song.artists.artistNameJP': textRegExp,
-                identifier: textRegExp,
-                featuring: textRegExp,
+                $or: [
+                    {
+                        'song.songNameEN': textRegExp,
+                    },
+                    {
+                        'song.songNameJP': textRegExp,
+                    },
+                    {
+                        'song.artists.artistNameEN': textRegExp,
+                    },
+                    {
+                        'song.artists.artistNameJP': textRegExp,
+                    },
+                    {
+                        identifier: textRegExp,
+                    },
+                    {
+                        featuring: textRegExp,
+                    },
+                ],
             };
         }
 

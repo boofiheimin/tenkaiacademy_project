@@ -285,12 +285,26 @@ describe('SongRecordsService', () => {
             it('should call SongRecordsRepository', () => {
                 const testRegExp = new RegExp('text', 'i');
                 expect(songRecordsRepository.find).toBeCalledWith({
-                    'song.songNameEN': testRegExp,
-                    'song.songNameJP': testRegExp,
-                    'song.artists.artistNameEN': testRegExp,
-                    'song.artists.artistNameJP': testRegExp,
-                    identifier: testRegExp,
-                    featuring: testRegExp,
+                    $or: [
+                        {
+                            'song.songNameEN': testRegExp,
+                        },
+                        {
+                            'song.songNameJP': testRegExp,
+                        },
+                        {
+                            'song.artists.artistNameEN': testRegExp,
+                        },
+                        {
+                            'song.artists.artistNameJP': testRegExp,
+                        },
+                        {
+                            identifier: testRegExp,
+                        },
+                        {
+                            featuring: testRegExp,
+                        },
+                    ],
                     isScuffed: false,
                     limit: 10,
                     skip: 0,
