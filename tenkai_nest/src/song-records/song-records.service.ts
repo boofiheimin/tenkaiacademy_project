@@ -131,4 +131,8 @@ export class SongRecordsService {
 
         return this.songRecordsRepository.update(id, videoParams);
     }
+
+    async deleteSongRecord(id: string): Promise<SongRecord> {
+        return this.songRecordsRepository.delete(id);
+    }
 }
