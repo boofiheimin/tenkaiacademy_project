@@ -18,7 +18,7 @@ export class SongRecordsService {
     ) {}
 
     async createSongRecords(createSongRecordInputDto: CreateSongRecordInputDto): Promise<SongRecord> {
-        const { videoId, proxyVideoId, songId, songStart, songEnd, songIndex, featuring, identifier } =
+        const { videoId, proxyVideoId, songId, songStart, songEnd, songIndex, featuring, identifier, isScuffed } =
             createSongRecordInputDto;
 
         if (songStart > songEnd) {
@@ -64,6 +64,7 @@ export class SongRecordsService {
             songIndex: isUndefined(songIndex) ? 0 : songIndex,
             ...(featuring && { featuring }),
             ...(identifier && { identifier }),
+            isScuffed: isUndefined(isScuffed) ? false : isScuffed,
         };
 
         const songRecord = await this.songRecordsRepository.create(videoParams);
