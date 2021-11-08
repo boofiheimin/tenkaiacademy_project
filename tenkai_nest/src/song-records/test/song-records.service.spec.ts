@@ -478,7 +478,7 @@ describe('SongRecordsService', () => {
     describe('deleteSongRecord', () => {
         describe('when call', () => {
             beforeEach(async () => {
-                await songRecordsService.deleteSongRecord(id);
+                songRecord = await songRecordsService.deleteSongRecord(id);
             });
             it('should call SongsRecordRepository', () => {
                 expect(songRecordsRepository.delete).toBeCalledWith(id);
