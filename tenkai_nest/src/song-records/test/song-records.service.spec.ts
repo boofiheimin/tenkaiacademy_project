@@ -7,6 +7,7 @@ import { SongsService } from 'src/songs/songs.service';
 import { songStub } from 'src/songs/test/stubs/song.stub';
 import { videoStub } from 'src/videos/test/stub/video.stub';
 import { VideosService } from 'src/videos/videos.service';
+import { FindSongRecordsResponseDto } from '../dto/find-song-records.response.dto';
 import { SongRecord } from '../schemas/song-record.schema';
 import { SongRecordsRepository } from '../song-records.repository';
 import { SongRecordsService } from '../song-records.service';
@@ -28,6 +29,7 @@ describe('SongRecordsService', () => {
     const randomNumberId = 777;
 
     let songRecord: SongRecord;
+    let songRecords: FindSongRecordsResponseDto;
     let spy: jest.SpyInstance;
     let error: Error;
 
@@ -49,6 +51,7 @@ describe('SongRecordsService', () => {
             spy.mockClear();
         }
         songRecord = undefined;
+        songRecords = undefined;
         error = undefined;
     });
 
@@ -263,6 +266,56 @@ describe('SongRecordsService', () => {
             });
             it('should throw BadRequestException', () => {
                 expect(error).toBeInstanceOf(BadRequestException);
+            });
+        });
+    });
+    describe('findSongRecords', () => {
+        describe('empty filter', () => {
+            beforeEach(async () => {
+                songRecords = await songRecordsService.findSongRecords({});
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsRepository.find).toBeCalledWith({
+                    sort: { publishedAt: -1, songIndex: 1 },
+                });
+            });
+            it('should return with songRecords', () => {
+                expect(songRecords).toEqual({
+                    docs: [songRecordStub()],
+                    totalCount: 1,
+                });
+            });
+        });
+        describe('with filter', () => {
+            beforeEach(async () => {
+                songRecords = await songRecordsService.findSongRecords({
+                    textSearch: 'text',
+                    isScuffed: false,
+                    limit: 10,
+                    skip: 0,
+                    dateSort: 1,
+                });
+            });
+            it('should call SongRecordsRepository', () => {
+                const testRegExp = new RegExp('text', 'i');
+                expect(songRecordsRepository.find).toBeCalledWith({
+                    'song.songNameEN': testRegExp,
+                    'song.songNameJP': testRegExp,
+                    'song.artists.artistNameEN': testRegExp,
+                    'song.artists.artistNameJP': testRegExp,
+                    identifier: testRegExp,
+                    featuring: testRegExp,
+                    isScuffed: false,
+                    limit: 10,
+                    skip: 0,
+                    sort: { publishedAt: 1, songIndex: 1 },
+                });
+            });
+            it('should return with songRecords', () => {
+                expect(songRecords).toEqual({
+                    docs: [songRecordStub()],
+                    totalCount: 1,
+                });
             });
         });
     });

@@ -5,6 +5,8 @@ import { EmbedSong } from 'src/songs/schemas/song.schema';
 import { SongsService } from 'src/songs/songs.service';
 import { VideosService } from 'src/videos/videos.service';
 import { CreateSongRecordInputDto } from './dto/create-song-record.input.dto';
+import { FindSongRecordsInputDto } from './dto/find-song-records.input.dto';
+import { FindSongRecordsResponseDto } from './dto/find-song-records.response.dto';
 import { SongRecord } from './schemas/song-record.schema';
 import { SongRecordsRepository } from './song-records.repository';
 
@@ -69,5 +71,30 @@ export class SongRecordsService {
 
         const songRecord = await this.songRecordsRepository.create(videoParams);
         return songRecord;
+    }
+
+    async findSongRecords(findSongRecordsInputDto: FindSongRecordsInputDto): Promise<FindSongRecordsResponseDto> {
+        const { isScuffed, textSearch, dateSort, limit, skip } = findSongRecordsInputDto;
+
+        let textSearchParams;
+        if (!isUndefined(textSearch)) {
+            const textRegExp = new RegExp(textSearch, 'i');
+            textSearchParams = {
+                'song.songNameEN': textRegExp,
+                'song.songNameJP': textRegExp,
+                'song.artists.artistNameEN': textRegExp,
+                'song.artists.artistNameJP': textRegExp,
+                identifier: textRegExp,
+                featuring: textRegExp,
+            };
+        }
+
+        return this.songRecordsRepository.find({
+            ...(!isUndefined(textSearchParams) && textSearchParams),
+            ...(!isUndefined(isScuffed) && { isScuffed }),
+            limit,
+            skip,
+            sort: { publishedAt: !isUndefined(dateSort) ? dateSort : -1, songIndex: 1 },
+        });
     }
 }

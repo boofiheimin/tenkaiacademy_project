@@ -52,5 +52,6 @@ export class SongRecord {
     @Prop({ default: false })
     isScuffed: boolean;
 }
+const SongRecordSchema = SchemaFactory.createForClass(SongRecord);
 
-export const SongRecordSchema = SchemaFactory.createForClass(SongRecord);
+export { SongRecordSchema };
