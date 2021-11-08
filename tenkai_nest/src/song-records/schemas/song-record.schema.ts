@@ -41,11 +41,11 @@ export class SongRecord {
     songIndex: number;
 
     @ApiPropertyOptional()
-    @Prop()
+    @Prop({ default: '' })
     featuring?: string;
 
     @ApiPropertyOptional({ enum: SongRecordType, description: 'For special song type' })
-    @Prop()
+    @Prop({ default: '' })
     identifier?: SongRecordType;
 
     @ApiProperty()

@@ -25,7 +25,7 @@ export class SongRecordsService {
         song: Song;
     }> {
         const { videoId, proxyVideoId, songId, songStart, songEnd } = inputFields;
-        if (!isUndefined(songStart) && !isUndefined(songEnd) && songStart > songEnd) {
+        if (!isUndefined(songStart) && !isUndefined(songEnd) && songStart >= songEnd) {
             throw new BadRequestException('Invalid song range');
         }
         let video = null;
@@ -112,6 +112,17 @@ export class SongRecordsService {
     async updateSongRecord(id: string, updateSongRecordInputDto: UpdateSongRecordInputDto): Promise<SongRecord> {
         const { videoId, proxyVideoId, songStart, songEnd, songIndex, featuring, identifier, isScuffed } =
             updateSongRecordInputDto;
+
+        if ((!isUndefined(songStart) && isUndefined(songEnd)) || (!isUndefined(songEnd) && isUndefined(songStart))) {
+            const currentSongRecord = await this.songRecordsRepository.findById(id);
+            if (
+                (!isUndefined(songStart) && isUndefined(songEnd) && songStart >= currentSongRecord.songEnd) ||
+                (!isUndefined(songEnd) && isUndefined(songStart) && songEnd <= currentSongRecord.songStart)
+            ) {
+                throw new BadRequestException('Invalid song range');
+            }
+        }
+
         const { video, song } = await this.inputFieldValidation(updateSongRecordInputDto);
 
         const videoParams: Partial<SongRecord> = {

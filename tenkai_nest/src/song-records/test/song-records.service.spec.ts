@@ -340,20 +340,60 @@ describe('SongRecordsService', () => {
             });
         });
         describe('invalid song range', () => {
-            beforeEach(async () => {
-                try {
-                    await songRecordsService.updateSongRecord(id, {
-                        songId: songStub().songId,
-                        songStart: 2,
-                        songEnd: 1,
-                        ...pick(songRecordStub(), ['videoId', 'songIndex', 'isScuffed', 'featuring', 'identifier']),
-                    });
-                } catch (e) {
-                    error = e;
-                }
+            describe('both start-end are provided', () => {
+                beforeEach(async () => {
+                    try {
+                        await songRecordsService.updateSongRecord(id, {
+                            songId: songStub().songId,
+                            songStart: 2,
+                            songEnd: 1,
+                            ...pick(songRecordStub(), ['videoId', 'songIndex', 'isScuffed', 'featuring', 'identifier']),
+                        });
+                    } catch (e) {
+                        error = e;
+                    }
+                });
+                it('should throw BadRequestException', () => {
+                    expect(error).toBeInstanceOf(BadRequestException);
+                });
             });
-            it('should call SongRecordsRepository', () => {
-                expect(error).toBeInstanceOf(BadRequestException);
+            describe('only start are provided', () => {
+                beforeEach(async () => {
+                    try {
+                        await songRecordsService.updateSongRecord(id, {
+                            songId: songStub().songId,
+                            songStart: 999999,
+                            ...pick(songRecordStub(), ['videoId', 'songIndex', 'isScuffed', 'featuring', 'identifier']),
+                        });
+                    } catch (e) {
+                        error = e;
+                    }
+                });
+                it('should call SongRecordsRepository', () => {
+                    expect(songRecordsRepository.findById).toBeCalledWith(id);
+                });
+                it('should throw BadRequestException', () => {
+                    expect(error).toBeInstanceOf(BadRequestException);
+                });
+            });
+            describe('only end are provided', () => {
+                beforeEach(async () => {
+                    try {
+                        await songRecordsService.updateSongRecord(id, {
+                            songId: songStub().songId,
+                            songEnd: -1,
+                            ...pick(songRecordStub(), ['videoId', 'songIndex', 'isScuffed', 'featuring', 'identifier']),
+                        });
+                    } catch (e) {
+                        error = e;
+                    }
+                });
+                it('should call SongRecordsRepository', () => {
+                    expect(songRecordsRepository.findById).toBeCalledWith(id);
+                });
+                it('should throw BadRequestException', () => {
+                    expect(error).toBeInstanceOf(BadRequestException);
+                });
             });
         });
         describe('invalid video', () => {
