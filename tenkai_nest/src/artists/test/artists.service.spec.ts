@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { SongRecordsService } from 'src/song-records/song-records.service';
 import { SongsService } from 'src/songs/songs.service';
 import { ArtistsRepository } from '../artists.repository';
 import { ArtistsService } from '../artists.service';
@@ -8,11 +9,13 @@ import { artistStub } from './stubs/artist.stub';
 
 jest.mock('../artists.repository');
 jest.mock('src/songs/songs.service');
+jest.mock('src/song-records/song-records.service');
 
 describe('ArtistsService', () => {
     let artistsService: ArtistsService;
     let artistsRepository: ArtistsRepository;
     let songsService: SongsService;
+    let songRecordsService: SongRecordsService;
 
     const testId = 'testId';
 
@@ -22,12 +25,13 @@ describe('ArtistsService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ArtistsService, ArtistsRepository, SongsService],
+            providers: [ArtistsService, ArtistsRepository, SongsService, SongRecordsService],
         }).compile();
 
         artistsService = module.get<ArtistsService>(ArtistsService);
         artistsRepository = module.get<ArtistsRepository>(ArtistsRepository);
         songsService = module.get<SongsService>(SongsService);
+        songRecordsService = module.get<SongRecordsService>(SongRecordsService);
     });
 
     afterEach(() => {
@@ -92,6 +96,9 @@ describe('ArtistsService', () => {
             it('should call SongsService', () => {
                 expect(songsService.artistCascadeUpdate).toBeCalledWith(artistStub());
             });
+            it('should call SongRecordsService', () => {
+                expect(songRecordsService.artistCascadeUpdate).toBeCalledWith(artistStub());
+            });
             it('should call ArtistsRepository', () => {
                 expect(artistsRepository.update).toBeCalledWith(testId, { artistNameEN: 'test' });
             });
@@ -107,6 +114,9 @@ describe('ArtistsService', () => {
             });
             it('should call SongsService', () => {
                 expect(songsService.artistCascadeDelete).toBeCalledWith(artistStub());
+            });
+            it('should call SongRecordsService', () => {
+                expect(songRecordsService.artistCascadeDelete).toBeCalledWith(artistStub());
             });
             it('should call ArtistsRepository', () => {
                 expect(artistsRepository.delete).toBeCalledWith(testId);

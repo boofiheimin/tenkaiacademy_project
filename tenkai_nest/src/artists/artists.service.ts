@@ -1,4 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { SongRecordsService } from 'src/song-records/song-records.service';
 import { SongsService } from 'src/songs/songs.service';
 import { ArtistsRepository } from './artists.repository';
 import { CreateArtistInputDto } from './dto/create-artist.input.dto';
@@ -12,6 +13,7 @@ export class ArtistsService {
     constructor(
         private readonly artistsRepository: ArtistsRepository,
         @Inject(forwardRef(() => SongsService)) private readonly songsService: SongsService,
+        private readonly songRecordsService: SongRecordsService,
     ) {}
 
     async createArtist(createArtistInputDto: CreateArtistInputDto): Promise<Artist> {
@@ -28,15 +30,15 @@ export class ArtistsService {
 
     async updateArtist(id: string, updateArtistInputDto: UpdateArtistInputDto): Promise<Artist> {
         const artist = await this.artistsRepository.update(id, updateArtistInputDto);
-        //TODO Cascade update all songRecords
         await this.songsService.artistCascadeUpdate(artist);
+        await this.songRecordsService.artistCascadeUpdate(artist);
         return artist;
     }
 
     async deleteArtist(id: string): Promise<Artist> {
         const artist = await this.artistsRepository.delete(id);
-        //TODO Cascade update all songRecords
         await this.songsService.artistCascadeDelete(artist);
+        await this.songRecordsService.artistCascadeDelete(artist);
         return artist;
     }
 

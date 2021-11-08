@@ -7,4 +7,8 @@ export const SongRecordsRepository = jest.fn().mockReturnValue({
     findOne: jest.fn().mockReturnValue(songRecordStub()),
     update: jest.fn().mockReturnValue(songRecordStub()),
     delete: jest.fn().mockReturnValue(songRecordStub()),
+    artistCascadeUpdate: jest.fn(),
+    artistCascadeDelete: jest.fn(),
+    songCascadeUpdate: jest.fn(),
+    songCascadeDelete: jest.fn(),
 });

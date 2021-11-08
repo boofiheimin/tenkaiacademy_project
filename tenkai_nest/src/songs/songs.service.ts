@@ -8,12 +8,14 @@ import { Song } from './schemas/song.schema';
 import { ArtistsService } from 'src/artists/artists.service';
 import { Artist, EmbedArtist } from 'src/artists/schemas/artist.schema';
 import { isUndefined } from 'lodash';
+import { SongRecordsService } from 'src/song-records/song-records.service';
 
 @Injectable()
 export class SongsService {
     constructor(
         private readonly songsRepository: SongsRepository,
         @Inject(forwardRef(() => ArtistsService)) private readonly artistsService: ArtistsService,
+        @Inject(forwardRef(() => SongRecordsService)) private readonly songRecordsService: SongRecordsService,
     ) {}
 
     async createSong(createSongInputDto: CreateSongInputDto): Promise<Song> {
@@ -78,7 +80,7 @@ export class SongsService {
             }
         }
 
-        const song = this.songsRepository.update(id, {
+        const song = await this.songsRepository.update(id, {
             ...(!isUndefined(songNameEN) && { songNameEN }),
             ...(!isUndefined(songNameJP) && { songNameJP }),
             ...(!isUndefined(songNameRM) && { songNameRM }),
@@ -86,14 +88,16 @@ export class SongsService {
             ...(!isUndefined(duration) && { duration }),
         });
 
-        //TODO Cascade update all songRecords.
+        await this.songRecordsService.songCascadeUpdate(song);
 
         return song;
     }
 
     async deleteSong(id: string): Promise<Song> {
-        const song = this.songsRepository.delete(id);
-        //TODO Cascade update all songRecords
+        const song = await this.songsRepository.delete(id);
+
+        await this.songRecordsService.songCascadeDelete(song);
+
         return song;
     }
 

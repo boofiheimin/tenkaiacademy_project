@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { YoutubeService } from 'src/base/youtube.service';
@@ -12,11 +12,12 @@ import { SongRecordsService } from './song-records.service';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: SongRecord.name, schema: SongRecordSchema }]),
-        SongsModule,
+        forwardRef(() => SongsModule),
         ConfigModule,
         VideosModule,
     ],
     controllers: [SongRecordsController],
     providers: [SongRecordsService, SongRecordsRepository, YoutubeService],
+    exports: [SongRecordsService],
 })
 export class SongRecordsModule {}

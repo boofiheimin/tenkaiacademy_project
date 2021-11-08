@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { pick } from 'lodash';
+import { artistStub } from 'src/artists/test/stubs/artist.stub';
 import { youtubeStub } from 'src/base/test/stub/youtube.stub';
 import { YoutubeService } from 'src/base/youtube.service';
 import { SongsService } from 'src/songs/songs.service';
@@ -528,7 +529,6 @@ describe('SongRecordsService', () => {
             });
         });
     });
-
     describe('deleteSongRecord', () => {
         describe('when call', () => {
             beforeEach(async () => {
@@ -539,6 +539,46 @@ describe('SongRecordsService', () => {
             });
             it('should return a song record', () => {
                 expect(songRecord).toEqual(songRecordStub());
+            });
+        });
+    });
+    describe('artistCascadeUpdate', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songRecordsService.artistCascadeUpdate(artistStub());
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsRepository.artistCascadeUpdate).toBeCalledWith(artistStub());
+            });
+        });
+    });
+    describe('artistCascadeDelete', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songRecordsService.artistCascadeDelete(artistStub());
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsRepository.artistCascadeDelete).toBeCalledWith(artistStub());
+            });
+        });
+    });
+    describe('songCascadeUpdate', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songRecordsService.songCascadeUpdate(songStub());
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsRepository.songCascadeUpdate).toBeCalledWith(songStub());
+            });
+        });
+    });
+    describe('songCascadeDelete', () => {
+        describe('when call', () => {
+            beforeEach(async () => {
+                await songRecordsService.songCascadeDelete(songStub());
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsRepository.songCascadeDelete).toBeCalledWith(songStub());
             });
         });
     });

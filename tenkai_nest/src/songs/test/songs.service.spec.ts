@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistsService } from 'src/artists/artists.service';
 import { EmbedArtist } from 'src/artists/schemas/artist.schema';
 import { artistStub } from 'src/artists/test/stubs/artist.stub';
+import { SongRecordsService } from 'src/song-records/song-records.service';
 import { FindSongsResponseDto } from '../dto/find-songs.response.dto';
 import { Song } from '../schemas/song.schema';
 import { SongsRepository } from '../songs.repository';
@@ -11,11 +12,13 @@ import { songStub } from './stubs/song.stub';
 
 jest.mock('src/artists/artists.service');
 jest.mock('../songs.repository');
+jest.mock('src/song-records/song-records.service');
 
 describe('SongsService', () => {
     let songsService: SongsService;
     let songsRepository: SongsRepository;
     let artistsService: ArtistsService;
+    let songRecordsService: SongRecordsService;
 
     const id = 'test-id';
     const randomId = 777;
@@ -27,12 +30,13 @@ describe('SongsService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [SongsService, SongsRepository, ArtistsService],
+            providers: [SongsService, SongsRepository, ArtistsService, SongRecordsService],
         }).compile();
 
         songsService = module.get<SongsService>(SongsService);
         songsRepository = module.get<SongsRepository>(SongsRepository);
         artistsService = module.get<ArtistsService>(ArtistsService);
+        songRecordsService = module.get<SongRecordsService>(SongRecordsService);
 
         jest.clearAllMocks();
     });
@@ -199,6 +203,9 @@ describe('SongsService', () => {
                     duration: songStub().duration,
                 });
             });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsService.songCascadeUpdate).toBeCalled();
+            });
             it('should return with a song', () => {
                 expect(song).toEqual(songStub());
             });
@@ -233,6 +240,9 @@ describe('SongsService', () => {
             });
             it('should call SongsRepository', () => {
                 expect(songsRepository.delete).toBeCalledWith(id);
+            });
+            it('should call SongRecordsRepository', () => {
+                expect(songRecordsService.songCascadeDelete).toBeCalled();
             });
             it('should return with a song', () => {
                 expect(song).toEqual(songStub());

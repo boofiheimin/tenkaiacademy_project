@@ -1,5 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { isUndefined } from 'lodash';
+import { Artist } from 'src/artists/schemas/artist.schema';
 import { YoutubeService, YoutubeVideo } from 'src/base/youtube.service';
 import { EmbedSong, Song } from 'src/songs/schemas/song.schema';
 import { SongsService } from 'src/songs/songs.service';
@@ -15,7 +16,7 @@ import { SongRecordsRepository } from './song-records.repository';
 export class SongRecordsService {
     constructor(
         private readonly songRecordsRepository: SongRecordsRepository,
-        private readonly songsService: SongsService,
+        @Inject(forwardRef(() => SongsService)) private readonly songsService: SongsService,
         private readonly videosService: VideosService,
         private readonly youtubeService: YoutubeService,
     ) {}
@@ -159,5 +160,21 @@ export class SongRecordsService {
 
     async deleteSongRecord(id: string): Promise<SongRecord> {
         return this.songRecordsRepository.delete(id);
+    }
+
+    async artistCascadeUpdate(artist: Artist): Promise<void> {
+        await this.songRecordsRepository.artistCascadeUpdate(artist);
+    }
+
+    async artistCascadeDelete(artist: Artist): Promise<void> {
+        await this.songRecordsRepository.artistCascadeDelete(artist);
+    }
+
+    async songCascadeUpdate(song: Song): Promise<void> {
+        await this.songRecordsRepository.songCascadeUpdate(song);
+    }
+
+    async songCascadeDelete(song: Song): Promise<void> {
+        await this.songRecordsRepository.songCascadeDelete(song);
     }
 }
