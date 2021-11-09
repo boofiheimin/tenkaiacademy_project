@@ -5,6 +5,6 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "precommit": "cd tenkai_nest && yarn lint"
+    "precommit": "cd tenkai_nest && yarn lint && cd ../tenkai_next && yarn lint"
   }
 }
