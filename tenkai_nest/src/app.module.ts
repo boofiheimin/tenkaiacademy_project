@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { BlacklistTokensModule } from './blacklist-tokens/blacklist-tokens.module';
 
 import config from './config/config';
 import { LoggerMiddleWare } from './utils/logger.middleware';
@@ -30,7 +29,6 @@ import { SongRecordsModule } from './song-records/song-records.module';
         ConfigModule.forRoot({
             load: [config],
         }),
-        BlacklistTokensModule,
         TagsModule,
         VideosModule,
         ClipsModule,

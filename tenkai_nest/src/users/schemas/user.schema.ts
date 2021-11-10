@@ -24,6 +24,10 @@ export class User {
     @Prop({ enum: Object.keys(UserRole), required: [true, 'Please assign a correct role'] })
     role: UserRole;
 
+    @ApiProperty({ description: 'refresh token version use to track revocation' })
+    @Prop({ default: 0 })
+    refreshTokenVersion: number;
+
     matchPassword: (password: string) => boolean;
 }
 

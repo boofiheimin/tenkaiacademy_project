@@ -4,8 +4,11 @@ import { User } from '../schemas/user.schema';
 import { UsersRepository } from '../users.repository';
 import { UsersService } from '../users.service';
 import { userStub } from './stubs/user.stub';
-
 jest.mock('../users.repository');
+
+const omitStubFn = (stub: any) => {
+    return omit(stub, ['matchPassword', 'id']);
+};
 
 describe('UsersService', () => {
     let usersService: UsersService;
@@ -23,13 +26,21 @@ describe('UsersService', () => {
     describe('createUser', () => {
         let user: User;
         beforeEach(async () => {
-            user = await usersService.createUser(omit(userStub(), 'matchPassword'));
+            user = await usersService.createUser({
+                username: userStub().username,
+                password: userStub().password,
+                role: userStub().role,
+            });
         });
         it('should call UserRepository', async () => {
-            expect(usersRepository.create).toBeCalledWith(omit(userStub(), 'matchPassword'));
+            expect(usersRepository.create).toBeCalledWith({
+                username: userStub().username,
+                password: userStub().password,
+                role: userStub().role,
+            });
         });
         it('should return with the user', async () => {
-            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
+            expect(omitStubFn(user)).toEqual(omitStubFn(userStub()));
         });
     });
 
@@ -42,7 +53,7 @@ describe('UsersService', () => {
             expect(usersRepository.findByUsername).toBeCalledWith(userStub().username, true);
         });
         it('should return with the user', async () => {
-            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
+            expect(omitStubFn(user)).toEqual(omitStubFn(userStub()));
         });
     });
 
@@ -55,7 +66,7 @@ describe('UsersService', () => {
             expect(usersRepository.findById).toBeCalledWith('user-id');
         });
         it('should return with the user', async () => {
-            expect(omit(user, 'matchPassword')).toEqual(omit(userStub(), 'matchPassword'));
+            expect(omitStubFn(user)).toEqual(omitStubFn(userStub()));
         });
     });
 });

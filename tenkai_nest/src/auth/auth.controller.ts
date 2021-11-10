@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, Post, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { User, UserRole } from 'src/users/schemas/user.schema';
@@ -11,7 +11,9 @@ import { LoginInputDto } from './dto/login.input.dto';
 import { RegisterInputDto } from './dto/register.input.dto';
 import { Request } from 'express';
 import { LoginResponseDto } from './dto/login.response.dto';
-import { BlacklistToken } from 'src/blacklist-tokens/schemas/blacklist-token.schema';
+import { JwtRefreshGuard } from './guards/jwt-refresh-token.guard';
+import { RequestWithUser } from './interfaces/auth.interface';
+import { LogOutResponseDto } from './dto/logout.response.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,12 +34,9 @@ export class AuthController {
     @ApiOperation({ summary: 'Login User' })
     @ApiResponse({ description: 'User has been successfully login', type: LoginResponseDto })
     async login(@Body() loginInput: LoginInputDto, @Req() req: Request): Promise<LoginResponseDto> {
-        const bearerToken = req.headers.authorization;
-        let token;
-        if (bearerToken) {
-            token = bearerToken.split(' ')[1];
-        }
-        return this.authService.login(new LoginInputDto(loginInput), token);
+        const { token, user, refreshTokenCookie } = await this.authService.login(new LoginInputDto(loginInput));
+        req.res.setHeader('Set-Cookie', [refreshTokenCookie]);
+        return { token, user };
     }
 
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
@@ -45,9 +44,19 @@ export class AuthController {
     @Post('logout')
     @ApiOperation({ summary: 'Logout User' })
     @ApiBearerAuth()
-    @ApiResponse({ description: 'User has been successfully logout', type: BlacklistToken })
-    async logout(@Headers('authorization') bearerToken: string): Promise<BlacklistToken> {
-        const [, token] = bearerToken.split(' ');
-        return this.authService.logout(token);
+    @ApiResponse({ description: 'User has been successfully logout', type: LogOutResponseDto })
+    logout(@Req() req: Request): LogOutResponseDto {
+        const logoutCookie = this.authService.logout();
+        req.res.setHeader('Set-Cookie', [logoutCookie]);
+        return {
+            message: 'logout successfully',
+        };
+    }
+
+    @UseGuards(JwtRefreshGuard)
+    @Get('refresh')
+    @ApiResponse({ description: 'AccessToken refreshed', type: LoginResponseDto })
+    async refresh(@Req() request: RequestWithUser): Promise<LoginResponseDto> {
+        return this.authService.refreshToken(request.user);
     }
 }

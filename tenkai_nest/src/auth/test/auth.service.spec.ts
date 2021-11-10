@@ -1,31 +1,40 @@
 import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
-import { BlacklistTokensService } from 'src/blacklist-tokens/blacklist-tokens.service';
-import { blacklistTokenStub } from 'src/blacklist-tokens/test/stubs/blacklist-token.stub';
-import { userStub } from 'src/users/test/stubs/user.stub';
+import { UserStub, userStub } from 'src/users/test/stubs/user.stub';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from '../auth.service';
 
 jest.mock('src/users/users.service');
-jest.mock('src/blacklist-tokens/blacklist-tokens.service');
+
+const omitStubFn = (stub: UserStub) => {
+    return omit(stub, ['matchPassword', 'id']);
+};
 
 describe('AuthService', () => {
     let authService: AuthService;
     let usersService: UsersService;
-    let blacklistTokenService: BlacklistTokensService;
     const mockSignedToken = 'signedToken';
+    const mockExpireAge = 999;
+    let response;
+    let error: Error;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AuthService,
-                BlacklistTokensService,
                 UsersService,
                 {
                     provide: JwtService,
                     useValue: {
-                        sign: jest.fn().mockReturnValueOnce(mockSignedToken),
+                        sign: jest.fn().mockReturnValue(mockSignedToken),
+                    },
+                },
+                {
+                    provide: ConfigService,
+                    useValue: {
+                        get: jest.fn().mockReturnValue(mockExpireAge),
                     },
                 },
             ],
@@ -33,7 +42,6 @@ describe('AuthService', () => {
 
         authService = module.get<AuthService>(AuthService);
         usersService = module.get<UsersService>(UsersService);
-        blacklistTokenService = module.get<BlacklistTokensService>(BlacklistTokensService);
         jest.clearAllMocks();
     });
 
@@ -41,20 +49,19 @@ describe('AuthService', () => {
         describe('when called', () => {
             let user;
             beforeEach(async () => {
-                user = await authService.register(omit(userStub(), 'matchPassword'));
+                user = await authService.register(omitStubFn(userStub()));
             });
             it('should call UsersService', () => {
-                expect(usersService.createUser).toBeCalledWith(omit(userStub(), 'matchPassword'));
+                expect(usersService.createUser).toBeCalledWith(omitStubFn(userStub()));
             });
             it('should return with the user', () => {
-                expect(user).toEqual(omit(userStub(), 'matchPassword'));
+                expect(user).toEqual(omitStubFn(userStub()));
             });
         });
     });
 
     describe('login', () => {
         describe('with correct credential', () => {
-            let response;
             beforeEach(async () => {
                 response = await authService.login({
                     username: userStub().username,
@@ -68,7 +75,9 @@ describe('AuthService', () => {
             it('should return with the correct response', () => {
                 expect(response).toEqual({
                     token: mockSignedToken,
+                    refreshTokenCookie: `refresh_token=${mockSignedToken}; HttpOnly; Path=/; Max-Age=${mockExpireAge}`,
                     user: {
+                        id: userStub().id.toString(),
                         username: userStub().username,
                         role: userStub().role,
                     },
@@ -77,7 +86,6 @@ describe('AuthService', () => {
         });
         describe('with incorrect credential', () => {
             describe('incorrect username', () => {
-                let error;
                 beforeEach(async () => {
                     try {
                         await authService.login({
@@ -99,7 +107,6 @@ describe('AuthService', () => {
                 });
             });
             describe('incorrect password', () => {
-                let error;
                 beforeEach(async () => {
                     try {
                         await authService.login({
@@ -121,59 +128,15 @@ describe('AuthService', () => {
                 });
             });
         });
-        describe('with token', () => {
-            describe('valid token', () => {
-                const token = 'random token';
-                beforeEach(async () => {
-                    await authService.login(
-                        {
-                            username: userStub().username,
-                            password: userStub().password,
-                        },
-                        token,
-                    );
-                });
-                it('should call BlacklistTokenService', () => {
-                    expect(blacklistTokenService.validateToken).toBeCalledWith(token);
-                    expect(blacklistTokenService.blacklistToken).toBeCalledWith(token);
-                });
-            });
-            describe('invalid token', () => {
-                let error;
-                beforeEach(async () => {
-                    try {
-                        await authService.login(
-                            {
-                                username: userStub().username,
-                                password: userStub().password,
-                            },
-                            blacklistTokenStub().token,
-                        );
-                    } catch (e) {
-                        error = e;
-                    }
-                });
-                it('should call BlacklistTokenService', () => {
-                    expect(blacklistTokenService.validateToken).toBeCalledWith(blacklistTokenStub().token);
-                });
-                it('should throw UnauthorizedException', () => {
-                    expect(error).toBeInstanceOf(UnauthorizedException);
-                });
-            });
-        });
     });
 
     describe('logout', () => {
         describe('when called', () => {
-            let blacklistToken;
             beforeEach(async () => {
-                blacklistToken = await authService.logout(blacklistTokenStub().token);
+                response = await authService.logout();
             });
-            it('should call BlacklistTokenService', () => {
-                expect(blacklistTokenService.blacklistToken).toBeCalledWith(blacklistTokenStub().token);
-            });
-            it('should return with the blacklistToken', () => {
-                expect(blacklistToken).toEqual(blacklistTokenStub());
+            it('should return with logout cookie', () => {
+                expect(response).toEqual('refresh_token=; HttpOnly; Path=/; Max-Age=0');
             });
         });
     });
