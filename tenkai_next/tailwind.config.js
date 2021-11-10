@@ -3,7 +3,14 @@ module.exports = {
   purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'kanata-gold': '#D6C37F',
+        'kanata-grey': '#b4b1c2',
+        'kanata-blue': '#1E62EB',
+        'kanata-pink': '#FEABBD'
+      }
+    },
   },
   variants: {
     extend: {},

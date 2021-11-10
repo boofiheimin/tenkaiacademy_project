@@ -20,7 +20,7 @@ module.exports = {
         sourceType: 'module',
         tsconfigRootDir: __dirname,
     },
-    ignorePatterns: [".eslintrc.js"],
+    ignorePatterns: [".eslintrc.js","tailwind.config.js"],
     plugins: ['react', '@typescript-eslint'],
     rules: {
         'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
@@ -30,7 +30,7 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "no-console": "error",
+        "no-console": 0,
         "prettier/prettier": [
             "error",
             {
@@ -43,6 +43,10 @@ module.exports = {
         "class-methods-use-this": 0,
         "no-constant-condition": ["error", { "checkLoops": false }],
         "@typescript-eslint/no-unused-vars": ["error"],
-        "@typescript-eslint/no-empty-function": 0
+        "@typescript-eslint/no-empty-function": 0,
+        "import/extensions": 0,
+        'import/prefer-default-export': 0,
+        'react/require-default-props': 0,
+        'jsx-a11y/click-events-have-key-events': 0
     },
 };

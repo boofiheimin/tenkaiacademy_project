@@ -1,7 +1,18 @@
+import { NavBar } from '../components/NavBar';
+import { Main } from '../components/Main';
+
 import 'tailwindcss/tailwind.css';
+import '../styles/styles.css';
 
 function MyApp({ Component, pageProps }) {
-    return <Component {...pageProps} />;
+    return (
+        <>
+            <NavBar />
+            <Main>
+                <Component {...pageProps} />
+            </Main>
+        </>
+    );
 }
 
 export default MyApp;
