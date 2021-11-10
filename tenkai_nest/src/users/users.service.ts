@@ -18,4 +18,8 @@ export class UsersService {
     async findUserById(id: string) {
         return this.userRepository.findById(id);
     }
+
+    async revokeToken(id: string) {
+        return this.userRepository.update(id, { refreshTokenVersion: { $inc: 1 } });
+    }
 }

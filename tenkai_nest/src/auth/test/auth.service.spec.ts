@@ -3,13 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { omit } from 'lodash';
-import { UserStub, userStub } from 'src/users/test/stubs/user.stub';
+import { userStub } from 'src/users/test/stubs/user.stub';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from '../auth.service';
 
 jest.mock('src/users/users.service');
 
-const omitStubFn = (stub: UserStub) => {
+const omitStubFn = (stub: any) => {
     return omit(stub, ['matchPassword', 'id']);
 };
 
@@ -47,15 +47,22 @@ describe('AuthService', () => {
 
     describe('register', () => {
         describe('when called', () => {
-            let user;
             beforeEach(async () => {
-                user = await authService.register(omitStubFn(userStub()));
+                response = await authService.register({
+                    username: userStub().username,
+                    password: userStub().password,
+                    role: userStub().role,
+                });
             });
             it('should call UsersService', () => {
-                expect(usersService.createUser).toBeCalledWith(omitStubFn(userStub()));
+                expect(usersService.createUser).toBeCalledWith({
+                    username: userStub().username,
+                    password: userStub().password,
+                    role: userStub().role,
+                });
             });
             it('should return with the user', () => {
-                expect(user).toEqual(omitStubFn(userStub()));
+                expect(omitStubFn(response)).toEqual(omitStubFn(userStub()));
             });
         });
     });
@@ -138,6 +145,18 @@ describe('AuthService', () => {
             it('should return with logout cookie', () => {
                 expect(response).toEqual('refresh_token=; HttpOnly; Path=/; Max-Age=0');
             });
+        });
+    });
+
+    describe('revoke', () => {
+        beforeEach(async () => {
+            response = await usersService.revokeToken('user-id');
+        });
+        it('should call UsersService', () => {
+            expect(usersService.revokeToken).toBeCalledWith('user-id');
+        });
+        it('should return with a user', () => {
+            expect(omitStubFn(response)).toEqual(omitStubFn(userStub()));
         });
     });
 });

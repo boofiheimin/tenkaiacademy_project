@@ -96,4 +96,8 @@ export class AuthService {
             },
         };
     }
+
+    async revokeToken(userId: string) {
+        return this.usersService.revokeToken(userId);
+    }
 }

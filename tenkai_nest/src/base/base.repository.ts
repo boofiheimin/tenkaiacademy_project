@@ -51,9 +51,9 @@ export abstract class BaseRepository<T extends Document> {
         return item;
     }
 
-    async update(id: string, data: Partial<T>): Promise<T> {
+    async update(id: string, data: object): Promise<T> {
         this.logger.log(`Updating ${this.collectionName}:<id:${id}> with ${JSON.stringify(data)}`);
-        const item = await this.model.findByIdAndUpdate(id, data as object, { new: true });
+        const item = await this.model.findByIdAndUpdate(id, data, { new: true });
         if (!item) {
             throw new NotFoundException(`${this.collectionName}:<id:${id}> not found`);
         }

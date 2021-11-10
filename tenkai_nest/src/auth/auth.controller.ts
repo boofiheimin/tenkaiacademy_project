@@ -14,6 +14,7 @@ import { LoginResponseDto } from './dto/login.response.dto';
 import { JwtRefreshGuard } from './guards/jwt-refresh-token.guard';
 import { RequestWithUser } from './interfaces/auth.interface';
 import { LogOutResponseDto } from './dto/logout.response.dto';
+import { RevokeTokenInputDto } from './dto/revoke-token.input.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -58,5 +59,15 @@ export class AuthController {
     @ApiResponse({ description: 'AccessToken refreshed', type: LoginResponseDto })
     async refresh(@Req() request: RequestWithUser): Promise<LoginResponseDto> {
         return this.authService.refreshToken(request.user);
+    }
+
+    @Roles(UserRole.SUPERADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Post('revoke')
+    @ApiOperation({ summary: 'Revoke Refresh Token for user' })
+    @ApiBearerAuth()
+    @ApiResponse({ description: "User's RefreshToken have been revoke", type: User })
+    async revokeToken(@Body() revokeTokenInputDto: RevokeTokenInputDto): Promise<User> {
+        return this.authService.revokeToken(revokeTokenInputDto.userId);
     }
 }

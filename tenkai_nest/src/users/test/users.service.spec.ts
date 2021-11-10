@@ -13,6 +13,8 @@ const omitStubFn = (stub: any) => {
 describe('UsersService', () => {
     let usersService: UsersService;
     let usersRepository: UsersRepository;
+
+    let user: User;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [UsersService, UsersRepository],
@@ -24,7 +26,6 @@ describe('UsersService', () => {
     });
 
     describe('createUser', () => {
-        let user: User;
         beforeEach(async () => {
             user = await usersService.createUser({
                 username: userStub().username,
@@ -45,7 +46,6 @@ describe('UsersService', () => {
     });
 
     describe('findByUsername', () => {
-        let user: User;
         beforeEach(async () => {
             user = await usersService.findByUsername(userStub().username, true);
         });
@@ -58,12 +58,23 @@ describe('UsersService', () => {
     });
 
     describe('findUserById', () => {
-        let user: User;
         beforeEach(async () => {
             user = await usersService.findUserById('user-id');
         });
         it('should call UserRepository', async () => {
             expect(usersRepository.findById).toBeCalledWith('user-id');
+        });
+        it('should return with the user', async () => {
+            expect(omitStubFn(user)).toEqual(omitStubFn(userStub()));
+        });
+    });
+
+    describe('revokeToken', () => {
+        beforeEach(async () => {
+            user = await usersService.revokeToken('user-id');
+        });
+        it('should call UserRepository', async () => {
+            expect(usersRepository.update).toBeCalledWith('user-id', { refreshTokenVersion: { $inc: 1 } });
         });
         it('should return with the user', async () => {
             expect(omitStubFn(user)).toEqual(omitStubFn(userStub()));
