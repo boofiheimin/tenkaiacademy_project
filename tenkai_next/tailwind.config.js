@@ -9,6 +9,9 @@ module.exports = {
         'kanata-grey': '#b4b1c2',
         'kanata-blue': '#1E62EB',
         'kanata-pink': '#FEABBD'
+      },
+      fontFamily: {
+        serif: ["Rubik", "sans-serif"]
       }
     },
   },

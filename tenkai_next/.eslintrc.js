@@ -20,7 +20,7 @@ module.exports = {
         sourceType: 'module',
         tsconfigRootDir: __dirname,
     },
-    ignorePatterns: [".eslintrc.js","tailwind.config.js"],
+    ignorePatterns: [".eslintrc.js","tailwind.config.js","next.config.js"],
     plugins: ['react', '@typescript-eslint'],
     rules: {
         'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
@@ -47,6 +47,7 @@ module.exports = {
         "import/extensions": 0,
         'import/prefer-default-export': 0,
         'react/require-default-props': 0,
+        'jsx-a11y/click-events-have-key-events': 0,
         'jsx-a11y/click-events-have-key-events': 0
     },
 };
