@@ -1,6 +1,13 @@
 module.exports = {
   mode: 'jit',
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  purge: {
+    content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+    options: {
+      safelist: {
+        greedy: [/safe$/],
+      }
+    }
+  },
   darkMode: 'class',
   theme: {
     extend: {

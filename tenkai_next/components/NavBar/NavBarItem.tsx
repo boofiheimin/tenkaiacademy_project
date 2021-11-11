@@ -10,7 +10,7 @@ interface Props {
 
 export const NavBarItem = ({ className = '', icon, text, fullMode = false, onClick = () => {} }: Props) => (
     <li
-        className={`${className} relative flex items-center h-12 w-full my-2 mx-auto p-2 dark:hover:bg-kanata-gold hover:bg-kanata-blue  dark:hover:text-white hover:text-white rounded-xl transition-all duration-200 ease-linear cursor-pointer group`}
+        className={`safe ${className} relative flex items-center h-12 w-full my-2 mx-auto p-2 dark:hover:bg-kanata-gold hover:bg-kanata-blue  dark:hover:text-white hover:text-white rounded-xl transition-all duration-200 ease-linear cursor-pointer group`}
         onClick={onClick}
         role="menuitem"
     >

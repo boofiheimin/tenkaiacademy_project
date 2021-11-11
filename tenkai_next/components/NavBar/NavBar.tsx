@@ -13,8 +13,8 @@ export const NavBar = () => {
     const handleSwitchMode = () => toggle();
     return (
         <nav
-            className={`fixed w-${
-                fullMode ? 52 : 16
+            className={`fixed ${
+                fullMode ? 'w-52' : 'w-16'
             } h-screen dark:bg-gray-800 bg-gray-200 text-kanata-blue dark:text-kanata-gold transition-all duration-150 ease-linear`}
         >
             <ul
