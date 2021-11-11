@@ -10,7 +10,7 @@ export const useDarkModeEX = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('darkMode') === 'true') {
+        if (value || localStorage.getItem('darkMode') === 'true') {
             setIsDarkMode(true);
         } else {
             setIsDarkMode(false);
