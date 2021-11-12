@@ -3,7 +3,7 @@ import { SiDiscogs, SiBookstack } from 'react-icons/si';
 import { FaHome, FaYoutube, FaFilm, FaItunesNote } from 'react-icons/fa';
 import { MdLightMode, MdDarkMode, MdMenu } from 'react-icons/md';
 import { useEffect, useState } from 'react';
-import { useDarkModeEX } from '../../lib/hooks';
+import { useDarkMode } from '../../lib/hooks';
 import { Shuriken } from '../Shuriken';
 import { NavBarItem } from './NavBarItem';
 
@@ -13,7 +13,7 @@ interface Props {
 
 const NavBarContent = ({ mobile }: Props) => {
     const router = useRouter();
-    const { toggle, isDarkMode } = useDarkModeEX();
+    const [isDarkMode, setDarkMode] = useDarkMode();
     const [fullMode, setFullMode] = useState(!mobile);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const NavBarContent = ({ mobile }: Props) => {
     }, [router.pathname, mobile]);
 
     const handleToggleMode = () => setFullMode(!fullMode);
-    const handleSwitchMode = () => toggle();
+    const handleSwitchMode = () => setDarkMode(!isDarkMode);
 
     return (
         <div className="text-kanata-blue dark:text-kanata-gold">
