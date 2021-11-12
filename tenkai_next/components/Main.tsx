@@ -6,7 +6,7 @@ interface Prop {
 
 export const Main = ({ children }: Prop) => {
     return (
-        <main className="bg-white text-black dark:bg-gray-700 dark:text-white h-full flex-grow transition-all duration-200 overflow-auto pt-5">
+        <main className="bg-white text-black dark:bg-gray-800 dark:text-white h-full flex-grow transition-all duration-200">
             {children}
         </main>
     );

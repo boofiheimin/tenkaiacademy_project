@@ -85,21 +85,19 @@ export const NavBarItem = ({
                         {subMenus.map((subMenu) => {
                             const isSubMenuActive = router.pathname === subMenu.link;
                             return (
-                                <>
-                                    <li
-                                        key={`_${subMenu.text}`}
-                                        className={`w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 canhover:dark:hover:bg-gray-700 canhover:hover:bg-gray-400 text-sm flex items-center rounded-xl ${
-                                            isSubMenuActive ? 'dark:bg-gray-700 bg-gray-400' : ''
-                                        }`}
-                                    >
-                                        <Link href={subMenu.link} passHref>
-                                            <a className="w-full flex">
-                                                <div className="px-1 py-1 mr-5">{subMenu.icon}</div>
-                                                {fullMode && subMenu.text}
-                                            </a>
-                                        </Link>
-                                    </li>
-                                </>
+                                <li
+                                    key={`_${subMenu.text}`}
+                                    className={`w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 canhover:dark:hover:bg-gray-700 canhover:hover:bg-gray-400 text-sm flex items-center rounded-xl ${
+                                        isSubMenuActive ? 'dark:bg-gray-700 bg-gray-400' : ''
+                                    }`}
+                                >
+                                    <Link href={subMenu.link} passHref>
+                                        <a className="w-full flex">
+                                            <div className="px-1 py-1 mr-5">{subMenu.icon}</div>
+                                            {fullMode && subMenu.text}
+                                        </a>
+                                    </Link>
+                                </li>
                             );
                         })}
                     </ul>
