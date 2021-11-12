@@ -21,7 +21,7 @@ export const NavBarItem = ({
     className = '',
     icon,
     text,
-    link = '',
+    link = '/',
     fullMode = false,
     onClick = () => {},
     subMenus,
@@ -33,7 +33,7 @@ export const NavBarItem = ({
         <li
             className={`${className} relative flex flex-col justify-center w-full my-2 mx-auto p-2 ${
                 openSubMenu && 'dark:bg-gray-800 bg-gray-300'
-            } dark:hover:bg-gray-800 hover:bg-gray-300 rounded-xl transition-all duration-200 ease-linear`}
+            } canhover:dark:hover:bg-gray-800 canhover:hover:bg-gray-300 rounded-xl transition-all duration-200 ease-linear`}
         >
             <Link href={link} passHref>
                 <a
@@ -50,7 +50,7 @@ export const NavBarItem = ({
                         />
                     )}
                     {!fullMode && text && (
-                        <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-12 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-hover:scale-100">
+                        <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-12 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-canhover:hover:scale-100">
                             {text}
                         </span>
                     )}
@@ -67,14 +67,14 @@ export const NavBarItem = ({
                             return (
                                 <li
                                     key={`_${subMenu.text}`}
-                                    className="relative w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 dark:hover:bg-gray-700 hover:bg-gray-400 text-sm flex items-center rounded-xl group"
+                                    className="relative w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 canhover:dark:hover:bg-gray-700 canhover:hover:bg-gray-400 text-sm flex items-center rounded-xl group"
                                 >
                                     <Link href={subMenu.link} passHref>
                                         <a className="w-full flex">
                                             <div className="px-1 py-1 mr-5">{subMenu.icon}</div>
                                             {fullMode && subMenu.text}
                                             {!fullMode && text && (
-                                                <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-10 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-hover:scale-100">
+                                                <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-10 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-canhover:hover:scale-100">
                                                     {subMenu.text}
                                                 </span>
                                             )}

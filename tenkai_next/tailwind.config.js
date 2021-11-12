@@ -19,6 +19,9 @@ module.exports = {
       },
       fontFamily: {
         serif: ["Rubik", "sans-serif"]
+      },
+      screens: {
+        'canhover': {'raw': '(hover: hover)'},
       }
     },
   },

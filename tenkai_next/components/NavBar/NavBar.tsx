@@ -47,7 +47,7 @@ const NavBarContent = ({ mobile }: Props) => {
                         <div
                             className={`ml-auto flex items-center justify-center h-12 w-12 rounded-xl ${
                                 !mobile &&
-                                'dark:hover:bg-kanata-gold hover:bg-kanata-blue dark:hover:text-white cursor-pointer hover:text-white'
+                                'canhover:dark:hover:bg-kanata-gold canhover:hover:bg-kanata-blue canhover:dark:hover:text-white cursor-pointer canhover:hover:text-white'
                             } transition-all duration-200 ease-linear`}
                             onClick={handleToggleMode}
                             onKeyPress={({ key }) => {
@@ -72,6 +72,7 @@ const NavBarContent = ({ mobile }: Props) => {
                         <NavBarItem
                             icon={<SiBookstack className="text-2xl" />}
                             text="Archive"
+                            link={router.pathname}
                             fullMode={fullMode}
                             subMenus={[
                                 { text: 'Videos', icon: <FaYoutube />, link: '/videos' },
@@ -103,7 +104,7 @@ const NavBarContent = ({ mobile }: Props) => {
                         <div
                             className={`ml-auto flex items-center justify-center h-12 w-12 rounded-xl ${
                                 !mobile &&
-                                'dark:hover:bg-kanata-gold hover:bg-kanata-blue dark:hover:text-white cursor-pointer hover:text-white '
+                                'canhover:dark:hover:bg-kanata-gold canhover:hover:bg-kanata-blue canhover:dark:hover:text-white cursor-pointer canhover:hover:text-white '
                             } transition-all duration-200 ease-linear`}
                             onClick={handleSwitchMode}
                             onKeyPress={({ key }) => {
