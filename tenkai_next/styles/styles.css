@@ -20,7 +20,7 @@ html, body, #__next  {
 }
 
 ::-webkit-scrollbar {
-    width: 1rem;
+    width: 0.5rem;
 }
 
 ::-webkit-scrollbar-thumb {

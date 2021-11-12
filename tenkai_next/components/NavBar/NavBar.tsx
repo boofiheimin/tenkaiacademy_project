@@ -22,7 +22,7 @@ const NavBarContent = ({ mobile }: Props) => {
         if (mobile) {
             setMobileFullMode(false);
         }
-    }, []);
+    }, [mobile]);
 
     useEffect(() => {
         if (mobile) {
