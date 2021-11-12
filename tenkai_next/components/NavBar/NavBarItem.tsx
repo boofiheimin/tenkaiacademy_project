@@ -32,7 +32,7 @@ export const NavBarItem = ({ className = '', icon, text, fullMode = false, onCli
             >
                 <div className="h-8 w-8 grid place-items-center flex-shrink-0">{icon}</div>
                 {fullMode && <div className="ml-3 whitespace-nowrap">{text}</div>}
-                {subMenus && (
+                {fullMode && subMenus && (
                     <BiChevronDown
                         className={`ml-auto h-6 w-6 ${openSubMenu && '-rotate-180'} transition-all duration-100`}
                     />
