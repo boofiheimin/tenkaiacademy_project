@@ -29,7 +29,7 @@ const NavBarContent = ({ mobile }: Props) => {
         <div className="text-kanata-blue dark:text-kanata-gold">
             <nav
                 className={`fixed ${fullMode ? 'w-52' : 'w-16'} ${
-                    mobile && !fullMode ? 'h-16' : 'h-screen'
+                    mobile && !fullMode ? 'h-16' : 'h-full'
                 }  transition-all duration-150 ease-linear z-40 dark:bg-gray-900 bg-gray-200`}
             >
                 <ul
