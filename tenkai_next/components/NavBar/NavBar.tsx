@@ -32,11 +32,7 @@ const NavBarContent = ({ mobile }: Props) => {
                     mobile && !fullMode ? 'h-16' : 'h-full'
                 }  transition-all duration-150 ease-linear z-40 dark:bg-gray-900 bg-gray-200`}
             >
-                <ul
-                    className={`list-none px-2 py-0 m-0 flex flex-col items-center h-full ${
-                        fullMode ? 'overflow-hidden' : 'overflow-visible'
-                    }`}
-                >
+                <ul className="list-none px-2 py-0 m-0 flex flex-col items-center h-full overflow-y-auto overflow-x-hidden">
                     <div className="w-full py-2 flex items-center">
                         <div className={`p-2  ${!fullMode && 'hidden'}`}>
                             <Shuriken className="fill-current h-6" />

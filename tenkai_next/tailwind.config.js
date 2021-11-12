@@ -22,6 +22,9 @@ module.exports = {
       },
       screens: {
         'canhover': {'raw': '(hover: hover)'},
+      },
+      spacing: {
+        '18' : '4.5rem'
       }
     },
   },

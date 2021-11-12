@@ -31,13 +31,13 @@ export const NavBarItem = ({
 
     return (
         <li
-            className={`${className} relative flex flex-col justify-center w-full my-2 mx-auto p-2 ${
+            className={`${className} flex flex-col justify-center w-full my-2 mx-auto p-2 ${
                 openSubMenu && 'dark:bg-gray-800 bg-gray-300'
             } canhover:dark:hover:bg-gray-800 canhover:hover:bg-gray-300 rounded-xl transition-all duration-200 ease-linear`}
         >
             <Link href={link} passHref>
                 <a
-                    className="flex items-center cursor-pointer group"
+                    className="flex items-center cursor-pointer "
                     onClick={subMenus ? handleToggleSubMenu : onClick}
                     role="menuitem"
                     tabIndex={0}
@@ -48,11 +48,6 @@ export const NavBarItem = ({
                         <BiChevronDown
                             className={`ml-auto h-6 w-6 ${openSubMenu && '-rotate-180'} transition-all duration-100`}
                         />
-                    )}
-                    {!fullMode && text && (
-                        <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-12 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-canhover:hover:scale-100">
-                            {text}
-                        </span>
                     )}
                 </a>
             </Link>
@@ -65,22 +60,19 @@ export const NavBarItem = ({
                     <ul className="flex flex-col justify-center">
                         {subMenus.map((subMenu) => {
                             return (
-                                <li
-                                    key={`_${subMenu.text}`}
-                                    className="relative w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 canhover:dark:hover:bg-gray-700 canhover:hover:bg-gray-400 text-sm flex items-center rounded-xl group"
-                                >
-                                    <Link href={subMenu.link} passHref>
-                                        <a className="w-full flex">
-                                            <div className="px-1 py-1 mr-5">{subMenu.icon}</div>
-                                            {fullMode && subMenu.text}
-                                            {!fullMode && text && (
-                                                <span className="absolute w-auto h-8 p-2 m-2 flex items-center min-w-max top-0 bottom-0 left-10 rounded-md text-white bg-gray-900 transition-all duration-100 scale-0 origin-left group-canhover:hover:scale-100">
-                                                    {subMenu.text}
-                                                </span>
-                                            )}
-                                        </a>
-                                    </Link>
-                                </li>
+                                <>
+                                    <li
+                                        key={`_${subMenu.text}`}
+                                        className="w-full cursor-pointer px-1 py-2 dark:text-yellow-100 text-blue-600 canhover:dark:hover:bg-gray-700 canhover:hover:bg-gray-400 text-sm flex items-center rounded-xl"
+                                    >
+                                        <Link href={subMenu.link} passHref>
+                                            <a className="w-full flex">
+                                                <div className="px-1 py-1 mr-5">{subMenu.icon}</div>
+                                                {fullMode && subMenu.text}
+                                            </a>
+                                        </Link>
+                                    </li>
+                                </>
                             );
                         })}
                     </ul>
