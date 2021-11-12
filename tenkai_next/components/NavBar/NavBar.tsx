@@ -42,6 +42,11 @@ const NavBarContent = ({ mobile }: Props) => {
                                 'dark:hover:bg-kanata-gold hover:bg-kanata-blue dark:hover:text-white cursor-pointer hover:text-white'
                             } transition-all duration-200 ease-linear`}
                             onClick={handleToggleMode}
+                            onKeyPress={({ key }) => {
+                                if (key === 'Enter') {
+                                    handleToggleMode();
+                                }
+                            }}
                             role="button"
                             tabIndex={0}
                         >
@@ -53,16 +58,21 @@ const NavBarContent = ({ mobile }: Props) => {
                             mobile && !fullMode && 'hidden'
                         } h-full w-full flex flex-col items-center justify-center`}
                     >
-                        <NavBarItem icon={<FaHome className="text-2xl" />} text="Home" fullMode={fullMode} />
-                        <NavBarItem icon={<SiDiscogs className="text-2xl" />} text="Discography" fullMode={fullMode} />
+                        <NavBarItem icon={<FaHome className="text-2xl" />} text="Home" link="/" fullMode={fullMode} />
+                        <NavBarItem
+                            icon={<SiDiscogs className="text-2xl" />}
+                            text="Discography"
+                            link="/discography"
+                            fullMode={fullMode}
+                        />
                         <NavBarItem
                             icon={<SiBookstack className="text-2xl" />}
                             text="Archive"
                             fullMode={fullMode}
                             subMenus={[
-                                { text: 'Videos', icon: <FaYoutube /> },
-                                { text: 'Clips', icon: <FaFilm /> },
-                                { text: 'Songs', icon: <FaItunesNote /> },
+                                { text: 'Videos', icon: <FaYoutube />, link: '/videos' },
+                                { text: 'Clips', icon: <FaFilm />, link: '/clips' },
+                                { text: 'Songs', icon: <FaItunesNote />, link: '/songs' },
                             ]}
                         />
                         <NavBarItem
