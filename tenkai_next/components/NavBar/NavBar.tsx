@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDarkMode } from '../../lib/hooks';
 import { Shuriken } from '../Shuriken';
 import { NavBarItem } from './NavBarItem';
+import { useAppStore } from '../../lib/stores';
 
 interface Props {
     mobile: boolean;
@@ -14,30 +15,41 @@ interface Props {
 const NavBarContent = ({ mobile }: Props) => {
     const router = useRouter();
     const [isDarkMode, setDarkMode] = useDarkMode();
-    const [fullMode, setFullMode] = useState(!mobile);
+    const { fullMode, setFullMode } = useAppStore();
+    const [mobileFullMode, setMobileFullMode] = useState(false);
 
     useEffect(() => {
         if (mobile) {
-            setFullMode(false);
+            setMobileFullMode(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (mobile) {
+            setMobileFullMode(false);
         }
     }, [router.pathname, mobile]);
 
-    const handleToggleMode = () => setFullMode(!fullMode);
+    const handleToggleMode = () => (mobile ? setMobileFullMode(!mobileFullMode) : setFullMode(!fullMode));
     const handleSwitchMode = () => setDarkMode(!isDarkMode);
+
+    const isFullMode = mobile ? mobileFullMode : fullMode;
 
     return (
         <div className="text-kanata-blue dark:text-kanata-gold">
             <nav
-                className={`fixed ${fullMode ? 'w-52' : 'w-16'} ${
-                    mobile && !fullMode ? 'h-16' : 'h-full'
+                className={`fixed ${isFullMode ? 'w-52' : 'w-16'} ${
+                    mobile && !isFullMode ? 'h-16' : 'h-full'
                 }  transition-all duration-150 ease-linear z-40 dark:bg-gray-900 bg-gray-200`}
             >
                 <ul className="list-none px-2 py-0 m-0 flex flex-col items-center h-full overflow-y-auto overflow-x-hidden">
                     <div className="w-full py-2 flex items-center">
-                        <div className={`p-2  ${!fullMode && 'hidden'}`}>
+                        <div className={`p-2  ${!isFullMode && 'hidden'}`}>
                             <Shuriken className="fill-current h-6" />
                         </div>
-                        <span className={`ml-2 font-mono text-xl font-bold ${!fullMode && 'hidden'} whitespace-nowrap`}>
+                        <span
+                            className={`ml-2 font-mono text-xl font-bold ${!isFullMode && 'hidden'} whitespace-nowrap`}
+                        >
                             天界学園
                         </span>
                         <div
@@ -46,30 +58,24 @@ const NavBarContent = ({ mobile }: Props) => {
                                 'canhover:dark:hover:bg-kanata-gold canhover:hover:bg-kanata-blue canhover:dark:hover:text-white cursor-pointer canhover:hover:text-white'
                             } transition-all duration-200 ease-linear`}
                             onClick={handleToggleMode}
-                            onKeyPress={({ key }) => {
-                                if (key === 'Enter') {
-                                    handleToggleMode();
-                                }
-                            }}
                             role="button"
                             tabIndex={0}
                         >
                             <MdMenu className="text-2xl" />
                         </div>
                     </div>
-                    <div className={`${mobile && !fullMode && 'hidden'} h-full w-full flex flex-col items-center`}>
-                        <NavBarItem icon={<FaHome className="text-2xl" />} text="Home" link="/" fullMode={fullMode} />
+                    <div className={`${mobile && !isFullMode && 'hidden'} h-full w-full flex flex-col items-center`}>
+                        <NavBarItem icon={<FaHome className="text-2xl" />} text="Home" link="/" fullMode={isFullMode} />
                         <NavBarItem
                             icon={<SiDiscogs className="text-2xl" />}
                             text="Discography"
                             link="/discography"
-                            fullMode={fullMode}
+                            fullMode={isFullMode}
                         />
                         <NavBarItem
                             icon={<SiBookstack className="text-2xl" />}
                             text="Archive"
-                            link={router.pathname}
-                            fullMode={fullMode}
+                            fullMode={isFullMode}
                             subMenus={[
                                 { text: 'Videos', icon: <FaYoutube />, link: '/videos' },
                                 { text: 'Clips', icon: <FaFilm />, link: '/clips' },
@@ -87,7 +93,7 @@ const NavBarContent = ({ mobile }: Props) => {
                                     )
                                 }
                                 text="Toggle Theme"
-                                fullMode={fullMode}
+                                fullMode={isFullMode}
                                 onClick={handleSwitchMode}
                             />
                         )}
@@ -117,10 +123,8 @@ const NavBarContent = ({ mobile }: Props) => {
                     <div className="h-16 w-screen" />
                 </>
             )}
-            {!mobile && (
-                <div className={`${fullMode ? 'w-52' : 'w-16'} h-full transition-all duration-150 ease-linear`} />
-            )}
-            {mobile && fullMode && (
+
+            {mobile && isFullMode && (
                 <div
                     className="absolute h-full w-full bg-black z-20 opacity-60"
                     onClick={handleToggleMode}
