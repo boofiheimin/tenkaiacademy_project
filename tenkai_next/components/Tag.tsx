@@ -11,9 +11,15 @@ export const Tag = ({ tagNameEN, className = '' }: Props) => {
     const color = config[tagNameEN]?.color || '';
 
     return (
-        <span
-            className={`${className} p-2 rounded-xl text-white w-auto`}
-            style={{ background: color || config.default.color }}
-        >{`${icon ? `${icon} ` : config.default.icon}${tagNameEN}`}</span>
+        <div
+            className={`${className} p-2 rounded-xl text-white w-auto max-w`}
+            style={{
+                background: color || config.default.color,
+                maxWidth: '7.5rem',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+            }}
+        >{`${icon ? `${icon} ` : config.default.icon}${tagNameEN}`}</div>
     );
 };

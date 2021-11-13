@@ -16,7 +16,7 @@ const exampleVideo = {
     relatedTweets: [],
     relatedVideos: [],
     source: 'youtube',
-    tags: [{ tagNameEN: 'Singing' }, { tagNameEN: 'Test' }],
+    tags: [{ tagNameEN: 'Singing' }, { tagNameEN: 'Singing' }, { tagNameEN: 'Singing' }],
     thumbnail: 'https://i.ytimg.com/vi/jyFSkcpK0WI/hqdefault.jpg',
     timestamps: [],
     title: '【歌枠】HAPPY HALLOWEEN🎃🎵/SINGING【天音かなた/ホロライブ】',
@@ -45,10 +45,13 @@ export const VideoCard = ({ horizontal = false }: Props) => {
                     <span>{moment(exampleVideo.publishedAt).fromNow()}</span>
                 </div>
                 <div className="py-2 italic">{exampleVideo.uploader}</div>
-                <div className="my-4 h-6 ">
-                    {exampleVideo.tags.map((tag) => (
+                <div className="my-4 h-6 flex items-center">
+                    {exampleVideo.tags.slice(0, 2).map((tag) => (
                         <Tag tagNameEN={tag.tagNameEN} key={tag.tagNameEN} className="mr-2 last:mr-0" />
                     ))}
+                    {exampleVideo.tags.length > 2 && (
+                        <span className="rounded-full p-2 bg-gray-500">{`+ ${exampleVideo.tags.length - 2}`}</span>
+                    )}
                 </div>
             </div>
         </div>
