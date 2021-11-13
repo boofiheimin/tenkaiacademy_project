@@ -28,25 +28,19 @@ export const Tooltip = ({ text, children, className, placement = 'bottom', disab
     });
     const show = () => {
         if (!disabled) {
-            popperElement.classList.remove('hidden');
             update();
-        }
-    };
-    const hide = () => {
-        if (!disabled) {
-            popperElement.classList.add('hidden');
         }
     };
 
     return (
-        <div className={`${className} group`} onMouseEnter={show} onMouseLeave={hide}>
+        <div className={`${className} group`} onMouseEnter={show}>
             <div ref={setReferenceElement}>{children}</div>
             <div
                 id="tooltip"
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}
-                className="text-base bg-black text-white p-2 rounded-xl top-4 hidden font-bold z-40"
+                className="text-base bg-black text-white p-2 rounded-xl top-4 hidden canhover:group-hover:block font-bold z-40"
             >
                 <span>{text}</span>
                 <div id="arrow" ref={setArrowElement} style={{ ...styles.arrow }} />

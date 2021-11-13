@@ -24,24 +24,30 @@ const exampleVideo = {
     uploader: 'Kanata Ch. 天音かなた',
 };
 
-export const VideoCard = () => {
+interface Props {
+    horizontal?: boolean;
+}
+
+export const VideoCard = ({ horizontal = false }: Props) => {
     return (
-        <div className="w-80 h-auto shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2">
-            <div className="relative w-full h-45">
+        <div
+            className={`${
+                horizontal ? 'lg:flex lg:w-full lg:h-50' : ''
+            } w-80 h-auto shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2`}
+        >
+            <div className={`relative ${horizontal ? 'lg:w-80 lg:h-50' : ''} w-full h-45`}>
                 <Image src={exampleVideo.thumbnail} layout="fill" objectFit="cover" alt={exampleVideo.title} />
             </div>
-            <div className="p-2">
-                <div className="line-clamp-2">{exampleVideo.title}</div>
-                <div className="text-sm text-gray-400 mt-1">
-                    <div className="text-sm text-gray-400 flex items-center">
-                        <AiOutlineClockCircle className="text-xl mr-2" />
-                        <span className="leading-none">{moment(exampleVideo.publishedAt).fromNow()}</span>
-                    </div>
-                    <div className="py-2 italic">{exampleVideo.uploader}</div>
+            <div className={`${horizontal ? 'lg:p-4' : ''} p-2`}>
+                <div className={`line-clamp-2 ${horizontal ? 'lg:text-xl' : ''}`}>{exampleVideo.title}</div>
+                <div className={`text-gray-400 flex items-center ${horizontal ? 'lg:text-base' : ''} text-sm`}>
+                    <AiOutlineClockCircle className="text-xl mr-2" />
+                    <span>{moment(exampleVideo.publishedAt).fromNow()}</span>
                 </div>
+                <div className="py-2 italic">{exampleVideo.uploader}</div>
                 <div className="my-4 h-6 ">
                     {exampleVideo.tags.map((tag) => (
-                        <Tag tagNameEN={tag.tagNameEN} key={tag.tagNameEN} />
+                        <Tag tagNameEN={tag.tagNameEN} key={tag.tagNameEN} className="mr-2 last:mr-0" />
                     ))}
                 </div>
             </div>
