@@ -32,6 +32,9 @@ module.exports = {
       },
       screens: {
         'canhover': {'raw': '(hover: hover)'},
+        'smMax': {'max': '639px'},
+        'mdMax': {'max': '767px'},
+        'lgMax': {'max': '1023px'}
       },
       spacing: {
         '18' : '4.5rem',
@@ -39,11 +42,14 @@ module.exports = {
       },
       gridTemplateColumns: {
         'video' : 'repeat(auto-fit, 20rem)'
+      },
+      justifyContent: {
+        'stretch' : 'stretch'
       }
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [require('@tailwindcss/line-clamp'),require('@tailwindcss/aspect-ratio'),],
 }

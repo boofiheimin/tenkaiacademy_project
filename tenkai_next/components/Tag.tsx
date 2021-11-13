@@ -12,7 +12,7 @@ export const Tag = ({ tagNameEN, className = '' }: Props) => {
 
     return (
         <div
-            className={`${className} p-2 rounded-xl text-white w-auto max-w`}
+            className={`${className} p-1 rounded-xl text-white w-auto max-w`}
             style={{
                 background: color || config.default.color,
                 maxWidth: '7.5rem',

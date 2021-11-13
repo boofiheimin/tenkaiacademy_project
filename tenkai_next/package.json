@@ -10,6 +10,7 @@
   "dependencies": {
     "@headlessui/react": "^1.4.2",
     "@popperjs/core": "^2.10.2",
+    "@tailwindcss/aspect-ratio": "^0.3.0",
     "@tailwindcss/line-clamp": "^0.2.2",
     "moment": "^2.29.1",
     "next": "latest",

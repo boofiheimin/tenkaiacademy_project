@@ -22,11 +22,11 @@ const Videos = () => {
                 <div className="px-10">
                     <div className="h-20 border-b flex justify-between items-end leading-none pb-1">
                         <span className="">Total: 69 Videos </span>
-                        <div className="text-2xl text-gray-500 hidden md:flex">
+                        <div className="text-2xl text-gray-500 hidden lg:flex">
                             <Tooltip text="Grid" className="mr-2">
                                 <button
                                     type="button"
-                                    className={` ${viewMode ? 'pointer-events-none text-white' : ''}`}
+                                    className={`${viewMode ? 'pointer-events-none text-white' : ''}`}
                                     onClick={toggleViewMode}
                                 >
                                     <IoGrid />
@@ -35,7 +35,7 @@ const Videos = () => {
                             <Tooltip text="List">
                                 <button
                                     type="button"
-                                    className={` ${!viewMode ? 'pointer-events-none text-white' : ''}`}
+                                    className={`${!viewMode ? 'pointer-events-none text-white' : ''}`}
                                     onClick={toggleViewMode}
                                 >
                                     <IoList />
@@ -47,8 +47,8 @@ const Videos = () => {
                         className={`pt-4 grid gap-4 ${
                             viewMode
                                 ? 'grid-cols-video justify-center'
-                                : 'grid-cols-video justify-center md:grid-cols-none'
-                        } justify-items-center items-center`}
+                                : 'grid-cols-video lgMax:justify-center lg:grid-cols-none lg:px-10'
+                        }  items-center`}
                     >
                         {/* test array */}
                         {[...Array(20)].map(() => (
