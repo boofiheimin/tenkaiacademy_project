@@ -15,7 +15,7 @@ const Videos = () => {
     const toggleViewMode = () => setViewMode(!viewMode);
 
     return (
-        <div>
+        <>
             <TopSearchBar />
             <div className="h-16" />
             <div className={`${fullMode ? 'md:pl-52' : 'md:pl-16'} transition-all duration-200`}>
@@ -57,7 +57,7 @@ const Videos = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 export default Videos;

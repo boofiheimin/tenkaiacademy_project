@@ -6,8 +6,8 @@ interface Prop {
 
 export const Main = ({ children }: Prop) => {
     return (
-        <main className="bg-white text-black dark:bg-gray-800 dark:text-white flex-grow transition-all duration-200 pb-2">
-            {children}
-        </main>
+        <div className="bg-white text-black dark:bg-gray-800 dark:text-white flex-grow transition-all duration-200 pb-2 flex items-stretch">
+            <div className="w-full">{children}</div>
+        </div>
     );
 };
