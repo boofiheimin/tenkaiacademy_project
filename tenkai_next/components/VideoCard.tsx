@@ -32,15 +32,15 @@ export const VideoCard = ({ horizontal = false }: Props) => {
     return (
         <div
             className={`${
-                horizontal ? 'lg:flex lg:w-full lg:align-center' : ''
-            } w-80 h-auto shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2`}
+                horizontal ? 'flex-col h-96 lg:h-auto lg:flex-row lg:w-full lg:align-center' : 'flex-col h-96'
+            } w-80 h-auto flex shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2`}
         >
             <div className="w-80 flex-shrink-0">
                 <div className="aspect-w-16 aspect-h-9">
                     <Image src={exampleVideo.thumbnail} layout="fill" objectFit="cover" alt={exampleVideo.title} />
                 </div>
             </div>
-            <div className={`flex flex-col ${horizontal ? 'lg:p-4' : 'pb-4'} p-2`}>
+            <div className={`flex flex-col ${horizontal ? 'lg:p-4' : ''} p-2 pb-4 flex-grow items-stretch`}>
                 <div className="line-clamp-2">{exampleVideo.title}</div>
                 <div className={`text-gray-400 flex items-center ${horizontal ? 'lg:text-base' : ''} text-sm`}>
                     <AiOutlineClockCircle className="text-xl mr-2" />
