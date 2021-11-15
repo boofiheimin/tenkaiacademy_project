@@ -13,7 +13,7 @@ export class UpdateVideoInputDto {
     @IsOptional()
     @IsString()
     @ApiPropertyOptional()
-    description?: string;
+    summary?: string;
 
     @IsOptional()
     @IsString()
@@ -56,6 +56,11 @@ export class UpdateVideoInputDto {
     uploader?: string;
 
     @IsOptional()
+    @IsString()
+    @ApiPropertyOptional()
+    channelId?: string;
+
+    @IsOptional()
     @IsEnum(VideoSource)
     @ApiPropertyOptional()
     source?: VideoSource;
@@ -67,7 +72,7 @@ export class UpdateVideoInputDto {
     constructor(data: object) {
         objectClassConstructor(this, data, [
             'title',
-            'description',
+            'summary',
             'thumbnail',
             'duration',
             'publishedAt',
@@ -76,6 +81,7 @@ export class UpdateVideoInputDto {
             'relatedTweet',
             'relatedVideoIds',
             'uploader',
+            'channelId',
             'source',
             'mirror',
         ]);

@@ -44,6 +44,11 @@ export class UpdateClipInputDto {
     uploader?: string;
 
     @ApiProperty()
+    @IsString()
+    @IsOptional()
+    channelId?: string;
+
+    @ApiProperty()
     @IsNumber({}, { each: true })
     @IsOptional()
     tagIds?: number[];
@@ -62,6 +67,7 @@ export class UpdateClipInputDto {
             'duration',
             'publishedAt',
             'uploader',
+            'channelId',
             'tagIds',
             'relatedClipIds',
         ]);

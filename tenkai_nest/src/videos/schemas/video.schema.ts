@@ -30,6 +30,10 @@ export class EmbedVideo {
 
     @IsString()
     @ApiProperty()
+    channelId: string;
+
+    @IsString()
+    @ApiProperty()
     thumbnail: string;
 
     @IsString()
@@ -44,12 +48,13 @@ export class EmbedVideo {
     @ApiProperty()
     existing: boolean;
 
-    constructor(video: VideoDocument | YoutubeVideo) {
+    constructor(video: Video | YoutubeVideo) {
         this.videoId = video.videoId;
         this.title = video.title;
         this.thumbnail = video.thumbnail;
         this.uploader = video.uploader;
         this.publishedAt = video.publishedAt;
+        this.channelId = video.channelId;
         this.existing = (video as VideoDocument).id ? true : false;
         if ((video as VideoDocument).id) {
             this.id = (video as VideoDocument).id.toString();
@@ -76,7 +81,7 @@ export class Video {
 
     @Prop({ default: '' })
     @ApiProperty()
-    description: string;
+    summary: string;
 
     @Prop({ default: '' })
     @ApiProperty()
@@ -106,9 +111,13 @@ export class Video {
     @ApiProperty({ description: 'Embed Video Metadata', type: [EmbedVideo] })
     relatedVideos: EmbedVideo[];
 
-    @Prop({ default: '' })
+    @Prop({ required: true })
     @ApiProperty()
     uploader: string;
+
+    @Prop({ required: true })
+    @ApiProperty()
+    channelId: string;
 
     @Prop({ enum: Object.values(VideoSource) })
     @ApiProperty({ enum: VideoSource })
@@ -126,13 +135,14 @@ export class Video {
         this.videoId = videoId;
         this.source = source;
         if (youtubeVideo) {
-            const { title, thumbnail, uploader, duration, publishedAt } = youtubeVideo;
+            const { title, thumbnail, uploader, channelId, duration, publishedAt } = youtubeVideo;
             this.title = title;
             this.thumbnail = thumbnail;
             this.uploader = uploader;
             this.duration = duration;
             this.publishedAt = publishedAt;
             this.isPrivate = false;
+            this.channelId = channelId;
         } else {
             this.title = '';
             this.isPrivate = true;

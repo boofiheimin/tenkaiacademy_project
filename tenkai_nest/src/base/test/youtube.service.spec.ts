@@ -46,6 +46,7 @@ describe('YoutubeService', () => {
                 uploader: 'Rick Astley',
                 duration: 213,
                 publishedAt: new Date('2009-10-25T06:57:33.000Z'),
+                channelId: 'UCuAXFkgsw1L7xaCfnd5JJOw',
             };
 
             expect(video).toEqual(expectedValue);

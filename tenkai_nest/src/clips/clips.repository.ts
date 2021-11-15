@@ -14,7 +14,6 @@ export class ClipsRepository extends BaseRepository<ClipDocument> {
             videoId: 1,
             srcVideos: 1,
             title: 1,
-            description: 1,
             thumbnail: 1,
             duration: 1,
             publishedAt: 1,

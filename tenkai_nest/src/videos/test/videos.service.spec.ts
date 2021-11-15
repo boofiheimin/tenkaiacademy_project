@@ -195,7 +195,9 @@ describe('VideosService', () => {
             });
             it('should call VideosRepository', () => {
                 expect(videosRepository.findByVideoId).toBeCalledWith(videoStub().videoId);
-                expect(videosRepository.update).toBeCalledWith(id, { relatedVideos: [new EmbedVideo(videoStub())] });
+                expect(videosRepository.update).toBeCalledWith(id, {
+                    relatedVideos: [new EmbedVideo(videoStub() as any)],
+                });
             });
             it('should return with a video', () => {
                 expect(omitStubFn(video)).toEqual(omitStubFn(videoStub()));

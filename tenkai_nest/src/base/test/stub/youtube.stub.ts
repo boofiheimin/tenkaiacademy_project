@@ -7,6 +7,7 @@ export const youtubeStub = (): YoutubeVideo => ({
     uploader: 'test-uploader',
     duration: 1000,
     publishedAt: new Date(0),
+    channelId: 'test-channel-id',
 });
 
 export const youtubeClipStub = (): YoutubeVideo => ({
@@ -16,6 +17,7 @@ export const youtubeClipStub = (): YoutubeVideo => ({
     uploader: 'test-uploader-clip',
     duration: 2000,
     publishedAt: new Date(1),
+    channelId: 'test-clip-channel-id',
 });
 
 export const videoIdsStub = (): string[] => [youtubeStub().videoId, youtubeStub().videoId, youtubeStub().videoId];

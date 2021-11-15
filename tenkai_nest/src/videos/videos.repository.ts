@@ -21,6 +21,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
             relatedTweets: 1,
             relatedVideos: 1,
             uploader: 1,
+            channelId: 1,
             source: 1,
             mirror: 1,
         });

@@ -18,6 +18,7 @@ export const clipStub = (): ClipStub => ({
     publishedAt: new Date(0),
     tags: [],
     uploader: 'test-uploader',
+    channelId: 'test-channelId',
     relatedClips: [],
     langs: [clipLangStub().code],
     save: () => {},

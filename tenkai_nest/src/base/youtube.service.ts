@@ -12,6 +12,7 @@ export interface YoutubeVideo {
     uploader: string;
     duration: number;
     publishedAt: Date;
+    channelId: string;
 }
 
 @Injectable()
@@ -35,6 +36,7 @@ export class YoutubeService {
                 uploader: get(video, 'snippet.channelTitle'),
                 duration: moment.duration(get(video, 'contentDetails.duration')).asSeconds(),
                 publishedAt: new Date(get(video, 'snippet.publishedAt')),
+                channelId: get(video, 'snippet.channelId'),
             };
         }
         return null;

@@ -21,6 +21,10 @@ export class EmbedClip {
 
     @IsString()
     @ApiProperty()
+    channelId: string;
+
+    @IsString()
+    @ApiProperty()
     thumbnail: string;
 
     @IsString()
@@ -35,12 +39,13 @@ export class EmbedClip {
     @ApiProperty()
     existing: boolean;
 
-    constructor(clip: ClipDocument | YoutubeVideo) {
-        const { videoId, title, thumbnail, uploader, publishedAt } = clip;
+    constructor(clip: Clip | YoutubeVideo) {
+        const { videoId, title, thumbnail, uploader, channelId, publishedAt } = clip;
         this.videoId = videoId;
         this.title = title;
         this.thumbnail = thumbnail;
         this.uploader = uploader;
+        this.channelId = channelId;
         this.publishedAt = publishedAt;
         this.existing = (clip as ClipDocument).id ? true : false;
         if ((clip as ClipDocument).id) {
@@ -99,9 +104,15 @@ export class Clip {
 
     @ApiProperty()
     @Prop({
-        default: '',
+        required: true,
     })
     uploader: string;
+
+    @ApiProperty()
+    @Prop({
+        required: true,
+    })
+    channelId: string;
 
     @ApiProperty({ description: 'Embed Clips Metadata', type: [EmbedClip] })
     @Prop({
