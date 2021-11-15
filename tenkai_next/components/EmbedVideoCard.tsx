@@ -1,6 +1,4 @@
-import moment from 'moment';
 import Image from 'next/image';
-import { AiOutlineClockCircle } from 'react-icons/ai';
 
 const exampleVideo = {
     _id: '6184ac417e0f68b237a9181e',
@@ -29,19 +27,15 @@ interface Props {
 export const EmbedVideoCard = ({ className = '' }: Props) => {
     // TODO :: do router.push thing here. depends on is videoId existing or not
     return (
-        <div className={`bg-gray-800 hover:bg-gray-600 max-w-xl w-full flex ${className} cursor-pointer`}>
-            <div className="w-52 flex-shrink-0">
+        <div className={`bg-gray-800 canhover:hover:bg-gray-600 w-full flex ${className} cursor-pointer`}>
+            <div className="w-44 flex-shrink-0">
                 <div className="relative aspect-w-16 aspect-h-9">
                     <Image src={exampleVideo.thumbnail} alt={exampleVideo.title} layout="fill" objectFit="cover" />
                 </div>
             </div>
             <div className="flex-grow flex flex-col p-2 items-stretch">
                 <span className="line-clamp-2">{exampleVideo.title}</span>
-                <div className="flex items-center text-gray-400 text-sm">
-                    <AiOutlineClockCircle className="text-xl mr-2" />
-                    <span>{moment(exampleVideo.publishedAt).fromNow()}</span>
-                </div>
-                <div className="text-sm italic mt-auto">{exampleVideo.uploader}</div>
+                <div className="text-sm italic mt-auto line-clamp-1">{exampleVideo.uploader}</div>
             </div>
         </div>
     );

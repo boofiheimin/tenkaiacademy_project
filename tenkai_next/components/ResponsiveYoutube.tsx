@@ -8,6 +8,7 @@ interface Props {
     tabContent?: ReactNode;
     tabDefaultStatus?: boolean;
     videoId: string;
+    className?: string;
 }
 
 export const ResponsiveYoutube = ({
@@ -16,11 +17,12 @@ export const ResponsiveYoutube = ({
     tabContent = <div />,
     tabDefaultStatus = true,
     videoId,
+    className,
 }: Props) => {
     const [showTab, setShowTab] = useState(tabDefaultStatus);
     const handleTabToggle = () => setShowTab(!showTab);
     return (
-        <div>
+        <div className={className}>
             <div className="flex items-stretch">
                 <div className="w-full">
                     <div className="aspect-w-16 aspect-h-9">
