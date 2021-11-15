@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAppStore } from './stores';
 
 // Hook
 function useLocalStorage<T>(key: string, initialValue?: T) {
@@ -40,17 +41,20 @@ function useLocalStorage<T>(key: string, initialValue?: T) {
 // Hook
 export function useDarkMode() {
     const [isDarkMode, setDarkMode] = useLocalStorage('dark-mode-enabled', true);
+    const setAppDarkMode = useAppStore((state) => state.setAppDarkMode);
     useEffect(
         () => {
             const className = 'dark';
             const element = window.document.body;
             if (isDarkMode) {
                 element.classList.add(className);
+                setAppDarkMode(true);
             } else {
                 element.classList.remove(className);
+                setAppDarkMode(false);
             }
         },
-        [isDarkMode], // Only re-call effect when value changes
+        [isDarkMode, setAppDarkMode], // Only re-call effect when value changes
     );
 
     // Return enabled state and setter
