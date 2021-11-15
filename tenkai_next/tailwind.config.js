@@ -16,6 +16,8 @@ module.exports = {
         'kanata-grey': '#b4b1c2',
         'kanata-blue': '#1E62EB',
         'kanata-pink': '#FEABBD',
+        'youtube': '#FF0000',
+        'twitter': '#1DA1F2',
         gray: {
           900: '#202225',
           800: '#2f3136',

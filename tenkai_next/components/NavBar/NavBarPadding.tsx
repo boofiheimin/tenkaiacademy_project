@@ -7,5 +7,5 @@ interface Props {
 
 export const NavBarPadding = ({ children }: Props) => {
     const fullMode = useAppStore((state) => state.fullMode);
-    return <div className={`transition-all duration-200 ${fullMode ? 'md:pl-52' : 'md:pl-16'} h-full`}>{children}</div>;
+    return <div className={`transition-all duration-200 ${fullMode ? 'md:pl-52' : 'md:pl-16'}`}>{children}</div>;
 };
