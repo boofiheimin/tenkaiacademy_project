@@ -170,40 +170,46 @@ const Video = () => {
                                 </button>
                             </Link>
                         </div>
-                        <button
-                            type="button"
-                            className="w-full bg-gray-900 h-8 grid place-items-center"
-                            onClick={handleToggleDetailTab}
-                        >
-                            <BiChevronDown
-                                className={`text-2xl transition-all duration-100 ${openDetailTab ? 'rotate-180' : ''}`}
-                            />
-                        </button>
-                        <div className={`${openDetailTab ? '' : 'hidden'}`}>
-                            {exampleVideo.tags.length > 0 && (
-                                <div className="bg-gray-900 mt-1">
-                                    <div className="px-2 py-4 flex items-center">
-                                        <span className="mr-2">Tags :</span>
-                                        {exampleVideo.tags.map((tag) => (
-                                            <Tag
-                                                className="mr-2 last:mr-0 my-1"
-                                                tagNameEN={tag.tagNameEN}
-                                                key={uuidV4()}
-                                            />
-                                        ))}
-                                    </div>
+                        {(exampleVideo.tags.length > 0 || exampleVideo.summary) && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="w-full bg-gray-900 h-8 grid place-items-center"
+                                    onClick={handleToggleDetailTab}
+                                >
+                                    <BiChevronDown
+                                        className={`text-2xl transition-all duration-100 ${
+                                            openDetailTab ? 'rotate-180' : ''
+                                        }`}
+                                    />
+                                </button>
+                                <div className={`${openDetailTab ? '' : 'hidden'}`}>
+                                    {exampleVideo.tags.length > 0 && (
+                                        <div className="bg-gray-900 mt-1">
+                                            <div className="px-2 py-4 flex items-center">
+                                                <span className="mr-2">Tags :</span>
+                                                {exampleVideo.tags.map((tag) => (
+                                                    <Tag
+                                                        className="mr-2 last:mr-0 my-1"
+                                                        tagNameEN={tag.tagNameEN}
+                                                        key={uuidV4()}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {exampleVideo.summary && (
+                                        <div className="bg-gray-900 mt-1">
+                                            <div className="p-2">
+                                                <span>Summary</span>
+                                                <div className="border-b border-white mb-1 w-1/2" />
+                                                <p>{exampleVideo.summary}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                            {exampleVideo.summary && (
-                                <div className="bg-gray-900 mt-1">
-                                    <div className="p-2">
-                                        <span>Summary</span>
-                                        <div className="border-b border-white mb-1 w-1/2" />
-                                        <p>{exampleVideo.summary}</p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                            </>
+                        )}
                         <div className="mt-1">
                             <Tab.Group>
                                 <Tab.List className="grid grid-flow-col" style={{ gridAutoColumns: 'minmax(0,1fr)' }}>
