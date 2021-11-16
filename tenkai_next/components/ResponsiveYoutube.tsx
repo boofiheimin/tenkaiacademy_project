@@ -33,7 +33,7 @@ export const ResponsiveYoutube = ({
                     <div
                         className={`${
                             showTab ? 'w-96' : 'w-12'
-                        } bg-gray-900 items-stretch transition-all duration-150 hidden xl:flex`}
+                        } bg-gray-900 items-stretch transition-all duration-150 hidden lg:flex`}
                     >
                         <div className="h-full w-full flex flex-col">
                             <div className="w-full overflow-hidden">
