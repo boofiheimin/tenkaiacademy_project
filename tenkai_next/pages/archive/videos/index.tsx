@@ -2,23 +2,21 @@ import { IoGrid, IoList } from 'react-icons/io5';
 import { v4 as uuidV4 } from 'uuid';
 
 import { useState } from 'react';
-import { useAppStore } from '../../lib/stores';
 
-import { TopSearchBar } from '../../components/TopSearchBar';
-import { VideoCard } from '../../components/VideoCard';
-import { Tooltip } from '../../components/Tooltip';
+// import { TopSearchBar } from '../../../components/TopSearchBar';
+import { VideoCard } from '../../../components/VideoCard';
+import { Tooltip } from '../../../components/Tooltip';
+import { NBarPadding } from '../../../components/NBar/NBarPadding';
 
 const Videos = () => {
     const [viewMode, setViewMode] = useState(true);
-    const fullMode = useAppStore((state) => state.fullMode);
 
     const toggleViewMode = () => setViewMode(!viewMode);
 
     return (
-        <>
-            <TopSearchBar />
+        <NBarPadding>
             <div className="h-16" />
-            <div className={`${fullMode ? 'md:pl-52' : 'md:pl-16'} transition-all duration-200`}>
+            <div className="transition-all duration-200">
                 <div className="px-10">
                     <div className="h-20 border-b flex justify-between items-end leading-none pb-1">
                         <span className="">Total: 69 Videos </span>
@@ -57,7 +55,7 @@ const Videos = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </NBarPadding>
     );
 };
 export default Videos;

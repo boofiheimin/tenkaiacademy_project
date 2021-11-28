@@ -10,12 +10,12 @@ import { BsYoutube, BsTwitter } from 'react-icons/bs';
 
 import { Fragment, useState } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
-import { ResponsiveYoutube } from '../../components/ResponsiveYoutube';
-import { NavBarPadding } from '../../components/NavBar/NavBarPadding';
-import { EmbedVideoCard } from '../../components/EmbedVideoCard';
-import { Tag } from '../../components/Tag';
+import { ResponsiveYoutube } from '../../../components/ResponsiveYoutube';
+import { EmbedVideoCard } from '../../../components/EmbedVideoCard';
+import { Tag } from '../../../components/Tag';
 
-import { useAppStore } from '../../lib/stores';
+import { useAppStore } from '../../../lib/stores';
+import { NBarPadding } from '../../../components/NBar/NBarPadding';
 
 const exampleVideo = {
     _id: '6184ac417e0f68b237a9181e',
@@ -75,7 +75,7 @@ const Video = () => {
         (exampleVideo.timestamps.length ? 1 : 0);
     const handleToggleDetailTab = () => setOpenDetailTab(!openDetailTab);
     return (
-        <NavBarPadding>
+        <NBarPadding>
             <div className="flex justify-center h-full lg:px-10">
                 <div className="h-full w-full">
                     <ResponsiveYoutube
@@ -320,7 +320,7 @@ const Video = () => {
                     </div>
                 </div>
             </div>
-        </NavBarPadding>
+        </NBarPadding>
     );
 };
 
