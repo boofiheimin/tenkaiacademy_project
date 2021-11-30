@@ -12,7 +12,7 @@ interface NavBarItemProps extends MenuItem {
 export const NavBarItem = ({ icon, text, active = false, link }: NavBarItemProps) => {
     return (
         <Link href={link} passHref>
-            <a>
+            <a onClick={(event) => event.stopPropagation()} role="menuitem" tabIndex={0}>
                 <div
                     className={`relative px-2 h-full grid place-items-center font-bold ${
                         active ? 'text-kgold dark:text-kblue pointer-events-none' : ''
@@ -26,7 +26,6 @@ export const NavBarItem = ({ icon, text, active = false, link }: NavBarItemProps
                         {cloneElement(icon, { className: `${icon.props.className} text-2xl` })}
                         <span className="text-xs">{text}</span>
                     </motion.div>
-                    {active && <div className="absolute h-1 w-1/2 top-10 rounded-full bg-kgold dark:bg-kblue" />}
                 </div>
             </a>
         </Link>

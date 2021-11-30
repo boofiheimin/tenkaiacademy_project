@@ -12,12 +12,12 @@ export const NavBarPadding = ({ children }: Props) => {
     let stateStyle = '';
 
     if (fullMode === NavBarMode.FULL) {
-        stateStyle = 'pl-52';
+        stateStyle = 'md:pl-52 smMax:pb-16';
     } else if (fullMode === NavBarMode.HALF) {
-        stateStyle = 'pl-16';
+        stateStyle = 'md:pl-16 smMax:pb-16';
     } else {
-        stateStyle = 'pl-0';
+        stateStyle = 'md:pl-0';
     }
 
-    return <div className={`${stateStyle} pt-16`}>{children}</div>;
+    return <div className={`${stateStyle} md:pt-16 `}>{children}</div>;
 };

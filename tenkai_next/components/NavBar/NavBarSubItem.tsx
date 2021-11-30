@@ -11,7 +11,14 @@ export interface NavBarVerticalItemProps extends MenuItem {
 export const NavBarVerticalItem = ({ icon, text, link, active, halfMode }: NavBarVerticalItemProps) => {
     return (
         <Link href={link} passHref>
-            <a>
+            <a
+                onClick={(event) => {
+                    console.log('what');
+                    event.stopPropagation();
+                }}
+                role="menuitem"
+                tabIndex={0}
+            >
                 <motion.div
                     className={`${
                         active ? 'dark:bg-gray-600 bg-gray-400 pointer-events-none' : ''
@@ -19,7 +26,9 @@ export const NavBarVerticalItem = ({ icon, text, link, active, halfMode }: NavBa
                     whileHover={{ scale: 1.05 }}
                 >
                     <div className="ml-1 mr-5 text-2xl">{icon}</div>
-                    <div className={`${halfMode ? 'group-hover:block hidden' : 'block'} text-xl`}>{text}</div>
+                    <div className={`${halfMode ? 'group-hover:block hidden' : 'block'} smMax:block text-xl`}>
+                        {text}
+                    </div>
                 </motion.div>
             </a>
         </Link>
