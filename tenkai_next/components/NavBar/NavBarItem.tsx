@@ -26,7 +26,7 @@ export const NavBarItem = ({ icon, text, active = false, link }: NavBarItemProps
                         {cloneElement(icon, { className: `${icon.props.className} text-2xl` })}
                         <span className="text-xs">{text}</span>
                     </motion.div>
-                    {active && <div className="absolute h-1 w-1/2 bottom-1 rounded-full bg-kgold dark:bg-kblue" />}
+                    {active && <div className="absolute h-1 w-1/2 top-10 rounded-full bg-kgold dark:bg-kblue" />}
                 </div>
             </a>
         </Link>

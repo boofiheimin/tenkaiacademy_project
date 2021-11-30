@@ -93,15 +93,23 @@ export const NavBar = () => {
                     <Shuriken className="w-8 h-8 mr-4 text-kanata-gold dark:text-kblue fill-current" />
                     <span className="text-xl font-bold">Tenkai Academy</span>
                 </div>
-                <div
-                    className="grid grid-flow-col  divide-black dark:divide-white h-full"
-                    style={{ gridAutoColumns: 'minmax(0,1fr)' }}
-                >
-                    {SiteMaps.map(({ text, icon, link }) => (
-                        <NavBarItem icon={icon} text={text} link={link} active={router.pathname === link} key={text} />
-                    ))}
+                <div className="flex items-center">
+                    <div
+                        className="grid grid-flow-col  divide-black dark:divide-white h-full"
+                        style={{ gridAutoColumns: 'minmax(0,1fr)' }}
+                    >
+                        {SiteMaps.map(({ text, icon, link }) => (
+                            <NavBarItem
+                                icon={icon}
+                                text={text}
+                                link={link}
+                                active={router.pathname === link}
+                                key={text}
+                            />
+                        ))}
+                    </div>
                     <button type="button" onClick={handleSwitchMode}>
-                        <div className="px-2">
+                        <div className="px-2 flex justify-center items-center">
                             {isDarkMode ? <MdLightMode className="text-xl" /> : <MdDarkMode className="text-xl" />}
                         </div>
                     </button>
