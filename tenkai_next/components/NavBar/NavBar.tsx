@@ -14,6 +14,7 @@ import { NavBarItem } from './NavBarItem';
 
 import { MenuItem } from './NavBar.interface';
 import { NavBarVerticalItem } from './NavBarSubItem';
+import { TransformingHamburger } from './TransformingHamburger';
 
 const SiteMaps: MenuItem[] = [
     {
@@ -93,7 +94,7 @@ export const NavBar = () => {
                     <Shuriken className="w-8 h-8 mr-4 text-kanata-gold dark:text-kblue fill-current" />
                     <span className="text-xl font-bold">Tenkai Academy</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center smMax:hidden">
                     <div
                         className="grid grid-flow-col  divide-black dark:divide-white h-full"
                         style={{ gridAutoColumns: 'minmax(0,1fr)' }}
@@ -113,6 +114,9 @@ export const NavBar = () => {
                             {isDarkMode ? <MdLightMode className="text-xl" /> : <MdDarkMode className="text-xl" />}
                         </div>
                     </button>
+                </div>
+                <div className="smMax:block hidden">
+                    <TransformingHamburger />
                 </div>
             </div>
             <motion.div
