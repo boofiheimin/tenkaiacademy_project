@@ -76,8 +76,8 @@ const Video = () => {
     const handleToggleDetailTab = () => setOpenDetailTab(!openDetailTab);
     return (
         <NBarPadding>
-            <div className="flex justify-center h-full lg:px-10">
-                <div className="h-full w-full">
+            <div className="flex justify-center h-full">
+                <div className="h-full" style={{ width: 'min(calc(( 100vh - 4rem ) * 16 / 10), 100%)' }}>
                     <ResponsiveYoutube
                         videoId={exampleVideo.videoId}
                         tab
