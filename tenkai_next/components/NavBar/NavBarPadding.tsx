@@ -1,11 +1,12 @@
 import { ReactNode } from 'react';
+
 import { NavBarMode, useAppStore } from '../../lib/stores';
 
 interface Props {
     children: ReactNode;
 }
 
-export const NBarPadding = ({ children }: Props) => {
+export const NavBarPadding = ({ children }: Props) => {
     const fullMode = useAppStore((state) => state.fullMode);
 
     let stateStyle = '';

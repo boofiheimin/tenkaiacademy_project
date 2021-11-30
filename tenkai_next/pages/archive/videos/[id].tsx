@@ -15,7 +15,7 @@ import { EmbedVideoCard } from '../../../components/EmbedVideoCard';
 import { Tag } from '../../../components/Tag';
 
 import { useAppStore } from '../../../lib/stores';
-import { NBarPadding } from '../../../components/NBar/NBarPadding';
+import { NavBarPadding } from '../../../components/NavBar/NavBarPadding';
 
 const exampleVideo = {
     _id: '6184ac417e0f68b237a9181e',
@@ -75,7 +75,7 @@ const Video = () => {
         (exampleVideo.timestamps.length ? 1 : 0);
     const handleToggleDetailTab = () => setOpenDetailTab(!openDetailTab);
     return (
-        <NBarPadding>
+        <NavBarPadding>
             <div className="flex justify-center h-full">
                 <div className="h-full" style={{ width: 'min(calc(( 100vh - 4rem ) * 16 / 10), 100%)' }}>
                     <ResponsiveYoutube
@@ -320,7 +320,7 @@ const Video = () => {
                     </div>
                 </div>
             </div>
-        </NBarPadding>
+        </NavBarPadding>
     );
 };
 

@@ -1,24 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ReactElement, cloneElement, useEffect, ReactNode } from 'react';
+import { useEffect } from 'react';
 import { FaHome, FaYoutube, FaFilm, FaItunesNote } from 'react-icons/fa';
 import { SiDiscogs, SiBookstack } from 'react-icons/si';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+
 import { useDarkMode } from '../../lib/hooks';
-import { Shuriken } from '../Shuriken';
 import { NavBarMode, useAppStore } from '../../lib/stores';
 
-interface MenuItem {
-    text: string;
-    icon: ReactElement;
-    link: string;
-}
+import { Shuriken } from '../Shuriken';
+import { NavBarItem } from './NavBarItem';
 
-interface NBarItemProps extends MenuItem {
-    active?: boolean;
-}
+import { MenuItem } from './NavBar.interface';
+import { NavBarVerticalItem } from './NavBarSubItem';
 
 const SiteMaps: MenuItem[] = [
     {
@@ -62,57 +57,7 @@ const variants = {
     half: { width: '4rem' },
 };
 
-const NBarItem = ({ icon, text, active = false, link }: NBarItemProps) => {
-    return (
-        <Link href={link} passHref>
-            <a>
-                <div
-                    className={`relative px-2 h-full grid place-items-center font-bold ${
-                        active ? 'text-kgold dark:text-kblue pointer-events-none' : ''
-                    }`}
-                >
-                    <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="grid place-items-center"
-                    >
-                        {cloneElement(icon, { className: `${icon.props.className} text-2xl` })}
-                        <span className="text-xs">{text}</span>
-                    </motion.div>
-                    {active && <div className="absolute h-1 w-1/2 bottom-1 rounded-full bg-kgold dark:bg-kblue" />}
-                </div>
-            </a>
-        </Link>
-    );
-};
-
-interface NBarVerticalItemProps {
-    icon: ReactNode;
-    text: string;
-    link: string;
-    active: boolean;
-    halfMode: boolean;
-}
-
-const NBarVerticalItem = ({ icon, text, link, active, halfMode }: NBarVerticalItemProps) => {
-    return (
-        <Link href={link} passHref>
-            <a>
-                <motion.div
-                    className={`${
-                        active ? 'dark:bg-gray-600 bg-gray-400 pointer-events-none' : ''
-                    } w-full flex py-2 h-14 px-4 items-center dark:hover:bg-gray-700 hover:bg-gray-300`}
-                    whileHover={{ scale: 1.05 }}
-                >
-                    <div className="ml-1 mr-5 text-2xl">{icon}</div>
-                    <div className={`${halfMode ? 'group-hover:block hidden' : 'block'} text-xl`}>{text}</div>
-                </motion.div>
-            </a>
-        </Link>
-    );
-};
-
-export const NBar = () => {
+export const NavBar = () => {
     const [isDarkMode, setDarkMode] = useDarkMode();
     const { fullMode, setFullMode } = useAppStore();
 
@@ -153,7 +98,7 @@ export const NBar = () => {
                     style={{ gridAutoColumns: 'minmax(0,1fr)' }}
                 >
                     {SiteMaps.map(({ text, icon, link }) => (
-                        <NBarItem icon={icon} text={text} link={link} active={router.pathname === link} key={text} />
+                        <NavBarItem icon={icon} text={text} link={link} active={router.pathname === link} key={text} />
                     ))}
                     <button type="button" onClick={handleSwitchMode}>
                         <div className="px-2">
@@ -171,7 +116,7 @@ export const NBar = () => {
                 transition={{ duration: 0.1 }}
             >
                 {SiteSubMaps.map(({ text, icon, link }) => (
-                    <NBarVerticalItem
+                    <NavBarVerticalItem
                         {...{ text, icon, link }}
                         key={text}
                         active={router.pathname === link}

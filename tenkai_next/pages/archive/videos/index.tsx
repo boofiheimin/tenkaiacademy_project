@@ -6,7 +6,7 @@ import { useState } from 'react';
 // import { TopSearchBar } from '../../../components/TopSearchBar';
 import { VideoCard } from '../../../components/VideoCard';
 import { Tooltip } from '../../../components/Tooltip';
-import { NBarPadding } from '../../../components/NBar/NBarPadding';
+import { NavBarPadding } from '../../../components/NavBar/NavBarPadding';
 
 const Videos = () => {
     const [viewMode, setViewMode] = useState(true);
@@ -14,7 +14,7 @@ const Videos = () => {
     const toggleViewMode = () => setViewMode(!viewMode);
 
     return (
-        <NBarPadding>
+        <NavBarPadding>
             <div className="h-16" />
             <div className="transition-all duration-200">
                 <div className="px-10">
@@ -55,7 +55,7 @@ const Videos = () => {
                     </div>
                 </div>
             </div>
-        </NBarPadding>
+        </NavBarPadding>
     );
 };
 export default Videos;
