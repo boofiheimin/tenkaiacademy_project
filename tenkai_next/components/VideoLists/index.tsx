@@ -4,15 +4,19 @@ import { useState } from 'react';
 import { Tooltip } from '../Tooltip';
 import { VideoCard } from '../VideoCard';
 import { SearchBar } from './SearchBar';
+import { VideosResponse } from '../../interfaces/video.interface';
 
-export const VideoLists = () => {
+interface Props {
+    data: VideosResponse;
+}
+export const VideoLists = ({ data }: Props) => {
     const [viewMode, setViewMode] = useState(true);
     const toggleViewMode = () => setViewMode(!viewMode);
     return (
         <div className="px-10">
             <SearchBar />
             <div className="h-20 border-b flex justify-between items-end leading-none pb-1">
-                <span className="">Total: 69 Videos </span>
+                <span className="">{`Total: ${data.totalCount}  Videos`}</span>
                 <div className="text-2xl text-gray-500 hidden lg:flex">
                     <Tooltip text="Grid" className="mr-2">
                         <button
@@ -41,9 +45,8 @@ export const VideoLists = () => {
                         : 'grid-cols-video lgMax:justify-center lg:grid-cols-none lg:px-10'
                 }  items-center`}
             >
-                {/* test array */}
-                {[...Array(20)].map(() => (
-                    <VideoCard key={uuidV4()} horizontal={!viewMode} />
+                {data.docs.map((video) => (
+                    <VideoCard key={uuidV4()} horizontal={!viewMode} video={video} />
                 ))}
             </div>
         </div>

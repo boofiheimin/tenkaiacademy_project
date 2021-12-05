@@ -1,4 +1,4 @@
-// import { NavBar } from '../components/NavBar/NavBar';
+import { Toaster } from 'react-hot-toast';
 import { Main } from '../components/Main';
 
 import { NavBar } from '../components/NavBar/NavBar';
@@ -10,6 +10,7 @@ function MyApp({ Component, pageProps }) {
     return (
         // Why did adding min-height: inherit solve it? IDK 😒
         <div className="flex flex-col md:flex-row w-full" style={{ minHeight: 'inherit' }}>
+            <Toaster />
             <NavBar />
             <Main>
                 <Component {...pageProps} />
