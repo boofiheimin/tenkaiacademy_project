@@ -15,7 +15,6 @@ import { EmbedVideoCard } from '../../../components/EmbedVideoCard';
 import { Tag } from '../../../components/Tag';
 
 import { useAppStore } from '../../../lib/stores';
-import { NavBarPadding } from '../../../components/NavBar/NavBarPadding';
 
 const exampleVideo = {
     _id: '6184ac417e0f68b237a9181e',
