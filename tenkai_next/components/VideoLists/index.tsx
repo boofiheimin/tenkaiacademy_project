@@ -1,22 +1,26 @@
 import { v4 as uuidV4 } from 'uuid';
 import { IoGrid, IoList } from 'react-icons/io5';
 import { useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Tooltip } from '../Tooltip';
 import { VideoCard } from '../VideoCard';
 import { SearchBar } from './SearchBar';
-import { VideosResponse } from '../../interfaces/video.interface';
+import { Video } from '../../interfaces/video.interface';
 
 interface Props {
-    data: VideosResponse;
+    videos: Video[];
+    totalCount: number;
+    fetchNext: () => void;
+    hasMore: boolean;
 }
-export const VideoLists = ({ data }: Props) => {
+export const VideoLists = ({ videos, totalCount, fetchNext, hasMore }: Props) => {
     const [viewMode, setViewMode] = useState(true);
     const toggleViewMode = () => setViewMode(!viewMode);
     return (
         <div className="px-10">
             <SearchBar />
             <div className="h-20 border-b flex justify-between items-end leading-none pb-1">
-                <span className="">{`Total: ${data.totalCount}  Videos`}</span>
+                <span className="">{`Total: ${totalCount}  Videos`}</span>
                 <div className="text-2xl text-gray-500 hidden lg:flex">
                     <Tooltip text="Grid" className="mr-2">
                         <button
@@ -38,17 +42,19 @@ export const VideoLists = ({ data }: Props) => {
                     </Tooltip>
                 </div>
             </div>
-            <div
-                className={`pt-4 grid gap-4 ${
-                    viewMode
-                        ? 'grid-cols-video justify-center'
-                        : 'grid-cols-video lgMax:justify-center lg:grid-cols-none lg:px-10'
-                }  items-center`}
-            >
-                {data.docs.map((video) => (
-                    <VideoCard key={uuidV4()} horizontal={!viewMode} video={video} />
-                ))}
-            </div>
+            <InfiniteScroll dataLength={videos.length} hasMore={hasMore} next={fetchNext}>
+                <div
+                    className={`pt-4 grid gap-4 ${
+                        viewMode
+                            ? 'grid-cols-video justify-center'
+                            : 'grid-cols-video lgMax:justify-center lg:grid-cols-none lg:px-10'
+                    }  items-center`}
+                >
+                    {videos.map((video) => (
+                        <VideoCard key={uuidV4()} horizontal={!viewMode} video={video} />
+                    ))}
+                </div>
+            </InfiniteScroll>
         </div>
     );
 };

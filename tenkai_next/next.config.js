@@ -4,6 +4,6 @@ module.exports = {
     },
     env: {
         apiUrl: 'http://localhost:5000/api/v2',
-        videoListLimit: 30
+        videosListLimit: 30
     }
 }
