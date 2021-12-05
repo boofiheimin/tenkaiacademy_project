@@ -19,5 +19,5 @@ export const NavBarPadding = ({ children }: Props) => {
         stateStyle = 'md:pl-0';
     }
 
-    return <div className={`${stateStyle} md:pt-16 `}>{children}</div>;
+    return <div className={`${stateStyle} pt-16 w-full h-full`}>{children}</div>;
 };
