@@ -35,10 +35,10 @@ export class VideosController {
     }
 
     @Get(':id')
-    @ApiOperation({ summary: 'Find Video by Id' })
+    @ApiOperation({ summary: 'Find Video by VideoId' })
     @ApiResponse({ type: Video })
-    async findVideoById(@Param('id') id: string): Promise<Video> {
-        return this.videoService.findVideoById(id);
+    async findVideoByVideoIdWithClip(@Param('id') id: string): Promise<Video> {
+        return this.videoService.findVideoByVideoIdWithClip(id);
     }
     @Roles(UserRole.ADMIN, UserRole.SUPERADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)

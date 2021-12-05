@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { BaseRepository } from 'src/base/base.repository';
 import { Tag } from 'src/tags/schemas/tag.schema';
 import { Video, VideoDocument } from './schemas/video.schema';
@@ -27,12 +27,12 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
         });
     }
 
-    async findByIdWithClip(id: string): Promise<Video> {
-        this.logger.log(`Finding ${this.collectionName}<id:${id}> with its clips`);
+    async findByVideoIdWithClip(videoId: string): Promise<Video> {
+        this.logger.log(`Finding ${this.collectionName}<videoId:${videoId}> with its clips`);
         const [video] = await this.videoModel
             .aggregate()
             .match({
-                _id: new Types.ObjectId(id),
+                videoId,
             })
             .lookup({
                 from: 'clips',
@@ -49,10 +49,10 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
                 ],
                 as: 'clips',
             })
-            .project(this.projection);
+            .project({ ...this.projection, clips: 1 });
 
         if (!video) {
-            throw new NotFoundException(`Video<id:${id}> not found`);
+            throw new NotFoundException(`Video<videoId:${videoId}> not found`);
         }
         return video;
     }

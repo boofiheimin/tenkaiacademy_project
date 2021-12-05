@@ -92,8 +92,8 @@ export class VideosService {
         });
     }
 
-    async findVideoById(id: string): Promise<Video> {
-        return this.videosRepository.findByIdWithClip(id);
+    async findVideoByVideoIdWithClip(videoId: string): Promise<Video> {
+        return this.videosRepository.findByVideoIdWithClip(videoId);
     }
 
     async findVideoByVideoId(videoId: string): Promise<Video> {

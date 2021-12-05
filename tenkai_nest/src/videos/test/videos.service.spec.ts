@@ -161,14 +161,14 @@ describe('VideosService', () => {
         });
     });
 
-    describe('findVideoById', () => {
+    describe('findVideoByVideoIdWithClip', () => {
         describe('when call', () => {
             const id = 'id';
             beforeEach(async () => {
-                video = await videosService.findVideoById(id);
+                video = await videosService.findVideoByVideoIdWithClip(id);
             });
             it('should call VideosRepository', () => {
-                expect(videosRepository.findByIdWithClip).toBeCalledWith(id);
+                expect(videosRepository.findByVideoIdWithClip).toBeCalledWith(id);
             });
             it('should return with a video with clips field', () => {
                 expect(omitStubFn(video)).toEqual({ ...omitStubFn(videoStub()), clips: [] });

@@ -7,7 +7,7 @@ export const VideosRepository = jest.fn().mockReturnValue({
     findOne: jest.fn().mockReturnValue(videoStub()),
     update: jest.fn().mockReturnValue(videoStub()),
     delete: jest.fn().mockReturnValue(videoStub()),
-    findByIdWithClip: jest.fn().mockReturnValue({ ...videoStub(), clips: [] }),
+    findByVideoIdWithClip: jest.fn().mockReturnValue({ ...videoStub(), clips: [] }),
     findOneAndUpsert: jest.fn().mockReturnValue(videoStub()),
     tagCascadeUpdate: jest.fn(),
     tagCascadeDelete: jest.fn(),
