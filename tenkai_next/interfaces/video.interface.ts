@@ -37,6 +37,7 @@ export interface Video {
     source: VideoSource;
     mirror: string;
     isPrivate: boolean;
+    clips: any[]; // TODO : change this when implement clips
 }
 
 export interface VideosResponse {

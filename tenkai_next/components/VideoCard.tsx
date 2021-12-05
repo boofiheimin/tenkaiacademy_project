@@ -8,14 +8,13 @@ import { Video } from '../interfaces/video.interface';
 
 interface Props {
     horizontal?: boolean;
-    link?: string;
     video: Video;
 }
 
-export const VideoCard = ({ horizontal = false, link = 'videos/1', video }: Props) => {
-    const { title, thumbnail, publishedAt, uploader, tags } = video;
+export const VideoCard = ({ horizontal = false, video }: Props) => {
+    const { videoId, title, thumbnail, publishedAt, uploader, tags } = video;
     return (
-        <Link href={link} passHref>
+        <Link href={`/archive/videos/${videoId}`} passHref>
             <a>
                 <div
                     className={`${
