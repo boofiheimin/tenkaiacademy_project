@@ -100,6 +100,15 @@ export const NavBar = () => {
 
     const mobileMenuState = openMobile ? 'open' : 'closed';
 
+    // eslint-disable-next-line no-nested-ternary
+    const initSubMenuState = router.pathname.includes('archive')
+        ? router.pathname.includes('videos/')
+            ? 'half'
+            : 'open'
+        : 'closed';
+
+    const initSubMenuStateMobile = router.pathname.includes('archive') ? 'open' : 'closed';
+
     return (
         <>
             <div className="fixed w-screen h-16 bg-white dark:bg-black dark:text-white shadow-md flex justify-between items-center px-4 z-40">
@@ -135,7 +144,7 @@ export const NavBar = () => {
             <div className="smMax:hidden">
                 <motion.div
                     variants={variants}
-                    initial="closed"
+                    initial={initSubMenuState}
                     animate={sideBarState}
                     whileHover="open"
                     className="fixed z-30 top-16 h-full bg-white dark:bg-gray-900 dark:text-white shadow-md transition-all duration-200 overflow-hidden group"
@@ -154,7 +163,7 @@ export const NavBar = () => {
             <div className="md:hidden block">
                 <motion.div
                     variants={botVariants}
-                    initial="closed"
+                    initial={initSubMenuStateMobile}
                     animate={botBarState}
                     className="fixed bottom-0 h-14 dark:bg-black bg-white shadow-md dark:text-white w-full z-40"
                 >
