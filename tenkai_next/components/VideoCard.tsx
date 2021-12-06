@@ -27,7 +27,7 @@ export const VideoCard = ({ horizontal = false, video }: Props) => {
                 <div
                     className={`${
                         horizontal ? 'flex-col h-96 lg:h-auto lg:flex-row lg:w-full lg:align-center' : 'flex-col h-96'
-                    } w-80 h-auto flex shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2`}
+                    } w-80 h-auto flex shadow-md dark:bg-gray-900 bg-white canhover:hover:scale-105 canhover:dark:hover:bg-gray-600 canhover:hover:bg-gray-200 cursor-pointer rounded-md mb-2`}
                 >
                     <div className="w-80 flex-shrink-0 relative">
                         <div className="aspect-w-16 aspect-h-9">
@@ -47,7 +47,11 @@ export const VideoCard = ({ horizontal = false, video }: Props) => {
                         className={`flex flex-col ${horizontal ? 'lg:p-4' : ''} p-2 pb-4 flex-grow items-stretch h-40`}
                     >
                         <div className="line-clamp-2">{title}</div>
-                        <div className={`text-gray-400 flex items-center ${horizontal ? 'lg:text-base' : ''} text-sm`}>
+                        <div
+                            className={`text-gray-500 dark:text-gray-400 flex items-center ${
+                                horizontal ? 'lg:text-base' : ''
+                            } text-sm`}
+                        >
                             <AiOutlineClockCircle className="text-xl mr-2" />
                             <span>{moment(publishedAt).fromNow()}</span>
                         </div>
@@ -63,7 +67,7 @@ export const VideoCard = ({ horizontal = false, video }: Props) => {
                                 />
                             ))}
                             {filteredTags.length > 2 && (
-                                <span className="rounded-full p-1 text-sm bg-gray-500 tagsContainer">{`+ ${
+                                <span className="rounded-full p-1 text-sm bg-gray-500 tagsContainer text-white">{`+ ${
                                     filteredTags.length - 2
                                 }`}</span>
                             )}

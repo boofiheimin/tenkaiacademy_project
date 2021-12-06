@@ -19,7 +19,7 @@ export const VideoLists = ({ videos, totalCount, fetchNext, hasMore, loading }: 
     const [viewMode, setViewMode] = useState(true);
     const toggleViewMode = () => setViewMode(!viewMode);
     return (
-        <div className="px-10">
+        <div className="px-10 smMax:px-4">
             <SearchBar />
             <div className="h-20 border-b flex justify-between items-end leading-none pb-1">
                 <span className="">{`Total: ${loading ? '---' : totalCount}  Videos`}</span>

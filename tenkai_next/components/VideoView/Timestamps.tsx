@@ -19,7 +19,7 @@ const Timestamp = ({ timestamp: propTimestamp, onTimestampClick }: TimestampProp
     };
     return (
         <button className="w-full" type="button" onClick={handleTimestampClick}>
-            <div className="p-2 w-full flex items-center mb-2 bg-gray-800 hover:bg-gray-700">
+            <div className="p-2 w-full flex items-center mb-2 dark:bg-gray-700 canhover:dark:hover:bg-gray-600 bg-white shadow canhover:hover:bg-gray-100">
                 <div>{secondsTohhmmss(timestamp)}</div>
                 <div className="ml-4 text-left">{description}</div>
             </div>
@@ -29,7 +29,7 @@ const Timestamp = ({ timestamp: propTimestamp, onTimestampClick }: TimestampProp
 
 export const Timestamps = ({ timestamps, onTimestampClick }: Props) => {
     return (
-        <div className="p-2">
+        <div className="p-2 xl:dark:bg-gray-900 dark:bg-gray-800 bg-gray-200">
             {timestamps.map((timestamp) => {
                 return (
                     <Timestamp

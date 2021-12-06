@@ -45,7 +45,7 @@ export function useDarkMode() {
     useEffect(
         () => {
             const className = 'dark';
-            const element = window.document.body;
+            const element = window.document.getElementsByTagName('html')[0];
             if (isDarkMode) {
                 element.classList.add(className);
                 setAppDarkMode(true);

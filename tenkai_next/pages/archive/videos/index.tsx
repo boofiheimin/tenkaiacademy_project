@@ -26,6 +26,7 @@ const Videos = () => {
     }, [page]);
 
     const fetchNext = () => {
+        console.log('what');
         setPage(page + 1);
     };
     return <VideoLists videos={videos} totalCount={total} fetchNext={fetchNext} hasMore={hasMore} loading={loading} />;

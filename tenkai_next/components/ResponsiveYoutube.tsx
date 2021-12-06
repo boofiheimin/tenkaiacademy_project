@@ -50,12 +50,12 @@ const ResponsiveYoutube = forwardRef(
                         <div
                             className={`${
                                 showTab ? 'w-96' : 'w-12'
-                            } bg-gray-900 items-stretch transition-all duration-150 hidden lg:flex`}
+                            } dark:bg-gray-900 bg-white shadow items-stretch transition-all duration-150 hidden lg:flex`}
                         >
                             <div className="h-full w-full flex flex-col">
                                 <div className="w-full overflow-hidden">
                                     <button
-                                        className="py-3 w-full bg-gray-900 flex items-center"
+                                        className="py-3 w-full dark:bg-gray-900 bg-white shadow flex items-center"
                                         type="button"
                                         onClick={handleTabToggle}
                                     >

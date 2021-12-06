@@ -54,7 +54,7 @@ export const VideoView = ({ video }: Props) => {
 
     return (
         <div className="flex justify-center h-full">
-            <div className="h-full" style={{ width: 'min(calc(( 100vh - 4rem ) * 16 / 10), 100%)' }}>
+            <div className="h-full flex flex-col" style={{ width: 'min(calc(( 100vh - 4rem ) * 16 / 10), 100%)' }}>
                 <ResponsiveYoutube
                     ref={youtubeRef}
                     videoId={videoId}
@@ -63,22 +63,25 @@ export const VideoView = ({ video }: Props) => {
                     tabContent={<Timestamps timestamps={timestamps} onTimestampClick={handleSeek} />}
                     className="smMax:sticky smMax:top-16"
                 />
-                <div className="w-full xl:grid-cols-3 grid-cols-1 gap-1 mt-1 hidden xl:grid">
+                <div className="w-full xl:grid-cols-3 grid-cols-1 gap-1 mt-1 hidden lg:grid">
                     <div className={clips.length > 0 ? 'col-span-2' : 'col-span-3'}>
-                        <div className="bg-gray-900 p-2">
+                        <div className="dark:bg-gray-900 bg-white shadow p-2">
                             <div className="text-xl">{title}</div>
-                            <div className="text-gray-400 py-1">{`Published at ${moment(publishedAt).format(
-                                'MMM DD, YYYY HH:mm:ss',
-                            )}`}</div>
+                            <div className="dark:text-gray-400 text-gray-500 py-1">{`Published at ${moment(
+                                publishedAt,
+                            ).format('MMM DD, YYYY HH:mm:ss')}`}</div>
                             <Link href={`https://www.youtube.com/channel/${channelId}`} passHref>
-                                <button type="button" className="px-2 py-1 bg-red-500 rounded-xl flex items-center">
+                                <button
+                                    type="button"
+                                    className="px-2 py-1 bg-red-500 text-white rounded-xl flex items-center"
+                                >
                                     <BsYoutube className="mr-2" />
                                     {uploader}
                                 </button>
                             </Link>
                         </div>
                         {tags.length > 0 && (
-                            <div className="bg-gray-900 mt-1">
+                            <div className="dark:bg-gray-900 bg-white shadow mt-1">
                                 <div className="px-2 py-4 flex items-center flex-wrap">
                                     <span className="mr-2">Tags :</span>
                                     {tags.map((tag) => (
@@ -93,10 +96,10 @@ export const VideoView = ({ video }: Props) => {
                             </div>
                         )}
                         {summary && (
-                            <div className="bg-gray-900 mt-1">
+                            <div className="dark:bg-gray-900 bg-white shadow mt-1">
                                 <div className="p-2">
                                     <span>Summary</span>
-                                    <div className="border-b border-white mb-1 w-1/2" />
+                                    <div className="border-b dark:border-white border-black mb-1 w-1/2" />
                                     <p>{summary}</p>
                                 </div>
                             </div>
@@ -108,7 +111,7 @@ export const VideoView = ({ video }: Props) => {
                         >
                             {relatedTweets.length > 0 && (
                                 <div>
-                                    <div className="bg-twitter p-2 flex items-center">
+                                    <div className="bg-twitter p-2 flex items-center text-white">
                                         <BsTwitter className="mr-2" />
                                         <span>Tweets</span>
                                     </div>
@@ -117,7 +120,7 @@ export const VideoView = ({ video }: Props) => {
                             )}
                             {relatedVideos.length > 0 && (
                                 <div>
-                                    <div className="bg-red-500 p-2 flex items-center">
+                                    <div className="bg-red-500 p-2 flex items-center text-white">
                                         <BsYoutube className="mr-2" />
                                         <span>Videos</span>
                                     </div>
@@ -129,23 +132,23 @@ export const VideoView = ({ video }: Props) => {
                     {clips.length > 0 && (
                         <div>
                             <div>
-                                <div className="p-2 flex items-center bg-gray-900">
+                                <div className="p-2 flex items-center dark:bg-gray-900 bg-white shadow text-white">
                                     <MdContentCut />
                                     <span className="ml-2">Clips</span>
                                 </div>
-                                <div className="p-1 flex flex-col items-center bg-gray-900">
+                                <div className="p-1 flex flex-col items-center dark:bg-gray-900 bg-white shadow">
                                     <EmbedVideos />
                                 </div>
                             </div>
                         </div>
                     )}
                 </div>
-                <div className="w-full xl:hidden">
-                    <div className="bg-gray-900 p-2">
+                <div className="w-full lg:hidden flex flex-col flex-grow">
+                    <div className="dark:bg-gray-900 bg-white shadow p-2">
                         <div className="text-xl">{title}</div>
-                        <div className="text-gray-400 py-1">{`Published at ${moment(publishedAt).format(
-                            'MMM DD, YYYY HH:mm:ss',
-                        )}`}</div>
+                        <div className="dark:text-gray-400 text-gray-500 py-1">{`Published at ${moment(
+                            publishedAt,
+                        ).format('MMM DD, YYYY HH:mm:ss')}`}</div>
                         <Link href={`https://www.youtube.com/channel/${channelId}`} passHref>
                             <button type="button">
                                 <div className="px-2 py-1 bg-red-500 rounded-xl flex items-center">
@@ -159,7 +162,7 @@ export const VideoView = ({ video }: Props) => {
                         <>
                             <button
                                 type="button"
-                                className="w-full bg-gray-900 h-8 grid place-items-center"
+                                className="w-full dark:bg-gray-900 bg-white shadow h-8 grid place-items-center"
                                 onClick={handleToggleDetailTab}
                             >
                                 <BiChevronDown
@@ -170,7 +173,7 @@ export const VideoView = ({ video }: Props) => {
                             </button>
                             <div className={`${openDetailTab ? '' : 'hidden'}`}>
                                 {tags.length > 0 && (
-                                    <div className="bg-gray-900 mt-1">
+                                    <div className="dark:bg-gray-900 bg-white shadow mt-1">
                                         <div className="px-2 py-4 flex items-center">
                                             <span className="mr-2">Tags :</span>
                                             {tags.map((tag) => (
@@ -196,74 +199,55 @@ export const VideoView = ({ video }: Props) => {
                             </div>
                         </>
                     )}
-                    <div className="mt-1">
+                    <div className="mt-1 overflow-y-auto flex-grow flex flex-col">
                         <Tab.Group>
                             <Tab.List className="grid grid-flow-col" style={{ gridAutoColumns: 'minmax(0,1fr)' }}>
                                 {clips.length > 0 && (
                                     <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                type="button"
-                                                className={`${selected ? '' : 'text-white'} w-full p-1 bg-gray-900 `}
-                                            >
-                                                <div className="flex items-center justify-center flex-col md:flex-row ">
-                                                    <MdContentCut className="text-xl md:text-base" />
-                                                    <span className="md:ml-1 text-xs md:text-base">Clips</span>
-                                                </div>
-                                            </button>
-                                        )}
+                                        <button type="button" className="w-full p-1 bg-gray-900 text-white">
+                                            <div className="flex items-center justify-center flex-col md:flex-row">
+                                                <MdContentCut className="text-xl md:text-base" />
+                                                <span className="md:ml-1 text-xs md:text-base">Clips</span>
+                                            </div>
+                                        </button>
                                     </Tab>
                                 )}
                                 {timestamps.length > 0 && (
                                     <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                type="button"
-                                                className={`${
-                                                    selected ? '' : 'text-white'
-                                                } w-full p-1 bg-gray-700 hidden lgMax:block`}
-                                            >
-                                                <div className="flex items-center justify-center flex-col md:flex-row">
-                                                    <AiOutlineClockCircle className="text-xl md:text-base" />
-                                                    <span className="md:ml-1 text-xs md:text-base">Timestamp</span>
-                                                </div>
-                                            </button>
-                                        )}
+                                        <button
+                                            type="button"
+                                            className="w-full p-1 bg-gray-700 text-white hidden lgMax:block"
+                                        >
+                                            <div className="flex items-center justify-center flex-col md:flex-row">
+                                                <AiOutlineClockCircle className="text-xl md:text-base" />
+                                                <span className="md:ml-1 text-xs md:text-base">Timestamp</span>
+                                            </div>
+                                        </button>
                                     </Tab>
                                 )}
 
                                 {relatedVideos.length > 0 && (
                                     <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                type="button"
-                                                className={`${selected ? '' : 'text-white'} w-full p-1 bg-red-500 `}
-                                            >
-                                                <div className="flex items-center justify-center flex-col md:flex-row">
-                                                    <BsYoutube className="text-xl md:text-base" />
-                                                    <span className="md:ml-1 text-xs md:text-base">Videos</span>
-                                                </div>
-                                            </button>
-                                        )}
+                                        <button type="button" className="w-full p-1 bg-red-500 text-white">
+                                            <div className="flex items-center justify-center flex-col md:flex-row">
+                                                <BsYoutube className="text-xl md:text-base" />
+                                                <span className="md:ml-1 text-xs md:text-base">Videos</span>
+                                            </div>
+                                        </button>
                                     </Tab>
                                 )}
                                 {relatedTweets.length > 0 && (
                                     <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                type="button"
-                                                className={`${selected ? '' : 'text-white'} w-full p-1 bg-twitter `}
-                                            >
-                                                <div className="flex items-center justify-center flex-col md:flex-row">
-                                                    <BsTwitter className="text-xl md:text-base" />
-                                                    <span className="md:ml-1 text-xs md:text-base">Tweets</span>
-                                                </div>
-                                            </button>
-                                        )}
+                                        <button type="button" className="w-full p-1 bg-twitter text-white">
+                                            <div className="flex items-center justify-center flex-col md:flex-row">
+                                                <BsTwitter className="text-xl md:text-base" />
+                                                <span className="md:ml-1 text-xs md:text-base">Tweets</span>
+                                            </div>
+                                        </button>
                                     </Tab>
                                 )}
                             </Tab.List>
-                            <Tab.Panels>
+                            <Tab.Panels className="flex-grow">
                                 {clips.length > 0 && (
                                     <Tab.Panel>
                                         <div className={`w-full bg-gray-900 h-4 ${tabNumber === 1 ? 'hidden' : ''}`} />
@@ -271,13 +255,13 @@ export const VideoView = ({ video }: Props) => {
                                     </Tab.Panel>
                                 )}
                                 {timestamps.length > 0 && (
-                                    <Tab.Panel>
+                                    <Tab.Panel className="h-full">
                                         <div
                                             className={`w-full bg-gray-700 h-4 ${
                                                 tabNumber === 1 ? 'hidden' : ''
                                             } hidden lgMax:block`}
                                         />
-                                        <div>time</div>
+                                        <Timestamps timestamps={timestamps} onTimestampClick={handleSeek} />
                                     </Tab.Panel>
                                 )}
                                 {relatedVideos.length > 0 && (
@@ -287,7 +271,7 @@ export const VideoView = ({ video }: Props) => {
                                     </Tab.Panel>
                                 )}
                                 {relatedTweets.length > 0 && (
-                                    <Tab.Panel>
+                                    <Tab.Panel className="flex flex-col h-full">
                                         <div className={`w-full bg-twitter h-4 ${tabNumber === 1 ? 'hidden' : ''}`} />
                                         <EmbedTweets tweetIds={relatedTweets} />
                                     </Tab.Panel>

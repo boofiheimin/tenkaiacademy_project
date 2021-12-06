@@ -9,7 +9,7 @@ import '../styles/styles.css';
 function MyApp({ Component, pageProps }) {
     return (
         // Why did adding min-height: inherit solve it? IDK 😒
-        <div className="flex flex-col md:flex-row w-full" style={{ minHeight: 'inherit' }}>
+        <div className="h-full w-full" style={{ minHeight: 'inherit' }}>
             <Toaster />
             <NavBar />
             <Main>

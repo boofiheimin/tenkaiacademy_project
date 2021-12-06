@@ -37,7 +37,7 @@ export const tagConfig = (): TagConfig => ({
     },
     Announcement: {
         icon: '📢',
-        color: '#3DED97',
+        color: '#32CD32',
     },
     Cooking: {
         icon: '🍳',
@@ -49,7 +49,7 @@ export const tagConfig = (): TagConfig => ({
     },
     Drawing: {
         icon: '🎨',
-        color: '#2832C2',
+        color: '#6495ED',
     },
     'Tokino Sora': {
         icon: '🐻',
