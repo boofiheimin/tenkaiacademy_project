@@ -7,11 +7,12 @@ import moment from 'moment';
 import Link from 'next/link';
 import { BsYoutube, BsTwitter } from 'react-icons/bs';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
 import { EmbedTweets } from './EmbedTweets';
 import { EmbedVideos } from './EmbedVideos';
+import { Timestamps } from './Timestamps';
 
 import { Video } from '../../interfaces/video.interface';
 import { ResponsiveYoutube } from '../ResponsiveYoutube';
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const VideoView = ({ video }: Props) => {
+    const youtubeRef = useRef(null);
     const [openDetailTab, setOpenDetailTab] = useState(false);
     const handleToggleDetailTab = () => setOpenDetailTab(!openDetailTab);
 
@@ -46,14 +48,19 @@ export const VideoView = ({ video }: Props) => {
         (clips.length ? 1 : 0) +
         (timestamps.length ? 1 : 0);
 
+    const handleSeek = (time: number) => {
+        youtubeRef.current.seekTime(time);
+    };
+
     return (
         <div className="flex justify-center h-full">
             <div className="h-full" style={{ width: 'min(calc(( 100vh - 4rem ) * 16 / 10), 100%)' }}>
                 <ResponsiveYoutube
+                    ref={youtubeRef}
                     videoId={videoId}
-                    tab={false}
+                    tab={timestamps.length > 0}
                     tabTitle="Timestamp"
-                    tabContent={<div>hi</div>}
+                    tabContent={<Timestamps timestamps={timestamps} onTimestampClick={handleSeek} />}
                     className="smMax:sticky smMax:top-16"
                 />
                 <div className="w-full xl:grid-cols-3 grid-cols-1 gap-1 mt-1 hidden xl:grid">
