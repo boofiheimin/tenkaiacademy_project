@@ -12,7 +12,7 @@ export class VideosRepository extends BaseRepository<VideoDocument> {
             _id: 1,
             videoId: 1,
             title: 1,
-            description: 1,
+            summary: 1,
             thumbnail: 1,
             duration: 1,
             publishedAt: 1,

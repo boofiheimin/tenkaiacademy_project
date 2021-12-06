@@ -143,7 +143,7 @@ export const VideoView = ({ video }: Props) => {
                         </div>
                     )}
                 </div>
-                <div className="w-full lg:hidden flex flex-col flex-grow">
+                <div className="w-full lg:hidden flex flex-col flex-grow smMax:h-0 smMax:overflow-y-auto">
                     <div className="dark:bg-gray-900 bg-white shadow p-2">
                         <div className="text-xl">{title}</div>
                         <div className="dark:text-gray-400 text-gray-500 py-1">{`Published at ${moment(
@@ -199,7 +199,7 @@ export const VideoView = ({ video }: Props) => {
                             </div>
                         </>
                     )}
-                    <div className="mt-1 overflow-y-auto flex-grow flex flex-col">
+                    <div className="mt-1 flex-grow flex flex-col">
                         <Tab.Group>
                             <Tab.List className="grid grid-flow-col" style={{ gridAutoColumns: 'minmax(0,1fr)' }}>
                                 {clips.length > 0 && (

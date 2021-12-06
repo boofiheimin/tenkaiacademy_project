@@ -9,8 +9,8 @@ interface EmbedTweetsProp {
 export const EmbedTweets = ({ tweetIds }: EmbedTweetsProp) => {
     const darkMode = useAppStore((state) => state.darkMode);
     return (
-        <div className="flex-grow smMax:h-0">
-            <div className="dark:bg-gray-900 bg-white shadow p-1 smMax:overflow-y-auto" id="tweet-container">
+        <div className="flex-grow">
+            <div className="dark:bg-gray-900 bg-white shadow p-1" id="tweet-container">
                 {tweetIds.map((tweetId) => (
                     <TwitterTweetEmbed
                         tweetId={tweetId}
