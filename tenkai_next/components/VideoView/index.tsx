@@ -72,10 +72,15 @@ export const VideoView = ({ video }: Props) => {
                         </div>
                         {tags.length > 0 && (
                             <div className="bg-gray-900 mt-1">
-                                <div className="px-2 py-4 flex items-center">
+                                <div className="px-2 py-4 flex items-center flex-wrap">
                                     <span className="mr-2">Tags :</span>
                                     {tags.map((tag) => (
-                                        <Tag className="mr-2 last:mr-0" tagNameEN={tag.tagNameEN} key={uuidV4()} />
+                                        <Tag
+                                            className="mr-2 last:mr-0 my-2"
+                                            tagNameEN={tag.tagNameEN}
+                                            key={uuidV4()}
+                                            full
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -166,6 +171,7 @@ export const VideoView = ({ video }: Props) => {
                                                     className="mr-2 last:mr-0 my-1"
                                                     tagNameEN={tag.tagNameEN}
                                                     key={uuidV4()}
+                                                    full
                                                 />
                                             ))}
                                         </div>

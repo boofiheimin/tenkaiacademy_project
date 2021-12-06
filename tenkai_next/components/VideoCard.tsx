@@ -5,14 +5,22 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 
 import { Tag } from './Tag';
 import { Video } from '../interfaces/video.interface';
+import { HIDDEN_TAG } from '../lib/tagUtils';
 
+const durationFormat = (duration) => {
+    if (duration < 3600) {
+        return moment('2015-01-01').startOf('day').seconds(duration).format('m:ss');
+    }
+    return moment('2015-01-01').startOf('day').seconds(duration).format('H:mm:ss');
+};
 interface Props {
     horizontal?: boolean;
     video: Video;
 }
 
 export const VideoCard = ({ horizontal = false, video }: Props) => {
-    const { videoId, title, thumbnail, publishedAt, uploader, tags } = video;
+    const { videoId, title, thumbnail, publishedAt, uploader, tags, duration } = video;
+    const filteredTags = tags.filter((tag) => !HIDDEN_TAG.includes(tag.tagNameEN));
     return (
         <Link href={`/archive/videos/${videoId}`} passHref>
             <a>
@@ -21,9 +29,18 @@ export const VideoCard = ({ horizontal = false, video }: Props) => {
                         horizontal ? 'flex-col h-96 lg:h-auto lg:flex-row lg:w-full lg:align-center' : 'flex-col h-96'
                     } w-80 h-auto flex shadow-md bg-gray-700 canhover:hover:scale-105 canhover:hover:bg-gray-600 cursor-pointer rounded-md mb-2`}
                 >
-                    <div className="w-80 flex-shrink-0">
+                    <div className="w-80 flex-shrink-0 relative">
                         <div className="aspect-w-16 aspect-h-9">
                             <Image src={thumbnail} layout="fill" objectFit="cover" alt={title} />
+                        </div>
+                        <div
+                            className="absolute right-1 bottom-1 text-white text-sm"
+                            style={{
+                                backgroundColor: 'rgba(0,0,0,0.75)',
+                                padding: '0 2px',
+                            }}
+                        >
+                            {durationFormat(duration)}
                         </div>
                     </div>
                     <div
@@ -36,11 +53,19 @@ export const VideoCard = ({ horizontal = false, video }: Props) => {
                         </div>
                         <div className="py-2 italic">{uploader}</div>
                         <div className="mt-auto h-6 flex items-center">
-                            {tags.slice(0, 2).map((tag) => (
-                                <Tag tagNameEN={tag.tagNameEN} key={tag.tagNameEN} className="mr-2 last:mr-0" />
+                            {filteredTags.slice(0, 2).map((tag) => (
+                                <Tag
+                                    tagNameEN={tag.tagNameEN}
+                                    key={tag.tagNameEN}
+                                    className={`mr-2 last:mr-0 ${
+                                        tags.length === 2 ? 'twoTagsContainer' : 'tagsContainer'
+                                    }`}
+                                />
                             ))}
-                            {tags.length > 2 && (
-                                <span className="rounded-full p-1 text-sm bg-gray-500">{`+ ${tags.length - 2}`}</span>
+                            {filteredTags.length > 2 && (
+                                <span className="rounded-full p-1 text-sm bg-gray-500 tagsContainer">{`+ ${
+                                    filteredTags.length - 2
+                                }`}</span>
                             )}
                         </div>
                     </div>

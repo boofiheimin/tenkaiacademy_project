@@ -72,3 +72,21 @@ html, body, #__next  {
     display: flex;
     justify-content: center;
   }
+
+  /* nth-last-child selector for tagsContainer */
+
+  .tagsContainer {
+    flex-shrink: 0;
+  }
+
+  .tagsContainer:nth-last-child(2) {
+    flex-shrink: 1;
+  }
+
+  .twoTagsContainer {
+    flex-shrink: 0;
+  }
+
+  .twoTagsContainer:last-child {
+    flex-shrink: 1;
+  }

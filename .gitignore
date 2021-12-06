@@ -18,6 +18,7 @@ server2
 tenkai_nest/node_modules
 tenkai_nest/dist
 tenkai_nest/.env
+tenkai_nest/script
 
 tenkai_next/node_modules
 tenkai_next/.pnp
